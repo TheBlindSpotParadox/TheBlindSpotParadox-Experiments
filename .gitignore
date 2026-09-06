@@ -10,3 +10,6 @@ __pycache__/
 # Mistral Vibe local session & config
 .vibe/
 repomix-output.xml
+
+# Graphe et visualisations locales
+graphify-out/
