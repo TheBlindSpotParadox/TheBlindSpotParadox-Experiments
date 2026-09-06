@@ -1,0 +1,14 @@
+Authorized deviations from artifacts_sha256_pre_ssot.txt
+========================================================
+The baseline is a frozen pre-SSOT oracle and is never rewritten. Any file listed below is a
+declared, motivated change; every other entry must verify byte-for-byte on every re-run.
+
+results/audit_S7/hydra_survival.csv
+    S7-bis section 4a. Two columns appended (complete_case_ci_lo, complete_case_ci_hi): the
+    complete-case ratio now carries the same seed-paired bootstrap as the RMST ratio, so the two
+    estimators are compared at equal arms. Verified strictly additive -- 0 of the 17 pre-existing
+    columns changed on any of the 20 rows.
+
+Verification:
+    sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt
+    -> expected: 33 OK, 1 FAILED (hydra_survival.csv, the line above).

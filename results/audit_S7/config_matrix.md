@@ -124,3 +124,47 @@ cell (F1 = 0.100 / 0.072 / 0.069) that `ROW_SPECS` (`:282-301`, 14 data rows) ne
 
 The manuscript's *"14 configurations"* (L327) matches the **table**; the code comment is what is
 wrong. Comment-only fix, no behavioural change — applied, diff in the reconciliation report.
+
+## 7. S7-bis — the R4 registry hole: closed (option A), with its residue named
+
+R4's registry values lived in `simulate_stream` argument defaults and in the detector/model
+factories, i.e. outside the module-level `Assign` walk of `tests/test_S7_consistency.py`. Since R4
+produces Table I, the table's constants were unprotected. Option A was taken: the diff is bounded to
+one token per site.
+
+**Routed to the SSOT (14 sites, all value-identical):**
+
+| file | site | before | after |
+|------|------|--------|-------|
+| `exp_R1_generate_data.py` | ARF factory | `n_models=10` | `ssot.R1_N_MODELS` |
+| `exp_R3_regime_crossover.py` | ARF factory | `n_models=10` | `ssot.R3_N_MODELS` |
+| `exp_R3_regime_crossover.py` | Bagging factory | `n_models=10` | `ssot.R3_N_MODELS` |
+| `exp_R3_regime_crossover.py` | PHT construct ×2 | `threshold=25.0` | `ssot.R3_PHT_LAMBDA` |
+| `exp_R4_main_table.py` | `simulate_stream` defaults | `n_steps=8000, tp=4000` | `ssot.R4_N_STEPS`, `ssot.R4_T_DRIFT` |
+| `exp_R4_main_table.py` | `pht()` | `threshold=15.0` | `ssot.R4_PHT_LAMBDA` |
+| `exp_R4_main_table.py` | ARF / SRP / Bagging factories | `n_models=10` | `ssot.R4_N_MODELS` |
+| `exp_R4_kswin_sweep.py` | `simulate_stream` defaults | `n_steps=8000, tp=4000` | `ssot.R4_N_STEPS`, `ssot.R4_T_DRIFT` |
+| `exp_R4_kswin_sweep.py` | ARF factory | `n_models=10` | `ssot.R4_N_MODELS` |
+
+Two new derived constants were declared for this: `R1_N_MODELS = N_MODELS` and
+`R3_N_MODELS = N_MODELS`.
+
+**Guard extended.** `tests/test_S7_consistency.py` now also walks function-argument defaults and
+call keywords, and fails when a guarded registry parameter — `n_steps`, `tp`, `t_drift`,
+`n_models`, `threshold` — is bound to a bare literal. Only an `ast.Constant` is a violation: a
+`Name`/`Attribute` default resolves to a module-level constant, which the existing module-level walk
+already covers, so `run_tau_arf(t_drift=T_DRIFT)` (R8) is not a false positive.
+
+**DECLARED UNGUARDED PERIMETER (option B applied to the remainder, not silence).** The following
+registry-adjacent literals remain outside the guard, because their parameter names are generic
+enough that guarding them would fire on River's own API surface:
+
+| site | literal | SSOT reference that declares it |
+|------|---------|---------------------------------|
+| `exp_R3_regime_crossover.py:78` | `drift.ADWIN(clock=1)` | `R3_C_INT` |
+| `exp_R3_regime_crossover.py:85, :111` | `PageHinkley(delta=0.005)` | `R3_DELTA_P` |
+| `exp_R4_main_table.py`, `exp_R4_kswin_sweep.py` | `drift.ADWIN(delta=0.002)` | `R4_ADWIN_DELTA` |
+| `exp_R4_main_table.py` | `drift.KSWIN(alpha=0.005)` | `R4_KSWIN_ALPHA` |
+| `exp_R4_*.py`, `exp_R9_compute_mcrit.py` | `seed=42` | not a registry name (a fixed nuisance seed) |
+
+R5 is unaffected: `exp_R5_config.py` already routes its registry through `config/experiment_ssot.py`.

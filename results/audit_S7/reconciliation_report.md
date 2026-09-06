@@ -1472,3 +1472,309 @@ index b835f7b..e2b5fe6 100644
      errors_pre, errors_post = [], []
 ```
 
+
+---
+
+# S7-bis — stream closure
+
+Scope: `docs/manuscript/articleA_blindspot_v64_camera_ready.tex` (the manuscript of record; v63 is
+archived) against the `results/` tree. Every value below was **re-measured in S7-bis** from the
+committed artifacts; nothing is carried on trust from the S7 report above.
+
+## B0. Manuscript of record
+
+`CLAUDE.md` was created at the repository root and declares
+`docs/manuscript/articleA_blindspot_v64_camera_ready.tex` (bibliography `articleA_biblio_v64.bib`)
+as the living manuscript, and v63 as archived. `README.md:227` was repointed from "the v63
+camera-ready" to the manuscript of record, with the v64 line numbers (L236, L391).
+
+**Phase 3 replayed on v64.** v64 carries the Section III theory rewrite, which shifts every line
+after 164 by +3; the v63 anchors are therefore invalid and were re-grepped. Pre-edit `\beta` census
+over v64: **L242, L270, L272, L279, L323**. The first four are the reliability target of Corollary 2
+and were renamed to $r$; **L323 is the GARCH persistence $\alpha + \beta$ and was not touched**.
+L274 (no `\beta`, but "reliability must be settled empirically") was aligned to "the reliability $r$",
+reproducing the v63 edit exactly. Post-edit census: **exactly one occurrence, L323, the GARCH one.**
+
+## B1. Divergences D-1 … D-10 — applied to v64, each anchored to its line
+
+Every substitution below is exact-match and was asserted unique before application (the patch script
+aborts without writing if any anchor misses or matches twice). Every artifact value was re-measured
+in S7-bis from the file named in the "source" column.
+
+| # | v64 line | manuscript before | manuscript after | re-measured value | source artifact |
+|---|---------|-------------------|------------------|-------------------|-----------------|
+| D-1 | 192 | "achieves exactly $0\%$ detection rate … for $\Delta e > 0.24$" | "achieves a ${<}0.1\%$ detection rate … ($1$ detection in $1{,}600$ runs, itself a blind spot: $\tau_{\mathrm{ARF}} = 54 \ll \tau_{\mathrm{det}} = 649$)" | **1/1600 = 0.0625 %**; `boundary_shift 1.331579`, $\Delta e = 0.326793$, seed 6, $\tau_{\mathrm{arf}} = 54$, $\tau_{\mathrm{det}} = 649$ | `results/R2_instrumented_blind_spot/data/R2_instrumented_A_PHT_ARF.parquet` |
+| D-2 | 213 | "miss rates rise from 60\% to 100\%" | "miss rates rise from 68\% to 100\%" | min miss **0.6800** at $\Delta e = 0.140949$, max **1.0000** | `…/R2_instrumented_B_PHT_ARF.parquet` |
+| D-3 | 298, 414 | "$\lambda_{\mathrm{op}}$ never exceeds $12.4$" / "$\lambda_{\mathrm{op}} \le 12.4$" | "$\le 12.44$ at $T_{\mathrm{drift}} = 2000$" (and $\le 10.5$ at $4000$ — see M1) | $\max \lambda_{\mathrm{limit}}$ over $[0.20, 0.50]$ = **12.4380** @ $\Delta e = 0.22$; **10.4920** @ $T_{\mathrm{drift}}{=}4000$ | `results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep{,_tdrift4000}.csv` |
+| D-4 | 405, 416 | "$\sim 24$ percentage points (RF $\approx 0.745$ vs ARF $\approx 0.985$)"; "${\sim}24\%$ … cost" | "$23.4$ percentage points (RF $\approx 0.750$ vs ARF $\approx 0.984$)"; "$23.4$ percentage-point … cost" | RF **0.7498**, ARF **0.9840**, gap **23.41 pp** at $\Delta e = 0.50$ | `results/R3_regime_crossover/data/R3_regime_crossover_metrics.parquet` |
+| D-5 | 376 | "an artifactual $80\%$ miss rate" | "an artifactual miss rate reaching $77\%$" | HT miss at the three sub-$0.09$ grid points: **77 / 73 / 71 %** | idem |
+| D-6 | 370 | Fig. 3 caption "($100\%$ missed)" | "(missed detections climb monotonically across the band, from $1\%$ at its first grid point $\Delta e{=}0.26$ to $100\%$ at $\Delta e{=}0.50$)" | ARF miss over $\Delta e \ge 0.25$: **1, 2, 8, 17, 32, 68, 98, 100 %** | idem |
+| D-7 | 136 | "at $b = 4.0$, empirical $\Delta e \approx 0.02$" | "the empirical $\Delta e$ measures $-0.02$---not merely attenuated but \emph{negative}" | mean over 100 seeds = **−0.0235** (median −0.0230) | `results/R9_mcrit/data/results_instrumented_A_ADWIN_HAT.csv` |
+| D-8 | 365 fn | "$\lambda = 15$ … calibrated against ProteuS pre-drift volatility to allow at most one false alarm per warm-up window" | "$\lambda = 15$ … is the fixed ProteuS operating threshold, applied with the monitor armed from $t{=}0$ and no warm-up window; the one-false-alarm-per-warm-up calibration procedure is used for the real-world streams of Section~\ref{sec:crossover}, not on ProteuS" | `PageHinkley(threshold=15.0)` hard-coded in R4; the calibration routine (`calibrate_lambda`, `PHT_TARGET_FA = 1`) exists only in R5 | `experiments/R4_proteus_evaluation/exp_R4_main_table.py`, `experiments/R5_real_world_evaluation/exp_R5_common.py:59-85` |
+| D-9 | 313 | "theoretical $\Delta e \in [0.02, 0.50]$" | "theoretical $\Delta e \in [0.028, 0.498]$" | grid endpoints **0.028186 … 0.497661** | `results/audit_S7/hydra_survival.csv` (20-point grid) |
+| D-10 | 119 | "(mean ${\approx}23$ at $c{=}32$)" | "(mean $\tau_{\mathrm{stat}} + 15.5$ at $c{=}32$)" + the derivation sentence | Table I measures $\mathrm{ADD} = 31.0$ with $\sigma = 0.0$ over **360 runs × 3 regimes** (ADWIN+ARF, $c{=}32$); $\tau^{*} \bmod c = 4000 \bmod 32 = 0$, so Eq. (1) gives $31 = 31 + \tau_{\mathrm{stat}} \Rightarrow \tau_{\mathrm{stat}} = 0$, and the uniform-phase mean is $(c-1)/2 = 15.5$ | `results/R4_proteus_evaluation/data/exp_R4_results_aligned_fusion.csv` |
+
+**R-2 reclassified as D-10, as instructed.** It is not an untraceable residue: Table I pins
+$\tau_{\mathrm{stat}} = 0$ by measurement, which determines the uniform-phase mean exactly. The
+manuscript's $23$ was a wrong value, and is corrected.
+
+### Two further divergences, found by S7-bis itself
+
+| # | v64 line | claim | measurement | resolution |
+|---|---------|-------|-------------|------------|
+| D-11 | 204 | *"the single-tree HAT stays at ${\approx}40\%$ miss under the same clock"* | the R-1 run (below) gives **29.7 %** over $\Delta e > 0.30$ — the band the sentence is comparing against — and **35.2 %** over the full grid. $40\%$ is attained at no band | rewritten to "$30\%$ miss over that band, and $35\%$ across the full magnitude grid". The rhetorical point is **strengthened**: the $M{=}10$ ensemble scores $2.4\%$ on the same band, a $12\times$ gap rather than the $8\times$ the old numerals implied |
+| D-12 | 309 | *"in ${\approx}5$\,h total"* | not reproducible from any committed record, and not supported by measurement: eight of the nine stages sum to **1 h 58 min 15 s** and R5 is additionally long-running | replaced by the measured figure for R1--R4 and R6--R9, with a pointer to `docs/ENVIRONMENT.md`. This is what actually discharges residue R-3: the runtime claim is now a measurement in a versioned file, not an assertion |
+
+**Arbitration recorded — D-3 versus M1.** The plan asks to keep $12.4$ as the $T_{\mathrm{drift}} =
+2000$ value (M1) while D-3 establishes that $\max \lambda_{\mathrm{limit}} = 12.438 > 12.4$, so
+"never exceeds 12.4" is false at full precision. Both are satisfied by writing
+$\lambda_{\mathrm{op}} \le 12.44$: it is true of the measurement, and it is the plan's numeral to one
+decimal. The measured maximum is recorded here and in `config_matrix.md` §5.
+
+## B2. Manuscript writings M1 … M4
+
+**M1 — the envelope-floor mechanism is refuted, the floor survives (L298, L414).** The manuscript
+attributed the flat $q_{0.05} \approx 13$ below $\Delta e = 0.16$ to noise-driven swaps. Re-measured
+at warm-up parity the plateau does not exist: $q_{0.05} = 25.70,\ 30.95,\ 54.70,\ 54.70$ at
+$T_{\mathrm{drift}} = 4000$ against $12.95,\ 12.95,\ 12.95,\ 12.95$ at $2000$. The passage now states
+the plateau as a property of the short warm-up and the floor as a guard against an immature
+ensemble. Both ceilings are written with their warm-up: $\lambda_{\mathrm{op}} \le 12.44$ at
+$T_{\mathrm{drift}} = 2000$ (the published configuration) and $\le 10.5$ at $4000$ (ProteuS parity).
+The Fundamental Tension paragraph now **names** the parity gap rather than assuming it away: the
+$\lambda \ge 15$ member is the R4 operating threshold, armed from $t = 0$, with no warm-up, on a
+different stream family (finding D-8). The conclusion is unchanged — the admissible set is empty
+under either calibration and the gap widens from $2.6$ to $4.5$ at parity.
+
+**M2 — the Hydra factor carries its interval and its qualifier on all three announcing sites.**
+Abstract (L41), Hydra section (L150) and the $K_{\mathrm{ARF}}$ remark (L227) now read *at least*
+$4.1$–$8.0\times$, never *from … to*. The two anchors are $4.12\times$ $[3.45, 4.96]$ and
+$7.99\times$ $[6.40, 9.72]$, stated as **lower bounds**: the ARF arm is censoring-free at every
+magnitude (max censored fraction $0.0000$) while the HAT arm is censored at $0$–$13\%$, so only the
+numerator is truncated at $t_c = 4000$. The grid maximum $8.04\times$ at $\Delta e = 0.028$ is
+reported in the same sentence.
+
+**M3 — the ratio of medians is now tabulated in the prose.** Kaplan--Meier median ratio
+$5.32\times$ at $\Delta e = 0.14$ against $3.10\times$ at $\Delta e = 0.33$, versus $7.99\times$ for
+the restricted mean at the latter. The manuscript states explicitly that the claim is one about
+expectations, not about the typical run.
+
+**M4 — the parallel-chart null is stated (L152).** Tartakovsky's multichart result is already cited;
+it is now used quantitatively: $M = 10$ predicts $10\times$, the measured $4.1$–$8.0\times$ sits
+strictly below it, and the shortfall is attributed to positive inter-tree correlation. One sentence,
+which forecloses the "you rediscovered the minimum of ten draws" objection.
+
+Every M2/M3 figure was regenerated by `experiments/R6_hydra_factor/exp_R6_hydra_survival.py` in this
+stream; outputs in `results/audit_S7/hydra_survival.{csv,tex}`.
+
+## B3. Residues
+
+**R-1 — the missing configuration, now run.** The manuscript (v64 L204) claims *"the single-tree HAT
+stays at ${\approx}40\%$ miss under the same clock"*, i.e. $M = 1$ with MATCHED clocks
+($c_{\mathrm{int}} = c_{\mathrm{ext}} = 1$). No artifact ran it: R6 is $M = 1$ with no external
+detector, R7 is matched clocks at $M = 10$, R9 is $M = 1$ but mismatched ($c_{\mathrm{ext}} = 32$).
+`exp_R9_generate_data.py` gained an optional external-clock argument — the same shape as R8's
+`T_DRIFT` parity argument — writing to a separate file so the published $c_{\mathrm{ext}} = 32$
+artifact is never overwritten. `c_ext` feeds only the external detector, so `tau_hat` is unaffected;
+the early break needs both delays resolved before it can fire.
+
+**R-3 — host and runtime become traceable.** `docs/ENVIRONMENT.md` was created and committed: host
+specification, pinned package versions, the LaTeX toolchain, and a measured wall-clock table for
+every stage re-executed in this stream. The manuscript sentence at L309 now points at it. The host
+is confirmed to be exactly the one the manuscript names (AMD EPYC 8224P, 24 cores / 48 threads,
+`MemTotal` 196 426 176 kB = 192 GB nominal); the S7 report's "48-core / 187 GB" was the same machine
+counted in logical threads and GiB.
+
+**Footnote `incremental_abrupt_balanced` ($\Delta e = -0.094$) — figure withdrawn.** The variant is
+excluded from `INSECTS_VARIANTS` (`exp_R5_config.py:42-43`), so no pipeline computes it; and
+`data/insects/` holds only the three evaluated variants, so it cannot be recomputed here either. Of
+the two options the plan allows, recomputation is not available, so the numeral is removed. The
+footnote now states the exclusion and its motive, and says explicitly that no $\Delta e$ is computed
+or reported for that variant — an assertion the repository can back.
+
+**R-1 — measured.** `python experiments/R9_mcrit/exp_R9_generate_data.py 1`, 46 s wall,
+$20$ magnitudes $\times$ $100$ seeds $= 2000$ runs, output
+`results/R9_mcrit/data/results_instrumented_matched_cext1_ADWIN_HAT.csv`
+(`sha256 b357e2cefd491411cc9ae9d1ded33030ddfa3479dc1d315785818636db0d68c4`). `miss` is defined
+exactly as in `exp_R7_compute_regime1.py` — `miss = tau_internal < tau_det`, NaN mapped to $+\infty$
+— and the bands use the theoretical $\Delta e = \Phi(b/\sqrt2) - 0.5$, so they are commensurable
+with R7's.
+
+| band | $M = 1$, $c_{\mathrm{int}} = c_{\mathrm{ext}} = 1$ (R-1) | $M = 10$, matched (R7 `B_matched`) |
+|------|---:|---:|
+| $\Delta e \le 0.15$ | 57.3 % | — |
+| $0.15 < \Delta e \le 0.35$ | 36.8 % | — |
+| $\Delta e > 0.35$ | 29.6 % | — |
+| $\Delta e > 0.30$ | **29.7 %** | **2.4 %** |
+| full grid | **35.2 %** | 13.6 % |
+
+The published $M{=}10$ figure reproduces exactly (2.4 % for $\Delta e > 0.30$, matching the S7
+measurement). The claimed ${\approx}40\%$ for the single tree does not: the miss rate is monotone
+decreasing in $\Delta e$, from 64 % at the smallest magnitude to 27--32 % across the upper half of
+the grid, and never sits at 40 % in the band the sentence compares. Recorded as **D-11** and
+corrected in the manuscript. **The residue is discharged by measurement, not by re-reading**, and
+the argument it supports is strengthened rather than weakened: the ensemble's SNR advantage under
+matched clocks is a factor $12$, not a factor $8$.
+
+
+## B4. Code — the four corrections
+
+**4a. `exp_R6_hydra_survival.py` — the two estimators are now compared at equal arms.** The table
+opposed an RMST ratio carrying a bootstrap CI against a bare complete-case point estimate. The
+complete-case ratio now receives the *same* paired bootstrap: same `idx` matrix, same
+`N_BOOT = 10000`, same seed pairing, resampled on the seed index rather than on observations. Two
+columns (`complete_case_ci_lo`, `complete_case_ci_hi`) were added to `hydra_survival.csv` and a
+`$95\%$ CI` column to `hydra_survival.tex`. `np.nanpercentile` over `np.nanmean(raw[idx], axis=1)` is
+used, because a complete-case resample can legitimately contain NaN.
+
+Measured at the two manuscript anchors: complete-case $4.05\times$ $[3.40, 4.87]$ vs RMST
+$4.12\times$ $[3.45, 4.96]$ at $\Delta e = 0.14$; both $7.99\times$ $[6.40, 9.72]$ at
+$\Delta e = 0.33$ (that magnitude is censoring-free, so the two estimators coincide exactly — which
+is itself the check that the censoring correction does nothing where there is no censoring).
+
+**4b. `arm()` returned `time` twice.** The third element was the same array object as the first.
+Removed; the two call sites and the KM loop unpack two values, and `r_mean` reads `t` directly.
+
+**4c. `median_ratio` treated NaN as truthy.** `round(med_h / med_a, 4) if med_a else np.nan` is taken
+when `med_a` is NaN (`bool(nan) is True`), silently producing NaN through a division rather than
+through the guard. Replaced by `np.isfinite(med_a) and med_a > 0`.
+
+**4d. Class audit — floating-point join keys, whole repository.** The 1-ULP defect found in S7 is a
+*join-key* defect, not a one-off. Census of every `merge` / `join` / `concat(axis=1)` / `groupby` /
+`reindex` / row-selection whose key is a float, across `experiments/`, `tests/` and `config/`:
+
+| # | site | float key | operation | verdict |
+|---|------|-----------|-----------|---------|
+| 1 | `experiments/R6_hydra_factor/exp_R6_compute_hydra.py:37-41` | `delta_e` | two `groupby` + `pd.concat(axis=1)` **across two files** | guarded — `assert len(merged) == 20` (cardinality); both sources parquet, so float64 is exact |
+| 2 | `experiments/R6_hydra_factor/exp_R6_hydra_survival.py:80-84` | `delta_e` | `np.isclose` selection across two files | guarded — tolerance join, plus a seed-pairing assertion and `assert len(grid) == 20` |
+| 3 | `tests/test_S7_consistency.py:147-149` | `boundary_shift` | `merge` parquet × **CSV** | guarded — `float_precision='round_trip'` **and** `assert len(m) == len(r6) == len(r9)`. This is the site where the defect was found |
+| 4 | `tests/test_S7_consistency.py:159-160` | `boundary_shift` | `merge` parquet × parquet | guarded — cardinality assertion |
+| 5 | `tests/test_S7_consistency.py:170-173` | `delta_e` | `concat(axis=1)` parquet × parquet | guarded — `assert len(merged) == 20` |
+| 6 | `experiments/R9_mcrit/exp_R9_compute_mcrit.py:118, 135-137` | `boundary_shift`, `delta_e_eff` | `.loc[df[col] == value]`, `value` drawn from the *same* frame | exact by construction (same object, no cross-file key). **Corrected anyway**: the read now pins `float_precision='round_trip'` per `CLAUDE.md` §3, so this frame's key matches the parquet family if it is ever joined. Verified artifact-neutral by re-running R9 and comparing the SHA-256 |
+| 7 | `tests/test_R6_hydra.py:33-34` | `delta_e` | two `groupby`, **never joined** — each series is fitted independently | no key crosses a file boundary; no action |
+| 8 | `experiments/R7_clock_mismatch/exp_R7_compute_regime1.py:34` | `delta_e` | single-source `groupby` | no action |
+| 9 | `experiments/R2_instrumented_blind_spot/exp_R2_instrumented_blind_spot.py:110` | `boundary_shift` | single-source `groupby` | no action |
+| 10 | `experiments/R6_hydra_factor/exp_R6_generate_data.py:79` | `delta_e` | single-source `groupby` | no action |
+| 11 | `experiments/R1_race_condition/exp_R1_generate_data.py:136` | `lambda_val` | single-source `groupby` | no action |
+| 12 | `tests/test_R7_regime1.py:18` | `delta_e` | single-source `groupby` | no action |
+| 13 | `tests/test_R9_mcrit.py:19-23` | `reliability_r`, `delta_e` | row selection by `np.isclose` | tolerance selection; the values are the exact targets written by the producer. No action |
+| 14 | `tests/test_R8_lambda_op.py:16` | — | column-wise max, no join | no action |
+| 15 | `exp_R4_main_table.py:264-270`, `exp_R4_kswin_sweep.py:185-191` | — | `groupby('Seed')` + `merge(on='Seed')` | integer key; immune |
+| 16 | `exp_R4_main_table.py:414`, `exp_R4_kswin_sweep.py:259` | — | `groupby(['Detector','Clock','Calibration'])` | str/int key; immune |
+| 17 | `experiments/R5_real_world_evaluation/exp_R5_make_table2.py:35-39` | — | `groupby(['variant','pipeline','seed'])`; the four artifacts are never merged | str/str/int key; immune |
+| 18 | `exp_R5_compute_{baf,insects,delta_e}.py`, `exp_R5_smoke_test.py` | — | `read_csv` of raw streams, no float join | no action |
+
+**One correction applied (site 6); every other site already carries one of the three required
+guards, or has no float key crossing a file boundary.** The class is closed: after this audit, every
+cross-file float join in the repository is protected either by `float_precision='round_trip'`, by a
+tolerance comparison, or by a cardinality assertion — in three cases by two of the three.
+
+## B5. The R4 hole — closed by option A
+
+R4's registry values lived in `simulate_stream` argument defaults and in the detector/model
+factories, i.e. outside the module-level `Assign` walk of the SSOT drift guard — and R4 produces
+Table I. The diff needed to close it is one token per site, so option A was taken rather than
+option B. Full site table, the two new derived constants, the guard extension and the **declared
+unguarded remainder** (`clock`, `delta`, `alpha`, `seed` literals, named one by one) are in
+`results/audit_S7/config_matrix.md` §7 and in the `tests/test_S7_consistency.py` docstring.
+
+The guard now walks function-argument defaults and call keywords in addition to module-level
+assignments, and fails when `n_steps`, `tp`, `t_drift`, `n_models` or `threshold` is bound to a bare
+literal. Only an `ast.Constant` is a violation, so `run_tau_arf(t_drift=T_DRIFT)` (R8) — a name that
+resolves to a module-level constant already covered by the first walk — is not a false positive.
+
+## B6. Bit-for-bit proof, extended past the requested perimeter
+
+Section 6 of the plan asks for R2, R3 and R7. Because option A (§B5) touches R1, R3 and R4 sources
+and because residue R-3 needs measured runtimes, the freeze was re-verified over **every stage except
+R5**: R1, R2, R3, R4, R6, R7, R8, R9. Each was re-executed end to end through its
+`run_experiment_R*.sh` wrapper with `PYTHONHASHSEED=0`, one stage at a time.
+
+**Result: 33 of the 34 baseline hashes are byte-identical.** The one deviation is
+`results/audit_S7/hydra_survival.csv`, the declared §4a change, recorded in
+`results/audit_S7/_baseline/authorized_deviations.txt`. `git status` shows no churn anywhere else
+under `results/` — including the eight committed PNG figures, which regenerate byte-for-byte.
+
+This converts the S7 static AST oracle into an empirical proof over the whole refactored perimeter,
+and it settles three questions that the static argument could only assert:
+
+1. **Option A is value-preserving.** R1, R3 and R4 had their `n_models` / `threshold` / `n_steps` /
+   `tp` literals routed to the SSOT, and all three reproduce bit-for-bit. R4 in particular — the
+   stage that produces Table I, and the whole motive for closing the hole — is identical across its
+   four CSVs and its generated `.tex`.
+2. **The §4d `float_precision='round_trip'` correction to `exp_R9_compute_mcrit.py` is
+   artifact-neutral.** `exp_R9_mcrit_comparison.csv` is unchanged, so pinning the reader's precision
+   removed a latent join-key defect without moving a single published value.
+3. **The §4a/4b/4c rewrite of `exp_R6_hydra_survival.py` changed nothing it should not have.**
+   Column-wise diff against the pre-S7-bis output: two columns added, **0 of the 17 pre-existing
+   columns differ on any of the 20 rows**.
+
+Wall-clock cost of the proof, and the per-stage table, are in `docs/ENVIRONMENT.md`.
+
+**R5 was not re-executed** and its runtime is therefore unmeasured; its artifacts are untouched and
+its numerals were reconciled in the S7 report above. This is stated as a residual, not hidden.
+
+## B7. Hygiene, and the LaTeX compile that is now a compile
+
+**Compiled bytecode.** `experiments/R5_real_world_evaluation/__pycache__/exp_R5_common.cpython-312.pyc`
+was tracked. `git rm --cached` removed it from the index. `.gitignore` already carried
+`__pycache__/` and `*.pyc`, so no rule was added — the file predated them. The regression is now
+tested: `tests/test_S7_consistency.py::test_no_compiled_bytecode_tracked` runs `git ls-files` and
+fails on any `.pyc` or `__pycache__/` path. It failed against the tracked file before the removal and
+passes after, so it is not a test that can only pass.
+
+**LaTeX.** Item 7 of the S7 phase-5 gate was a brace-balance check, because no TeX toolchain existed
+on the host. Tectonic 0.17.0 was installed from `conda-forge` into a dedicated `tex` environment
+(never into the pinned `Trading` environment, whose solve is already constrained). The manuscript of
+record now **compiles**.
+
+```
+$ conda run -n tex tectonic -X compile docs/manuscript/articleA_blindspot_v64_camera_ready.tex
+Output written on articleA_blindspot_v64_camera_ready.xdv (11 pages)
+Writing articleA_blindspot_v64_camera_ready.pdf (1.53 MiB)
+```
+
+| check | result |
+|-------|--------|
+| TeX errors (`!`) | **0** |
+| Overfull boxes | **0** |
+| Undefined references / citations | **0** |
+| Pages | 11 |
+| BibTeX warnings | 1 — `empty booktitle in hopcroft_karp_1973`, pre-existing, not introduced here |
+| Font warnings | 4 — `TU/ptm/...` undefined; XeTeX substituting for the Type 1 Times faces, a toolchain artefact |
+
+Underfull-hbox warnings (9) are typographic, not structural. The committed camera-ready PDF was
+**not** overwritten: a XeTeX build with substituted fonts is a compile proof, not a camera-ready
+replacement. Item 7 of the S7 gate is now a compile; the brace-balance check it replaced is
+superseded.
+
+## B8. Exit gate — the four S7 criteria
+
+Stated first, in the plan's own words, with the state of each. This is the stream's exit gate, not
+the phase-5 checklist.
+
+| # | criterion | state | evidence |
+|---|-----------|-------|----------|
+| 1 | zero untraceable value | **met** | The three S7 residues are discharged: R-1 by a new 2000-run measurement (§B3), R-2 by reclassification to D-10 and correction (§B1), R-3 by `docs/ENVIRONMENT.md` plus the D-12 correction of the runtime claim. The `incremental_abrupt_balanced` footnote figure is withdrawn — the variant is excluded from `INSECTS_VARIANTS` and its stream is not in `data/insects/`, so it cannot be computed, and the manuscript now says so instead of quoting $-0.094$. Every numeral introduced by S7-bis was measured in S7-bis and carries its source file in the tables above |
+| 2 | zero manuscript / artifact / test divergence | **met** | D-1 … D-10 applied to v64, each line-anchored and asserted unique; D-11 and D-12, found by S7-bis itself, applied likewise. Every value re-measured on the restored artifacts. `pytest tests/` → 9 passed, 0 skipped |
+| 3 | old and new Hydra factor both reported | **met** | `results/audit_S7/hydra_survival.{csv,tex}` tabulate the published complete-case ratio and the censoring-aware RMST ratio side by side, both now with a seed-paired bootstrap CI (§4a). The manuscript carries the new figures as lower bounds with their intervals on all three announcing sites, plus the median ratio (M3) |
+| 4 | single reliability convention across the three supports | **met** | `.tex`: one surviving `\beta`, L323, the GARCH persistence parameter. Code: `R9_RELIABILITY_TARGETS`, artifact column `reliability_r`; every remaining `beta` in the tree is a GARCH parameter of the ProteuS generator. `README.md`: no `beta`. `tests/test_R9_mcrit.py` targets `reliability_r == 0.95` |
+
+### Residual risks, stated rather than annexed
+
+1. **R5 was not re-executed.** Its artifacts are untouched and its numerals were reconciled in S7,
+   but its bit-reproducibility after the SSOT refactor rests on the static AST oracle, not on
+   execution — R5 is the one stage of nine without an empirical freeze. Its runtime is likewise
+   unmeasured, which is why the manuscript no longer asserts a full-pipeline total.
+2. **The committed camera-ready PDF is now stale** with respect to the edited `.tex`. It was not
+   regenerated: Tectonic runs XeTeX and substitutes for the Type 1 `ptm` faces, so its output is a
+   compile proof, not a drop-in replacement for a pdfTeX camera-ready. Regenerating the PDF needs a
+   pdfTeX toolchain and is an authoring decision, not an audit action.
+3. **`hopcroft_karp_1973` has an empty `booktitle`** in `articleA_biblio_v64.bib` — the single
+   BibTeX warning of the compile. Pre-existing, not introduced here, not corrected (touching the
+   `.bib` would move the rendered bibliography).
+4. **The declared unguarded perimeter** of the AST gate (`clock`, `delta`, `alpha`, `seed` literals)
+   is named in `config_matrix.md` §7 and in the test docstring. It is a deliberate scope boundary,
+   not an oversight.
+5. **The warm-up parity defect is now written into the paper rather than resolved.** M1 states both
+   ceilings with their warm-up and names the stream-family mismatch; standardising the paper on one
+   warm-up remains a Section III-E authoring decision.

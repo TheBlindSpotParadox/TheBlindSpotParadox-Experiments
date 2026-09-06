@@ -32,6 +32,14 @@ C_INT, C_EXT = ssot.R9_C_INT, ssot.R9_C_EXT
 BOUNDARY_SHIFTS = ssot.R9_BOUNDARY_SHIFTS
 SEEDS = ssot.R9_SEEDS                        # 100 seeds per magnitude
 
+# S7-bis/R-1: optional external-clock override, same shape as R8's T_DRIFT parity argument. The
+# manuscript claims an M=1 miss rate under MATCHED clocks (c_int = c_ext = 1); no artifact runs that
+# configuration. `exp_R9_generate_data.py 1` measures it and writes alongside the published c_ext=32
+# artifact, which is never overwritten. c_ext feeds only the external detector, so tau_hat is
+# unaffected -- the early break needs both delays resolved before it fires.
+if len(sys.argv) > 1:
+    C_EXT = int(sys.argv[1])
+
 def run_instrumented_hat(boundary_shift, seed):
     safe_seed = int(seed % (2**31 - 1))
     random.seed(safe_seed)
@@ -90,7 +98,8 @@ def run_instrumented_hat(boundary_shift, seed):
 if __name__ == "__main__":
     grid = [(bs, s) for bs in BOUNDARY_SHIFTS for s in SEEDS]
     rows = Parallel(n_jobs=-1)(delayed(run_instrumented_hat)(bs, s) for bs, s in tqdm(grid, desc="Experiment R9"))
-    out = DATA_DIR / "results_instrumented_A_ADWIN_HAT.csv"
+    out = DATA_DIR / ("results_instrumented_A_ADWIN_HAT.csv" if C_EXT == ssot.R9_C_EXT
+                      else f"results_instrumented_matched_cext{C_EXT}_ADWIN_HAT.csv")
     pd.DataFrame(rows).to_csv(out, index=False)
     print(f"[INFO] single-tree HAT instrumentation saved to: {out}")
     print(f"[INFO] {len(rows)} runs; next: exp_R9_compute_mcrit.py")

@@ -72,7 +72,7 @@ for from_t, to_t in itertools.permutations(TICKERS, 2):
     TRANSITIONS.append((from_t, to_t, w, f"{from_t}->{to_t}"))
 
 # ─── Stream Simulation & Evaluation ───────────────────────────────────────────
-def simulate_stream(p_from, p_to, regime_name, w, n_steps=8000, tp=4000, seed=42):
+def simulate_stream(p_from, p_to, regime_name, w, n_steps=ssot.R4_N_STEPS, tp=ssot.R4_T_DRIFT, seed=42):
     np.random.seed(seed)
     t_arr = np.arange(n_steps, dtype=float)
     f_t   = expit(4.0 * (t_arr - tp) / w)
@@ -162,7 +162,7 @@ def run_concept_drift_kswin(df, model, detector_factory):
     return dets
 
 # ─── Detector & Model Factories (Unified Configs) ─────────────────────────────
-def pht():        return drift.PageHinkley(threshold=15.0)            # Equivalent to delta=0.005 (default)
+def pht():        return drift.PageHinkley(threshold=ssot.R4_PHT_LAMBDA)  # Equivalent to delta=0.005 (default)
 def adwin(c):     return drift.ADWIN(delta=0.002, clock=c)
 def kswin(seed):  return drift.KSWIN(alpha=0.005, window_size=100, stat_size=30, seed=seed)
 try:
@@ -174,14 +174,14 @@ def eddm():       return EDDM()
 def make_ht():    return tree.HoeffdingTreeClassifier()
 def make_arf(seed, c):
     # Exact ARF from legacy Table I: only drift_detector is fixed (warning kept at default).
-    return forest.ARFClassifier(n_models=10, seed=seed, drift_detector=adwin(c))
+    return forest.ARFClassifier(n_models=ssot.R4_N_MODELS, seed=seed, drift_detector=adwin(c))
 def make_srp(seed, c):
-    return SRPClassifier(model=tree.HoeffdingTreeClassifier(), n_models=10,
+    return SRPClassifier(model=tree.HoeffdingTreeClassifier(), n_models=ssot.R4_N_MODELS,
                          subspace_size=0.6, training_method='patches', lam=6.0,
                          drift_detector=adwin(c), warning_detector=adwin(c), seed=seed)
 def make_rf(seed):
     return ensemble.BaggingClassifier(model=tree.HoeffdingTreeClassifier(),
-                                      n_models=10, seed=seed)
+                                      n_models=ssot.R4_N_MODELS, seed=seed)
 
 # ─── 15 Pipelines per (transition, seed) ──────────────────────────────────────
 # 15 are computed, 14 are rendered: EDDM + ARF (c=32) is produced here but has no row in

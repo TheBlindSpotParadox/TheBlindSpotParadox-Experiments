@@ -75,14 +75,14 @@ def run_single_seed(seed, delta_e, pipeline_type):
     if pipeline_type == 'HT':
         model = tree.HoeffdingTreeClassifier()
     elif pipeline_type == 'ARF':
-        model = forest.ARFClassifier(n_models=10, drift_detector=drift.ADWIN(clock=1), seed=seed)
+        model = forest.ARFClassifier(n_models=ssot.R3_N_MODELS, drift_detector=drift.ADWIN(clock=1), seed=seed)
     elif pipeline_type == 'RF_Static':
         # Static Bagging without internal ADWIN tree resets -> Non-Adaptive Ensemble
-        model = ensemble.BaggingClassifier(model=tree.HoeffdingTreeClassifier(), n_models=10, seed=seed)
+        model = ensemble.BaggingClassifier(model=tree.HoeffdingTreeClassifier(), n_models=ssot.R3_N_MODELS, seed=seed)
     else:
         raise ValueError("Unknown pipeline configuration.")
         
-    pht = drift.PageHinkley(threshold=25.0, delta=0.005)
+    pht = drift.PageHinkley(threshold=ssot.R3_PHT_LAMBDA, delta=0.005)
     
     alarms_pre = 0
     detected_in_window = 0
@@ -108,7 +108,7 @@ def run_single_seed(seed, delta_e, pipeline_type):
                 detected_in_window = 1
             
             # Reset detector state post-alarm to prevent cascade triggering
-            pht = drift.PageHinkley(threshold=25.0, delta=0.005)
+            pht = drift.PageHinkley(threshold=ssot.R3_PHT_LAMBDA, delta=0.005)
             
         if DRIFT_TIME <= t <= DRIFT_TIME + TOLERANCE:
             if y_pred == y: correct_post += 1

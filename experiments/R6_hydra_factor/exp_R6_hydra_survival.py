@@ -59,11 +59,10 @@ def km_median(ts, surv):
 
 
 def arm(df, col):
-    """(time, observed, restricted) for one arm: NaN == censored at HORIZON."""
+    """(time, observed) for one arm: NaN == censored at HORIZON, where time == min(tau, HORIZON)."""
     tau = df[col].to_numpy(dtype=float)
     observed = ~np.isnan(tau)
-    time = np.where(observed, np.minimum(tau, HORIZON), float(HORIZON))
-    return time, observed, time
+    return np.where(observed, np.minimum(tau, HORIZON), float(HORIZON)), observed
 
 
 def main():
@@ -84,14 +83,14 @@ def main():
             f"arms are not seed-paired at Delta_e={de}"
         n = len(h)
 
-        th, oh, yh = arm(h, "tau_hat")
-        ta, oa, ya = arm(a, "tau_arf")
+        th, oh = arm(h, "tau_hat")
+        ta, oa = arm(a, "tau_arf")
 
         # (2) KM per (arm, Delta_e) + the identity check that validates single administrative censoring
         rows_km = {}
-        for name, (t, o, y) in (("hat", (th, oh, yh)), ("arf", (ta, oa, ya))):
+        for name, (t, o) in (("hat", (th, oh)), ("arf", (ta, oa))):
             ts, surv = km_curve(t, o)
-            r_km, r_mean = rmst(ts, surv, HORIZON), float(np.mean(y))
+            r_km, r_mean = rmst(ts, surv, HORIZON), float(np.mean(t))
             assert abs(r_km - r_mean) <= RMST_TOL, (
                 f"RMST({HORIZON}) != mean(min(tau,{HORIZON})) for arm {name} at Delta_e={de}: "
                 f"{r_km} vs {r_mean} (delta {r_km - r_mean:.3e}). Censoring is NOT purely "
@@ -104,11 +103,14 @@ def main():
         # (4) paired-on-seed bootstrap. Under the verified identity RMST == mean(min(tau, HORIZON)),
         #     so a resample of seed indices reduces to a mean of the restricted times.
         idx = rng.integers(0, n, size=(N_BOOT, n))
-        ratio_boot = yh[idx].mean(axis=1) / ya[idx].mean(axis=1)
-        lo, hi = np.percentile(ratio_boot, [2.5, 97.5])
+        lo, hi = np.percentile(th[idx].mean(axis=1) / ta[idx].mean(axis=1), [2.5, 97.5])
 
-        cc_h = float(np.nanmean(h["tau_hat"].to_numpy(dtype=float)))
-        cc_a = float(np.nanmean(a["tau_arf"].to_numpy(dtype=float)))
+        # (4a) same idx, same N_BOOT for the complete-case estimator: the two columns of the table
+        #      are then compared at equal arms instead of "with CI" against "without".
+        raw_h, raw_a = h["tau_hat"].to_numpy(dtype=float), a["tau_arf"].to_numpy(dtype=float)
+        cc_h, cc_a = float(np.nanmean(raw_h)), float(np.nanmean(raw_a))
+        cc_lo, cc_hi = np.nanpercentile(
+            np.nanmean(raw_h[idx], axis=1) / np.nanmean(raw_a[idx], axis=1), [2.5, 97.5])
 
         rows.append({
             "delta_e": round(float(de), 6), "n_seeds": n,
@@ -118,9 +120,10 @@ def main():
             "rmst_ratio": round(rmst_h / rmst_a, 4),
             "rmst_ratio_ci_lo": round(float(lo), 4), "rmst_ratio_ci_hi": round(float(hi), 4),
             "median_hat": med_h, "median_arf": med_a,
-            "median_ratio": round(med_h / med_a, 4) if med_a else np.nan,
+            "median_ratio": round(med_h / med_a, 4) if np.isfinite(med_a) and med_a > 0 else np.nan,
             "complete_case_hat": round(cc_h, 4), "complete_case_arf": round(cc_a, 4),
             "complete_case_ratio": round(cc_h / cc_a, 4),
+            "complete_case_ci_lo": round(float(cc_lo), 4), "complete_case_ci_hi": round(float(cc_hi), 4),
             "rmst_identity_dev": max(dev_h, dev_a),
         })
 
@@ -142,10 +145,12 @@ def main():
            r"complete-case ratio vs.\ censoring-aware RMST ratio at the common administrative horizon "
            rf"$t_c = {HORIZON}$ post-drift steps ($100$ seeds/magnitude, $95\%$ percentile CI from "
            rf"${N_BOOT}$ bootstrap resamples paired on the seed index). " + note + "}",
-           r"  \label{tab:hydra_survival}", r"  \begin{tabular}{@{}lrrrr@{}}", r"    \toprule",
-           r"    $\Delta e$ & cens. HAT & complete-case & RMST ratio & $95\%$ CI \\", r"    \midrule"]
+           r"  \label{tab:hydra_survival}", r"  \begin{tabular}{@{}lrrrrr@{}}", r"    \toprule",
+           r"    $\Delta e$ & cens. HAT & complete-case & $95\%$ CI & RMST ratio & $95\%$ CI \\",
+           r"    \midrule"]
     for _, r in res.iterrows():
         tex.append(rf"    {r.delta_e:.3f} & {r.censored_frac_hat:.2f} & {r.complete_case_ratio:.2f}$\times$ "
+                   rf"& $[{r.complete_case_ci_lo:.2f}, {r.complete_case_ci_hi:.2f}]$ "
                    rf"& {r.rmst_ratio:.2f}$\times$ & $[{r.rmst_ratio_ci_lo:.2f}, {r.rmst_ratio_ci_hi:.2f}]$ \\")
     tex += [r"    \bottomrule", r"  \end{tabular}", r"\end{table}", ""]
     (OUT_DIR / "hydra_survival.tex").write_text("\n".join(tex), encoding="utf-8")
@@ -158,7 +163,8 @@ def main():
         i = (res["delta_e"] - target).abs().idxmin()
         r = res.loc[i]
         print(f"[R6/S7] manuscript anchor Delta_e~{target} (grid {r.delta_e:.6f}): "
-              f"complete-case {r.complete_case_ratio:.2f}x -> RMST {r.rmst_ratio:.2f}x "
+              f"complete-case {r.complete_case_ratio:.2f}x [{r.complete_case_ci_lo:.2f}, "
+              f"{r.complete_case_ci_hi:.2f}] -> RMST {r.rmst_ratio:.2f}x "
               f"[{r.rmst_ratio_ci_lo:.2f}, {r.rmst_ratio_ci_hi:.2f}]")
     print(f"[R6/S7] RMST ratio over the full grid: {res.rmst_ratio.min():.2f}x .. {res.rmst_ratio.max():.2f}x")
     print(f"[R6/S7] -> results/audit_S7/hydra_survival.{{csv,tex}}")

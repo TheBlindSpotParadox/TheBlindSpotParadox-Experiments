@@ -8,11 +8,19 @@ Stream S7 consistency suite.
    (b) any resolved value drifts from the Phase-0 oracle
    `results/audit_S7/_baseline/constants_pre.json`. This is the non-regression proof that the SSOT
    refactor changed no value, obtained without running an experiment.
+   S7-bis extends (a) beyond module scope: a guarded registry name bound to a bare literal in a
+   function-argument default or a call keyword now fails too -- this is what closed the R4 hole,
+   whose n_steps / tp / n_models / threshold lived in `simulate_stream` defaults and in the detector
+   factories. DECLARED UNGUARDED PERIMETER: the literals `clock=1` (R3), `delta=0.005` (R3),
+   `delta=0.002` / `alpha=0.005` (R4) and `seed=42` (R4, R9). Their parameter names are generic
+   enough that guarding them would fire on River's own API surface; they are named here rather than
+   left silent, and are declared in `results/audit_S7/config_matrix.md`.
 2. tau_HAT is identical between R6 and R9 per (boundary_shift, seed): same M = 1, same seeds, same
    stream, two independent instrumentation scripts.
 3. tau_arf is identical across the R2 scenarios A/B/C per (boundary_shift, seed): the external
    CUSUM threshold lambda does not feed back into the ARF.
 4. The R6 <-> R2 Delta_e join retains its 20 magnitude points.
+5. No compiled bytecode is tracked by git (S7-bis/section 7).
 
 Assertions 2-4 read committed artifacts; each skips with an explicit motive when the artifact is
 absent, so the suite is green on a fresh clone and enforcing after a full reproduction.
@@ -22,6 +30,7 @@ Usage:  PYTHONHASHSEED=0 python -m pytest tests/test_S7_consistency.py -v
 import ast
 import builtins
 import json
+import subprocess
 import sys
 from pathlib import Path
 
@@ -50,6 +59,11 @@ AUTHORIZED_DELTAS = {
     ("experiments/R9_mcrit/exp_R9_compute_mcrit.py", "BETAS"):
         "S7/TASK 3: reliability letter beta -> r; BETAS replaced by RELIABILITY_TARGETS",
 }
+
+# Registry names carried in function-argument defaults or call keywords instead of at module level
+# (S7-bis/section 5, option A). Only a bare literal is a violation: a Name/Attribute default resolves
+# to a module-level constant, which the module-level walk already guards.
+GUARDED_PARAMS = {"n_steps", "tp", "t_drift", "n_models", "threshold"}
 
 SAFE_BUILTINS = {n: getattr(builtins, n)
                  for n in ("list", "range", "dict", "tuple", "set", "int", "float", "str",
@@ -101,6 +115,25 @@ def module_constants(path, ns_extra=None):
     return out
 
 
+def param_literals(path):
+    """Guarded registry names still bound to a bare literal in an argument default or call keyword."""
+    out = []
+    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
+        if isinstance(node, ast.Call):
+            out += [f"{ast.unparse(node.func)}({kw.arg}={ast.unparse(kw.value)})"
+                    for kw in node.keywords
+                    if kw.arg in GUARDED_PARAMS and isinstance(kw.value, ast.Constant)]
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            a = node.args
+            pos = a.posonlyargs + a.args
+            pairs = list(zip(pos[len(pos) - len(a.defaults):], a.defaults))
+            pairs += [(k, d) for k, d in zip(a.kwonlyargs, a.kw_defaults) if d is not None]
+            out += [f"def {node.name}({arg.arg}={ast.unparse(d)})"
+                    for arg, d in pairs
+                    if arg.arg in GUARDED_PARAMS and isinstance(d, ast.Constant)]
+    return out
+
+
 def census():
     return {str(p.relative_to(ROOT_DIR)): module_constants(p, {"ssot": ssot})
             for p in sorted((ROOT_DIR / "experiments").rglob("*.py"))}
@@ -115,6 +148,7 @@ def test_ssot_registry_and_no_value_drift():
         for name, entry in names.items():
             if name in GUARDED_NAMES and "ssot." not in entry["expr"]:
                 local_literals.append(f"{rel}:{name} = {entry['expr']}")
+        local_literals += [f"{rel}:{hit}" for hit in param_literals(ROOT_DIR / rel)]
 
     for rel, names in pre.items():
         for name, entry in names.items():
@@ -130,6 +164,15 @@ def test_ssot_registry_and_no_value_drift():
     assert not local_literals, "registry constants re-bound to local literals:\n  " + "\n  ".join(local_literals)
     assert not missing, "module-level constants removed without authorisation:\n  " + "\n  ".join(missing)
     assert not drift, "resolved values drifted from the Phase-0 oracle:\n  " + "\n  ".join(drift)
+
+
+def test_no_compiled_bytecode_tracked():
+    r = subprocess.run(["git", "ls-files", "-z"], cwd=ROOT_DIR, capture_output=True, text=True)
+    if r.returncode != 0:
+        pytest.skip("not a git working tree")
+    tracked = [f for f in r.stdout.split("\0")
+               if f.endswith(".pyc") or f.startswith("__pycache__/") or "/__pycache__/" in f]
+    assert not tracked, "compiled bytecode tracked by git:\n  " + "\n  ".join(tracked)
 
 
 def _read(path, **kw):

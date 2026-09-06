@@ -52,7 +52,7 @@ def run_diff_test(seed, lambda_val):
     b_shift = np.sqrt(2) * norm.ppf(0.5 + DELTA_E)
     
     arf = ssot.require_drift_tracker(
-        forest.ARFClassifier(n_models=10, seed=seed, drift_detector=drift.ADWIN(clock=ssot.R1_C_INT), warning_detector=drift.ADWIN(clock=ssot.R1_C_INT)))
+        forest.ARFClassifier(n_models=ssot.R1_N_MODELS, seed=seed, drift_detector=drift.ADWIN(clock=ssot.R1_C_INT), warning_detector=drift.ADWIN(clock=ssot.R1_C_INT)))
     cusum_external_fixed = StrictCUSUM(0.05, DELTA_P, lambda_val)
     
     errors_warmup = []

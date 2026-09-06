@@ -63,7 +63,7 @@ for from_t, to_t in itertools.permutations(TICKERS, 2):
     TRANSITIONS.append((from_t, to_t, w, f"{from_t}->{to_t}"))
 
 # ─── Stream Simulation & Evaluation ───────────────────────────────────────────
-def simulate_stream(p_from, p_to, regime_name, w, n_steps=8000, tp=4000, seed=42):
+def simulate_stream(p_from, p_to, regime_name, w, n_steps=ssot.R4_N_STEPS, tp=ssot.R4_T_DRIFT, seed=42):
     np.random.seed(seed)
     t_arr = np.arange(n_steps, dtype=float)
     f_t   = expit(4.0 * (t_arr - tp) / w)
@@ -136,7 +136,7 @@ def run_concept_drift_kswin(df, model, detector_factory):
 
 def kswin(seed, alpha): return drift.KSWIN(alpha=alpha, window_size=100, stat_size=30, seed=seed)
 def adwin(c): return drift.ADWIN(delta=0.002, clock=c)
-def make_arf(seed, c): return forest.ARFClassifier(n_models=10, seed=seed, drift_detector=adwin(c))
+def make_arf(seed, c): return forest.ARFClassifier(n_models=ssot.R4_N_MODELS, seed=seed, drift_detector=adwin(c))
 
 # ─── Targeted Execution Loop (Alpha Sweep) ────────────────────────────────────
 def process_transition_seed(trans, seed):

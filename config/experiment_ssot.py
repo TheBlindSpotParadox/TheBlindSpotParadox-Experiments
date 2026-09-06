@@ -20,9 +20,13 @@ is what makes the artifacts bit-comparable. The triple per-worker lock (`random.
 `np.random.seed` + `default_rng`) is likewise left verbatim in each worker function -- it is required
 by River's Cython tree-spawn path and must not be centralised or "cleaned up".
 
-R4 (ProteuS) and R5 (real world) carry their registry values in function defaults and in
-`exp_R5_config.py` respectively; the constants declared here for them are the audited reference used
-by the consistency test, not a replacement of their call sites.
+R4 (ProteuS) carried n_steps / tp / n_models / threshold in function defaults and call keywords,
+outside the module-level AST walk. S7-bis routes those four to this module in R1, R3 and R4 and
+extends the guard to argument defaults and call keywords. Still unguarded, by name and not by
+silence: `clock`, `delta`, `alpha` and `seed` literals (R3:78 `clock=1`, R3 `delta=0.005`,
+R4 `delta=0.002` / `alpha=0.005`, R4/R9 `seed=42`) -- generic parameter names whose guarding would
+produce false positives across River's own API. R5 keeps its registry in `exp_R5_config.py`, which
+already routes through this module.
 """
 from pathlib import Path
 
@@ -63,6 +67,7 @@ R1_N_SEEDS = 200
 R1_DELTA_E = 0.25                              # single magnitude; the sweep is over lambda
 R1_LAMBDAS = [2.5, 5.0, 10.0, 15.0, 20.0, 25.0, 50.0, 100.0]  # S7/G2: 15 and 20 added to measure
                                                # lambda* instead of interpolating it across [10, 25]
+R1_N_MODELS = N_MODELS
 R1_DELTA_P = DELTA_P
 R1_WARMUP_WINDOW = 1000                        # pre-drift error buffer for the empirical CUSUM p_pre
 R1_C_INT = C_INT
@@ -89,7 +94,8 @@ R3_TAU_TOL = 1000                              # post-drift scoring window
 R3_N_SEEDS = 100
 R3_SEEDS = SEED_SCHEME_NAIVE_0_99
 R3_DELTA_E_GRID = np.linspace(0.02, 0.50, 15)
-R3_PHT_LAMBDA = 25.0                           # declared: constructed inline in run_single_seed
+R3_N_MODELS = N_MODELS
+R3_PHT_LAMBDA = 25.0
 R3_DELTA_P = DELTA_P
 R3_C_INT = C_INT                               # warning_detector left at river default (see README §5)
 
