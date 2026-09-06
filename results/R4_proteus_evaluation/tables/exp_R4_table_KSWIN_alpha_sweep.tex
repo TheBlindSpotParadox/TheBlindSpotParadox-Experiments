@@ -1,0 +1,17 @@
+\begin{table*}[t]
+  \centering
+  \caption{KSWIN sensitivity sweep ($\alpha \in \{0.001, 0.005, 0.01, 0.05\}$) on heteroscedastic ProteuS streams (12 transitions $\times$ 30 seeds $=$ 360 runs per cell). Evaluates the robustness of the distribution-based test against false-alarm flooding under high GARCH variance (Cal. B). Mean $\pm$ 95\% CI (1000 bootstrap resamples).}
+  \label{tab:kswin_alpha_sweep}
+  \begin{tabular}{@{}lrrrrrr@{}}
+    \toprule
+                                                   & \multicolumn{2}{c}{\textbf{IID Baseline}} & \multicolumn{2}{c}{\textbf{Cal. A (Low GARCH)}} & \multicolumn{2}{c}{\textbf{Cal. B (High GARCH)}} \\
+    \cmidrule(lr){2-3} \cmidrule(lr){4-5} \cmidrule(lr){6-7}
+    \textbf{Pipeline Configuration}                & \textbf{F1} & \textbf{ADD} & \textbf{F1} & \textbf{ADD} & \textbf{F1} & \textbf{ADD} \\
+    \midrule
+    \textbf{KSWIN ($\alpha = 0.001$) + ARF}        & 1.00 & 15 [0] & 1.00 & 15 [0] & 1.00 & 15 [0] \\
+    \textbf{KSWIN ($\alpha = 0.005$) + ARF}        & 1.00 & 14 [0] & 1.00 & 14 [0] & 1.00 & 14 [0] \\
+    \textbf{KSWIN ($\alpha = 0.01$) + ARF}         & 1.00 & 13 [0] & 1.00 & 13 [0] & 1.00 & 13 [0] \\
+    \textbf{KSWIN ($\alpha = 0.05$) + ARF}         & 1.00 & 11 [0] & 1.00 & 11 [0] & 1.00 & 11 [0] \\
+    \bottomrule
+  \end{tabular}
+\end{table*}

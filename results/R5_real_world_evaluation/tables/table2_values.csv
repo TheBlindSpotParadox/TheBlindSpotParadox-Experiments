@@ -1,0 +1,7 @@
+row,dataset,variant,delta_e,F1_PHT_HT,F1_PHT_ARF,F1_ADW_ARF,ratio,diff_HT_minus_ARF,sign_test_p,seeds_favor_HT,seeds_favor_ARF
+BAF Base,baf,Base,-0.0009,0.0952,0.0952,0.0,1.0,0.0,,,
+BAF Variant I,baf,VariantI,-0.0,0.087,0.1052,0.0,0.8266,-0.0182,,,
+BAF Variant II,baf,VariantII,0.0001,0.0,0.0,0.0,inf,0.0,,,
+INSECTS abrupt\_balanced,insects,abrupt_balanced,0.0743,0.127,0.18,0.4776,0.7056,-0.053,0.042773945257067694,9.0,21.0
+INSECTS gradual\_balanced,insects,gradual_balanced,0.4503,0.25,0.0237,0.0641,10.5703,0.2263,1.862645149230957e-09,30.0,0.0
+INSECTS reoccurring\_balanced,insects,incremental_reoccurring_balanced,0.3914,0.3077,0.1906,0.1606,1.6143,0.1171,1.862645149230957e-09,30.0,0.0

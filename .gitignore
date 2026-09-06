@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+*.log
+*BKUP*
+/data/
+/logs/
+
+*.csv.gz
+*.gz
+# Mistral Vibe local session & config
+.vibe/
+repomix-output.xml

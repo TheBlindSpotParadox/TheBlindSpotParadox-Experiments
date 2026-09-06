@@ -1,0 +1,2 @@
+pipeline_A,pipeline_B,n_det_A,n_total_A,n_det_B,n_total_B,sign_test_p
+KSWIN a=0.005,KSWIN a=0.05,1080,1080,1080,1080,1.0
