@@ -224,7 +224,7 @@ The orchestrator pins `PYTHONHASHSEED=0`, and every cell pins its `random`/`nump
 - **Manuscript mapping:** Table II (`tab:real_data_summary`) and the flooding analysis of Section IV-C (genuine detection vs false-alarm flooding) are derived directly from these artifacts.
 
 > 💡 **Reviewer Transparency Note regarding Table II (Flooding Alarm Count):**
-> The Section IV-C flooding discussion in the submitted manuscript quotes **93 alarms** (precision $0.011$) for the `PHT+ARF(c=1)` pipeline on the `gradual_balanced` stream, whereas this artifact and the finalized Table II report the reproducible value of **86 alarms** (precision $0.012$). The discrepancy is a stale in-line figure in the manuscript text: the Table II body and all conclusions were finalized against this pipeline's deterministic output, but the alarm count quoted in the prose was not updated in lockstep. The repository value (**86 alarms**, reproduced bit-for-bit on every run) is authoritative. The scientific conclusion — massive false-alarm flooding by `PHT+ARF(c=1)` against only **7 alarms** for the `PHT+HT` baseline — is entirely unchanged.
+> The Section IV-C flooding discussion in the **submitted** manuscript quoted **93 alarms** (precision $0.011$) for the `PHT+ARF(c=1)` pipeline on the `gradual_balanced` stream, whereas this artifact and the finalized Table II report the reproducible value of **86 alarms** (precision $0.012$). **This divergence is closed: the v63 camera-ready `.tex` already carries 86 alarms / precision $0.012$ at L233, at L388 and in the Table II caption; no stale 93 remains in the manuscript.** The note is retained as a historical record of the submitted version. The repository value (**86 alarms**, reproduced bit-for-bit on every run) is authoritative. The scientific conclusion — massive false-alarm flooding by `PHT+ARF(c=1)` against only **7 alarms** for the `PHT+HT` baseline — is entirely unchanged.
 
 ### Experiment R6: The Hydra Effect (Ensemble Acceleration)
 This experiment isolates the adaptation delay of a single Hoeffding Adaptive Tree ($M=1$) against the full Adaptive Random Forest ($M=10$). It computes the empirical Hydra acceleration factor ($4.1\times$--$8.0\times$) and verifies the structural power-law constants ($K_{\mathrm{HAT}} \approx 102$) discussed in **Section III-C (The Hydra Effect: Ensemble Acceleration)**.
@@ -271,7 +271,7 @@ chmod +x run_experiment_R8.sh
 > **Reproducibility:** `tests/test_R8_lambda_op.py` re-derives the artifact and asserts the three numerical claims of Definition 11.
 
 ### Experiment R9: The Critical Ensemble Size ($M_{\mathrm{crit}}$)
-Records, per drift magnitude and seed, the internal adaptation delay $\tau_{\mathrm{HAT}}$ of a single Hoeffding Adaptive Tree. The empirical CDF of $\tau_{\mathrm{HAT}}$ is consumed to derive the distribution-free critical ensemble size $M_{\mathrm{crit}}$. The comparison table reports $M_{\mathrm{crit}}$ at $\beta \in \{0.50, 0.05\}$; the manuscript's worked example and the "$M_{\mathrm{crit}} \le 3$" claim use $\beta = 0.50$ (the $\beta = 0.05$ column is a conservative complement and is expectedly larger). The operational quantity $P_{\mathrm{miss}}(M{=}10)$ is $\beta$-independent.
+Records, per drift magnitude and seed, the internal adaptation delay $\tau_{\mathrm{HAT}}$ of a single Hoeffding Adaptive Tree. The empirical CDF of $\tau_{\mathrm{HAT}}$ is consumed to derive the distribution-free critical ensemble size $M_{\mathrm{crit}}$. The comparison table reports $M_{\mathrm{crit}}$ at the reliability targets $r \in \{0.99, 0.95, 0.50\}$, where $r = 1 - P_{\mathrm{miss}}$ is the target detection guarantee of Corollary 2 ($M_{\mathrm{crit}} = \lfloor \ln r / \ln(1 - F) \rfloor$). Under this formula a **larger** $M_{\mathrm{crit}}$ is **permissive** (it certifies a larger ensemble), so the low-$r$ column is the permissive end, not a conservative one. The manuscript's worked example is stated at $r = 0.95$. The operational quantity $P_{\mathrm{miss}}(M{=}10)$ is $r$-independent.
 
 ```bash
 chmod +x run_experiment_R9.sh
@@ -282,7 +282,7 @@ chmod +x run_experiment_R9.sh
 - **Data:** `results/R9_mcrit/data/exp_R9_mcrit_comparison.csv`
 - **Figure:** `results/R9_mcrit/figures/Fig_R9_Mcrit_empirical_vs_exp.png`
 
-> **Reproducibility:** `tests/test_R9_mcrit.py` asserts that the regenerated artifact reproduces the exact numerical example of the manuscript Corollary ($M_{\mathrm{crit}}=1$).
+> **Reproducibility:** `tests/test_R9_mcrit.py` asserts that the regenerated artifact reproduces the numerical example of the manuscript Corollary at the reliability target $r = 0.95$.
 
 ## 5. Artifact Scope & Configuration Notes
 

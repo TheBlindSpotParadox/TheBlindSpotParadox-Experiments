@@ -8,6 +8,7 @@ locking so the run is bit-wise reproducible. The Hydra factor tau_HAT / tau_ARF 
 power-law fits (K_HAT, alpha_HAT) are assembled downstream by exp_R6_compute_hydra.py.
 """
 import random
+import sys
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
@@ -21,13 +22,16 @@ warnings.filterwarnings('ignore')
 
 # [IEEE/ICDM FAIR Compliance] Dynamic path resolution; script lives in experiments/R6_hydra_factor/
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 DATA_DIR = ROOT_DIR / "results" / "R6_hydra_factor" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
 # M=1 => single Hoeffding Adaptive Tree; internal clock c_int=1 (hyper-reactive)
-N_STEPS, T_DRIFT, N_MODELS, C_INT = 8000, 4000, 1, 1
-BOUNDARY_SHIFTS = np.linspace(0.1, 4.0, 20)
-SEEDS = list(range(1, 101))
+N_STEPS, T_DRIFT, N_MODELS, C_INT = ssot.R6_N_STEPS, ssot.R6_T_DRIFT, ssot.R6_N_MODELS, ssot.R6_C_INT
+BOUNDARY_SHIFTS = ssot.R6_BOUNDARY_SHIFTS
+SEEDS = ssot.R6_SEEDS
 
 def run_instrumented_hat(boundary_shift, seed):
     # Worker-Level Global Locking (CRITICAL): identical to the validated R2 scheme,
@@ -37,9 +41,10 @@ def run_instrumented_hat(boundary_shift, seed):
     np.random.seed(safe_seed)
     rng = np.random.default_rng(safe_seed)
 
-    hat = ARFClassifier(n_models=N_MODELS, seed=safe_seed,
-                        drift_detector=drift.ADWIN(clock=C_INT),
-                        warning_detector=drift.ADWIN(clock=C_INT))
+    hat = ssot.require_drift_tracker(
+        ARFClassifier(n_models=N_MODELS, seed=safe_seed,
+                      drift_detector=drift.ADWIN(clock=C_INT),
+                      warning_detector=drift.ADWIN(clock=C_INT)))
 
     tau_hat = np.nan
     for t in range(N_STEPS):

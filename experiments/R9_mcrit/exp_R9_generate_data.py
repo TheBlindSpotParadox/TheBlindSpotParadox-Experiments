@@ -8,6 +8,7 @@ The empirical CDF of tau_HAT is consumed by exp_R9_compute_mcrit.py to derive th
 critical ensemble size M_crit. Determinized with the exact R2/R6/R7 worker-level RNG locking.
 """
 import random
+import sys
 import warnings
 import numpy as np
 import pandas as pd
@@ -19,14 +20,17 @@ from river.forest import ARFClassifier
 warnings.filterwarnings('ignore')
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 DATA_DIR = ROOT_DIR / "results" / "R9_mcrit" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-N_STEPS, T_DRIFT, N_MODELS = 8000, 4000, 1   # M=1 single Hoeffding Adaptive Tree
-DELTA_E_WINDOW = 500
-C_INT, C_EXT = 1, 32
-BOUNDARY_SHIFTS = np.linspace(0.1, 4.0, 20)
-SEEDS = list(range(1, 101))                  # 100 seeds per magnitude
+N_STEPS, T_DRIFT, N_MODELS = ssot.R9_N_STEPS, ssot.R9_T_DRIFT, ssot.R9_N_MODELS   # M=1 single Hoeffding Adaptive Tree
+DELTA_E_WINDOW = ssot.R9_DELTA_E_WINDOW
+C_INT, C_EXT = ssot.R9_C_INT, ssot.R9_C_EXT
+BOUNDARY_SHIFTS = ssot.R9_BOUNDARY_SHIFTS
+SEEDS = ssot.R9_SEEDS                        # 100 seeds per magnitude
 
 def run_instrumented_hat(boundary_shift, seed):
     safe_seed = int(seed % (2**31 - 1))
@@ -34,10 +38,11 @@ def run_instrumented_hat(boundary_shift, seed):
     np.random.seed(safe_seed)
     rng = np.random.default_rng(safe_seed)
 
-    hat = ARFClassifier(n_models=N_MODELS, seed=safe_seed,
-                        drift_detector=drift.ADWIN(clock=C_INT),
-                        warning_detector=drift.ADWIN(clock=C_INT))
-    ext = drift.ADWIN(delta=0.002, clock=C_EXT)
+    hat = ssot.require_drift_tracker(
+        ARFClassifier(n_models=N_MODELS, seed=safe_seed,
+                      drift_detector=drift.ADWIN(clock=C_INT),
+                      warning_detector=drift.ADWIN(clock=C_INT)), warning=True)
+    ext = drift.ADWIN(delta=ssot.R9_EXT_DELTA, clock=C_EXT)
 
     tau_hat, tau_det = np.nan, np.nan
     errors_pre, errors_post = [], []

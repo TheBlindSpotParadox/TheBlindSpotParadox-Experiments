@@ -14,6 +14,7 @@
 
 import collections
 import itertools
+import sys
 import warnings
 from pathlib import Path
 
@@ -32,6 +33,8 @@ warnings.filterwarnings("ignore")
 
 # ─── Configuration & Paths (FAIR Compliance) ─────────────────────────────────
 ROOT_DIR    = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
 RESULTS_DIR = ROOT_DIR / "results" / "R4_proteus_evaluation" / "data"
 TABLES_DIR  = ROOT_DIR / "results" / "R4_proteus_evaluation" / "tables"
 LOGS_DIR    = ROOT_DIR / "logs" / "R4_proteus_evaluation"
@@ -43,8 +46,8 @@ RAW_CSV   = RESULTS_DIR / "exp_R4_results_aligned_fusion.csv"
 OUT_TEX   = TABLES_DIR / "table1_proteus_summary.tex"
 SIGN_CSV  = RESULTS_DIR / "exp_R4_seed_level_tests.csv"
 
-N_SEEDS        = 30
-SEEDS          = list(range(1, N_SEEDS + 1))    # Strict alignment: seeds 1..30
+N_SEEDS        = ssot.R4_N_SEEDS
+SEEDS          = ssot.R4_SEEDS    # Strict alignment: seeds 1..30
 BOOTSTRAP_SEED = 12345                          # Determinism for bootstrap CI
 KSWIN_LAG      = 15                             # W/2 (Structural smoothing lag)
 KSWIN_RESET_MODEL = True   # True = legacy protocol alignment (reset model on detection).
@@ -180,7 +183,9 @@ def make_rf(seed):
     return ensemble.BaggingClassifier(model=tree.HoeffdingTreeClassifier(),
                                       n_models=10, seed=seed)
 
-# ─── 14 Pipelines per (transition, seed) ──────────────────────────────────────
+# ─── 15 Pipelines per (transition, seed) ──────────────────────────────────────
+# 15 are computed, 14 are rendered: EDDM + ARF (c=32) is produced here but has no row in
+# ROW_SPECS, so Table I shows 14 configurations while the raw CSV holds 15.
 def process_transition_seed(trans, seed):
     # Strict RNG isolation per worker (Bit-wise reproducibility).
     # C-Level Overflow Prevention: apply modulo for Cython-compiled extensions
@@ -375,7 +380,7 @@ def build_table(agg, sign_df):
 # ─── Main ─────────────────────────────────────────────────────────────────────
 def main():
     grid = list(itertools.product(TRANSITIONS, SEEDS))
-    print(f"[run] {len(TRANSITIONS)} transitions x {N_SEEDS} seeds x 14 pipelines x 3 regimes")
+    print(f"[run] {len(TRANSITIONS)} transitions x {N_SEEDS} seeds x 15 pipelines x 3 regimes (14 rendered)")
     print("[run] Parallel execution (Joblib) - Please wait...")
     nested = Parallel(n_jobs=-1)(delayed(process_transition_seed)(t, s) for t, s in tqdm(grid, desc="R4 Main Table"))
     df = pd.DataFrame([row for sub in nested for row in sub],

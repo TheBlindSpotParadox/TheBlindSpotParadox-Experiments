@@ -6,6 +6,7 @@ Reproduces Figure 3 of the manuscript "The Blind Spot Paradox".
 Strictly adheres to IEEE/ICDM FAIR reproducibility standards.
 """
 import random
+import sys
 import numpy as np
 import pandas as pd
 from scipy.stats import norm
@@ -25,6 +26,9 @@ warnings.filterwarnings('ignore')
 # Assumes script is located in experiments/R3_regime_crossover/
 # ------------------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 RESULTS_DIR = ROOT_DIR / "results" / "R3_regime_crossover"
 DATA_DIR = RESULTS_DIR / "data"
 FIG_DIR = RESULTS_DIR / "figures"
@@ -32,11 +36,11 @@ FIG_DIR = RESULTS_DIR / "figures"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-N_STEPS = 8000
-DRIFT_TIME = 4000
-TOLERANCE = 1000
-N_SEEDS = 100
-DELTA_E_VALUES = np.linspace(0.02, 0.50, 15)
+N_STEPS = ssot.R3_N_STEPS
+DRIFT_TIME = ssot.R3_T_DRIFT
+TOLERANCE = ssot.R3_TAU_TOL
+N_SEEDS = ssot.R3_N_SEEDS
+DELTA_E_VALUES = ssot.R3_DELTA_E_GRID
 
 def compute_boundary_shift(delta_e):
     r"""

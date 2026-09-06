@@ -24,6 +24,9 @@ warnings.filterwarnings('ignore')
 
 # Dynamic Path Resolution (IEEE/ICDM FAIR Compliance)
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 RESULTS_DIR = ROOT_DIR / "results" / "R2_instrumented_blind_spot"
 DATA_DIR = RESULTS_DIR / "data"
 FIGURES_DIR = RESULTS_DIR / "figures"
@@ -31,12 +34,12 @@ FIGURES_DIR = RESULTS_DIR / "figures"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 FIGURES_DIR.mkdir(parents=True, exist_ok=True)
 
-N_STEPS, T_DRIFT, N_MODELS = 8000, 4000, 10
-BOUNDARY_SHIFTS = np.linspace(0.1, 4.0, 20)
+N_STEPS, T_DRIFT, N_MODELS = ssot.R2_N_STEPS, ssot.R2_T_DRIFT, ssot.R2_N_MODELS
+BOUNDARY_SHIFTS = ssot.R2_BOUNDARY_SHIFTS
 
 # IEEE/ICDM FAIR Determinism: Controlled Rollback to original seed space
 # Restoring the naive sequence to match the submitted PDF's exact fitted coefficients (e.g., 18.5)
-SEEDS = list(range(1, 101))
+SEEDS = ssot.R2_SEEDS
 
 BLUE, ORANGE, RED, GREEN, GRAY = '#04617b', '#E8A000', '#C62828', '#2E7D32', '#546E7A'
 plt.rcParams.update({'figure.dpi': 300, 'font.family': 'sans-serif', 'font.size': 11,
@@ -64,7 +67,8 @@ def run_instrumented_arf_pht(boundary_shift, seed, cfg):
     np.random.seed(safe_seed)
     rng = np.random.default_rng(safe_seed)
     
-    arf = ARFClassifier(n_models=N_MODELS, seed=safe_seed, drift_detector=drift.ADWIN(clock=cfg['c_int']), warning_detector=drift.ADWIN(clock=cfg['c_int']))
+    arf = ssot.require_drift_tracker(
+        ARFClassifier(n_models=N_MODELS, seed=safe_seed, drift_detector=drift.ADWIN(clock=cfg['c_int']), warning_detector=drift.ADWIN(clock=cfg['c_int'])))
     
     tau_arf, tau_det = np.nan, np.nan
     errors_pre =[]

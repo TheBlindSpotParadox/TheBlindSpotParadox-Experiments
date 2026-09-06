@@ -4,6 +4,7 @@ Extended Diagnostic 3: Isolate the evolution of P(tau_arf < tau_det) over a lamb
 with truncation bias correction for the Share Blind Spot computation.
 """
 import random
+import sys
 import numpy as np
 import pandas as pd
 from joblib import Parallel, delayed
@@ -15,15 +16,18 @@ from river import forest, drift
 # [IEEE/ICDM FAIR Compliance] Dynamic path resolution based on script location
 # The script is in experiments/R1_race_condition/. We target the root centralized results folder.
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 RESULTS_DIR = ROOT_DIR / "results" / "R1_race_condition" / "data"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
-N_STEPS = 54000  # Warmup 4000 + Tolerance 50000 (harmonized)
-T_DRIFT = 4000
-N_SEEDS = 200
-DELTA_E = 0.25
-LAMBDAS_TO_TEST = [2.5, 5.0, 10.0, 25.0, 50.0, 100.0]
-DELTA_P = 0.005
+N_STEPS = ssot.R1_N_STEPS      # Warmup 4000 + Tolerance 50000 (harmonized)
+T_DRIFT = ssot.R1_T_DRIFT
+N_SEEDS = ssot.R1_N_SEEDS
+DELTA_E = ssot.R1_DELTA_E
+LAMBDAS_TO_TEST = ssot.R1_LAMBDAS
+DELTA_P = ssot.R1_DELTA_P
 
 class StrictCUSUM:
     def __init__(self, p_pre, delta, threshold):
@@ -47,7 +51,8 @@ def run_diff_test(seed, lambda_val):
     
     b_shift = np.sqrt(2) * norm.ppf(0.5 + DELTA_E)
     
-    arf = forest.ARFClassifier(n_models=10, seed=seed, drift_detector=drift.ADWIN(clock=1), warning_detector=drift.ADWIN(clock=1))
+    arf = ssot.require_drift_tracker(
+        forest.ARFClassifier(n_models=10, seed=seed, drift_detector=drift.ADWIN(clock=ssot.R1_C_INT), warning_detector=drift.ADWIN(clock=ssot.R1_C_INT)))
     cusum_external_fixed = StrictCUSUM(0.05, DELTA_P, lambda_val)
     
     errors_warmup = []
@@ -118,7 +123,7 @@ def run_diff_test(seed, lambda_val):
 
 if __name__ == "__main__":
     print("[INFO] Launching Extended Diagnostic 3 (Share Blind Spot Cartography)...")
-    seq = np.random.SeedSequence(42)
+    seq = np.random.SeedSequence(ssot.SEED_SCHEME_SEEDSEQ_ENTROPY)
     seeds = [int(s.generate_state(1)[0]) for s in seq.spawn(N_SEEDS)]
     
     grid = [(s, l) for s in seeds for l in LAMBDAS_TO_TEST]

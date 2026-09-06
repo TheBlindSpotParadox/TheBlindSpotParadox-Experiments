@@ -236,7 +236,7 @@ A high threshold ($\lambda = 50$) produces \emph{complete} starvation: the PHT d
 \subsection{Theoretical Bounds: The Starvation Boundary}\label{sec:starvation_boundary}
 
 The Hydra Effect (Section~\ref{sec:hydra}) and the Starvation Effect (Section~\ref{sec:starvation}) combine to define a \emph{structural} boundary---in expectation---on the viability of external monitoring.
-We derive an upper bound on the probability of missed detection and a critical ensemble size $M_{\mathrm{crit}}$ beyond which external detection fails with probability exceeding $1 - \beta$.
+We derive an upper bound on the probability of missed detection and a critical ensemble size $M_{\mathrm{crit}}$ beyond which external detection fails with probability exceeding $1 - r$, where $r$ denotes the reliability target.
 
 \paragraph{Correlation disclaimer.}
 The $M$ trees in the ARF are trained on the \emph{same} data stream via Poisson-weighted bootstrap (Oza bagging with $\lambda = 6$~\cite{gomes_arf_2017}).
@@ -264,16 +264,16 @@ Under conditional independence, $\tau_{\mathrm{ARF}} = \min_i \tau_i$ is stochas
 \end{proof}
 
 \begin{corollary}[Critical Ensemble Size]\label{cor:mcrit}
-  For a target detection guarantee $P_{\mathrm{miss}} \le 1 - \beta$, the ensemble size must not exceed:
+  For a reliability target $r$, i.e.\ a detection guarantee $P_{\mathrm{miss}} \le 1 - r$, the ensemble size must not exceed:
   \begin{equation}\label{eq:mcrit}
-    M_{\mathrm{crit}} = \left\lfloor \frac{\ln \beta}{\ln\!\bigl[1 - F(\tau_{\mathrm{det}}^*)\bigr]} \right\rfloor\,.
+    M_{\mathrm{crit}} = \left\lfloor \frac{\ln r}{\ln\!\bigl[1 - F(\tau_{\mathrm{det}}^*)\bigr]} \right\rfloor\,.
   \end{equation}
-  For $M > M_{\mathrm{crit}}$ this (conservative) certificate no longer holds, and reliability must be settled empirically rather than inferred from the bound.
+  For $M > M_{\mathrm{crit}}$ this (conservative) certificate no longer holds, and the reliability $r$ must be settled empirically rather than inferred from the bound.
 \end{corollary}
 
 \paragraph{Numerical example (distribution-free).}
 Corollary~\ref{cor:mcrit} requires the scalar $F(\tau_{\mathrm{det}}^*)$. A Kolmogorov--Smirnov test ($N{=}2000$ bootstrap) rejects an exponential fit of the single-tree delays $\tau_{\mathrm{HAT}}$ at every tested magnitude ($p<0.05$), so we evaluate $M_{\mathrm{crit}}$ directly from the empirical CDF $\widehat{F}$ of $\tau_{\mathrm{HAT}}$.
-At $\Delta e = 0.33$ ($\lambda=50$), instrumentation yields $\mathbb{E}[\tau_{\mathrm{HAT}}] = 463$, $\tau_{\mathrm{det}}^* = 155$, and $\widehat{F}(\tau_{\mathrm{det}}^*) = 0.49$, so the (conservative) independence bound~\eqref{eq:mcrit} yields $M_{\mathrm{crit}} = 0$ at the reliability target $\beta = 0.95$---it cannot certify reliable detection even for a single tree, a verdict that persists across the operative grid ($\Delta e \ge 0.24$).
+At $\Delta e = 0.33$ ($\lambda=50$), instrumentation yields $\mathbb{E}[\tau_{\mathrm{HAT}}] = 463$, $\tau_{\mathrm{det}}^* = 155$, and $\widehat{F}(\tau_{\mathrm{det}}^*) = 0.49$, so the (conservative) independence bound~\eqref{eq:mcrit} yields $M_{\mathrm{crit}} = 0$ at the reliability target $r = 0.95$---it cannot certify reliable detection even for a single tree, a verdict that persists across the operative grid ($\Delta e \ge 0.24$).
 River's default ($M=10$) therefore starves the external CUSUM, as confirmed directly by the measured ${<}1\%$ detection rate in Figure~\ref{fig:pht_scenarios}(A).
 
 \subsection{The Decoupling Principle}\label{sec:decoupling}

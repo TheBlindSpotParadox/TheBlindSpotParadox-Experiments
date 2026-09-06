@@ -10,6 +10,7 @@ import itertools
 import warnings
 from pathlib import Path
 
+import sys
 import numpy as np
 import pandas as pd
 from scipy.special import expit, gammaln
@@ -24,6 +25,8 @@ warnings.filterwarnings("ignore")
 
 # ─── Configuration & Paths (FAIR Compliance) ─────────────────────────────────
 ROOT_DIR    = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
 RESULTS_DIR = ROOT_DIR / "results" / "R4_proteus_evaluation" / "data"
 TABLES_DIR  = ROOT_DIR / "results" / "R4_proteus_evaluation" / "tables"
 LOGS_DIR    = ROOT_DIR / "logs" / "R4_proteus_evaluation"
@@ -35,8 +38,8 @@ RAW_CSV   = RESULTS_DIR / "exp_R4_results_KSWIN_alpha_sweep.csv"
 OUT_TEX   = TABLES_DIR / "exp_R4_table_KSWIN_alpha_sweep.tex"
 SIGN_CSV  = RESULTS_DIR / "exp_R4_seed_level_tests_KSWIN_alpha_sweep.csv"
 
-N_SEEDS        = 30
-SEEDS          = list(range(1, N_SEEDS + 1))
+N_SEEDS        = ssot.R4_N_SEEDS
+SEEDS          = ssot.R4_SEEDS
 BOOTSTRAP_SEED = 12345
 KSWIN_LAG      = 15
 KSWIN_RESET_MODEL = True

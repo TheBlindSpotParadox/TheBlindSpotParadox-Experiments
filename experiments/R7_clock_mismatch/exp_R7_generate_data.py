@@ -10,6 +10,7 @@ exact R2/R6 worker-level RNG locking. The Regime-1 miss-rate summary is assemble
 downstream by exp_R7_compute_regime1.py; reproduction checks live in tests/test_R7_regime1.py.
 """
 import random
+import sys
 import warnings
 import numpy as np
 import pandas as pd
@@ -23,13 +24,16 @@ warnings.filterwarnings('ignore')
 
 # Script lives in experiments/R7_clock_mismatch/ ; target the centralized results root.
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 DATA_DIR = ROOT_DIR / "results" / "R7_clock_mismatch" / "data"
 DATA_DIR.mkdir(parents=True, exist_ok=True)
 
-N_STEPS, T_DRIFT, N_MODELS = 8000, 4000, 10
-BOUNDARY_SHIFTS = np.linspace(0.1, 4.0, 20)
-SEEDS = list(range(1, 101))
-EXT_DELTA = 0.002  # external ADWIN sensitivity (matches the submitted Fig. 2ter setup)
+N_STEPS, T_DRIFT, N_MODELS = ssot.R7_N_STEPS, ssot.R7_T_DRIFT, ssot.R7_N_MODELS
+BOUNDARY_SHIFTS = ssot.R7_BOUNDARY_SHIFTS
+SEEDS = ssot.R7_SEEDS
+EXT_DELTA = ssot.R7_EXT_DELTA  # external ADWIN sensitivity (matches the submitted Fig. 2ter setup)
 
 SCENARIOS = [
     {"id": "A_mismatched", "c_int": 1,  "c_ext": 32},  # River's default external clock
@@ -45,9 +49,10 @@ def run_clock_mismatch(boundary_shift, seed, cfg):
     np.random.seed(safe_seed)
     rng = np.random.default_rng(safe_seed)
 
-    arf = ARFClassifier(n_models=N_MODELS, seed=safe_seed,
-                        drift_detector=drift.ADWIN(clock=cfg['c_int']),
-                        warning_detector=drift.ADWIN(clock=cfg['c_int']))
+    arf = ssot.require_drift_tracker(
+        ARFClassifier(n_models=N_MODELS, seed=safe_seed,
+                      drift_detector=drift.ADWIN(clock=cfg['c_int']),
+                      warning_detector=drift.ADWIN(clock=cfg['c_int'])))
     ext = drift.ADWIN(delta=EXT_DELTA, clock=cfg['c_ext'])
 
     tau_arf, tau_det = np.nan, np.nan

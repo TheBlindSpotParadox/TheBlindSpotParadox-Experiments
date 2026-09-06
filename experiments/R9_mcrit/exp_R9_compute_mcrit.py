@@ -1,3 +1,4 @@
+import sys
 import warnings
 import numpy as np
 import pandas as pd
@@ -13,25 +14,30 @@ warnings.filterwarnings("ignore", category=RuntimeWarning)
 # Parameters
 # --------------------------------------------------------------------
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 RESULTS_DIR = ROOT_DIR / "results" / "R9_mcrit" / "data"
 FIG_DIR = ROOT_DIR / "results" / "R9_mcrit" / "figures"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-LAMBDAS = [8, 25, 50]                 # Three calibrations from the paper
-DELTA_P = 0.005                       # CUSUM tolerance
-BETAS = [0.50, 0.05]                  # Main beta + complement
-DKW_ALPHA = 0.05                      # 95% DKW confidence band
-TARGET_DELTAS = [0.10, 0.15, 0.20, 0.25, 0.33, 0.40, 0.50]
+LAMBDAS = ssot.R9_LAMBDAS             # Three calibrations from the paper
+DELTA_P = ssot.R9_DELTA_P             # CUSUM tolerance
+RELIABILITY_TARGETS = ssot.R9_RELIABILITY_TARGETS   # r = 1 - P_miss target
+DKW_ALPHA = ssot.R9_DKW_ALPHA         # 95% DKW confidence band
+TARGET_DELTAS = ssot.R9_TARGET_DELTAS
 PALETTE = {8: "#00748C", 25: "#E08000", 50: "#3B6FA0"}  # teal / orange / navy
 
 
 # --------------------------------------------------------------------
 # Helpers
 # --------------------------------------------------------------------
-def mcrit_from_F(F, beta):
+def mcrit_from_F(F, r):
     """
-    M_crit = floor( ln(beta) / ln(1-F) ), STRICTLY DECREASING with respect to F.
+    M_crit = floor( ln(r) / ln(1-F) ), STRICTLY DECREASING with respect to F.
+    r is the reliability target of Corollary 2: r = 1 - P_miss. A LARGER M_crit is
+    PERMISSIVE (it certifies a larger ensemble), so a smaller r is the permissive end.
     F <= 0: no adaptation observed before tau_det* -> no finite M
             starves the detector -> +inf.
     F >= 1: a single tree is already sufficient to starve the detector -> 0.
@@ -42,7 +48,7 @@ def mcrit_from_F(F, beta):
         return np.inf
     if F >= 1.0:
         return 0.0
-    return float(np.floor(np.log(beta) / np.log(1.0 - F)))
+    return float(np.floor(np.log(r) / np.log(1.0 - F)))
 
 
 def empirical_cdf_at(data, x):
@@ -152,18 +158,18 @@ def main():
             F_emp_low = max(0.0, F_emp - eps_dkw)  # borne basse -> M_crit max (defensif)
             pmiss_m10 = 1.0 - (1.0 - F_emp) ** 10
 
-            for beta in BETAS:
-                m_emp = mcrit_from_F(F_emp, beta)
-                m_exp = mcrit_from_F(F_exp, beta)
-                m_alt = mcrit_from_F(F_alt, beta) if np.isfinite(F_alt) else np.nan
-                m_emp_dkw_up = mcrit_from_F(F_emp_low, beta)  # Lower bound -> M_crit max (defensive)
+            for r in RELIABILITY_TARGETS:
+                m_emp = mcrit_from_F(F_emp, r)
+                m_exp = mcrit_from_F(F_exp, r)
+                m_alt = mcrit_from_F(F_alt, r) if np.isfinite(F_alt) else np.nan
+                m_emp_dkw_up = mcrit_from_F(F_emp_low, r)  # Lower bound -> M_crit max (defensive)
                 coherent = (m_exp >= m_emp) == (F_exp <= F_emp)
 
                 rows.append({
                     "delta_e": round(target, 3),
                     "delta_e_eff": round(de_eff, 4),
                     "lambda": lam,
-                    "beta": beta,
+                    "reliability_r": r,
                     "n_samples": n,
                     "E_tau_HAT": round(mean_tau, 2),
                     "tau_det_star": round(tau_det_star, 2),
@@ -182,7 +188,7 @@ def main():
 
             print(f"  De~{de_eff:.3f} | lam={lam:>2} | tau*={tau_det_star:8.1f} | "
                   f"F_emp={F_emp:.3f} F_exp={F_exp:.3f} | "
-                  f"Mcrit(.50) emp={mcrit_from_F(F_emp,0.5)} exp={mcrit_from_F(F_exp,0.5)} | "
+                  f"Mcrit(r=.50) emp={mcrit_from_F(F_emp,0.5)} exp={mcrit_from_F(F_exp,0.5)} | "
                   f"{verdict}")
 
     res = pd.DataFrame(rows)
@@ -198,7 +204,7 @@ def main():
     # large/volatile (up to +inf when F_emp=0 at N=100). These points are NOT relevant
     # to the structural claim. Restricting the DOMAIN cleanly removes out-of-scale
     # peaks, inf values, and prevents matplotlib from connecting points over gaps.
-    sub = res[(res["beta"] == 0.50) & (res["delta_e_eff"] > 0.20)].copy()
+    sub = res[(res["reliability_r"] == 0.50) & (res["delta_e_eff"] > 0.20)].copy()
     FIG_LAMBDAS = [25, 50]
     CAP = 10
     fig, ax = plt.subplots(figsize=(7.0, 4.3), dpi=300)
@@ -219,7 +225,7 @@ def main():
     ax.text(0.015, 0.9, "River default $M=10$", transform=ax.transAxes,
             ha="left", va="top", fontsize=8, color="0.35")
     ax.set_xlabel(r"Effective error jump $\Delta e$")
-    ax.set_ylabel(r"Critical ensemble size $M_{\rm crit}$  ($\beta=0.50$)")
+    ax.set_ylabel(r"Critical ensemble size $M_{\rm crit}$  ($r=0.50$)")
     ax.set_ylim(-0.5, CAP + 0.8)
     ax.set_title(r"Empirical vs exponential $M_{\rm crit}$ (blind-spot regime, real $\tau_{\rm HAT}$)",
                  fontweight="bold", pad=10)

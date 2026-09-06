@@ -17,6 +17,8 @@ Methodological alignments:
   3. Early-break upon the first captured post-drift swap (identical logic to R1).
   4. Seed pooling matches the established R1 pipeline (SeedSequence(42).spawn(N_SEEDS)).
 """
+import sys
+
 import numpy as np
 import pandas as pd
 from pathlib import Path
@@ -27,70 +29,72 @@ from river import drift, forest
 
 # --- Configuration -----------------------------------------------------------
 ROOT_DIR    = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
 RESULTS_DIR = ROOT_DIR / "results" / "R8_lambda_op_sweep" / "data"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 OUT_CSV     = RESULTS_DIR / "exp_R8_lambda_op_sweep.csv"
 
-WARMUP        = 1000            # Warmup steps (matches R1)
-DRIFT_GAP     = 1000            # t_drift_eff = WARMUP + DRIFT_GAP = 2000 (matches R1)
-TOLERANCE     = 50000           # Post-drift tracking tolerance (matches R1)
-T_DRIFT       = WARMUP + DRIFT_GAP
-N_STEPS       = T_DRIFT + TOLERANCE
+WARMUP        = ssot.R8_WARMUP_WINDOW      # Warmup steps (matches R1)
+DRIFT_GAP     = ssot.R8_DRIFT_GAP          # t_drift_eff = WARMUP + DRIFT_GAP = 2000 (matches R1)
+TOLERANCE     = ssot.R8_CENSORING_HORIZON  # Post-drift tracking tolerance (matches R1)
+T_DRIFT       = ssot.R8_T_DRIFT
+N_STEPS       = ssot.R8_N_STEPS
 
-N_MODELS      = 10              # M = 10
-C_INT         = 1               # Blind spot configuration
-N_SEEDS       = 200
-DELTA_E_GRID  = np.linspace(0.10, 0.50, 21)
-DELTA_P       = 0.005           # PH/CUSUM tolerance
-Q_LEVEL       = 0.05
+N_MODELS      = ssot.R8_N_MODELS           # M = 10
+C_INT         = ssot.R8_C_INT              # Blind spot configuration
+N_SEEDS       = ssot.R8_N_SEEDS
+DELTA_E_GRID  = ssot.R8_DELTA_E_GRID
+DELTA_P       = ssot.R8_DELTA_P            # PH/CUSUM tolerance
+Q_LEVEL       = ssot.R8_Q_LEVEL
 OVERLAP_REF   = {0.10: 12.95, 0.25: 48.90, 0.40: 26.95}  # Reference q05 to reproduce from R1
 
 
-def run_tau_arf(seed: int, delta_e: float):
-    """Returns the timestamp of the first internal post-drift swap (NaN if none < TOLERANCE)."""
+def run_tau_arf(seed: int, delta_e: float, t_drift: int = T_DRIFT, n_steps: int = N_STEPS):
+    """Returns the timestamp of the first internal post-drift swap (NaN if none < TOLERANCE).
+    t_drift/n_steps are overridable for the warm-up parity sweep (S7/G1); the defaults reproduce
+    the published T_DRIFT=2000 configuration bit-for-bit."""
     rng = np.random.default_rng(seed)
     b_shift = np.sqrt(2.0) * norm.ppf(0.5 + delta_e)   # Shifted boundary matching target Delta_e
 
-    model = forest.ARFClassifier(
+    model = ssot.require_drift_tracker(forest.ARFClassifier(
         n_models=N_MODELS, seed=seed,
         drift_detector=drift.ADWIN(clock=C_INT),
         warning_detector=drift.ADWIN(clock=C_INT),
-    )
-
-    if not hasattr(model, "_drift_tracker"):
-        raise RuntimeError(
-            "ARFClassifier missing '_drift_tracker' attribute: incompatible River version. "
-            "Ensure River 0.23.0 is installed for proper internal tree swap tracking."
-        )
+    ))
 
     tau_arf = np.nan
-    for t in range(1, N_STEPS + 1):
+    for t in range(1, n_steps + 1):
         x0, x1 = rng.normal(), rng.normal()
         x_dict = {0: x0, 1: x1}
-        y = int(x0 + x1 > 0.0) if t <= T_DRIFT else int(x0 + x1 > b_shift)
+        y = int(x0 + x1 > 0.0) if t <= t_drift else int(x0 + x1 > b_shift)
 
         before = sum(model._drift_tracker.values())
         model.learn_one(x_dict, y)          # predict_one omitted: unnecessary for tau_ARF tracking
         after = sum(model._drift_tracker.values())
 
-        if t > T_DRIFT and after > before:
-            tau_arf = t - T_DRIFT
+        if t > t_drift and after > before:
+            tau_arf = t - t_drift
             break                            # First post-drift swap captured -> stop
     return {"seed": seed, "delta_e": float(delta_e), "tau_arf": tau_arf}
 
 
-def main():
-    seq = np.random.SeedSequence(42)
+def main(t_drift: int = T_DRIFT):
+    n_steps = t_drift + TOLERANCE
+    suffix = "" if t_drift == T_DRIFT else f"_tdrift{t_drift}"
+    out_csv = RESULTS_DIR / f"exp_R8_lambda_op_sweep{suffix}.csv"
+
+    seq = np.random.SeedSequence(ssot.SEED_SCHEME_SEEDSEQ_ENTROPY)
     seed_pool = [int(s.generate_state(1)[0]) for s in seq.spawn(N_SEEDS)]
     grid = [(s, de) for de in DELTA_E_GRID for s in seed_pool]
 
     print(f"[INFO] {len(grid)} ARF runs (c_int={C_INT}, M={N_MODELS}) "
-          f"| drift@t={T_DRIFT} tol={TOLERANCE}")
+          f"| drift@t={t_drift} tol={TOLERANCE}")
     res = Parallel(n_jobs=-1)(
-        delayed(run_tau_arf)(s, de) for s, de in tqdm(grid, desc="R8 Lambda Sweep")
+        delayed(run_tau_arf)(s, de, t_drift, n_steps) for s, de in tqdm(grid, desc="R8 Lambda Sweep")
     )
     df = pd.DataFrame(res)
-    df.to_csv(RESULTS_DIR / "exp_R8_fine_grid_raw.csv", index=False)
+    df.to_csv(RESULTS_DIR / f"exp_R8_fine_grid_raw{suffix}.csv", index=False)
 
     # --- Per-magnitude aggregation ----------------------------------------------
     records = []
@@ -108,7 +112,7 @@ def main():
             "lambda_limit": round(lam_limit, 3),
         })
     table = pd.DataFrame.from_records(records)
-    table.to_csv(OUT_CSV, index=False)
+    table.to_csv(out_csv, index=False)
 
     # --- Global minimum search --------------------------------------------------
     valid = table.dropna(subset=["lambda_limit"])
@@ -131,4 +135,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    main(int(sys.argv[1]) if len(sys.argv) > 1 else T_DRIFT)

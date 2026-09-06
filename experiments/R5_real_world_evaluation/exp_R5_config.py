@@ -5,10 +5,13 @@ of "The Blind Spot Paradox" (ICDM 2026).
 All paths are resolved dynamically from this file's location, so the repository is
 fully portable (no hard-coded absolute path). River is pinned to 0.23.0 because the
 internal ADWIN clock artifact studied in the paper is version-sensitive."""
+import sys
 from pathlib import Path
 
 # --- Dynamic, portable paths (mandated FAIR layout) ---
 ROOT_DIR    = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
 DATA_DIR    = ROOT_DIR / "data"
 RESULTS_DIR = ROOT_DIR / "results" / "R5_real_world_evaluation" / "data"
 TABLES_DIR  = ROOT_DIR / "results" / "R5_real_world_evaluation" / "tables"
@@ -24,7 +27,7 @@ CHECKPOINTS_DIR.mkdir(parents=True, exist_ok=True)
 
 # --- Reproducibility ---
 SEED_MASTER       = 42
-N_SEEDS           = 30
+N_SEEDS           = ssot.N_SEEDS_REAL
 RIVER_VERSION_PIN = "0.23.0"
 
 # --- Pipelines (G4: only the three columns shown in Table II) ---
@@ -35,7 +38,7 @@ PIPELINES_FLOODING = ["pht_ht", "pht_arf_c1"]   # per-episode decomposition (Sec
 BAF_VARIANTS  = ["Base", "VariantI", "VariantII"]
 BAF_DRIFTS    = [125000, 250000, 375000, 500000, 625000, 750000, 875000]
 BAF_WARMUP    = 100_000
-BAF_TAU_TOL   = 5_000
+BAF_TAU_TOL   = ssot.TAU_TOL
 BAF_NONE_FILL = 0     # default label used when the classifier abstains
 
 # --- INSECTS (Souza et al., 2020, Table 2) ---
@@ -44,7 +47,7 @@ INSECTS_VARIANTS = ["abrupt_balanced", "gradual_balanced",
 INSECTS_WARMUP_FRACTION = 0.10
 INSECTS_WARMUP_CAP      = 100_000
 INSECTS_TAU_FRACTION    = 0.05
-INSECTS_TAU_CAP         = 5_000
+INSECTS_TAU_CAP         = ssot.TAU_TOL
 INSECTS_NONE_FILL       = -1
 
 # Canonical drift positions (Souza 2020, Table 2). The reoccurring stream stops at

@@ -1,0 +1,839 @@
+{
+  "experiments/R1_race_condition/exp_R1_generate_data.py": {
+    "DELTA_E": {
+      "expr": "0.25",
+      "value": "0.25"
+    },
+    "DELTA_P": {
+      "expr": "0.005",
+      "value": "0.005"
+    },
+    "LAMBDAS_TO_TEST": {
+      "expr": "[2.5, 5.0, 10.0, 25.0, 50.0, 100.0]",
+      "value": "[2.5, 5.0, 10.0, 25.0, 50.0, 100.0]"
+    },
+    "N_SEEDS": {
+      "expr": "200",
+      "value": "200"
+    },
+    "N_STEPS": {
+      "expr": "54000",
+      "value": "54000"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R1_race_condition' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "T_DRIFT": {
+      "expr": "4000",
+      "value": "4000"
+    }
+  },
+  "experiments/R1_race_condition/exp_R1_plot_figure.py": {
+    "FIG_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R1_race_condition' / 'figures'",
+      "value": null
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R1_race_condition' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    }
+  },
+  "experiments/R2_instrumented_blind_spot/exp_R2_instrumented_blind_spot.py": {
+    "BLUE": {
+      "expr": "'#04617b'",
+      "value": "'#04617b'"
+    },
+    "BOUNDARY_SHIFTS": {
+      "expr": "np.linspace(0.1, 4.0, 20)",
+      "value": "[0.1, 0.30526315789473685, 0.5105263157894737, 0.7157894736842105, 0.9210526315789473, 1.1263157894736844, 1.3315789473684212, 1.536842105263158, 1.7421052631578948, 1.9473684210526316, 2.1526315789473687, 2.3578947368421055, 2.5631578947368423, 2.768421052631579, 2.973684210526316, 3.1789473684210527, 3.3842105263157896, 3.5894736842105264, 3.794736842105263, 4.0]"
+    },
+    "DATA_DIR": {
+      "expr": "RESULTS_DIR / 'data'",
+      "value": null
+    },
+    "FIGURES_DIR": {
+      "expr": "RESULTS_DIR / 'figures'",
+      "value": null
+    },
+    "GRAY": {
+      "expr": "'#546E7A'",
+      "value": "'#546E7A'"
+    },
+    "GREEN": {
+      "expr": "'#2E7D32'",
+      "value": "'#2E7D32'"
+    },
+    "N_MODELS": {
+      "expr": "10",
+      "value": "10"
+    },
+    "N_STEPS": {
+      "expr": "8000",
+      "value": "8000"
+    },
+    "ORANGE": {
+      "expr": "'#E8A000'",
+      "value": "'#E8A000'"
+    },
+    "RED": {
+      "expr": "'#C62828'",
+      "value": "'#C62828'"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R2_instrumented_blind_spot'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "SCENARIOS": {
+      "expr": "[{'id': 'A_PHT_ARF', 'title': 'Instrumented Robust PHT', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=50$) (Error bars = SEM)', 'c_int': 1, 'lambda': 50.0}, {'id': 'B_PHT_ARF', 'title': 'Instrumented Complexity Intersection', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=25$) (Error bars = SEM)', 'c_int': 1, 'lambda': 25.0}, {'id': 'C_PHT_ARF', 'title': 'Instrumented Hyper-reactive PHT', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=8$) (Error bars = SEM)', 'c_int': 1, 'lambda': 8.0}]",
+      "value": "[{'id': 'A_PHT_ARF', 'title': 'Instrumented Robust PHT', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=50$) (Error bars = SEM)', 'c_int': 1, 'lambda': 50.0}, {'id': 'B_PHT_ARF', 'title': 'Instrumented Complexity Intersection', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=25$) (Error bars = SEM)', 'c_int': 1, 'lambda': 25.0}, {'id': 'C_PHT_ARF', 'title': 'Instrumented Hyper-reactive PHT', 'subtitle': 'Real ARF ($c_{\\\\mathrm{int}}=1$) vs External PHT ($\\\\lambda=8$) (Error bars = SEM)', 'c_int': 1, 'lambda': 8.0}]"
+    },
+    "SEEDS": {
+      "expr": "list(range(1, 101))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]"
+    },
+    "T_DRIFT": {
+      "expr": "4000",
+      "value": "4000"
+    }
+  },
+  "experiments/R3_regime_crossover/exp_R3_regime_crossover.py": {
+    "DATA_DIR": {
+      "expr": "RESULTS_DIR / 'data'",
+      "value": null
+    },
+    "DELTA_E_VALUES": {
+      "expr": "np.linspace(0.02, 0.5, 15)",
+      "value": "[0.02, 0.054285714285714284, 0.08857142857142858, 0.12285714285714287, 0.15714285714285714, 0.19142857142857142, 0.22571428571428573, 0.26, 0.2942857142857143, 0.3285714285714286, 0.3628571428571429, 0.3971428571428572, 0.4314285714285715, 0.46571428571428575, 0.5]"
+    },
+    "DRIFT_TIME": {
+      "expr": "4000",
+      "value": "4000"
+    },
+    "FIG_DIR": {
+      "expr": "RESULTS_DIR / 'figures'",
+      "value": null
+    },
+    "N_SEEDS": {
+      "expr": "100",
+      "value": "100"
+    },
+    "N_STEPS": {
+      "expr": "8000",
+      "value": "8000"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R3_regime_crossover'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "TOLERANCE": {
+      "expr": "1000",
+      "value": "1000"
+    }
+  },
+  "experiments/R4_proteus_evaluation/exp_R4_kswin_sweep.py": {
+    "BOOTSTRAP_SEED": {
+      "expr": "12345",
+      "value": "12345"
+    },
+    "ETF_PARAMS_A": {
+      "expr": "{'SPY': {'mu': 0.1 / 252, 'omega': 5e-07, 'alpha': 0.08, 'beta': 0.88}, 'PFF': {'mu': 0.03 / 252, 'omega': 8e-08, 'alpha': 0.05, 'beta': 0.9}, 'VNQ': {'mu': 0.08 / 252, 'omega': 2e-06, 'alpha': 0.12, 'beta': 0.82}, 'BWX': {'mu': 0.02 / 252, 'omega': 4e-08, 'alpha': 0.04, 'beta': 0.92}}",
+      "value": "{'SPY': {'mu': 0.0003968253968253968, 'omega': 5e-07, 'alpha': 0.08, 'beta': 0.88}, 'PFF': {'mu': 0.00011904761904761905, 'omega': 8e-08, 'alpha': 0.05, 'beta': 0.9}, 'VNQ': {'mu': 0.00031746031746031746, 'omega': 2e-06, 'alpha': 0.12, 'beta': 0.82}, 'BWX': {'mu': 7.936507936507937e-05, 'omega': 4e-08, 'alpha': 0.04, 'beta': 0.92}}"
+    },
+    "ETF_PARAMS_B": {
+      "expr": "{'SPY': {'mu': 0.112 / 252, 'omega': 1.2e-07, 'alpha': 0.09, 'beta': 0.893}, 'PFF': {'mu': 0.025 / 252, 'omega': 2.5e-08, 'alpha': 0.062, 'beta': 0.928}, 'VNQ': {'mu': 0.075 / 252, 'omega': 6e-07, 'alpha': 0.115, 'beta': 0.875}, 'BWX': {'mu': 0.008 / 252, 'omega': 8e-09, 'alpha': 0.055, 'beta': 0.94}}",
+      "value": "{'SPY': {'mu': 0.00044444444444444447, 'omega': 1.2e-07, 'alpha': 0.09, 'beta': 0.893}, 'PFF': {'mu': 9.92063492063492e-05, 'omega': 2.5e-08, 'alpha': 0.062, 'beta': 0.928}, 'VNQ': {'mu': 0.0002976190476190476, 'omega': 6e-07, 'alpha': 0.115, 'beta': 0.875}, 'BWX': {'mu': 3.1746031746031745e-05, 'omega': 8e-09, 'alpha': 0.055, 'beta': 0.94}}"
+    },
+    "KSWIN_LAG": {
+      "expr": "15",
+      "value": "15"
+    },
+    "KSWIN_RESET_MODEL": {
+      "expr": "True",
+      "value": "True"
+    },
+    "LOGS_DIR": {
+      "expr": "ROOT_DIR / 'logs' / 'R4_proteus_evaluation'",
+      "value": null
+    },
+    "N_SEEDS": {
+      "expr": "30",
+      "value": "30"
+    },
+    "OUT_TEX": {
+      "expr": "TABLES_DIR / 'exp_R4_table_KSWIN_alpha_sweep.tex'",
+      "value": null
+    },
+    "RAW_CSV": {
+      "expr": "RESULTS_DIR / 'exp_R4_results_KSWIN_alpha_sweep.csv'",
+      "value": null
+    },
+    "REG_DISPLAY": {
+      "expr": "[('IID', 'IID Baseline'), ('Cal. A', 'Cal. A'), ('Cal. B', 'Cal. B')]",
+      "value": "[('IID', 'IID Baseline'), ('Cal. A', 'Cal. A'), ('Cal. B', 'Cal. B')]"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R4_proteus_evaluation' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "ROW_SPECS": {
+      "expr": "[('\\\\textbf{KSWIN ($\\\\alpha = 0.001$) + ARF}', 'KSWIN_a_0.001', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.005$) + ARF}', 'KSWIN_a_0.005', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.01$) + ARF}', 'KSWIN_a_0.01', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.05$) + ARF}', 'KSWIN_a_0.05', 1, True)]",
+      "value": "[('\\\\textbf{KSWIN ($\\\\alpha = 0.001$) + ARF}', 'KSWIN_a_0.001', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.005$) + ARF}', 'KSWIN_a_0.005', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.01$) + ARF}', 'KSWIN_a_0.01', 1, True), ('\\\\textbf{KSWIN ($\\\\alpha = 0.05$) + ARF}', 'KSWIN_a_0.05', 1, True)]"
+    },
+    "SEEDS": {
+      "expr": "list(range(1, N_SEEDS + 1))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]"
+    },
+    "SIGN_CSV": {
+      "expr": "RESULTS_DIR / 'exp_R4_seed_level_tests_KSWIN_alpha_sweep.csv'",
+      "value": null
+    },
+    "TABLES_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R4_proteus_evaluation' / 'tables'",
+      "value": null
+    },
+    "TICKERS": {
+      "expr": "['SPY', 'PFF', 'VNQ', 'BWX']",
+      "value": "['SPY', 'PFF', 'VNQ', 'BWX']"
+    },
+    "TRANSITIONS": {
+      "expr": "[]",
+      "value": "[]"
+    }
+  },
+  "experiments/R4_proteus_evaluation/exp_R4_main_table.py": {
+    "BOOTSTRAP_SEED": {
+      "expr": "12345",
+      "value": "12345"
+    },
+    "ETF_PARAMS_A": {
+      "expr": "{'SPY': {'mu': 0.1 / 252, 'omega': 5e-07, 'alpha': 0.08, 'beta': 0.88}, 'PFF': {'mu': 0.03 / 252, 'omega': 8e-08, 'alpha': 0.05, 'beta': 0.9}, 'VNQ': {'mu': 0.08 / 252, 'omega': 2e-06, 'alpha': 0.12, 'beta': 0.82}, 'BWX': {'mu': 0.02 / 252, 'omega': 4e-08, 'alpha': 0.04, 'beta': 0.92}}",
+      "value": "{'SPY': {'mu': 0.0003968253968253968, 'omega': 5e-07, 'alpha': 0.08, 'beta': 0.88}, 'PFF': {'mu': 0.00011904761904761905, 'omega': 8e-08, 'alpha': 0.05, 'beta': 0.9}, 'VNQ': {'mu': 0.00031746031746031746, 'omega': 2e-06, 'alpha': 0.12, 'beta': 0.82}, 'BWX': {'mu': 7.936507936507937e-05, 'omega': 4e-08, 'alpha': 0.04, 'beta': 0.92}}"
+    },
+    "ETF_PARAMS_B": {
+      "expr": "{'SPY': {'mu': 0.112 / 252, 'omega': 1.2e-07, 'alpha': 0.09, 'beta': 0.893}, 'PFF': {'mu': 0.025 / 252, 'omega': 2.5e-08, 'alpha': 0.062, 'beta': 0.928}, 'VNQ': {'mu': 0.075 / 252, 'omega': 6e-07, 'alpha': 0.115, 'beta': 0.875}, 'BWX': {'mu': 0.008 / 252, 'omega': 8e-09, 'alpha': 0.055, 'beta': 0.94}}",
+      "value": "{'SPY': {'mu': 0.00044444444444444447, 'omega': 1.2e-07, 'alpha': 0.09, 'beta': 0.893}, 'PFF': {'mu': 9.92063492063492e-05, 'omega': 2.5e-08, 'alpha': 0.062, 'beta': 0.928}, 'VNQ': {'mu': 0.0002976190476190476, 'omega': 6e-07, 'alpha': 0.115, 'beta': 0.875}, 'BWX': {'mu': 3.1746031746031745e-05, 'omega': 8e-09, 'alpha': 0.055, 'beta': 0.94}}"
+    },
+    "KSWIN_LAG": {
+      "expr": "15",
+      "value": "15"
+    },
+    "KSWIN_RESET_MODEL": {
+      "expr": "True",
+      "value": "True"
+    },
+    "LOGS_DIR": {
+      "expr": "ROOT_DIR / 'logs' / 'R4_proteus_evaluation'",
+      "value": null
+    },
+    "N_SEEDS": {
+      "expr": "30",
+      "value": "30"
+    },
+    "OUT_TEX": {
+      "expr": "TABLES_DIR / 'table1_proteus_summary.tex'",
+      "value": null
+    },
+    "RAW_CSV": {
+      "expr": "RESULTS_DIR / 'exp_R4_results_aligned_fusion.csv'",
+      "value": null
+    },
+    "REG_DISPLAY": {
+      "expr": "[('IID', 'IID Baseline'), ('Cal. A', 'Cal. A'), ('Cal. B', 'Cal. B')]",
+      "value": "[('IID', 'IID Baseline'), ('Cal. A', 'Cal. A'), ('Cal. B', 'Cal. B')]"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R4_proteus_evaluation' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "ROW_SPECS": {
+      "expr": "[('\\\\textbf{PHT + HT}', 'PHT + HT', 1, False), ('\\\\textbf{PHT + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'PHT + ARF', 32, False), ('\\\\textbf{PHT + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'PHT + ARF', 1, False), 'MIDRULE', ('\\\\textbf{EDDM + HT}', 'EDDM + HT', 1, False), ('\\\\textbf{EDDM + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'EDDM + ARF', 1, False), 'MIDRULE', ('\\\\textbf{ADWIN + HT}', 'ADWIN + HT', 1, False), ('\\\\textbf{ADWIN + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'ADWIN + ARF', 32, False), ('\\\\textbf{ADWIN + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'ADWIN + ARF', 1, False), 'MIDRULE', ('\\\\textbf{SRP + PHT} ($c_{\\\\mathrm{int}} = 1$)', 'SRP + PHT', 1, False), ('\\\\textbf{SRP + PHT} ($c_{\\\\mathrm{int}} = 32$)', 'SRP + PHT', 32, False), ('\\\\textbf{KSWIN + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'KSWIN + ARF', 1, True), ('\\\\textbf{KSWIN + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'KSWIN + ARF', 32, True), 'MIDRULE', ('\\\\textbf{PHT + RF} (Static)', 'PHT + RF (Static)', 1, False), ('\\\\textbf{ADWIN + RF} (Static)', 'ADWIN + RF (Static)', 1, False)]",
+      "value": "[('\\\\textbf{PHT + HT}', 'PHT + HT', 1, False), ('\\\\textbf{PHT + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'PHT + ARF', 32, False), ('\\\\textbf{PHT + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'PHT + ARF', 1, False), 'MIDRULE', ('\\\\textbf{EDDM + HT}', 'EDDM + HT', 1, False), ('\\\\textbf{EDDM + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'EDDM + ARF', 1, False), 'MIDRULE', ('\\\\textbf{ADWIN + HT}', 'ADWIN + HT', 1, False), ('\\\\textbf{ADWIN + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'ADWIN + ARF', 32, False), ('\\\\textbf{ADWIN + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'ADWIN + ARF', 1, False), 'MIDRULE', ('\\\\textbf{SRP + PHT} ($c_{\\\\mathrm{int}} = 1$)', 'SRP + PHT', 1, False), ('\\\\textbf{SRP + PHT} ($c_{\\\\mathrm{int}} = 32$)', 'SRP + PHT', 32, False), ('\\\\textbf{KSWIN + ARF} ($c_{\\\\mathrm{int}} = 1$)', 'KSWIN + ARF', 1, True), ('\\\\textbf{KSWIN + ARF} ($c_{\\\\mathrm{int}} = 32$)', 'KSWIN + ARF', 32, True), 'MIDRULE', ('\\\\textbf{PHT + RF} (Static)', 'PHT + RF (Static)', 1, False), ('\\\\textbf{ADWIN + RF} (Static)', 'ADWIN + RF (Static)', 1, False)]"
+    },
+    "SEEDS": {
+      "expr": "list(range(1, N_SEEDS + 1))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30]"
+    },
+    "SIGN_CSV": {
+      "expr": "RESULTS_DIR / 'exp_R4_seed_level_tests.csv'",
+      "value": null
+    },
+    "TABLES_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R4_proteus_evaluation' / 'tables'",
+      "value": null
+    },
+    "TICKERS": {
+      "expr": "['SPY', 'PFF', 'VNQ', 'BWX']",
+      "value": "['SPY', 'PFF', 'VNQ', 'BWX']"
+    },
+    "TRANSITIONS": {
+      "expr": "[]",
+      "value": "[]"
+    }
+  },
+  "experiments/R5_real_world_evaluation/exp_R5_common.py": {},
+  "experiments/R5_real_world_evaluation/exp_R5_compute_baf.py": {},
+  "experiments/R5_real_world_evaluation/exp_R5_compute_delta_e.py": {},
+  "experiments/R5_real_world_evaluation/exp_R5_compute_insects.py": {},
+  "experiments/R5_real_world_evaluation/exp_R5_config.py": {
+    "ARF_N_MODELS": {
+      "expr": "10",
+      "value": "10"
+    },
+    "BAF_CHUNK_SIZE": {
+      "expr": "30",
+      "value": "30"
+    },
+    "BAF_DIR": {
+      "expr": "DATA_DIR / 'baf'",
+      "value": null
+    },
+    "BAF_DRIFTS": {
+      "expr": "[125000, 250000, 375000, 500000, 625000, 750000, 875000]",
+      "value": "[125000, 250000, 375000, 500000, 625000, 750000, 875000]"
+    },
+    "BAF_NONE_FILL": {
+      "expr": "0",
+      "value": "0"
+    },
+    "BAF_TAU_TOL": {
+      "expr": "5000",
+      "value": "5000"
+    },
+    "BAF_VARIANTS": {
+      "expr": "['Base', 'VariantI', 'VariantII']",
+      "value": "['Base', 'VariantI', 'VariantII']"
+    },
+    "BAF_WARMUP": {
+      "expr": "100000",
+      "value": "100000"
+    },
+    "CHECKPOINTS_DIR": {
+      "expr": "RESULTS_DIR / 'checkpoints'",
+      "value": null
+    },
+    "DATA_DIR": {
+      "expr": "ROOT_DIR / 'data'",
+      "value": null
+    },
+    "DELTA_E_MIN_WINDOW": {
+      "expr": "50",
+      "value": "50"
+    },
+    "DELTA_E_N_BOOTSTRAP": {
+      "expr": "1000",
+      "value": "1000"
+    },
+    "DELTA_E_RNG": {
+      "expr": "42",
+      "value": "42"
+    },
+    "DELTA_E_WINDOW_CAP": {
+      "expr": "5000",
+      "value": "5000"
+    },
+    "DELTA_E_WINDOW_FACTOR": {
+      "expr": "3",
+      "value": "3"
+    },
+    "F1_COL": {
+      "expr": "'F1_bp'",
+      "value": "'F1_bp'"
+    },
+    "FLOODING_GENUINE_MARGIN": {
+      "expr": "0.1",
+      "value": "0.1"
+    },
+    "INSECTS_CHUNK_SIZE": {
+      "expr": "50",
+      "value": "50"
+    },
+    "INSECTS_DIR": {
+      "expr": "DATA_DIR / 'insects'",
+      "value": null
+    },
+    "INSECTS_DRIFTS": {
+      "expr": "{'abrupt_balanced': [14352, 19500, 33240, 38682, 39510], 'gradual_balanced': [14028], 'incremental_reoccurring_balanced': [26568, 53364, 79932, 106497]}",
+      "value": "{'abrupt_balanced': [14352, 19500, 33240, 38682, 39510], 'gradual_balanced': [14028], 'incremental_reoccurring_balanced': [26568, 53364, 79932, 106497]}"
+    },
+    "INSECTS_DRIFTS_DELTA_E": {
+      "expr": "{'abrupt_balanced': [14352, 19500, 33240, 38682, 39510], 'gradual_balanced': [14028], 'incremental_reoccurring_balanced': [26568, 53364]}",
+      "value": "{'abrupt_balanced': [14352, 19500, 33240, 38682, 39510], 'gradual_balanced': [14028], 'incremental_reoccurring_balanced': [26568, 53364]}"
+    },
+    "INSECTS_NONE_FILL": {
+      "expr": "-1",
+      "value": "-1"
+    },
+    "INSECTS_TAU_CAP": {
+      "expr": "5000",
+      "value": "5000"
+    },
+    "INSECTS_TAU_FRACTION": {
+      "expr": "0.05",
+      "value": "0.05"
+    },
+    "INSECTS_VARIANTS": {
+      "expr": "['abrupt_balanced', 'gradual_balanced', 'incremental_reoccurring_balanced']",
+      "value": "['abrupt_balanced', 'gradual_balanced', 'incremental_reoccurring_balanced']"
+    },
+    "INSECTS_WARMUP_CAP": {
+      "expr": "100000",
+      "value": "100000"
+    },
+    "INSECTS_WARMUP_FRACTION": {
+      "expr": "0.1",
+      "value": "0.1"
+    },
+    "LOGS_DIR": {
+      "expr": "ROOT_DIR / 'logs' / 'R5_real_world_evaluation'",
+      "value": null
+    },
+    "N_JOBS": {
+      "expr": "-1",
+      "value": "-1"
+    },
+    "N_SEEDS": {
+      "expr": "30",
+      "value": "30"
+    },
+    "OUT_BAF": {
+      "expr": "RESULTS_DIR / 'baf_results.parquet'",
+      "value": null
+    },
+    "OUT_DELTA_E": {
+      "expr": "RESULTS_DIR / 'delta_e.parquet'",
+      "value": null
+    },
+    "OUT_EPISODE": {
+      "expr": "RESULTS_DIR / 'insects_per_episode.parquet'",
+      "value": null
+    },
+    "OUT_FLOODING": {
+      "expr": "RESULTS_DIR / 'flooding_decomposition.parquet'",
+      "value": null
+    },
+    "OUT_INSECTS": {
+      "expr": "RESULTS_DIR / 'insects_results.parquet'",
+      "value": null
+    },
+    "OUT_TABLE2_CSV": {
+      "expr": "TABLES_DIR / 'table2_values.csv'",
+      "value": null
+    },
+    "OUT_TABLE2_TEX": {
+      "expr": "TABLES_DIR / 'table2_real_data_summary.tex'",
+      "value": null
+    },
+    "PAIR_DEN": {
+      "expr": "'pht_arf_c1'",
+      "value": "'pht_arf_c1'"
+    },
+    "PAIR_NUM": {
+      "expr": "'pht_ht'",
+      "value": "'pht_ht'"
+    },
+    "PHT_DELTA": {
+      "expr": "0.005",
+      "value": "0.005"
+    },
+    "PHT_TARGET_FA": {
+      "expr": "1",
+      "value": "1"
+    },
+    "PIPELINES": {
+      "expr": "['pht_ht', 'pht_arf_c1', 'adwin_arf_c1']",
+      "value": "['pht_ht', 'pht_arf_c1', 'adwin_arf_c1']"
+    },
+    "PIPELINES_FLOODING": {
+      "expr": "['pht_ht', 'pht_arf_c1']",
+      "value": "['pht_ht', 'pht_arf_c1']"
+    },
+    "REOCCURRING_F1_K2": {
+      "expr": "True",
+      "value": "True"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R5_real_world_evaluation' / 'data'",
+      "value": null
+    },
+    "RIVER_VERSION_PIN": {
+      "expr": "'0.23.0'",
+      "value": "'0.23.0'"
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "SEED_MASTER": {
+      "expr": "42",
+      "value": "42"
+    },
+    "TABLES_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R5_real_world_evaluation' / 'tables'",
+      "value": null
+    }
+  },
+  "experiments/R5_real_world_evaluation/exp_R5_make_table2.py": {
+    "ROW_ORDER": {
+      "expr": "[('baf', 'Base', 'BAF Base'), ('baf', 'VariantI', 'BAF Variant I'), ('baf', 'VariantII', 'BAF Variant II'), ('insects', 'abrupt_balanced', 'INSECTS abrupt\\\\_balanced'), ('insects', 'gradual_balanced', 'INSECTS gradual\\\\_balanced'), ('insects', 'incremental_reoccurring_balanced', 'INSECTS reoccurring\\\\_balanced')]",
+      "value": "[('baf', 'Base', 'BAF Base'), ('baf', 'VariantI', 'BAF Variant I'), ('baf', 'VariantII', 'BAF Variant II'), ('insects', 'abrupt_balanced', 'INSECTS abrupt\\\\_balanced'), ('insects', 'gradual_balanced', 'INSECTS gradual\\\\_balanced'), ('insects', 'incremental_reoccurring_balanced', 'INSECTS reoccurring\\\\_balanced')]"
+    }
+  },
+  "experiments/R5_real_world_evaluation/exp_R5_preflight.py": {},
+  "experiments/R5_real_world_evaluation/exp_R5_smoke_test.py": {
+    "SMOKE_ROWS": {
+      "expr": "20000",
+      "value": "20000"
+    },
+    "SMOKE_WARMUP": {
+      "expr": "2000",
+      "value": "2000"
+    }
+  },
+  "experiments/R6_hydra_factor/exp_R6_compute_hydra.py": {
+    "K_arf": {
+      "expr": "(powerlaw(arf_m))[0]",
+      "value": null
+    },
+    "K_hat": {
+      "expr": "(powerlaw(hat_m))[0]",
+      "value": null
+    },
+    "OUT": {
+      "expr": "ROOT_DIR / 'results' / 'R6_hydra_factor' / 'tables' / 'exp_R6_hydra_empirical_validation.tex'",
+      "value": null
+    },
+    "R2": {
+      "expr": "ROOT_DIR / 'results' / 'R2_instrumented_blind_spot' / 'data' / 'R2_instrumented_A_PHT_ARF.parquet'",
+      "value": null
+    },
+    "R6": {
+      "expr": "ROOT_DIR / 'results' / 'R6_hydra_factor' / 'data' / 'R6_hat_instrumented.parquet'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "a_arf": {
+      "expr": "(powerlaw(arf_m))[1]",
+      "value": null
+    },
+    "a_hat": {
+      "expr": "(powerlaw(hat_m))[1]",
+      "value": null
+    },
+    "arf": {
+      "expr": "pd.read_parquet(R2).dropna(subset=['tau_arf'])",
+      "value": null
+    },
+    "arf_m": {
+      "expr": "arf.groupby('delta_e')['tau_arf'].mean()",
+      "value": null
+    },
+    "de_hi": {
+      "expr": "(at(0.33))[1]",
+      "value": null
+    },
+    "de_lo": {
+      "expr": "(at(0.14))[1]",
+      "value": null
+    },
+    "h_hi": {
+      "expr": "(at(0.33))[0]",
+      "value": null
+    },
+    "h_lo": {
+      "expr": "(at(0.14))[0]",
+      "value": null
+    },
+    "hat": {
+      "expr": "pd.read_parquet(R6).dropna(subset=['tau_hat'])",
+      "value": null
+    },
+    "hat_m": {
+      "expr": "hat.groupby('delta_e')['tau_hat'].mean()",
+      "value": null
+    },
+    "merged": {
+      "expr": "pd.concat([hat_m.rename('tau_hat'), arf_m.rename('tau_arf')], axis=1).dropna()",
+      "value": null
+    },
+    "report": {
+      "expr": "f'Hydra factor tau_HAT/tau_ARF: {h_lo:.1f}x at Delta_e={de_lo:.2f}  ->  {h_hi:.1f}x at Delta_e={de_hi:.2f}\\nHAT power law : tau_HAT ~ {K_hat:.1f} (Delta_e)^{a_hat:.2f}\\nARF power law : tau_ARF ~ {K_arf:.1f} (Delta_e)^{a_arf:.2f}\\n'",
+      "value": null
+    }
+  },
+  "experiments/R6_hydra_factor/exp_R6_generate_data.py": {
+    "BOUNDARY_SHIFTS": {
+      "expr": "np.linspace(0.1, 4.0, 20)",
+      "value": "[0.1, 0.30526315789473685, 0.5105263157894737, 0.7157894736842105, 0.9210526315789473, 1.1263157894736844, 1.3315789473684212, 1.536842105263158, 1.7421052631578948, 1.9473684210526316, 2.1526315789473687, 2.3578947368421055, 2.5631578947368423, 2.768421052631579, 2.973684210526316, 3.1789473684210527, 3.3842105263157896, 3.5894736842105264, 3.794736842105263, 4.0]"
+    },
+    "C_INT": {
+      "expr": "1",
+      "value": "1"
+    },
+    "DATA_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R6_hydra_factor' / 'data'",
+      "value": null
+    },
+    "N_MODELS": {
+      "expr": "1",
+      "value": "1"
+    },
+    "N_STEPS": {
+      "expr": "8000",
+      "value": "8000"
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "SEEDS": {
+      "expr": "list(range(1, 101))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]"
+    },
+    "T_DRIFT": {
+      "expr": "4000",
+      "value": "4000"
+    }
+  },
+  "experiments/R7_clock_mismatch/exp_R7_compute_regime1.py": {
+    "BANDS": {
+      "expr": "[('$\\\\Delta e \\\\le 0.15$', -np.inf, 0.15), ('$0.15 < \\\\Delta e \\\\le 0.35$', 0.15, 0.35), ('$\\\\Delta e > 0.35$', 0.35, np.inf)]",
+      "value": "[('$\\\\Delta e \\\\le 0.15$', -inf, 0.15), ('$0.15 < \\\\Delta e \\\\le 0.35$', 0.15, 0.35), ('$\\\\Delta e > 0.35$', 0.35, inf)]"
+    },
+    "CONFIG_LABEL": {
+      "expr": "{'A_mismatched': 'Mismatched ($c_{\\\\mathrm{int}}{=}1,\\\\ c_{\\\\mathrm{ext}}{=}32$)', 'B_matched': 'Matched ($c_{\\\\mathrm{int}}{=}1,\\\\ c_{\\\\mathrm{ext}}{=}1$)', 'C_decoupled': 'Decoupled ($c_{\\\\mathrm{int}}{=}32,\\\\ c_{\\\\mathrm{ext}}{=}1$)'}",
+      "value": "{'A_mismatched': 'Mismatched ($c_{\\\\mathrm{int}}{=}1,\\\\ c_{\\\\mathrm{ext}}{=}32$)', 'B_matched': 'Matched ($c_{\\\\mathrm{int}}{=}1,\\\\ c_{\\\\mathrm{ext}}{=}1$)', 'C_decoupled': 'Decoupled ($c_{\\\\mathrm{int}}{=}32,\\\\ c_{\\\\mathrm{ext}}{=}1$)'}"
+    },
+    "DATA": {
+      "expr": "ROOT_DIR / 'results' / 'R7_clock_mismatch' / 'data' / 'R7_clock_mismatch.parquet'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "TABLES": {
+      "expr": "ROOT_DIR / 'results' / 'R7_clock_mismatch' / 'tables'",
+      "value": null
+    },
+    "df": {
+      "expr": "pd.read_parquet(DATA)",
+      "value": null
+    },
+    "rows": {
+      "expr": "[]",
+      "value": "[]"
+    },
+    "tex": {
+      "expr": "['\\\\begin{tabular}{@{}lccc@{}}', '  \\\\toprule', '  Clock configuration & ' + ' & '.join((b[0] for b in BANDS)) + ' \\\\\\\\', '  \\\\midrule']",
+      "value": "['\\\\begin{tabular}{@{}lccc@{}}', '  \\\\toprule', '  Clock configuration & $\\\\Delta e \\\\le 0.15$ & $0.15 < \\\\Delta e \\\\le 0.35$ & $\\\\Delta e > 0.35$ \\\\\\\\', '  \\\\midrule']"
+    }
+  },
+  "experiments/R7_clock_mismatch/exp_R7_generate_data.py": {
+    "BOUNDARY_SHIFTS": {
+      "expr": "np.linspace(0.1, 4.0, 20)",
+      "value": "[0.1, 0.30526315789473685, 0.5105263157894737, 0.7157894736842105, 0.9210526315789473, 1.1263157894736844, 1.3315789473684212, 1.536842105263158, 1.7421052631578948, 1.9473684210526316, 2.1526315789473687, 2.3578947368421055, 2.5631578947368423, 2.768421052631579, 2.973684210526316, 3.1789473684210527, 3.3842105263157896, 3.5894736842105264, 3.794736842105263, 4.0]"
+    },
+    "DATA_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R7_clock_mismatch' / 'data'",
+      "value": null
+    },
+    "EXT_DELTA": {
+      "expr": "0.002",
+      "value": "0.002"
+    },
+    "N_MODELS": {
+      "expr": "10",
+      "value": "10"
+    },
+    "N_STEPS": {
+      "expr": "8000",
+      "value": "8000"
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "SCENARIOS": {
+      "expr": "[{'id': 'A_mismatched', 'c_int': 1, 'c_ext': 32}, {'id': 'B_matched', 'c_int': 1, 'c_ext': 1}, {'id': 'C_decoupled', 'c_int': 32, 'c_ext': 1}]",
+      "value": "[{'id': 'A_mismatched', 'c_int': 1, 'c_ext': 32}, {'id': 'B_matched', 'c_int': 1, 'c_ext': 1}, {'id': 'C_decoupled', 'c_int': 32, 'c_ext': 1}]"
+    },
+    "SEEDS": {
+      "expr": "list(range(1, 101))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]"
+    },
+    "T_DRIFT": {
+      "expr": "4000",
+      "value": "4000"
+    }
+  },
+  "experiments/R8_lambda_op_sweep/exp_R8_lambda_op_sweep.py": {
+    "C_INT": {
+      "expr": "1",
+      "value": "1"
+    },
+    "DELTA_E_GRID": {
+      "expr": "np.linspace(0.1, 0.5, 21)",
+      "value": "[0.1, 0.12000000000000001, 0.14, 0.16, 0.18, 0.2, 0.22, 0.24000000000000002, 0.26, 0.28, 0.30000000000000004, 0.32, 0.33999999999999997, 0.36, 0.38, 0.4, 0.42000000000000004, 0.44000000000000006, 0.45999999999999996, 0.48, 0.5]"
+    },
+    "DELTA_P": {
+      "expr": "0.005",
+      "value": "0.005"
+    },
+    "DRIFT_GAP": {
+      "expr": "1000",
+      "value": "1000"
+    },
+    "N_MODELS": {
+      "expr": "10",
+      "value": "10"
+    },
+    "N_SEEDS": {
+      "expr": "200",
+      "value": "200"
+    },
+    "N_STEPS": {
+      "expr": "T_DRIFT + TOLERANCE",
+      "value": "52000"
+    },
+    "OUT_CSV": {
+      "expr": "RESULTS_DIR / 'exp_R8_lambda_op_sweep.csv'",
+      "value": null
+    },
+    "OVERLAP_REF": {
+      "expr": "{0.1: 12.95, 0.25: 48.9, 0.4: 26.95}",
+      "value": "{0.1: 12.95, 0.25: 48.9, 0.4: 26.95}"
+    },
+    "Q_LEVEL": {
+      "expr": "0.05",
+      "value": "0.05"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R8_lambda_op_sweep' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "TOLERANCE": {
+      "expr": "50000",
+      "value": "50000"
+    },
+    "T_DRIFT": {
+      "expr": "WARMUP + DRIFT_GAP",
+      "value": "2000"
+    },
+    "WARMUP": {
+      "expr": "1000",
+      "value": "1000"
+    }
+  },
+  "experiments/R9_mcrit/exp_R9_compute_mcrit.py": {
+    "BETAS": {
+      "expr": "[0.5, 0.05]",
+      "value": "[0.5, 0.05]"
+    },
+    "DELTA_P": {
+      "expr": "0.005",
+      "value": "0.005"
+    },
+    "DKW_ALPHA": {
+      "expr": "0.05",
+      "value": "0.05"
+    },
+    "FIG_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R9_mcrit' / 'figures'",
+      "value": null
+    },
+    "LAMBDAS": {
+      "expr": "[8, 25, 50]",
+      "value": "[8, 25, 50]"
+    },
+    "PALETTE": {
+      "expr": "{8: '#00748C', 25: '#E08000', 50: '#3B6FA0'}",
+      "value": "{8: '#00748C', 25: '#E08000', 50: '#3B6FA0'}"
+    },
+    "RESULTS_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R9_mcrit' / 'data'",
+      "value": null
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "TARGET_DELTAS": {
+      "expr": "[0.1, 0.15, 0.2, 0.25, 0.33, 0.4, 0.5]",
+      "value": "[0.1, 0.15, 0.2, 0.25, 0.33, 0.4, 0.5]"
+    }
+  },
+  "experiments/R9_mcrit/exp_R9_generate_data.py": {
+    "BOUNDARY_SHIFTS": {
+      "expr": "np.linspace(0.1, 4.0, 20)",
+      "value": "[0.1, 0.30526315789473685, 0.5105263157894737, 0.7157894736842105, 0.9210526315789473, 1.1263157894736844, 1.3315789473684212, 1.536842105263158, 1.7421052631578948, 1.9473684210526316, 2.1526315789473687, 2.3578947368421055, 2.5631578947368423, 2.768421052631579, 2.973684210526316, 3.1789473684210527, 3.3842105263157896, 3.5894736842105264, 3.794736842105263, 4.0]"
+    },
+    "C_EXT": {
+      "expr": "32",
+      "value": "32"
+    },
+    "C_INT": {
+      "expr": "1",
+      "value": "1"
+    },
+    "DATA_DIR": {
+      "expr": "ROOT_DIR / 'results' / 'R9_mcrit' / 'data'",
+      "value": null
+    },
+    "DELTA_E_WINDOW": {
+      "expr": "500",
+      "value": "500"
+    },
+    "N_MODELS": {
+      "expr": "1",
+      "value": "1"
+    },
+    "N_STEPS": {
+      "expr": "8000",
+      "value": "8000"
+    },
+    "ROOT_DIR": {
+      "expr": "Path(__file__).resolve().parent.parent.parent",
+      "value": null
+    },
+    "SEEDS": {
+      "expr": "list(range(1, 101))",
+      "value": "[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100]"
+    },
+    "T_DRIFT": {
+      "expr": "4000",
+      "value": "4000"
+    }
+  }
+}

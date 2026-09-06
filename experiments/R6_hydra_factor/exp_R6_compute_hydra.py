@@ -7,11 +7,17 @@ power-law prefactors/exponents (K_HAT, K_ARF, alpha_HAT, alpha_ARF).
 Inputs : R6_hat_instrumented.parquet (tau_hat)  +  R2_instrumented_A_PHT_ARF.parquet (tau_arf).
 Output : a small .tex snippet + console report. No figure.
 """
+import sys
+
 import numpy as np
 import pandas as pd
 from pathlib import Path
+from scipy.stats import norm
 
 ROOT_DIR = Path(__file__).resolve().parent.parent.parent
+sys.path.insert(0, str(ROOT_DIR))
+from config import experiment_ssot as ssot
+
 R6 = ROOT_DIR / "results" / "R6_hydra_factor" / "data" / "R6_hat_instrumented.parquet"
 R2 = ROOT_DIR / "results" / "R2_instrumented_blind_spot" / "data" / "R2_instrumented_A_PHT_ARF.parquet"
 OUT = ROOT_DIR / "results" / "R6_hydra_factor" / "tables" / "exp_R6_hydra_empirical_validation.tex"
@@ -26,21 +32,32 @@ hat = pd.read_parquet(R6).dropna(subset=['tau_hat'])
 arf = pd.read_parquet(R2).dropna(subset=['tau_arf'])
 # R2 stores boundary_shift; map to the same Delta_e transform if 'delta_e' absent
 if 'delta_e' not in arf.columns:
-    from scipy.stats import norm
     arf['delta_e'] = norm.cdf(arf['boundary_shift'] / np.sqrt(2)) - 0.5
 
 hat_m = hat.groupby('delta_e')['tau_hat'].mean()
 arf_m = arf.groupby('delta_e')['tau_arf'].mean()
 
 merged = pd.concat([hat_m.rename('tau_hat'), arf_m.rename('tau_arf')], axis=1).dropna()
+assert len(merged) == 20, f"R6/R2 Delta_e join dropped points: {len(merged)} of 20 retained"
 merged['hydra'] = merged['tau_hat'] / merged['tau_arf']
 
 K_hat, a_hat = powerlaw(hat_m)
 K_arf, a_arf = powerlaw(arf_m)
 
-# Hydra endpoints near the magnitudes cited in the paper
-def at(de):
+# Hydra endpoints at the magnitudes cited in the paper. 0.14 and 0.33 are ROUNDED LABELS: the
+# swept grid is norm.cdf(linspace(0.1, 4.0, 20)/sqrt(2)) - 0.5, whose points 2 and 6 are 0.140949
+# and 0.326793. Resolve the label to its grid point, then assert the selection is exact -- the bare
+# idxmin silently accepted any nearest point, including one from a different grid.
+DELTA_E_GRID = norm.cdf(ssot.R6_BOUNDARY_SHIFTS / np.sqrt(2)) - 0.5
+HYDRA_ANCHORS = {0.14: 2, 0.33: 6}       # manuscript label -> index in DELTA_E_GRID
+GRID_TOL = 1e-6
+
+def at(label):
+    de = DELTA_E_GRID[HYDRA_ANCHORS[label]]
     i = (merged.index.to_series() - de).abs().idxmin()
+    assert abs(i - de) <= GRID_TOL, (
+        f"Delta_e {i} is {abs(i - de):.2e} from the grid anchor {de} for label {label} "
+        f"(tolerance {GRID_TOL:g}): the R6/R2 magnitude grid has changed")
     return merged.loc[i, 'hydra'], i
 h_lo, de_lo = at(0.14)
 h_hi, de_hi = at(0.33)
