@@ -260,6 +260,15 @@ S6_PARQUET_VERSION = "2.6"
 S6_PARQUET_ROW_GROUP = 100_000
 S6_PARQUET_PARTITION_FMT = "{:.6f}"            # delta_e -> hive directory name
 
+# S6 post-hoc audit of the external CUSUM. The campaign accumulates at DELTA_P = 0.005; the
+# manuscript text states 0.01, and transfer_S1 open item 2 flags the factor of two as unresolved.
+# The audit re-accumulates the committed traces at the manuscript value so the two can be compared
+# without re-running anything.
+S6_AUDIT_DELTA_P = R2_CUSUM_DELTA              # 0.01, the manuscript tolerance
+S6_AUDIT_LAMBDAS = [15.0, 50.0]                # 15 brackets the measured lambda_op envelope
+                                               # (q05 floor 15.2 over Delta_e >= 0.20); 50 is the
+                                               # threshold the starvation certificate is stated at
+
 
 def require_drift_tracker(model, warning=False):
     """River private-attribute guard, shared by R1, R2, R6, R7, R8 and R9.
