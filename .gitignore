@@ -13,3 +13,6 @@ repomix-output.xml
 
 # Graphe et visualisations locales
 graphify-out/
+
+# Traces brutes volumineuses S6 (régénérables en 20 min)
+results/S6_synchronized_traces/data/traces.parquet/

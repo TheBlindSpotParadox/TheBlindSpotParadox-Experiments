@@ -61,6 +61,9 @@ RUNS_SCHEMA = pa.schema(
     + [("tau_erase", pa.float64()),
        ("a", pa.float64()), ("a_rect", pa.float64()), ("a_refl", pa.float64()),
        ("a_unrefl_peak", pa.float64()),
+       # framework_v2 quantities (def:times / def:budget / def:kappa); see s6_defs
+       ("tau_erase_fw", pa.float64()), ("w_fw", pa.float64()),
+       ("a_fw", pa.float64()), ("a_rect_fw", pa.float64()), ("kappa", pa.float64()),
        ("n_nodes_mean_at_drift", pa.float64()), ("n_nodes_mean_at_horizon", pa.float64()),
        ("n_active_leaves_mean_at_horizon", pa.float64()),
        ("err_post_mean", pa.float64())]
@@ -98,19 +101,28 @@ def write_runs(records, out_dir):
     return _write(table, Path(out_dir) / "runs.parquet")
 
 
-def write_traces(frames, out_dir):
-    """Hive dataset partitioned by delta_e. `frames` is a list of dicts of equal-length arrays,
-    each carrying the TRACES_SCHEMA keys plus a scalar `delta_e`."""
+def trace_root(out_dir, reset=False):
     root = Path(out_dir) / "traces.parquet"
-    if root.exists():
+    if reset and root.exists():
         shutil.rmtree(root)
-    written = []
-    for de in sorted({f["delta_e"] for f in frames}):
-        part = [f for f in frames if f["delta_e"] == de]
-        cols = {f_.name: np.concatenate([p[f_.name] for p in part]) for f_ in TRACES_SCHEMA}
-        table = _sorted_table(cols, TRACES_SCHEMA, ["arm", "seed", "t_rel"])
-        written.append(_write(table, root / f"delta_e={PARTITION_FMT.format(de)}" / "part-0.parquet"))
-    return root, written
+    return root
+
+
+def write_trace_partition(frames, root, delta_e):
+    """One hive partition. `frames` is a list of dicts of equal-length arrays carrying the
+    TRACES_SCHEMA keys, all at this `delta_e`. Written on its own so a campaign can free a batch
+    before simulating the next magnitude: the full grid holds tens of millions of trace rows and
+    accumulating them all in the parent process is how a run dies at 90 %."""
+    cols = {f.name: np.concatenate([p[f.name] for p in frames]) for f in TRACES_SCHEMA}
+    table = _sorted_table(cols, TRACES_SCHEMA, ["arm", "seed", "t_rel"])
+    return _write(table, Path(root) / f"delta_e={PARTITION_FMT.format(delta_e)}" / "part-0.parquet")
+
+
+def write_traces(frames, out_dir):
+    """Hive dataset partitioned by delta_e, written in one call."""
+    root = trace_root(out_dir, reset=True)
+    return root, [write_trace_partition([f for f in frames if f["delta_e"] == de], root, de)
+                  for de in sorted({f["delta_e"] for f in frames})]
 
 
 def read_traces(root):

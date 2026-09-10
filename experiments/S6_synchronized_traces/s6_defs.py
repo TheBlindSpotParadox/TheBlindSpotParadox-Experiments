@@ -160,6 +160,70 @@ def empirical_delta_e(err_pre, err_post, window=ERR_WINDOW):
     return e_pre, e_post - e_pre
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# framework_v2 definitions (docs/sections/framework_v2.tex, def:times / def:budget / def:kappa)
+# ══════════════════════════════════════════════════════════════════════════════
+# DECLARED DIVERGENCE. The Phase-1 mandate fixed operational surrogates -- tau_err with a W/2
+# hysteresis on a threshold e_pre + rho * Delta_e_emp, tau_erase as the argmax of A_unrefl, A as the
+# signed excess over a fixed horizon. The manuscript's formal framework defines the same three
+# quantities differently:
+#
+#   tau_err(rho) = inf{t : bar_e_s <= p_0 + rho for ALL s >= t}   -- a LAST crossing, absolute rho
+#   tau_erase    = tau_err(delta_P),   W = tau_erase - tau*
+#   A            = sum over (tau*, tau_erase] of (bar_e_t - p_0 - delta_P)^+   -- positive part
+#   A_rect       = (Delta_e - delta_P) * W                        -- height x exploitable transient
+#   kappa        = (tau_erase - tau*) / (tau_swap^(1/M) - tau*)
+#
+# Both are computed and both are written. The surrogates carry the Phase-1 names; the framework
+# quantities carry a `_fw` suffix. `docs/theory/transfer_S1.md` states the S6 blocking gate on the
+# framework kappa, so the verdict is read there and nowhere else.
+#
+# "for ALL s >= t" is not measurable on an unbounded stream. It is evaluated over the post-drift
+# horizon T_h and reported as censored when bar_e never settles inside it.
+
+
+def tau_err_framework(err_post, e_pre, rho, window=ERR_WINDOW, horizon=T_HORIZON):
+    """inf{t <= horizon : rolling mean of the error stays <= e_pre + rho from t onward}.
+
+    `rho` is an ABSOLUTE offset above the pre-drift rate, per def:times -- not a fraction of the
+    jump. The smoothed error is the trailing mean over `window`, so the crossing it reports lags the
+    true one by up to W; the W/2 correction R4 applies to its own smoothed detector is left to the
+    caller rather than folded in silently. NaN when the error is still above the threshold at the
+    horizon."""
+    n = min(int(horizon), len(err_post))
+    smooth = rolling_mean(err_post[:n], window)
+    above = np.isfinite(smooth) & (smooth > e_pre + rho)
+    if not above.any():
+        return float(window - 1) if n >= window else np.nan
+    last = int(np.flatnonzero(above)[-1])
+    return np.nan if last == n - 1 else float(last + 1)
+
+
+def budget_framework(err_post, e_pre, tau_erase_fw, delta_e_emp, delta=DELTA_P, window=ERR_WINDOW):
+    """(A_fw, A_rect_fw) per def:budget, A = sum over (tau*, tau_erase] of (bar_e_t - p_0 - delta_P)^+.
+
+    The positive part applies to the SMOOTHED rate bar_e_t, never to the raw 0/1 indicator. On the
+    indicator the clip is inert -- (1 - p_0 - delta_P)^+ = 0.945 on every error step and 0 elsewhere,
+    so the sum degenerates into 0.945 times the error count and stops being an excess at all. That
+    distinction is the whole difference between a proof budget and a tally.
+
+    A_rect_fw is the rectangle the framework itself names, (Delta_e - delta_P) * W -- height times
+    the exploitable transient, not height times the first swap."""
+    if not np.isfinite(tau_erase_fw):
+        return np.nan, np.nan
+    w = int(tau_erase_fw)
+    smooth = rolling_mean(err_post[:w + 1], window)
+    excess = smooth[np.isfinite(smooth)] - e_pre - delta
+    return float(np.clip(excess, 0.0, None).sum()), float((delta_e_emp - delta) * w)
+
+
+def kappa(tau_erase_fw, tau_swap_1m):
+    """Dilation ratio of def:kappa. NaN when either time is censored or the first swap is at tau*."""
+    if not (np.isfinite(tau_erase_fw) and np.isfinite(tau_swap_1m)) or tau_swap_1m <= 0:
+        return np.nan
+    return float(tau_erase_fw / tau_swap_1m)
+
+
 def demo():
     """Self-check: the invariants the test suite asserts on real traces, on constructed inputs."""
     err = np.concatenate([np.ones(30), np.zeros(970)])          # 30 post-drift steps in error
@@ -186,6 +250,20 @@ def demo():
 
     m = rolling_mean([1, 2, 3, 4], 2)
     assert np.isnan(m[0]) and list(m[1:]) == [1.5, 2.5, 3.5], m
+
+    # framework_v2: last crossing, positive-part budget, dilation ratio
+    t_fw = tau_err_framework(err, e_pre, rho=DELTA_P, window=10, horizon=1000)
+    assert t_fw == 39.0, t_fw            # last window still above 0.005 ends at 38
+    a_fw, a_rect_fw = budget_framework(err, e_pre, t_fw, d_emp, window=10)
+    smooth = rolling_mean(err[:int(t_fw) + 1], 10)
+    expected = np.clip(smooth[np.isfinite(smooth)] - e_pre - DELTA_P, 0.0, None).sum()
+    assert abs(a_fw - expected) < 1e-12 and a_fw > 0, (a_fw, expected)
+    assert abs(a_fw - 25.35) < 1e-2, a_fw          # smoothed excess; the raw-indicator clip
+    assert abs(30 * (1 - DELTA_P) - 29.85) < 1e-9  # would have given 29.85, a mere error count
+    assert abs(a_rect_fw - (0.6 - DELTA_P) * 39) < 1e-9, a_rect_fw
+    assert abs(kappa(t_fw, 10.0) - 3.9) < 1e-12
+    assert np.isnan(kappa(np.nan, 10.0)) and np.isnan(kappa(t_fw, 0.0))
+    assert np.isnan(tau_err_framework(np.ones(200), 0.0, DELTA_P, window=10, horizon=200))
     print("s6_defs demo: OK")
 
 

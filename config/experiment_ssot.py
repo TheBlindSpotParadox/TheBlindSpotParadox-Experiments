@@ -228,7 +228,25 @@ S6_ERR_WINDOW = 200                            # W, rolling recovery estimate. R
 S6_ERR_HYSTERESIS = S6_ERR_WINDOW // 2         # H = W/2 consecutive steps under the threshold
 S6_RHO_GRID = [0.50, 0.25, 0.10]               # residual fraction of the empirical Delta_e
 S6_Q_GRID = [0.1, 0.25, 0.5, 1.0]              # fraction of DISTINCT trees replaced; 0.1 == 1/M
-S6_T_HORIZON = R3_TAU_TOL                      # T_h = 1000, the post-drift scoring window of R3
+S6_T_HORIZON = 2500                            # T_h. S6/Phase-2 rectification: at 1000 the argmax
+                                               # of A_unrefl hit the right edge of the window on the
+                                               # weak band (median tau_erase = 1143 at Delta_e=0.10).
+                                               # Raised UNIFORMLY, not only under Delta_e <= 0.15:
+                                               # A integrates over T_h, so a magnitude-dependent
+                                               # horizon makes A incomparable across the grid
+S6_KAPPA_DELTA_E_TARGET = 0.33                 # transfer_S1 blocking gate; nearest canonical grid
+                                               # point is 0.3268
+S6_KAPPA_STAR_MEAN = 1.73                      # W* / mean first swap = 95 / 54.8 (transfer_S1)
+S6_KAPPA_STAR_Q05 = 3.18                       # W* / q05 first swap  = 95 / 30   (transfer_S1)
+S6_W_STAR = 95                                 # max window preserving the lambda=50 certificate
+S6_FIGURE_LAMBDAS = R2_LAMBDAS                 # 50 / 25 / 8 -- R2's scenarios A / B / C
+S6_FIGURE_LAMBDA_LADDER = R2_LAMBDAS + [4.0, 2.0, 1.0]
+# The synthesis figure wants one column per regime (starvation / safe zone / flooding) and picks the
+# lambda for each from its MEASURED pre-drift false-alarm rate and detection rate, not by decree.
+# R2's three thresholds do not span the flooding regime: at lambda = 8 the CUSUM ARL_0 is ~2.3e3
+# (transfer_S1) against a 1000-step observable warm-up, so false alarms stay rare -- R2's own figure
+# labels that scenario "SAFE ZONE". The ladder is extended downward so the third regime can appear
+# if it exists at all on this stream; if it does not, the figure says so.
 S6_TRACE_PRE = S6_WARMUP_WINDOW                # traced window = [t_drift - 1000, t_drift + 4000)
 S6_TRACE_POST = CENSORING_HORIZON
 S6_SMOKE_N_SEEDS = 5

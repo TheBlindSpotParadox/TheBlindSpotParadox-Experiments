@@ -143,6 +143,8 @@ def _metrics(seed, delta_e, arm, post, err_pre, pre_swaps, fork_t_rel, n_nodes_a
     tau_star = defs.tau_swap(trees_cum, N_MODELS, 1.0 / N_MODELS)
     t_erase = defs.tau_erase(a_unrefl, tau_star)
     a, a_rect = defs.error_budget(err_post, e_pre, delta_e_emp, tau_star)
+    t_erase_fw = defs.tau_err_framework(err_post, e_pre, defs.DELTA_P)
+    a_fw, a_rect_fw = defs.budget_framework(err_post, e_pre, t_erase_fw, delta_e_emp)
     horizon = min(int(T_HORIZON), err_post.size) - 1
 
     record = {
@@ -156,6 +158,8 @@ def _metrics(seed, delta_e, arm, post, err_pre, pre_swaps, fork_t_rel, n_nodes_a
         "trees_swapped_total": int(trees_cum[-1]) if trees_cum.size else 0,
         "tau_erase": t_erase, "a": a, "a_rect": a_rect,
         "a_refl": float(a_refl[horizon]), "a_unrefl_peak": float(a_unrefl.max()),
+        "tau_erase_fw": t_erase_fw, "w_fw": t_erase_fw, "a_fw": a_fw, "a_rect_fw": a_rect_fw,
+        "kappa": defs.kappa(t_erase_fw, tau_star),
         "n_nodes_mean_at_drift": float(n_nodes_at_drift),
         "n_nodes_mean_at_horizon": float(post["n_nodes_mean"][horizon]),
         "n_active_leaves_mean_at_horizon": float(post["n_active_leaves_mean"][horizon]),
@@ -251,16 +255,26 @@ def simulate(seed, delta_e):
 
 
 def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6"):
-    grid = [(s, de) for de in delta_e_grid for s in seeds]
+    """Simulate the grid one magnitude at a time, writing each trace partition before the next.
+
+    The full grid is 100 x 20 x 4 arms x 5000 traced steps = 40 million rows; holding them all in
+    the parent to write once at the end costs several GB for no benefit, and the hive layout is one
+    file per magnitude anyway. Records are small and are written once at the end, sorted."""
     t0 = time.perf_counter()
-    out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de) for s, de in tqdm(grid, desc=desc))
-    records = [r for recs, _ in out for r in recs]
-    frames = [f for _, frs in out for f in frs]
-    runs_path = writer.write_runs(records, out_dir)
-    traces_path, parts = writer.write_traces(frames, out_dir)
-    return {"cells": len(grid), "records": len(records), "frames": len(frames),
-            "trace_rows": sum(f["t_rel"].size for f in frames),
-            "runs_path": runs_path, "traces_path": traces_path, "parts": parts,
+    root = writer.trace_root(out_dir, reset=True)
+    records, rows, parts = [], 0, []
+    bar = tqdm(delta_e_grid, desc=desc)
+    for de in bar:
+        out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de) for s in seeds)
+        frames = [f for _, frs in out for f in frs]
+        records += [r for recs, _ in out for r in recs]
+        rows += sum(f["t_rel"].size for f in frames)
+        parts.append(writer.write_trace_partition(frames, root, de))
+        bar.set_postfix(rows=f"{rows:,}")
+        del out, frames
+    return {"cells": len(seeds) * len(delta_e_grid), "records": len(records),
+            "frames": len(parts), "trace_rows": rows,
+            "runs_path": writer.write_runs(records, out_dir), "traces_path": root, "parts": parts,
             "wall_clock_s": time.perf_counter() - t0}
 
 
