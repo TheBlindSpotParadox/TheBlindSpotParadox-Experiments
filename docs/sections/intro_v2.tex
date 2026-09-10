@@ -1,0 +1,103 @@
+% ══════════════════════════════════════════════════════════════════
+\section{Introduction}\label{sec:intro}
+% ══════════════════════════════════════════════════════════════════
+
+An adaptive stream classifier repairs itself; it does not report.
+When an Adaptive Random Forest (ARF)~\cite{gomes_arf_2017} replaces a drifting
+subtree, predictive loss returns towards its pre-drift level and nothing else
+leaves the model: no change timestamp, no localisation, no record a downstream
+system can act on. Deployment separates three objectives that the streaming
+literature routinely merges.
+\emph{(i) Adaptation} minimises predictive loss; the model is its own consumer.
+\emph{(ii) Monitoring and diagnosis} establish whether the environment changed,
+when, and where; the consumers are the engineers who must decide whether a shift
+is benign seasonality or a broken upstream feature.
+\emph{(iii) System alarm} notifies operators, downstream pipelines and auditors.
+Objectives (ii) and (iii) survive a model that repairs itself perfectly, because
+their consumers are not the model. Regulation states the separation directly:
+Article~15(4) of the EU Artificial Intelligence Act~\cite{eu_ai_act_2024}
+requires providers of high-risk systems that keep learning after deployment to
+eliminate or mitigate the feedback loops that continued learning creates, and
+Article~72 requires a documented post-market monitoring system collecting
+performance evidence over the system's lifetime. United States banking
+supervision requires ongoing monitoring of deployed models under independent
+effective challenge~\cite{frb_sr26_2_2026}. A model that silently absorbs a
+change satisfies none of this.
+
+The architecture we study---a self-updating model observed by a monitor it does
+not control---is the ordinary shape of production monitoring. Managed services
+attach drift and model-quality jobs to a deployed endpoint on their own
+schedule~\cite{gcp_vertex_monitoring, aws_model_monitor}; open-source libraries
+run the same checks in pipelines and CI~\cite{evidently_lib}; NannyML names its
+object of observation \emph{the monitored model} and estimates that model's
+performance from predictions when labels arrive late or never~\cite{nannyml_pe}.
+None of these stacks assumes a frozen model, and none couples the monitor to the
+model's update path. River~\cite{montiel_river_2021} and MOA ship both halves and
+compose them. We claim no census of deployments; we claim that the composition is
+the default design pattern and that regulation now requires the monitoring half
+to stay independent of the adaptation half.
+
+Composing the two halves closes a loop. Let $\tau^{*}$ denote the change instant,
+$e_t \in \{0,1\}$ the classifier's error indicator at time $t$, and $\Delta e$ the
+error excess the change induces before any adaptation. The external monitor
+observes $e_t$; the classifier reacts to that same $e_t$ by replacing trees. The
+measured signal is endogenous. Fault detection under feedback has studied this
+configuration for three decades: a controller that rejects a disturbance also
+removes it from the residual, and a residual-based detector loses the evidence it
+was calibrated on~\cite{chen_patton_1999, gertler_1998, isermann_2006}. ARF's
+internal ADWIN detectors~\cite{bifet_adwin_2007} act as a high-gain,
+event-triggered corrector on the error rate; the external cumulative monitor is
+the residual test. The change is not undone---the environment has shifted and
+stays shifted---the loop has removed its signature.
+
+Adaptation therefore converts a persistent change into a transient one. Write
+$\tau_{\mathrm{erase}}$ for the erasure time: the delay from $\tau^{*}$ until
+ensemble error returns to within tolerance of its pre-drift level. Any monitor
+reading $e_t$ has $\tau_{\mathrm{erase}}$ observations of the change, not the
+horizon of the stream. Cumulative-evidence monitors of the CUSUM
+family~\cite{page_1954, lorden_1971, moustakides_1986} require a fixed quantity of
+evidence, accumulated at a rate set by $\Delta e$, before stopping; when the
+window closes first, no alarm fires. Stated this way the effect is a power
+deficit under window truncation, and the design problem is a sizing problem: fit
+the evidence a monitor requires inside the window the classifier leaves open.
+Sequential detection of transient signals~\cite{nikiforov_2012,
+tartakovsky_2023_transient} supplies the matching criterion---worst-case
+probability of missed detection over a window of finite length at a fixed
+false-alarm rate---in place of the F1 scores that dominate drift-detector
+benchmarks and that fold calibration and delay into one scalar comparable across
+no two detectors.
+
+We call \textbf{blind spot} the region of the design space where the window
+closes before the required evidence arrives, and \textbf{starvation} the
+mechanism that closes it. Two consequences follow on the same threshold.
+Raising the monitor's threshold to control false alarms lengthens the required
+accumulation and widens the blind spot; lowering it to fit inside
+$\tau_{\mathrm{erase}}$ floods a heteroscedastic stream with alarms. Recall
+collapse on stationary streams and precision collapse on non-stationary ones are
+the two faces of one calibration, not two phenomena
+(Fig.~\ref{fig:ontology}). Our real-data streams exhibit the precision face; the
+recall face is established on controlled and semi-synthetic streams, and we
+mark the distinction wherever results are reported.
+
+\noindent\textbf{Contributions.}
+\begin{enumerate}[nosep, label=\textbf{(C\arabic*)}]
+  \item \textbf{Monitoring under closed-loop adaptation.} We state the
+  concept-drift monitoring problem as fault detection on an endogenous residual,
+  give the mapping to the fault-detection-under-feedback setting, and derive the
+  prediction that severity is governed by the ratio of erasure time to detector
+  integration time---not by River, by ARF, or by ADWIN
+  (Section~\ref{sec:blindspot}).
+  \item \textbf{A transient-detection analysis of starvation.} We characterise
+  the observability window $\tau_{\mathrm{erase}}$ induced by adaptation and give
+  a finite-horizon sizing condition relating evidence required to evidence
+  available, together with a detection floor that no threshold choice escapes
+  (Section~\ref{sec:starvation}).
+  \item \textbf{Synchronised measurement.} We instrument tree replacement,
+  ensemble error and the external monitor's statistic on a shared clock, and
+  report how strongly replacement counts predict error recovery, so that erasure
+  is measured rather than assumed (Section~\ref{sec:experiments}).
+  \item \textbf{An architectural consequence.} We order monitor families by their
+  exposure to the loop---cumulative on the error stream, windowed on the error
+  stream, distributional on the input space---and state the cost each pays
+  (Section~\ref{sec:related} and Section~\ref{sec:discussion}).
+\end{enumerate}

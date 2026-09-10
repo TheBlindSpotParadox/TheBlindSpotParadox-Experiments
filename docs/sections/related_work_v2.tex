@@ -1,0 +1,112 @@
+% ══════════════════════════════════════════════════════════════════
+\section{Background and Related Work}\label{sec:related}
+% ══════════════════════════════════════════════════════════════════
+
+\subsection{Detection and adaptation, evaluated apart}
+Concept drift detection has been surveyed for two
+decades~\cite{gama_survey_2014, lu_concept_drift_2018, bayram_2022}, from
+Klinkenberg and Joachims~\cite{klinkenberg_2000} onwards. The surveys frame the
+detector as a module serving the classifier: the detector fires, the classifier
+adapts. Evaluation follows the frame. Detector
+benchmarks~\cite{goncalves_2014, lukats_2025} run on pre-generated bitstreams
+with no classifier in the loop; work introducing adaptive ensembles such as
+ARF~\cite{gomes_arf_2017} or SRP~\cite{gomes_srp_2019} reports predictive
+accuracy. Deployed pipelines stack the two. Stirling et
+al.~\cite{stirling_2018} studied the effect of the internal detector on a
+Hoeffding Adaptive Tree~\cite{bifet_hat_2009} and measured classification
+accuracy only. Read~\cite{read_2018} flagged destructive adaptation in
+Hoeffding-tree ensembles as a classification inefficiency and argued for
+detector-free continuous adaptation; read from the monitoring side, the same
+mechanism removes the evidence an external monitor needs.
+
+\subsection{Fault detection on an endogenous residual}
+Monitoring a signal that a controller is actively regulating is the standard
+setting of model-based fault detection and isolation~\cite{chen_patton_1999,
+gertler_1998, isermann_2006, blanke_2006}. A residual generator compares
+observed behaviour to nominal behaviour and a decision rule tests the residual
+for a shift. Under feedback the residual is no longer a free measurement: the
+controller compensates the fault and the residual returns towards zero while the
+fault persists, so residual sensitivity falls and detectability degrades. The
+effect is reported across process control and is not confined to linear
+plants---adaptive controllers mask fault signatures that data-driven detectors
+rely on. Two properties transfer to our setting. Detectability is a property of
+the loop, not of the detector alone. Instrumenting a signal the loop does not
+close over restores it.
+
+The mapping is structural and we state its limits. The plant is the conditional
+law $P_t(Y \mid X)$; the fault is the change at $\tau^{*}$; the residual is the
+error stream $e_t$; the controller is the internal drift-detection and
+tree-replacement mechanism; the residual test is the external monitor. Unlike a
+linear regulator with integral action, ARF's corrector is discrete,
+event-triggered and non-parametric, so no transfer-function argument carries
+over and we make none. What carries over is the topology and its consequence:
+the quantity the monitor reads is a function of the corrector's own action.
+
+\subsection{Change-point criteria}
+Sequential change-point theory supplies the criteria we report against. Page's
+CUSUM~\cite{page_1954} is minimax optimal for Lorden's worst-case expected
+delay~\cite{lorden_1971, moustakides_1986}; Lai~\cite{lai_1995} unifies the
+procedures scattered across quality control and fault detection; Tartakovsky,
+Nikiforov and Basseville~\cite{tartakovsky_2014} give the reference treatment.
+A detector is characterised by a pair: the in-control average run length
+$\mathrm{ARL}_0$, and the detection delay attained at that $\mathrm{ARL}_0$. The
+pair is comparable across detector families because it fixes calibration before
+measuring speed. An F1 score computed over a matching window is not: it depends
+on the window, on the number of true change points in the stream, and on an
+implicit and unequal false-alarm budget per detector.
+
+Changes of finite duration require a further departure. When a change persists
+for a bounded interval, mean delay is the wrong functional and the criterion
+becomes the worst-case probability of missed detection within the
+interval~\cite{nikiforov_2012, tartakovsky_2023_transient}. Adaptation places our
+problem in exactly this class: the interval is $\tau_{\mathrm{erase}}$, and it is
+set by the classifier rather than by the environment.
+
+\subsection{Monitoring deployed models}
+Production monitoring separates the monitor from the model by
+construction. Managed services schedule data-quality and model-quality jobs
+against a deployed endpoint, comparing live features to a training
+baseline and, where labels are ingested, live error to a baseline
+error~\cite{gcp_vertex_monitoring, aws_model_monitor}. Open-source libraries run
+equivalent checks offline and in pipelines~\cite{evidently_lib}. Where labels are
+delayed, performance is estimated from prediction confidence or from a secondary
+loss model~\cite{nannyml_pe}; both estimators assume the conditional law is
+unchanged, so they degrade under precisely the drift they are deployed to
+survive. None of these systems is coupled to the monitored model's own update
+path, and Article~15(4) of the EU Artificial Intelligence
+Act~\cite{eu_ai_act_2024} requires providers of continually learning high-risk
+systems to address the feedback loops that continued learning creates.
+
+\subsection{Monitors outside the loop}
+A monitor that never reads $e_t$ is not exposed to erasure. Detectors on the
+input distribution $P(X)$ compare a reference window to a current window:
+Hellinger-distance monitoring on feature histograms~\cite{ditzler_hdddm_2011},
+density comparison in a principal-component
+subspace~\cite{qahtan_pcacd_2015}, and discriminative separability between the
+two windows~\cite{gozuacik_d3_2019}. Margin-density
+monitoring~\cite{sethi_md3_2017} sits between the families: it reads the
+classifier's decision geometry rather than its realised error. Surveys and
+benchmarks cover the family~\cite{gemaque_2020, hu_nofreelunch_2020,
+lukats_2025}.
+
+The exemption has a price, and it is symmetric. An input-space monitor is blind
+to a change in $P(Y \mid X)$ at fixed $P(X)$---the case where the labelling rule
+moves and the features do not---which is the case error-stream monitors are
+built for. Neither family dominates. The design consequence is that the two
+occupy different positions with respect to the loop and are therefore
+complementary rather than substitutable, which is why we evaluate an
+input-space arm alongside the error-stream arms
+(Section~\ref{sec:experiments}).
+
+\subsection{Detectors instantiated in this work}
+\textbf{ADWIN}~\cite{bifet_adwin_2007} maintains a window split into two
+sub-windows and declares a change when their means diverge beyond a Hoeffding
+bound~\cite{hoeffding_1963}, testing every $c$ steps.
+\textbf{PHT}~\cite{page_1954, basseville_1993} accumulates a running statistic
+net of a tolerance $\delta_P>0$ and fires when it exceeds a threshold $\lambda>0$
+governing $\mathrm{ARL}_0$. \textbf{DDM}~\cite{gama_ddm_2004},
+\textbf{EDDM}~\cite{baena_eddm_2006} and \textbf{ECDD}~\cite{ross_ecdd_2012}
+share the accumulation structure and inherit its window sensitivity.
+\textbf{KSWIN}~\cite{raab_kswin_2020} applies a two-sample test between a
+reference reservoir and a recent window, so its evidence requirement is set by
+the window rather than by an accumulated sum.
