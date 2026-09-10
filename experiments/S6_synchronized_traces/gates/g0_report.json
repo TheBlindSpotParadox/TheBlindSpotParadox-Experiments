@@ -1,0 +1,76 @@
+{
+  "checks_passed": {
+    "drift_totals": 150,
+    "first_per_tree": 150,
+    "rng_state": 150,
+    "tau_first": 150,
+    "warning_totals": 150
+  },
+  "config": {
+    "c_int": 1,
+    "censoring_horizon": 4000,
+    "n_models": 10,
+    "n_steps": 8000,
+    "rng_lock": "random.seed + np.random.seed + default_rng(seed % (2**31-1))",
+    "seed_scheme": "SeedSequence(42).spawn(50)",
+    "t_drift": 4000
+  },
+  "cost_ratio_with_over_without": 1.1396011610234011,
+  "env": {
+    "executable": "/home/m53/miniforge3/envs/Trading/bin/python",
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "flaw": "F25 -- R1/R8 omitted predict_one(), forbidding simultaneous observation of the ensemble error and the internal statistics",
+  "gate": "G0",
+  "grid": {
+    "delta_e": [
+      0.1,
+      0.25,
+      0.4
+    ],
+    "n_pairs": 150,
+    "n_seeds": 50
+  },
+  "hypothesis": "predict_one() consumes no RNG state, so the per-tree swap chronology is strictly identical with and without it",
+  "mismatches": [],
+  "n_identical": 150,
+  "n_mismatched": 0,
+  "n_pairs": 150,
+  "per_delta_e": [
+    {
+      "delta_e": 0.1,
+      "mean_seconds_with": 12.186496785301715,
+      "mean_seconds_without": 10.776396145299078,
+      "median_tau_first": 443.5,
+      "n_censored": 0,
+      "n_identical": 50,
+      "n_pairs": 50,
+      "q05_tau_first": 20.6
+    },
+    {
+      "delta_e": 0.25,
+      "mean_seconds_with": 11.895842567933723,
+      "mean_seconds_without": 10.474591083293781,
+      "median_tau_first": 87.5,
+      "n_censored": 0,
+      "n_identical": 50,
+      "n_pairs": 50,
+      "q05_tau_first": 49.45
+    },
+    {
+      "delta_e": 0.4,
+      "mean_seconds_with": 11.35030178597197,
+      "mean_seconds_without": 9.841154786590486,
+      "median_tau_first": 40.5,
+      "n_censored": 0,
+      "n_identical": 50,
+      "n_pairs": 50,
+      "q05_tau_first": 27.0
+    }
+  ],
+  "verdict": "PASS",
+  "wall_clock_s": 81.68227602588013
+}

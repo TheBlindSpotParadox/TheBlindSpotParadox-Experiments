@@ -214,3 +214,26 @@ def test_R6_R2_delta_e_join_retains_20_points():
                         arf.dropna(subset=["tau_arf"]).groupby("delta_e")["tau_arf"].mean()],
                        axis=1).dropna()
     assert len(merged) == 20, f"R6/R2 Delta_e join retains {len(merged)} of 20 points"
+
+
+def test_S6_phase0_gates_all_pass():
+    """Stream S6 Phase-0 gates G0..G3 are committed artifacts with a PASS verdict.
+
+    The gates license the S6 harness: G0 that predict_one() is RNG-neutral, G1 that a deepcopy fork
+    is faithful, G2 that the private River surface the harness reads exists on the pinned build, G3
+    that the campaign is affordable. A gate that stops passing invalidates the harness, so the
+    verdict is asserted here rather than left in a JSON nobody re-reads."""
+    gates = ROOT_DIR / "experiments" / "S6_synchronized_traces" / "gates"
+    expected = {"g0_report.json": "G0", "g1_report.json": "G1",
+                "g2_api_map.json": "G2", "g3_report.json": "G3"}
+    missing = [n for n in expected if not (gates / n).exists()]
+    assert not missing, ("Phase-0 gate reports absent: " + ", ".join(missing) +
+                         " -- run experiments/S6_synchronized_traces/gates/g*.py")
+    failed = []
+    for name, gate in expected.items():
+        payload = json.loads((gates / name).read_text(encoding="utf-8"))
+        assert payload["gate"] == gate, f"{name} carries gate {payload['gate']}, expected {gate}"
+        if payload["verdict"] != "PASS":
+            failed.append(f"{gate} ({name}): {payload['verdict']}")
+    assert not failed, "Phase-0 gates not passing:\n  " + "\n  ".join(failed)
+    assert not json.loads((gates / "g2_api_map.json").read_text(encoding="utf-8"))["missing_attributes"]

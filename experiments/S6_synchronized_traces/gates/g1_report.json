@@ -1,0 +1,75 @@
+{
+  "checks_passed": {
+    "aliasing.fork_trees_share_fork_rng": 150,
+    "aliasing.orig_trees_share_orig_rng": 150,
+    "disjoint.background": 150,
+    "disjoint.drift_detectors": 150,
+    "disjoint.drift_tracker": 150,
+    "disjoint.rng_object": 150,
+    "disjoint.trees": 150,
+    "disjoint.warning_detectors": 150,
+    "equivalent.drift_totals": 150,
+    "equivalent.error_sequence": 150,
+    "equivalent.forest_rng_state": 150,
+    "equivalent.prediction_sequence": 150,
+    "equivalent.warning_totals": 150
+  },
+  "config": {
+    "c_int": 1,
+    "fork_horizon": 500,
+    "fork_t_rel": 100,
+    "n_models": 10,
+    "replay_order": "original then fork, sequential",
+    "rng_lock": "random.seed + np.random.seed + default_rng(seed % (2**31-1))",
+    "t_drift": 4000
+  },
+  "env": {
+    "executable": "/home/m53/miniforge3/envs/Trading/bin/python",
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "flaw": "prerequisite of the S6 causal test: a forked branch must be state-equivalent and memory-disjoint",
+  "gate": "G1",
+  "grid": {
+    "delta_e": [
+      0.1,
+      0.25,
+      0.4
+    ],
+    "n_forks": 150,
+    "n_seeds": 50
+  },
+  "hypothesis": "copy.deepcopy of an ARFClassifier at t_rel=+100 reproduces the original bit-for-bit over 500 identical steps, sharing no mutable state",
+  "mismatches": [],
+  "n_faithful": 150,
+  "n_forks": 150,
+  "n_forks_with_live_background_at_fork": 0,
+  "n_forks_with_swap_during_replay": 128,
+  "per_delta_e": [
+    {
+      "delta_e": 0.1,
+      "mean_error_after_fork": 0.054079999999999996,
+      "mean_swaps_during_replay": 1.14,
+      "n_faithful": 50,
+      "n_forks": 50
+    },
+    {
+      "delta_e": 0.25,
+      "mean_error_after_fork": 0.05276,
+      "mean_swaps_during_replay": 2.92,
+      "n_faithful": 50,
+      "n_forks": 50
+    },
+    {
+      "delta_e": 0.4,
+      "mean_error_after_fork": 0.03472,
+      "mean_swaps_during_replay": 2.68,
+      "n_faithful": 50,
+      "n_forks": 50
+    }
+  ],
+  "verdict": "PASS",
+  "wall_clock_s": 29.15212626196444
+}

@@ -1,0 +1,149 @@
+{
+  "bench": {
+    "arms": [
+      {
+        "arm": "M10_clock1",
+        "clock": 1,
+        "instrumented": true,
+        "n_models": 10,
+        "sec_per_step": 0.0008611245421692729,
+        "seconds": 8.611245421692729,
+        "steps": 10000,
+        "steps_per_second": 1161.2722098024099,
+        "trace_rows": 10000
+      },
+      {
+        "arm": "M10_clock32",
+        "clock": 32,
+        "instrumented": true,
+        "n_models": 10,
+        "sec_per_step": 0.0004783578101079911,
+        "seconds": 4.783578101079911,
+        "steps": 10000,
+        "steps_per_second": 2090.485362357199,
+        "trace_rows": 10000
+      },
+      {
+        "arm": "M1_clock1",
+        "clock": 1,
+        "instrumented": true,
+        "n_models": 1,
+        "sec_per_step": 9.400397166609764e-05,
+        "seconds": 0.9400397166609764,
+        "steps": 10000,
+        "steps_per_second": 10637.8484044483,
+        "trace_rows": 10000
+      },
+      {
+        "arm": "M1_clock32",
+        "clock": 32,
+        "instrumented": true,
+        "n_models": 1,
+        "sec_per_step": 5.429291618056595e-05,
+        "seconds": 0.5429291618056595,
+        "steps": 10000,
+        "steps_per_second": 18418.609099467532,
+        "trace_rows": 10000
+      }
+    ],
+    "probe_delta_e": 0.25,
+    "steps_per_arm": 10000
+  },
+  "campaign": {
+    "design": {
+      "arms": [
+        "M10_clock1",
+        "M10_clock32",
+        "M1_clock1",
+        "M1_clock32"
+      ],
+      "early_break": false,
+      "factorial": "(M in {1, 10}) x (ADWIN clock in {1, 32})",
+      "n_magnitudes": 20,
+      "n_seeds": 100,
+      "n_steps": 8000,
+      "source": "config.experiment_ssot.S6_ARMS / S6_CAMPAIGN_SEEDS / S6_CAMPAIGN_BOUNDARY_SHIFTS",
+      "t_drift": 4000,
+      "total_runs": 8000,
+      "total_steps": 64000000
+    },
+    "per_arm": [
+      {
+        "arm": "M10_clock1",
+        "core_seconds": 13777.992674708366,
+        "n_runs": 2000,
+        "n_steps": 8000,
+        "sec_per_run": 6.888996337354183
+      },
+      {
+        "arm": "M10_clock32",
+        "core_seconds": 7653.724961727858,
+        "n_runs": 2000,
+        "n_steps": 8000,
+        "sec_per_run": 3.826862480863929
+      },
+      {
+        "arm": "M1_clock1",
+        "core_seconds": 1504.0635466575623,
+        "n_runs": 2000,
+        "n_steps": 8000,
+        "sec_per_run": 0.7520317733287811
+      },
+      {
+        "arm": "M1_clock32",
+        "core_seconds": 868.6866588890553,
+        "n_runs": 2000,
+        "n_steps": 8000,
+        "sec_per_run": 0.4343433294445276
+      }
+    ],
+    "rescale_formula": "wall_s = n_arms_scaled * n_seeds * n_magnitudes * n_steps * sec_per_step(arm) / (n_cpu * measured_efficiency); sec_per_step is in bench.arms and is the only quantity that needs re-measuring",
+    "serial_core_seconds": 23804.46784198284,
+    "wall_clock_estimate_s": {
+      "ideal_logical_48": 495.92641337464255,
+      "measured_efficiency": 1036.8723623431142,
+      "physical_cores_24": 991.8528267492851
+    }
+  },
+  "cross_check_vs_g0": {
+    "available": true,
+    "g0_total_steps": 2400000,
+    "note": "upper bound: G0 records only the drift-counter vector, the reference arm here records the full S6 per-step payload, and G0's second arm has no predict_one",
+    "observed_wall_s": 81.68227602588013,
+    "predicted_wall_s": 90.02104084705934,
+    "ratio_predicted_over_observed": 1.102087811785964,
+    "reference": "g0_report.json, same host, same session"
+  },
+  "env": {
+    "executable": "/home/m53/miniforge3/envs/Trading/bin/python",
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "flaw": "F6 / F7 / F25 -- the full-trace harness has no early break and no dropped predict_one, so its cost is not R8's cost",
+  "gate": "G3",
+  "host": {
+    "os_cpu_count": 48,
+    "platform": "linux"
+  },
+  "instrumentation_overhead": {
+    "bare_learn_one_seconds": 7.240586464758962,
+    "instrumented_seconds": 8.611245421692729,
+    "note": "bare loop = learn_one only, R8 ordering, no predict_one and no per-step record",
+    "overhead_ratio": 1.1893022013624135,
+    "overhead_sec_per_step": 0.00013706589569337666,
+    "reference_arm": "M10_clock1"
+  },
+  "parallel_scaling": {
+    "effective_workers": 22.957953849005808,
+    "measured_efficiency": 0.478290705187621,
+    "n_logical_cpus": 48,
+    "n_tasks": 48,
+    "note": "one round of n_cpu identical reference-arm tasks under joblib n_jobs=-1; efficiency < 1 is the hyperthread and scheduling cost, 24 physical cores for 48 logical threads",
+    "serial_seconds_per_task": 8.611245421692729,
+    "wall_seconds_for_one_saturating_round": 18.004208169411868
+  },
+  "verdict": "PASS",
+  "wall_clock_s": 40.15689298789948
+}

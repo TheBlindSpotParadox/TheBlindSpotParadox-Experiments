@@ -1,0 +1,418 @@
+{
+  "api_map": {
+    "drift_detector_fields": {
+      "clock": {
+        "callable": false,
+        "path": "model._drift_detectors[i].clock",
+        "present": true,
+        "role": "declared clock (c_int / c_ext)",
+        "sample": "1",
+        "type": "builtins.int"
+      },
+      "delta": {
+        "callable": false,
+        "path": "model._drift_detectors[i].delta",
+        "present": true,
+        "role": "declared sensitivity",
+        "sample": "0.002",
+        "type": "builtins.float"
+      },
+      "drift_detected": {
+        "callable": false,
+        "path": "model._drift_detectors[i].drift_detected",
+        "present": true,
+        "role": "boolean latch read after update()",
+        "sample": "False",
+        "type": "builtins.bool"
+      },
+      "estimation": {
+        "callable": false,
+        "path": "model._drift_detectors[i].estimation",
+        "present": true,
+        "role": "ADWIN window mean",
+        "sample": "0.08258064516129032",
+        "type": "builtins.float"
+      },
+      "grace_period": {
+        "callable": false,
+        "path": "model._drift_detectors[i].grace_period",
+        "present": true,
+        "role": "steps before the first cut is attempted",
+        "sample": "10",
+        "type": "builtins.int"
+      },
+      "n_detections": {
+        "callable": false,
+        "path": "model._drift_detectors[i].n_detections",
+        "present": true,
+        "role": "cumulative detections on this detector instance",
+        "sample": "0",
+        "type": "builtins.int"
+      },
+      "total": {
+        "callable": false,
+        "path": "model._drift_detectors[i].total",
+        "present": true,
+        "role": "ADWIN window sum",
+        "sample": "64.0",
+        "type": "builtins.float"
+      },
+      "variance": {
+        "callable": false,
+        "path": "model._drift_detectors[i].variance",
+        "present": true,
+        "role": "ADWIN window variance",
+        "sample": "58.714838709677394",
+        "type": "builtins.float"
+      },
+      "width": {
+        "callable": false,
+        "path": "model._drift_detectors[i].width",
+        "present": true,
+        "role": "ADWIN window length",
+        "sample": "775.0",
+        "type": "builtins.float"
+      }
+    },
+    "forest_attributes": {
+      "_background": {
+        "callable": false,
+        "key_semantics": "list of length n_models; entry is a BaseTreeClassifier between the warning and the drift, None otherwise",
+        "len": 10,
+        "path": "model._background",
+        "present": true,
+        "role": "per-tree background tree slot (None when no warning is live)",
+        "sample": "[None, None, None, None, None, None, None, None, None, None]",
+        "type": "builtins.list"
+      },
+      "_drift_detectors": {
+        "callable": false,
+        "len": 10,
+        "path": "model._drift_detectors",
+        "present": true,
+        "role": "per-tree drift detector bank",
+        "sample": "[ADWIN (\n  delta=0.002\n  clock=1\n  max_buckets=5\n  min_window_length=5\n  grace_period=10\n), ADWIN (\n  delta=0.002\n  clock=1\n  max_buckets=5\n  min_window_length=",
+        "type": "builtins.list"
+      },
+      "_drift_tracker": {
+        "callable": false,
+        "key_semantics": "collections.defaultdict(int) keyed by tree index in [0, n_models-1]; a key is absent until that tree is first replaced -- read with .get(i, 0), indexing inserts the key",
+        "len": 10,
+        "path": "model._drift_tracker",
+        "present": true,
+        "role": "per-tree replacement counter, keyed by tree index",
+        "sample": "defaultdict(<class 'int'>, {9: 4, 7: 7, 6: 6, 0: 4, 3: 6, 4: 4, 1: 4, 2: 4, 8: 5, 5: 3})",
+        "type": "collections.defaultdict"
+      },
+      "_metrics": {
+        "callable": false,
+        "len": 10,
+        "path": "model._metrics",
+        "present": true,
+        "role": "per-tree weighting metric",
+        "sample": "[Accuracy: 91.75%, Accuracy: 95.11%, Accuracy: 93.82%, Accuracy: 81.18%, Accuracy: 80.49%, Accuracy: 91.06%, Accuracy: 77.05%, Accuracy: 92.94%, Accuracy: 86.72",
+        "type": "builtins.list"
+      },
+      "_rng": {
+        "callable": false,
+        "path": "model._rng",
+        "present": true,
+        "role": "forest generator, threaded into every tree",
+        "sample": "<random.Random object at 0x55687f67d3e0>",
+        "type": "random.Random"
+      },
+      "_warning_detectors": {
+        "callable": false,
+        "len": 10,
+        "path": "model._warning_detectors",
+        "present": true,
+        "role": "per-tree warning detector bank",
+        "sample": "[ADWIN (\n  delta=0.002\n  clock=1\n  max_buckets=5\n  min_window_length=5\n  grace_period=10\n), ADWIN (\n  delta=0.002\n  clock=1\n  max_buckets=5\n  min_window_length=",
+        "type": "builtins.list"
+      },
+      "_warning_tracker": {
+        "callable": false,
+        "len": 10,
+        "path": "model._warning_tracker",
+        "present": true,
+        "role": "per-tree warning counter, keyed by tree index",
+        "sample": "defaultdict(<class 'int'>, {9: 4, 7: 7, 6: 6, 0: 4, 3: 6, 4: 4, 1: 4, 2: 4, 8: 5, 5: 3})",
+        "type": "collections.defaultdict"
+      },
+      "data": {
+        "callable": false,
+        "len": 10,
+        "path": "model.data",
+        "present": true,
+        "role": "the ensemble itself (UserList payload)",
+        "sample": "[BaseTreeClassifier (\n  max_features=1\n  grace_period=50\n  max_depth=980\n  split_criterion=\"info_gain\"\n  delta=0.01\n  tau=0.05\n  leaf_prediction=\"nba\"\n  nb_thre",
+        "type": "builtins.list"
+      }
+    },
+    "forest_callables": {
+      "n_drifts_detected": {
+        "callable": true,
+        "path": "model.n_drifts_detected",
+        "present": true,
+        "role": "public accessor over _drift_tracker",
+        "type": "builtins.method"
+      },
+      "n_warnings_detected": {
+        "callable": true,
+        "path": "model.n_warnings_detected",
+        "present": true,
+        "role": "public accessor over _warning_tracker",
+        "type": "builtins.method"
+      }
+    },
+    "tree_fields": {
+      "height": {
+        "callable": false,
+        "path": "model.data[i].height",
+        "present": true,
+        "role": "tree depth",
+        "sample": "9",
+        "type": "builtins.int"
+      },
+      "n_active_leaves": {
+        "callable": false,
+        "path": "model.data[i].n_active_leaves",
+        "present": true,
+        "role": "active leaf count",
+        "sample": "23",
+        "type": "builtins.int"
+      },
+      "n_leaves": {
+        "callable": false,
+        "path": "model.data[i].n_leaves",
+        "present": true,
+        "role": "leaf count",
+        "sample": "23",
+        "type": "builtins.int"
+      },
+      "n_nodes": {
+        "callable": false,
+        "path": "model.data[i].n_nodes",
+        "present": true,
+        "role": "tree size",
+        "sample": "45",
+        "type": "builtins.int"
+      },
+      "rng": {
+        "aliasing": "model.data[i].rng is model._rng -- River threads one generator through the whole forest; verified: True",
+        "callable": false,
+        "path": "model.data[i].rng",
+        "present": true,
+        "role": "generator reference, must be the forest generator",
+        "sample": "<random.Random object at 0x55687f67d3e0>",
+        "type": "random.Random"
+      }
+    },
+    "warning_detector_fields": {
+      "clock": {
+        "callable": false,
+        "path": "model._warning_detectors[i].clock",
+        "present": true,
+        "role": "declared clock (c_int / c_ext)",
+        "sample": "1",
+        "type": "builtins.int"
+      },
+      "delta": {
+        "callable": false,
+        "path": "model._warning_detectors[i].delta",
+        "present": true,
+        "role": "declared sensitivity",
+        "sample": "0.002",
+        "type": "builtins.float"
+      },
+      "drift_detected": {
+        "callable": false,
+        "path": "model._warning_detectors[i].drift_detected",
+        "present": true,
+        "role": "boolean latch read after update()",
+        "sample": "False",
+        "type": "builtins.bool"
+      },
+      "estimation": {
+        "callable": false,
+        "path": "model._warning_detectors[i].estimation",
+        "present": true,
+        "role": "ADWIN window mean",
+        "sample": "0.08258064516129032",
+        "type": "builtins.float"
+      },
+      "grace_period": {
+        "callable": false,
+        "path": "model._warning_detectors[i].grace_period",
+        "present": true,
+        "role": "steps before the first cut is attempted",
+        "sample": "10",
+        "type": "builtins.int"
+      },
+      "n_detections": {
+        "callable": false,
+        "path": "model._warning_detectors[i].n_detections",
+        "present": true,
+        "role": "cumulative detections on this detector instance",
+        "sample": "0",
+        "type": "builtins.int"
+      },
+      "total": {
+        "callable": false,
+        "path": "model._warning_detectors[i].total",
+        "present": true,
+        "role": "ADWIN window sum",
+        "sample": "64.0",
+        "type": "builtins.float"
+      },
+      "variance": {
+        "callable": false,
+        "path": "model._warning_detectors[i].variance",
+        "present": true,
+        "role": "ADWIN window variance",
+        "sample": "58.714838709677394",
+        "type": "builtins.float"
+      },
+      "width": {
+        "callable": false,
+        "path": "model._warning_detectors[i].width",
+        "present": true,
+        "role": "ADWIN window length",
+        "sample": "775.0",
+        "type": "builtins.float"
+      }
+    }
+  },
+  "background_tree_observability": {
+    "blind_spot_c_int": {
+      "drift_totals": [
+        4,
+        4,
+        4,
+        6,
+        4,
+        3,
+        6,
+        7,
+        5,
+        4
+      ],
+      "first_step_with_a_live_background_tree": null,
+      "max_simultaneous_background_trees": 0,
+      "motive": "project configuration (R1/R2/R6/R7/R8/R9): both ADWINs on c_int",
+      "n_drifts_detected_matches_tracker": true,
+      "n_warnings_detected_matches_tracker": true,
+      "per_tree_accessor_matches_tracker": true,
+      "replacements_with_a_tree_created_in_the_same_step": 47,
+      "replacements_with_a_warmed_background_tree": 0,
+      "steps_with_a_live_background_tree": 0,
+      "warning_equals_drift_elementwise": true,
+      "warning_totals": [
+        4,
+        4,
+        4,
+        6,
+        4,
+        3,
+        6,
+        7,
+        5,
+        4
+      ]
+    },
+    "matched_c_ext": {
+      "drift_totals": [
+        5,
+        3,
+        4,
+        4,
+        5,
+        3,
+        2,
+        4,
+        2,
+        4
+      ],
+      "first_step_with_a_live_background_tree": null,
+      "max_simultaneous_background_trees": 0,
+      "motive": "matched external clock, River's default clock value",
+      "n_drifts_detected_matches_tracker": true,
+      "n_warnings_detected_matches_tracker": true,
+      "per_tree_accessor_matches_tracker": true,
+      "replacements_with_a_tree_created_in_the_same_step": 36,
+      "replacements_with_a_warmed_background_tree": 0,
+      "steps_with_a_live_background_tree": 0,
+      "warning_equals_drift_elementwise": true,
+      "warning_totals": [
+        5,
+        3,
+        4,
+        4,
+        5,
+        3,
+        2,
+        4,
+        2,
+        4
+      ]
+    },
+    "river_default": {
+      "drift_totals": [
+        3,
+        3,
+        2,
+        3,
+        3,
+        2,
+        3,
+        4,
+        3,
+        2
+      ],
+      "first_step_with_a_live_background_tree": 352,
+      "max_simultaneous_background_trees": 6,
+      "motive": "River's own defaults: ADWIN(delta=0.001) / ADWIN(delta=0.01)",
+      "n_drifts_detected_matches_tracker": true,
+      "n_warnings_detected_matches_tracker": true,
+      "per_tree_accessor_matches_tracker": true,
+      "replacements_with_a_tree_created_in_the_same_step": 4,
+      "replacements_with_a_warmed_background_tree": 24,
+      "steps_with_a_live_background_tree": 6750,
+      "warning_equals_drift_elementwise": false,
+      "warning_totals": [
+        3,
+        3,
+        3,
+        3,
+        3,
+        3,
+        4,
+        4,
+        3,
+        3
+      ]
+    }
+  },
+  "config": {
+    "c_ext": 32,
+    "c_int": 1,
+    "n_models": 10,
+    "n_steps": 8000,
+    "probe_delta_e": 0.25,
+    "t_drift": 4000
+  },
+  "env": {
+    "executable": "/home/m53/miniforge3/envs/Trading/bin/python",
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "finding": "In the project's blind-spot configuration both detectors are identical ADWIN clones fed the same input, so they fire on the same step: the background tree is created and promoted inside one learn_one call and is never observable between steps. The replacement tree is therefore a tree that has learned nothing. River's own default pair (delta 0.001 / 0.01) separates the two events and does expose live background trees. Consequence for S6: `_background` is a valid access path but a constant-None observable on the c_int and c_ext arms; per-tree adaptation must be read from `_drift_tracker` and the detector windows, not from background occupancy.",
+  "flaw": "the S6 harness reads a private River surface wider than the two attributes the SSOT guard covers",
+  "gate": "G2",
+  "missing_attributes": [],
+  "river": "river.forest.adaptive_random_forest.ARFClassifier",
+  "verdict": "PASS",
+  "wall_clock_s": 13.787579123862088
+}

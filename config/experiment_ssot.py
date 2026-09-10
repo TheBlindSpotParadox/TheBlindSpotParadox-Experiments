@@ -10,7 +10,8 @@ BOUNDARY_SHIFTS, DELTA_E_GRID, C_INT, C_EXT, EXT_DELTA, DELTA_P, LAMBDAS, WARMUP
 DELTA_E_WINDOW, N_SEEDS_REAL, TAU_TOL.
 
 Intentional per-experiment divergences are DERIVED CONSTANTS carrying an `R<n>_` prefix and a motive,
-never local literals. `tests/test_S7_consistency.py` walks every module-level assignment in
+never local literals. Stream-scoped constants that belong to no single R<n> carry the stream prefix
+instead (`S6_`), under the same rule. `tests/test_S7_consistency.py` walks every module-level assignment in
 `experiments/**/*.py` and fails if a registry name is re-bound to a local literal, or if any resolved
 value drifts from `results/audit_S7/_baseline/constants_pre.json`.
 
@@ -176,6 +177,70 @@ R9_DELTA_P = DELTA_P
 R9_RELIABILITY_TARGETS = [0.99, 0.95, 0.50]    # S7/TASK 3: r = 1 - P_miss, replaces the beta letter
 R9_DKW_ALPHA = 0.05
 R9_TARGET_DELTAS = [0.10, 0.15, 0.20, 0.25, 0.33, 0.40, 0.50]
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S6 — synchronized traces (F6 / F7 / F25). Phase 0 = verification gates G0..G3.
+# ══════════════════════════════════════════════════════════════════════════════
+# S6 adopts the canonical family (R2/R6/R7/R9) rather than the R1/R8 timing: the triple per-worker
+# RNG lock and the 8000/4000 split are the configuration under which the manuscript's tau_ARF
+# figures were produced, and F7 needs a bounded post-drift window that every run reaches, not an
+# early break at the first swap.
+S6_N_STEPS = N_STEPS
+S6_T_DRIFT = T_DRIFT
+S6_CENSORING_HORIZON = CENSORING_HORIZON       # 4000 post-drift steps, traced without early break:
+                                               # F6 requires every per-tree swap, not min_i tau_i
+S6_N_MODELS = N_MODELS
+S6_C_INT = C_INT
+S6_C_EXT = C_EXT
+S6_SEED_MASTER = SEED_SCHEME_SEEDSEQ_ENTROPY   # np.random.SeedSequence(42).spawn(n)
+
+# Phase-0 gate grid. The three magnitudes are R8's OVERLAP_REF anchors (weak / mid / strong band).
+S6_GATE_N_SEEDS = 50
+S6_GATE_DELTA_E = [0.10, 0.25, 0.40]
+S6_G1_FORK_T_REL = 100                         # deepcopy taken at t_rel = +100 post-drift
+S6_G1_FORK_HORIZON = 500                       # identical steps replayed on original and fork
+S6_G3_BENCH_STEPS = 10_000
+
+# Phase-1 campaign shape, declared here so G3 extrapolates a stated design and not a guess.
+# 2x2 factorial (M, ADWIN clock): the Hydra factor (R6) crossed with the clock mismatch (R7).
+S6_ARMS = ((N_MODELS, C_INT), (N_MODELS, C_EXT), (R6_N_MODELS, C_INT), (R6_N_MODELS, C_EXT))
+S6_CAMPAIGN_BOUNDARY_SHIFTS = BOUNDARY_SHIFTS  # 20 magnitudes, canonical family
+S6_CAMPAIGN_SEEDS = SEED_SCHEME_NAIVE_1_100    # 100 seeds, canonical family
+
+# --- Phase 1: harness, causal arms and stopping definitions --------------------------------------
+S6_ARM_NAMES = ("full", "no_swap", "frozen", "static")
+# 'full'    nominal ARF.
+# 'no_swap' deepcopy fork at tau_swap^(1/M); both internal detector paths made inert. Learning
+#           continues, replacements cease. River draws the Poisson weight BEFORE the detector blocks
+#           and the blocks themselves consume no entropy, so making them inert removes no draw: the
+#           branch diverges from 'full' only through the tree structures the suppressed replacements
+#           would have produced, which is the effect under study.
+# 'frozen'  same fork, learn_one no longer called.
+# 'static'  ensemble.BaggingClassifier(HoeffdingTreeClassifier, M) -- the non-adaptive reference of
+#           R3 ("Static Bagging without internal ADWIN tree resets").
+S6_WARMUP_WINDOW = R2_WARMUP_WINDOW            # 1000 pre-drift steps calibrate e_pre and the CUSUM
+                                               # p_pre, the R1/R2 convention
+S6_ERR_WINDOW = 200                            # W, rolling recovery estimate. R4 smooths the error
+                                               # over 30 with a W/2 lag; 200 is the width at which
+                                               # the rolling-mean noise floor sqrt(p(1-p)/W) ~ 0.015
+                                               # stays under rho * Delta_e at the weak anchor
+S6_ERR_HYSTERESIS = S6_ERR_WINDOW // 2         # H = W/2 consecutive steps under the threshold
+S6_RHO_GRID = [0.50, 0.25, 0.10]               # residual fraction of the empirical Delta_e
+S6_Q_GRID = [0.1, 0.25, 0.5, 1.0]              # fraction of DISTINCT trees replaced; 0.1 == 1/M
+S6_T_HORIZON = R3_TAU_TOL                      # T_h = 1000, the post-drift scoring window of R3
+S6_TRACE_PRE = S6_WARMUP_WINDOW                # traced window = [t_drift - 1000, t_drift + 4000)
+S6_TRACE_POST = CENSORING_HORIZON
+S6_SMOKE_N_SEEDS = 5
+S6_SMOKE_DELTA_E = S6_GATE_DELTA_E             # same three anchors the Phase-0 gates used
+
+# Deterministic Parquet contract. Every value is pinned: a byte-different artifact on replay is a
+# defect, and tests/test_S6_traces.py is the oracle.
+S6_PARQUET_COMPRESSION = "zstd"
+S6_PARQUET_COMPRESSION_LEVEL = 9
+S6_PARQUET_VERSION = "2.6"
+S6_PARQUET_ROW_GROUP = 100_000
+S6_PARQUET_PARTITION_FMT = "{:.6f}"            # delta_e -> hive directory name
 
 
 def require_drift_tracker(model, warning=False):
