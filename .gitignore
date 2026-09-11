@@ -16,6 +16,12 @@ repomix.config.json
 # Repomix outputs
 *.xml
 
+# Former manuscript versions
+/docs/manuscript/*_v0*.tex
+
+# Compiled manuscript
+/docs/manuscript/*.pdf
+
 # Graphe et visualisations locales
 graphify-out/
 

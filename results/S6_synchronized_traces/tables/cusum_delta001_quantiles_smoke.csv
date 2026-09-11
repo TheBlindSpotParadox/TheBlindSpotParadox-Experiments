@@ -1,0 +1,4 @@
+delta_e,n,p0_hat_median,s_max_median,s_max_q05,s_max_q95,cross_rate_lambda15,cross_rate_lambda50,delta_p,window,arm
+0.1,5,0.024,19.384,15.635,34.263,1.0,0.0,0.01,2500,full
+0.25,5,0.024,27.788,27.01,38.368,1.0,0.0,0.01,2500,full
+0.4,5,0.024,28.36,25.015,33.253,1.0,0.0,0.01,2500,full

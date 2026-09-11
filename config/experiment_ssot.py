@@ -269,6 +269,16 @@ S6_AUDIT_LAMBDAS = [15.0, 50.0]                # 15 brackets the measured lambda
                                                # (q05 floor 15.2 over Delta_e >= 0.20); 50 is the
                                                # threshold the starvation certificate is stated at
 
+# S6 refinement sweep. q05(S_max) at delta_P = 0.01 crosses lambda = 15 between the canonical grid
+# points 0.0854 (q05 = 9.38) and 0.1409 (q05 = 18.32); the canonical grid has nothing in between.
+# This sub-grid brackets the crossing so Delta_e_c = inf{Delta_e : q05(S_max) >= 15} is measured
+# rather than interpolated across a gap of 0.055. 300 seeds, because the statistic is a quantile of
+# a quantile and 100 seeds put its bootstrap CI at +/- 0.6 on the canonical grid.
+S6_REFINE_DELTA_E = [0.095, 0.105, 0.115, 0.125, 0.135, 0.145]
+S6_REFINE_N_SEEDS = 300
+S6_REFINE_ARMS = ("full",)                     # no fork, no static: Delta_e_c is a property of the
+                                               # nominal arm alone
+
 
 def require_drift_tracker(model, warning=False):
     """River private-attribute guard, shared by R1, R2, R6, R7, R8 and R9.

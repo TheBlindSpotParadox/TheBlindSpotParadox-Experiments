@@ -1,0 +1,40 @@
+{
+  "arm": "full",
+  "delta_e_c": {
+    "bootstrap_seed": 12345,
+    "grid": {
+      "ci_hi_97p5": 0.135,
+      "ci_lo_2p5": 0.115,
+      "estimate": 0.125,
+      "fraction_no_crossing": 0.0
+    },
+    "interpolated": {
+      "ci_hi_97p5": 0.12715,
+      "ci_lo_2p5": 0.11392,
+      "estimate": 0.119708,
+      "fraction_no_crossing": 0.0
+    },
+    "magnitudes": [
+      0.095,
+      0.105,
+      0.115,
+      0.125,
+      0.135,
+      0.145
+    ],
+    "n_bootstrap": 10000,
+    "q05_per_magnitude": [
+      11.0534,
+      11.6819,
+      13.998,
+      16.1261,
+      16.7519,
+      17.9834
+    ],
+    "scheme": "seed-level, block resampled per magnitude",
+    "threshold": 15.0
+  },
+  "delta_p": 0.01,
+  "source": "results/S6_synchronized_traces/data_refine",
+  "window": 2500
+}

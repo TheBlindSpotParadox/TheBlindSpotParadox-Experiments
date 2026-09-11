@@ -24,6 +24,39 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{assumption}[theorem]{Assumption}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{empresult}{Empirical Result}
+
+% ── Stream S6 measured constants. Source: results/S6_synchronized_traces/.
+% Every value is read from a committed artifact; none is typed by hand.
+\newcommand{\SixSeeds}{100}                  % config/experiment_ssot.py S6_CAMPAIGN_SEEDS
+\newcommand{\SixHorizon}{2500}               % S6_T_HORIZON
+\newcommand{\DeltaPtext}{0.01}               % R2_CUSUM_DELTA = S6_AUDIT_DELTA_P
+\newcommand{\SixCanonDeltaE}{0.3268}         % canonical grid point (transfer\_S1 label 0.33)
+\newcommand{\SixTauFirst}{57.4}              % mean tau\_swap^(1/M), s6\_causal.json
+\newcommand{\SixTauErase}{612}               % mean argmax A\_unrefl, s6\_causal.json
+\newcommand{\SixMuWfirst}{18.2}              % (Delta e - delta\_P) * SixTauFirst
+\newcommand{\SixMuWerase}{194}               % (Delta e - delta\_P) * SixTauErase
+\newcommand{\SixCeilingFull}{31.3}           % median S\_max, arm full, canonical point
+\newcommand{\SixCeilingNoSwap}{41.1}         % median S\_max, arm no\_swap
+\newcommand{\SixCeilingFrozen}{650}          % median S\_max, arm frozen
+\newcommand{\FullSpreadGrid}{6.58}           % max/min median S\_max, full, 20-point grid
+\newcommand{\FrozenSpreadGrid}{133}          % idem, frozen (132.98)
+\newcommand{\SuppressLo}{12}                 % frozen/full median ratio at Delta e = 0.24
+\newcommand{\SuppressHi}{59}                 % idem at Delta e = 0.50
+\newcommand{\StarvFullK}{1}                  % crossings of lambda=50, full, envelope
+\newcommand{\StarvFullN}{1600}               % seed-runs, 16 magnitudes x 100 seeds
+\newcommand{\StarvFullUpper}{0.35}           % Clopper-Pearson 95\% upper, percent
+\newcommand{\StarvFrozenLower}{99.4}         % Clopper-Pearson 95\% lower, percent
+\newcommand{\NoSwapLeak}{18}                 % percent detection at lambda=50, no\_swap, canonical
+\newcommand{\SwapRatio}{17.9}                % tau\_swap^(1)/tau\_swap^(1/M), pooled median
+\newcommand{\SwapElasticity}{0.66}           % AFT beta\_1
+\newcommand{\SwapElasticityZ}{-14.9}         % z against H0 = 1
+\newcommand{\LambdaFA}{15}                   % R4\_PHT\_LAMBDA, ProteuS pre-drift calibration
+\newcommand{\EnvLo}{0.20}\newcommand{\EnvHi}{0.40}
+\newcommand{\DeFloorLo}{0.085}\newcommand{\DeFloorHi}{0.141}
+\newcommand{\QlowFloorLo}{9.38}\newcommand{\QlowFloorHi}{18.32}
+\newcommand{\DeCrit}{0.120}                  % measured Action 4: 0.1197, n=300
+\newcommand{\DeCritCI}{[0.114, 0.127]}       % 95% bootstrap CI (10,000 draws)
 
 % ─────────────────────────────────────────────────────────────────
 \IEEEoverridecommandlockouts
@@ -40,7 +73,7 @@ Paper under Triple-Blind Review}}
 % ABSTRACT
 % ══════════════════════════════════════════════════════════════════
 \begin{abstract}
-  Concept drift monitoring on data streams typically pairs an adaptive classifier with an external drift detector. We show that this standard architecture harbors a fundamental race condition: adaptive classifiers such as Adaptive Random Forests (ARF) absorb distributional changes before CUSUM-family monitors accumulate sufficient evidence, erasing the drift signal over the exploitable transient. Through direct instrumentation of the ARF's internal tree-swap dynamics we trace this blind spot paradox to a single root cause---internal ADWIN hyper-reactivity---with two regime-dependent faces: starvation (recall collapse) on stationary streams and false-alarm flooding (precision collapse) on non-stationary streams. A Starvation Effect renders the transient signal too brief for CUSUM accumulation, producing missed detections or alarms that fire only after adaptation; an ensemble-level Hydra Effect accelerates this adaptation by at least 4.1 to 8.0 times over a single tree. We introduce the Decoupling Principle---external monitors must be strictly more reactive than internal classifiers---and expose a Fundamental Tension within the cumulative-evidence family: bounding false alarms under heteroscedastic volatility requires a high threshold that exceeds the upper bound required for reliable decoupling, leaving the admissible set empty. A distribution-based KSWIN monitor avoids this tension on the settings we test, recovering reliable detection at no predictive cost. Validation spans instrumented Bernoulli race experiments across a wide range of drift magnitudes, heteroscedastic ARMA--GARCH streams (ProteuS), and six real-world streams (BAF, INSECTS); standard benchmarks (SEA, Hyperplane) operate below the starvation threshold and mask the phenomenon.
+  Concept drift monitoring on data streams typically pairs an adaptive classifier with an external drift detector. We show that this standard architecture harbors a fundamental race condition: adaptive classifiers such as Adaptive Random Forests (ARF) absorb distributional changes before CUSUM-family monitors accumulate sufficient evidence, erasing the drift signal over the exploitable transient. Through direct instrumentation of the ARF's internal tree-swap dynamics we trace this blind spot paradox to a single root cause---internal ADWIN hyper-reactivity---with two regime-dependent faces: starvation (recall collapse) on stationary streams and false-alarm flooding (precision collapse) on non-stationary streams. A Starvation Effect renders the transient signal too brief for CUSUM accumulation, producing missed detections or alarms that fire only after adaptation; an ensemble-level Hydra Effect accelerates this adaptation by at least 4.1 to 8.0 times over a single tree. We recast decoupling as a reliability condition on stopping times and give a deterministic detection certificate calibrated on the evidence ceiling the monitor can actually reach. The certificate exposes a detectability floor on drift magnitude: below it, bounding false alarms under heteroscedastic volatility requires a threshold above the ceiling, and the admissible calibration set is empty. Synchronised instrumentation of $8{,}000$ runs measures the ceiling directly and locates the floor. A distribution-based KSWIN monitor avoids the constraint on the settings we test, recovering reliable detection at no predictive cost. Validation spans instrumented Bernoulli race experiments across a wide range of drift magnitudes, heteroscedastic ARMA--GARCH streams (ProteuS), and six real-world streams (BAF, INSECTS); standard benchmarks (SEA, Hyperplane) operate below the floor and mask the phenomenon.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -75,7 +108,7 @@ We introduce three contributions, preceded by a preliminary technical finding:
 \begin{enumerate}[nosep, label=\textbf{(C\arabic*)}, start=1]
   \item[\textbf{(P)}] \textbf{Preliminary: ADWIN Clock Artefact.} Batched evaluation in River's ADWIN~\cite{montiel_river_2021} induces a shifted uniform delay $\mathcal{U}\{\tau_{\mathrm{stat}},\, \tau_{\mathrm{stat}} + c - 1\}$.
   \item \textbf{The Blind Spot Paradox.} We formalize the race condition and trace it to internal ADWIN hyper-reactivity, whose stationary \emph{Starvation Effect} defeats CUSUM and is amplified by the ensemble-level \emph{Hydra Effect}. We derive the critical ensemble size $M_{\mathrm{crit}}$ inducing structural failure.
-  \item \textbf{The Decoupling Principle.} A sufficient condition for reliable monitoring: the external monitor must be \emph{strictly more reactive} than the classifier's internal adaptation, exposing a \textbf{Fundamental Tension} with false-alarm control on heteroscedastic streams.
+  \item \textbf{The Decoupling Principle.} A reliability condition on stopping times ensuring the external monitor triggers before adaptation erases the signal, exposing a \textbf{Fundamental Tension} with false-alarm control on heteroscedastic streams below a detectability floor.
   \item \textbf{Comprehensive Empirical Validation.} We validate the paradox across instrumented Bernoulli experiments ($\Delta e \in [0.02, 0.50]$), heteroscedastic ARMA--GARCH streams (ProteuS~\cite{suarez_cetrulo_proteus_2025}), and real-world data (BAF, INSECTS). Standard benchmarks (SEA, Hyperplane) operate below the starvation threshold, masking the phenomenon (Section~\ref{sec:limitations}).
 \end{enumerate}
 
@@ -153,6 +186,15 @@ Comparing a single Hoeffding Adaptive Tree (HAT, $M = 1$)~\cite{bifet_hat_2009} 
 
 This phenomenon is structurally analogous to the multichart CUSUM of Tartakovsky~\cite{tartakovsky_2005_multichart}, where running $M$ parallel CUSUM charts and alarming on the first exceedance reduces detection delay by a factor approaching $M$. Read as a quantitative null, that analogy predicts $10\times$ at $M = 10$; the measured $4.1$--$8.0\times$ sits strictly below it, and the shortfall is the measured cost of the positive inter-tree correlation induced by shared training data. The Hydra Effect is therefore a departure from the parallel-chart bound, not a rediscovery of it.
 
+\paragraph{What the first replacement does, and what it does not.}
+Counterfactual arms sharing one stream, one history and one fork separate two mechanisms that earlier versions of this work conflated. Suspending adaptation entirely at the first replacement leaves the error excess in place and the evidence ceiling rises to $\SixCeilingFrozen$ at $\Delta e = \SixCanonDeltaE$; suspending every \emph{subsequent} replacement while the surviving trees keep learning gives $\SixCeilingNoSwap$; the nominal arm reaches $\SixCeilingFull$. Volumetric erasure is therefore the work of ordinary incremental learning by the $M-1$ trees that were not replaced. The mechanism is direct: instrumentation shows that the two ADWIN instances guarding a member are identical clones fed identical input, so they fire on the same step and the promoted background tree has learned nothing at the instant it replaces an active one. A tree with no training cannot restore an ensemble's error rate, and one member in ten alters one vote in ten.
+
+The replacement sequence keeps a narrower and better-identified role. First, it accelerates onset: the forest reacts on $\min_i \tau_i$, so the learning phase that erases the residual begins $4.1$--$8.0\times$ sooner than a single adaptive tree's would. Second, it acts as a terminal lock on the \emph{thresholded} decision: suppressing the replacements after the first raises the median ceiling from $\SixCeilingFull$ to $\SixCeilingNoSwap$ and lifts detection at $\lambda = 50$ from zero to $\NoSwapLeak\%$. A residue worth under one percent of the erased evidence flips nearly a fifth of the decisions, because the threshold sits in the upper tail of the ceiling distribution. We report $\tau_{\mathrm{swap}}^{(1)}/\tau_{\mathrm{swap}}^{(1/M)} = \SwapRatio$ and an elasticity of $\SwapElasticity$ ($z = \SwapElasticityZ$ against unity) so that the first replacement is read as the onset of adaptation and not as its completion, and we no longer describe the replacement sequence as an avalanche.
+
+\begin{remark}[Scope of the counterfactual]\label{rem:cf_scope}
+  Both counterfactual arms fork \emph{at} the first replacement and therefore share it with the nominal arm. They identify the contribution of subsequent replacements and of post-fork learning; they do not isolate the contribution of the first replacement itself, which would require an arm with replacement suppressed from $\tau^*$ onward. No claim is made about that quantity.
+\end{remark}
+
 \subsection{The Starvation Effect: Transient Signal Erasure}\label{sec:starvation}
 
 When the ARF adapts in time $\tau_{\mathrm{ARF}}$, the external detector observes a \emph{transient} error signal: the error rate jumps from $p_0$ to $p_0 + \Delta e$ at $\tau^*$, then decays back to $p_0$ by $\tau^* + \tau_{\mathrm{ARF}}$.
@@ -178,6 +220,44 @@ After adaptation ($t > \tau^* + \tau_{\mathrm{ARF}}$), the increments become $\m
 \begin{proof}
   Let $\xi_i := e_i - p_0 - \delta_P - \mu$ be the centered increments, of range at most $1$. Unrolling the reflection in~\eqref{eq:cusum} gives $S_t = \max\bigl(s_0 + \sum_{i \le t}(\xi_i + \mu),\ \max_{k < t}\sum_{k < i \le t}(\xi_i + \mu)\bigr)$, so $\{S^* \ge \lambda\}$ is contained in the union, over the at most $W$ restart points $k$, of the events $\bigl\{\max_{k < j \le \tau^*+W}\sum_{k < i \le j}\xi_i \ge \lambda - s_0 - \mu W\bigr\}$. Doob's maximal inequality applied to the exponential submartingale of the centered walk, with the Azuma--Hoeffding estimate for increments of range $1$~\cite{hoeffding_1963,tartakovsky_2014}, bounds each event by $\exp\bigl(-2(\lambda - s_0 - \mu W)_{+}^{2}/W\bigr)$; a union bound over $k$ gives~\eqref{eq:markov_bound}, and solving for $\lambda$ gives~\eqref{eq:starve_boundary}. No positive term is discarded: the fluctuation contribution survives as the $\sqrt{W \ln(W/\varepsilon)}$ margin, and the pre-drift value $s_0$ enters explicitly rather than being set to zero.
 \end{proof}
+
+\begin{remark}[Where the bound binds]\label{rem:transient_length}
+  Eq.~\eqref{eq:markov_bound} is informative only while $\mu W < \lambda$, and $W$ must be the length of the \emph{exploitable} transient. Instantiated at the first internal replacement, $W = \SixTauFirst$ steps at $\Delta e = \SixCanonDeltaE$, so $\mu W = \SixMuWfirst$ and the bound is non-vacuous. Synchronised instrumentation measures the exploitable transient at $\tau_{\mathrm{erase}} = \SixTauErase$ steps---an order of magnitude longer, since replacing one member of $M$ does not return the ensemble error to its pre-change level. At that $W$, $\mu W = \SixMuWerase$ exceeds every threshold considered here, the positive part in~\eqref{eq:markov_bound} vanishes and the bound degenerates to $\Pr(S^* \ge \lambda) \le 1$. The assumption that fails is the constant accumulation rate $\mu$ across the window: the error excess decays inside it rather than persisting. Proposition~\ref{prop:certificate} removes the rate model altogether.
+\end{remark}
+
+\begin{proposition}[Deterministic detection certificate]\label{prop:certificate}
+  Write $Z_t := \sum_{u = \tau^*+1}^{t}\bigl(e_u - p_0 - \delta_P\bigr)$ for the charged excess-error walk, $A_{\mathrm{sig}}(H) := \sum_{t = \tau^*+1}^{\tau^*+H}(e_t - p_0)$ for the raw excess-error integral over a window of length $H$, and $S_{\max}(H) := \max_{\tau^* \le t \le \tau^*+H} S_t$. Set $\tau_{\mathrm{erase}} := \arg\max_{t} Z_t - \tau^*$ and $A_{\mathrm{swap}} := \max_t Z_t$, the exploitable evidence budget. Then, for every $H \ge 1$,
+  \begin{equation}\label{eq:cert_chain}
+    S_{\max}(H) \;\ge\; A_{\mathrm{swap}} \;\ge\; A_{\mathrm{sig}}(H) - H\,\delta_P\,,
+  \end{equation}
+  and consequently
+  \begin{equation}\label{eq:certificate}
+    A_{\mathrm{sig}}(H) - H\,\delta_P \;\ge\; \lambda \;\;\Longrightarrow\;\; \tau_{\mathrm{det}} \le H\,.
+  \end{equation}
+  The left-hand side of~\eqref{eq:certificate} is maximised at $H = \tau_{\mathrm{erase}}$, where it equals $A_{\mathrm{swap}}$.
+\end{proposition}
+
+\begin{proof}
+  Unrolling~\eqref{eq:cusum} from $S_{\tau^*} = 0$ gives the Lindley identity $S_t = Z_t - \min_{\tau^* \le u \le t} Z_u$. The minimum is at most $Z_{\tau^*} = 0$, so $S_t \ge Z_t$ pointwise, and taking maxima over $[\tau^*, \tau^*+H]$ gives the first inequality of~\eqref{eq:cert_chain}. A maximum dominates any endpoint, so $A_{\mathrm{swap}} \ge Z_{\tau^*+H} = A_{\mathrm{sig}}(H) - H\delta_P$, which is the second. If that quantity reaches $\lambda$ then $S_{\max}(H) \ge \lambda$ and the walk has crossed by $\tau^*+H$. The maximiser of $H \mapsto Z_{\tau^*+H}$ is $\tau_{\mathrm{erase}}$ by definition. No distributional assumption is used.
+\end{proof}
+
+\begin{remark}[A short-window certificate]\label{rem:shortwindow}
+  The penalty $H\delta_P$ grows linearly while the signal integral saturates once the ensemble has adapted, so~\eqref{eq:certificate} weakens with the window. At $H = \SixHorizon$ and $\delta_P = \DeltaPtext$ the penalty alone is $25$, and no magnitude of the grid supplies a full-window integral clearing $\lambda = 50$ on top of it. Only the short window $H = \tau_{\mathrm{erase}}$ carries information, and the quantity it certifies is the ceiling $A_{\mathrm{swap}}$, not the window length. This retires the window-based sufficient statistic: starvation is governed by how much evidence exists, not by how long it lasts.
+\end{remark}
+
+\begin{empresult}[Measured starvation of the cumulative-evidence family]\label{res:starvation}
+  Synchronised traces (\SixSeeds{} seeds $\times$ $20$ magnitudes $\times$ four causal arms, $M = 10$, $c_{\mathrm{int}} = 1$, $H = \SixHorizon$, re-accumulated at $\delta_P = \DeltaPtext$) give, on the operational envelope $\Delta e \in [\EnvLo, 0.50]$ and with seeds as the unit of independence:
+  \begin{itemize}[leftmargin=*,topsep=2pt,itemsep=1pt]
+    \item nominal arm, $\Pr(S_{\max} \ge 50) = \StarvFullK/\StarvFullN$, exact $95\%$ upper bound $\StarvFullUpper\%$;
+    \item counterfactual arm with adaptation suspended at the first replacement, $\ge \StarvFrozenLower\%$ (exact $95\%$ lower bound);
+    \item median evidence ceiling suppressed by a factor $\SuppressLo\times$ to $\SuppressHi\times$ across the envelope, monotone increasing in $\Delta e$.
+  \end{itemize}
+  Across the full grid the nominal ceiling spans a factor $\FullSpreadGrid\times$ against $\FrozenSpreadGrid\times$ for the suspended arm: increasing the magnitude of a drift does not increase the evidence delivered to an external monitor, and removing adaptation restores the scaling.
+\end{empresult}
+
+\begin{remark}[Unit of independence and aggregation]\label{rem:aggregation}
+  Crossing rates are a function of $\Delta e$ by construction, so magnitudes are not exchangeable and seeds may not be pooled across them before homogeneity is tested. Rates are computed per magnitude; the envelope figure above is reported after an exact Fisher test over the grid fails to reject at the $5\%$ level. Intervals are Clopper--Pearson throughout. At \SixSeeds{} seeds a single magnitude certifies no rate below $3.6\%$, which is why the envelope aggregate, and not the per-magnitude one, carries the claim.
+\end{remark}
 
 \begin{remark}[Finite horizon, and what follows it]\label{rem:sufficient}
   Eq.~\eqref{eq:markov_bound} bounds a crossing probability over the transient window only; it does not assert permanent erasure. Once the increments turn negative ($-\delta_P$) the reflected statistic stays positive recurrent and still crosses any finite $\lambda$ eventually. The correct post-transient statement is not a vanishing trigger probability but a mean time between false alarms growing exponentially in $\lambda$~\cite{tartakovsky_2014,page_1954}: an alarm raised after $\tau^* + W$ is uninformative about the drift, which is precisely the flooding regime (Remark~\ref{rem:flooding}). The $\sqrt{W}$ margin in~\eqref{eq:starve_boundary} also explains why the empirical crossover (Section~\ref{sec:crossover}) is a finite-width \emph{stochastic} transition rather than a sharp threshold, alongside the bimodal $\tau_{\mathrm{ARF}}$ in the Safe Zone and noise swaps (Remark~\ref{rem:bgswap}).
@@ -283,21 +363,33 @@ River's default ($M=10$) therefore starves the external CUSUM, as confirmed dire
 
 \subsection{The Decoupling Principle}\label{sec:decoupling}
 
-\begin{definition}[Decoupling Principle]\label{def:decoupling}
+\begin{definition}[Decoupling, reliability form]\label{def:decoupling}
 
   \smallskip
-  \emph{(i)~Formal condition.} A monitoring pipeline satisfies the \textbf{Decoupling Principle} if and only if the external monitor is configured to be \emph{strictly more reactive} than the classifier's internal adaptation:
+  \emph{(i)~Formal condition.} Fix an operational envelope $\mathcal{E} = [\Delta e_{\min}, \Delta e_{\max}]$ and a reliability level $1-\alpha$. A monitoring pipeline is \textbf{$(1-\alpha)$-decoupled on $\mathcal{E}$} if
   \begin{equation}\label{eq:decoupling}
-    c_{\mathrm{ext}} < c_{\mathrm{int}} \quad \text{and} \quad \lambda < \lambda^*(\Delta e_{\min})\,,
+    \Pr\bigl(\tau_{\mathrm{det}} \le \tau_{\mathrm{erase}}\bigr) \;\ge\; 1-\alpha
+    \qquad \text{for every } \Delta e \in \mathcal{E}\,.
   \end{equation}
-  where $\lambda^*(\Delta e_{\min})$ is the critical threshold at which $\tau_{\mathrm{det}} = \tau_{\mathrm{ARF}}$ for the smallest expected drift $\Delta e_{\min}$.
+  The condition compares two stopping times. It carries no clock parameter and no threshold, and is therefore stated in terms shared by every detector family.
+
+  \smallskip
+  \emph{(i-bis)~Certificate for the cumulative-evidence family.} Let $q_\alpha(\Delta e)$ denote the $\alpha$-quantile of the evidence ceiling $A_{\mathrm{swap}}$ at magnitude $\Delta e$. By Proposition~\ref{prop:certificate}, $A_{\mathrm{swap}} \ge \lambda$ forces a crossing at or before $\tau_{\mathrm{erase}}$; hence $\lambda \le \lambda_{\mathrm{op}}(\alpha, \mathcal{E}) := \min_{\Delta e \in \mathcal{E}} q_\alpha(\Delta e)$ is sufficient for $(1-\alpha)$-decoupling on $\mathcal{E}$. The certificate is sufficient, not necessary: a pipeline violating it may still detect, through a fluctuation of $S_t$ above $A_{\mathrm{swap}}$ or because its stopping time is not governed by $\lambda$ at all. ADWIN paired with the ARF detects reliably at $c_{\mathrm{ext}} = c_{\mathrm{int}}$ for the second reason. That configuration is consistent with~\eqref{eq:decoupling} and was not with the strict biconditional of the submitted version, which we withdraw.
 
   \smallskip
   \emph{(ii)~Operational calibration.} Condition~\eqref{eq:decoupling} is existential and circular as stated. The following procedure renders it constructive over an operational envelope $[\Delta e_{\min}, \Delta e_{\max}]$ of drift magnitudes to be guaranteed at reliability $1-\alpha$:
 
-  \textbf{(1)}~Fix the operational envelope $[\Delta e_{\min}, \Delta e_{\max}]$. \textbf{(2)}~For each $\Delta e$ on a grid spanning the envelope, inject a synthetic abrupt drift into the ARF during offline calibration and record the empirical distribution of internal adaptation times $\tau_{\mathrm{ARF}}(\Delta e)$. \textbf{(3)}~Extract the empirical $\alpha$-quantile $q_{\alpha}(\tau_{\mathrm{ARF}}(\Delta e))$ at each grid point. \textbf{(4)}~Set $\lambda_{\mathrm{op}} := \min_{\Delta e}\,\{\, q_{\alpha}(\tau_{\mathrm{ARF}}(\Delta e))\cdot(\Delta e - \delta_P) \,\}$, with $\delta_P$ the detector drift-tolerance.
+  \textbf{(1)}~Fix the operational envelope $[\Delta e_{\min}, \Delta e_{\max}]$. \textbf{(2)}~For each $\Delta e$ on a grid spanning the envelope, inject a synthetic abrupt drift into the ARF during offline calibration and record the empirical distribution of internal adaptation times $\tau_{\mathrm{ARF}}(\Delta e)$. \textbf{(3)}~Extract the empirical $\alpha$-quantile $q_{\alpha}(\tau_{\mathrm{ARF}}(\Delta e))$ at each grid point. \textbf{(4)}~Record the evidence ceiling $A_{\mathrm{swap}}$ of each calibration run and set $\lambda_{\mathrm{op}} := \min_{\Delta e} q_{\alpha}\bigl(A_{\mathrm{swap}}(\Delta e)\bigr)$. The rectangular surrogate $q_{\alpha}(\tau_{\mathrm{ARF}})\cdot(\Delta e - \delta_P)$ used in the submitted version assumes a constant accumulation rate over a transient of length $\tau_{\mathrm{ARF}}$; synchronised instrumentation invalidates both halves of that assumption and the surrogate is withdrawn. Step~(4) requires no extra simulation: $S_t$ recomputes offline from the recorded error stream for any $\lambda$ and any $\delta_P$.
 
-  The minimum over the envelope (rather than evaluation at $\Delta e_{\min}$ alone) is mandatory because $q_{\alpha}(\tau_{\mathrm{ARF}})$ is \emph{non-monotone} in $\Delta e$: a fine-magnitude sweep ($\Delta e \in [0.10,0.50]$, $200$ seeds, $\alpha = 0.05$) run at $T_{\mathrm{drift}} = 2000$ shows $q_{0.05}$ to be magnitude-\emph{independent} (constant at $12.95$) for $\Delta e \le 0.16$. That plateau is a property of the \emph{warm-up}, not of the ARF: repeating the identical sweep at $T_{\mathrm{drift}} = 4000$ dissolves it, $q_{0.05}$ rising $25.70 \to 30.95 \to 54.70 \to 54.70$ over the same four magnitudes. The floor is therefore a guard against an immature ensemble---not, as we previously argued, a signature of noise-driven swaps (Remark~\ref{rem:bgswap})---and it must be re-derived for the warm-up actually deployed. Over $[\Delta e_{\min}, \Delta e_{\max}] = [0.20, 0.50]$ the sweep yields $\lambda_{\mathrm{op}} \le 12.44$ at $T_{\mathrm{drift}} = 2000$ (down to $\approx 4.2$ at the lower edge) and $\lambda_{\mathrm{op}} \le 10.5$ at $T_{\mathrm{drift}} = 4000$ (down to $\approx 9.1$), so matching the warm-up tightens the ceiling rather than relaxing it. The procedure requires only offline simulation of the target drift, bypassing analytical estimation of $K_{\mathrm{ARF}}$ and $F$.
+\begin{empresult}[Envelope dependence of the admissible set]\label{res:tension}
+  With $\lambda_{\mathrm{FA}} = \LambdaFA$ calibrated on pre-change volatility and $\alpha = 0.05$, the measured ceiling gives $q_{0.05} = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \lambda_{\mathrm{FA}}\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$ and non-empty for every envelope floored at or above $\DeFloorHi$. The detectability floor $\Delta e_c := \inf\{\Delta e : q_{0.05}(\Delta e) \ge \lambda_{\mathrm{FA}}\}$ lies strictly inside that interval, at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Standard synthetic benchmarks operate below it, which is why the failure mode does not surface on them.
+\end{empresult}
+
+\begin{remark}[Envelope truncation]\label{rem:envelope}
+  The magnitude grid is uniform in the boundary shift $b$ and therefore strongly non-uniform in $\Delta e$: seven of its twenty points fall in $\Delta e \in [0.475, 0.498]$, where the post-change class prior $\Pr(y=1) = 0.5 - \Delta e$ drops below $2.5\%$ and the post-change concept is close to constant. Over an untruncated envelope the minimum defining $\lambda_{\mathrm{op}}$ is attained inside that cluster and measures the generator rather than the pipeline. We floor the operational envelope at $\EnvLo$ and cap it at $\EnvHi$, where the prior remains at $10\%$.
+\end{remark}
+
+  The minimum over the envelope (rather than evaluation at $\Delta e_{\min}$ alone) is mandatory because $q_{\alpha}(\tau_{\mathrm{ARF}})$ is \emph{non-monotone} in $\Delta e$: a fine-magnitude sweep ($\Delta e \in [0.10,0.50]$, $200$ seeds, $\alpha = 0.05$) run at $T_{\mathrm{drift}} = 2000$ shows $q_{0.05}$ to be magnitude-\emph{independent} (constant at $12.95$) for $\Delta e \le 0.16$. That plateau is a property of the \emph{warm-up}, not of the ARF: repeating the identical sweep at $T_{\mathrm{drift}} = 4000$ dissolves it, $q_{0.05}$ rising $25.70 \to 30.95 \to 54.70 \to 54.70$ over the same four magnitudes. The floor is therefore a guard against an immature ensemble---not, as we previously argued, a signature of noise-driven swaps (Remark~\ref{rem:bgswap})---and it must be re-derived for the warm-up actually deployed. The procedure requires only offline simulation of the target drift, bypassing analytical estimation of $K_{\mathrm{ARF}}$ and $F$.
 \end{definition}
 
 Default River configurations use $c_{\mathrm{int}} = 1$ and $c_{\mathrm{ext}} = 32$, violating Definition~\ref{def:decoupling} and producing the worst-case clock-mismatch artefact (Section~\ref{sec:hardware}).
@@ -413,7 +505,7 @@ This monitoring fidelity comes at a measurable predictive cost: as visible in Fi
 \subsection{Practical Implications}
 Default configurations (e.g., River's ARF at $c_{\mathrm{int}} = 1$) mask strong drifts from a cumulative monitor. Reliable monitoring requires either a non-adaptive classifier, or an external clock faster than the internal one ($c_{\mathrm{ext}} < c_{\mathrm{int}}$).
 
-\textbf{The Fundamental Tension.} On heteroscedastic streams, guaranteeing reliable detection caps the CUSUM threshold at $\lambda_{\mathrm{op}} \le 12.44$ when the calibration sweep uses $T_{\mathrm{drift}} = 2000$, and at $\lambda_{\mathrm{op}} \le 10.5$ once its warm-up is matched to the ProteuS streams ($T_{\mathrm{drift}} = 4000$), whereas controlling GARCH-induced false alarms requires $\lambda \ge 15$. We state the parity gap rather than hide it: the $\lambda \ge 15$ member is the fixed ProteuS operating threshold, armed from $t{=}0$ with no warm-up and on a different stream family, so the two members are not measured under one protocol. The conclusion survives the mismatch---the admissible set is empty under either calibration ($\{\lambda \le 12.44\} \cap \{\lambda \ge 15\} = \emptyset$) and the gap \emph{widens} from $2.6$ to $4.5$ at warm-up parity---and forces a choice among three architectural fixes:
+\textbf{The Fundamental Tension.} The tension is an envelope property, not a universal one. Instrumented on the canonical grid at $\delta_P = \DeltaPtext$, the measured evidence ceiling gives $q_{0.05}(S_{\max}) = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \LambdaFA\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$, and non-empty for every envelope floored at or above $\DeFloorHi$; the boundary lies strictly inside that interval, measured at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Restricting the envelope to $[\EnvLo, \EnvHi]$, where the post-change class prior stays at $10\%$, leaves the admissible set non-empty. The infeasibility claim of the submitted version held only because the envelope reached below the detectability floor. This forces a choice among three architectural fixes:
 \textbf{(S1) Detector-side:} Window-divergence monitors (e.g., KSWIN) do not accumulate evidence and are far less sensitive to a short transient; on the settings we test they restore detection at no predictive cost.
 \textbf{(S2) Classifier-side:} A Static Random Forest ($\tau_{\mathrm{ARF}} = \infty$) removes the CUSUM tension at a $23.4$ percentage-point post-drift accuracy cost, isolating internal adaptation as the driver.
 \textbf{(S3) Macro-architecture:} A two-tier protocol in which the external monitor commands the ensemble swap keeps S1's monitoring fidelity together with S2's long-term recovery.
@@ -429,7 +521,7 @@ Default configurations (e.g., River's ARF at $c_{\mathrm{int}} = 1$) mask strong
 
 We formalized the \textbf{blind spot paradox}: adaptive classifiers systematically defeat external \emph{cumulative-evidence} drift detectors by absorbing distributional changes before the accumulator reaches its alarm threshold. We traced it to one root cause---internal ADWIN hyper-reactivity---whose stationary \emph{Starvation Effect} is amplified by the ensemble-level \emph{Hydra Effect}; we derived the critical size $M_{\mathrm{crit}}$ beyond which cumulative monitors structurally fail. Windowed and distributional monitors are spared by construction.
 
-To restore reliability, we introduced the \textbf{Decoupling Principle}: external monitors must be strictly more reactive than internal classifiers. Our empirical validation exposes a Fundamental Tension on heteroscedastic streams, where reliable decoupling and false-alarm control are mutually exclusive under CUSUM architectures. Consequently, the principal operational resolution is detector-side: substituting cumulative-evidence monitors with distribution-based tests like KSWIN escapes the starvation regime entirely, restoring perfect detection without sacrificing the adaptive ensemble's predictive power.
+To restore reliability, we introduced the \textbf{Decoupling Principle}: external monitors must be strictly more reactive than internal classifiers. Our empirical validation exposes a Fundamental Tension on heteroscedastic streams, where reliable decoupling and false-alarm control become mutually exclusive under CUSUM architectures if the target drift magnitude falls below the detectability floor. Consequently, the principal operational resolution is detector-side: substituting cumulative-evidence monitors with distribution-based tests like KSWIN escapes the starvation regime entirely, restoring perfect detection without sacrificing the adaptive ensemble's predictive power.
 
 % ──────────────────────────────────────────────────────────────────
 \bibliographystyle{IEEEtran}

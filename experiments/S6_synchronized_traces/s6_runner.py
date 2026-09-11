@@ -195,8 +195,13 @@ def _frame(seed, delta_e, arm, pre, post, derived):
     }
 
 
-def simulate(seed, delta_e):
-    """One (seed, Delta_e) cell -> (records, frames) for the four arms."""
+def simulate(seed, delta_e, arms=ARM_NAMES):
+    """One (seed, Delta_e) cell -> (records, frames) for the requested arms.
+
+    'full' is always simulated: it is the trunk the two forks are taken from and the only arm that
+    locates tau_swap^(1/M). Restricting `arms` to ('full',) skips the two branch replays and the
+    independent static run, which is what the refinement sweep wants -- Delta_e_c is a property of
+    the nominal arm and the counterfactuals would triple its cost for nothing."""
     safe_seed, x, y = make_stream(seed, delta_e)
     records, frames = [], []
 
@@ -221,7 +226,7 @@ def simulate(seed, delta_e):
         frames.append(_frame(seed, delta_e, arm, pre, post, der))
 
     # --- counterfactual branches ------------------------------------------------------------------
-    for arm in ("no_swap", "frozen"):
+    for arm in [a for a in ("no_swap", "frozen") if a in arms]:
         if not fork_taken:
             rec = {**records[0], "arm": arm, "fork_taken": False, "fork_t_rel": np.nan}
             rec.update({k: np.nan for k in rec if k.startswith(("tau_", "a", "e_", "delta_e_emp",
@@ -242,6 +247,8 @@ def simulate(seed, delta_e):
         frames.append(_frame(seed, delta_e, arm, pre, post, der))
 
     # --- static reference: independent model class on the same stream -----------------------------
+    if "static" not in arms:
+        return records, frames
     stat = make_static(safe_seed)
     segment(stat, x, y, 0, T_DRIFT - TRACE_PRE, observe=False, track=False)
     s_pre, _ = segment(stat, x, y, T_DRIFT - TRACE_PRE, T_DRIFT, track=False)
@@ -254,7 +261,7 @@ def simulate(seed, delta_e):
     return records, frames
 
 
-def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6"):
+def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6", arms=ARM_NAMES):
     """Simulate the grid one magnitude at a time, writing each trace partition before the next.
 
     The full grid is 100 x 20 x 4 arms x 5000 traced steps = 40 million rows; holding them all in
@@ -265,7 +272,7 @@ def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6"):
     records, rows, parts = [], 0, []
     bar = tqdm(delta_e_grid, desc=desc)
     for de in bar:
-        out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de) for s in seeds)
+        out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de, arms) for s in seeds)
         frames = [f for _, frs in out for f in frs]
         records += [r for recs, _ in out for r in recs]
         rows += sum(f["t_rel"].size for f in frames)
@@ -304,13 +311,22 @@ if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "demo":
         demo()
         sys.exit(0)
-    smoke = len(sys.argv) > 1 and sys.argv[1] == "smoke"
-    seeds = common.seed_pool(ssot.S6_SMOKE_N_SEEDS if smoke else len(ssot.S6_CAMPAIGN_SEEDS))
-    grid = ssot.S6_SMOKE_DELTA_E if smoke else [
-        float(np.round(common.norm.cdf(b / np.sqrt(2)) - 0.5, 6)) for b in ssot.S6_CAMPAIGN_BOUNDARY_SHIFTS]
-    out = RESULTS_DIR / ("smoke" if smoke else "data")
-    print(f"[INFO] S6 {'smoke' if smoke else 'FULL'} campaign: {len(seeds)} seeds x {len(grid)} "
-          f"magnitudes x {len(ARM_NAMES)} arms -> {out.relative_to(ssot.ROOT_DIR)}")
-    summary = campaign(seeds, grid, out, desc="S6 smoke" if smoke else "S6 campaign")
+    mode = sys.argv[1] if len(sys.argv) > 1 else "full"
+    if mode == "smoke":
+        seeds, grid, arms = common.seed_pool(ssot.S6_SMOKE_N_SEEDS), ssot.S6_SMOKE_DELTA_E, ARM_NAMES
+    elif mode == "refine":
+        seeds = common.seed_pool(ssot.S6_REFINE_N_SEEDS)
+        grid, arms = ssot.S6_REFINE_DELTA_E, ssot.S6_REFINE_ARMS
+    elif mode == "full":
+        seeds = common.seed_pool(len(ssot.S6_CAMPAIGN_SEEDS))
+        grid = [float(np.round(common.norm.cdf(b / np.sqrt(2)) - 0.5, 6))
+                for b in ssot.S6_CAMPAIGN_BOUNDARY_SHIFTS]
+        arms = ARM_NAMES
+    else:
+        raise SystemExit(f"usage: s6_runner.py [full|smoke|refine|demo]  (got {mode!r})")
+    out = RESULTS_DIR / {"smoke": "smoke", "refine": "data_refine", "full": "data"}[mode]
+    print(f"[INFO] S6 {mode} campaign: {len(seeds)} seeds x {len(grid)} magnitudes x "
+          f"{len(arms)} arm(s) {list(arms)} -> {out.relative_to(ssot.ROOT_DIR)}")
+    summary = campaign(seeds, grid, out, desc=f"S6 {mode}", arms=arms)
     print(f"[INFO] {summary['records']} run records, {summary['frames']} traces, "
           f"{summary['trace_rows']:,} trace rows in {summary['wall_clock_s']:.1f}s")
