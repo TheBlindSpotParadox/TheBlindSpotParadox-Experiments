@@ -7,13 +7,13 @@ commands that regenerate them are at the end.
 
 ## 1. Campaign
 
-| item | value |
-|------|-------|
-| grid | 100 seeds x 20 canonical magnitudes x 4 causal arms = 8 000 run records |
-| stream | canonical family, `N_STEPS = 8000`, drift at `t = 4000`, `M = 10`, `c_int = 1` |
-| traces | 40 000 000 rows, `[tau* - 1000, tau* + 4000)`, hive-partitioned by `delta_e` |
-| wall clock | 1 218.6 s on 24 physical cores (48 logical), `PYTHONHASHSEED=0` |
-| artifacts | `results/S6_synchronized_traces/data/` (403 MB), `tables/`, `figures/` |
+| item       | value                                                                          |
+| ---------- | ------------------------------------------------------------------------------ |
+| grid       | 100 seeds x 20 canonical magnitudes x 4 causal arms = 8 000 run records        |
+| stream     | canonical family, `N_STEPS = 8000`, drift at `t = 4000`, `M = 10`, `c_int = 1` |
+| traces     | 40 000 000 rows, `[tau* - 1000, tau* + 4000)`, hive-partitioned by `delta_e`   |
+| wall clock | 1 218.6 s on 24 physical cores (48 logical), `PYTHONHASHSEED=0`                |
+| artifacts  | `results/S6_synchronized_traces/data/` (403 MB), `tables/`, `figures/`         |
 
 Arms. `full` is the nominal ARF. `no_swap` and `frozen` are `copy.deepcopy` forks taken at
 `tau_swap^(1/M)`, the instant of the first post-drift replacement, on the same materialised stream:
@@ -31,12 +31,12 @@ Forks were taken on 2 000 / 2 000 cells; `tau_swap^(1/M)` is censored on none.
 magnitude, at every magnitude on the grid.
 
 | Delta_e | tau_swap^(1/M) | tau_swap^(1/2) | tau_swap^(1) | ratio (1)/(1/M) | N_swap | distinct trees |
-|--------:|---------------:|---------------:|-------------:|----------------:|-------:|---------------:|
-| 0.085 | 417.5 | 1556.0 | 3362.0 | 7.3 | 21 | 10 |
-| 0.194 | 150.0 | 976.0 | 2289.5 | 14.6 | 24 | 10 |
-| 0.327 | 53.0 | 130.5 | 1221.5 | 23.4 | 20 | 10 |
-| 0.416 | 38.5 | 74.0 | 819.0 | 21.1 | 14 | 10 |
-| 0.498 | 29.0 | 49.5 | 482.0 | 15.0 | 10 | 10 |
+| ------: | -------------: | -------------: | -----------: | --------------: | -----: | -------------: |
+|   0.085 |          417.5 |         1556.0 |       3362.0 |             7.3 |     21 |             10 |
+|   0.194 |          150.0 |          976.0 |       2289.5 |            14.6 |     24 |             10 |
+|   0.327 |           53.0 |          130.5 |       1221.5 |            23.4 |     20 |             10 |
+|   0.416 |           38.5 |           74.0 |        819.0 |            21.1 |     14 |             10 |
+|   0.498 |           29.0 |           49.5 |        482.0 |            15.0 |     10 |             10 |
 
 Pooled median ratio `tau_swap^(1) / tau_swap^(1/M) = 17.9`. The full ensemble has still not
 completed its turnover at the censoring horizon in 43 % of runs at `Delta_e = 0.085`.
@@ -57,12 +57,12 @@ Two further readings.
 **Rank correlation.** `tau_swap^(1/M)` does retain predictive content once the magnitude is held
 fixed, but unevenly (Spearman, arm `full`, `n = 2000`):
 
-| target | pooled | weak (`<=0.15`) | mid | strong (`>0.35`) |
-|--------|-------:|----------------:|----:|-----------------:|
-| `A` (framework) | 0.713 | 0.404 | 0.447 | 0.569 |
-| `tau_err(0.50)` | 0.850 | 0.059 | 0.726 | 0.775 |
-| `tau_err(0.10)` | 0.694 | 0.097 | 0.345 | 0.531 |
-| `tau_erase^argmax` | 0.640 | 0.348 | 0.105 | 0.427 |
+| target             | pooled | weak (`<=0.15`) |   mid | strong (`>0.35`) |
+| ------------------ | -----: | --------------: | ----: | ---------------: |
+| `A` (framework)    |  0.713 |           0.404 | 0.447 |            0.569 |
+| `tau_err(0.50)`    |  0.850 |           0.059 | 0.726 |            0.775 |
+| `tau_err(0.10)`    |  0.694 |           0.097 | 0.345 |            0.531 |
+| `tau_erase^argmax` |  0.640 |           0.348 | 0.105 |            0.427 |
 
 In the weak band the first swap carries essentially no information about the recovery times
 (0.06 / 0.10): those replacements are noise-driven and are not the adaptation event.
@@ -84,9 +84,9 @@ scale for the quantity it is used to stand for. **F6 confirmed.**
 `A_rect = Delta_e x tau_swap^(1/M)`, the rectangle R8's reasoning implies, is not a bounded proxy in
 either direction:
 
-| Delta_e | 0.028 | 0.085 | 0.141 | 0.194 | 0.327 | 0.436 | 0.452 | 0.498 |
-|---------|------:|------:|------:|------:|------:|------:|------:|------:|
-| `A / A_rect` | 2.05 | 0.74 | 1.09 | 1.79 | 2.70 | 1.06 | **-0.15** | **-14.12** |
+| Delta_e      | 0.028 | 0.085 | 0.141 | 0.194 | 0.327 | 0.436 |     0.452 |      0.498 |
+| ------------ | ----: | ----: | ----: | ----: | ----: | ----: | --------: | ---------: |
+| `A / A_rect` |  2.05 |  0.74 |  1.09 |  1.79 |  2.70 |  1.06 | **-0.15** | **-14.12** |
 
 The ratio is non-monotone, spans 2.7 to -14.1, and **changes sign**: for `Delta_e >= 0.452` the
 integrated budget `A = sum (e_t - p_0)` over `T_h` is negative, because the adapted ensemble ends the
@@ -104,12 +104,12 @@ The threshold-free evidence ceiling `max_t A_unrefl(t)` is the maximum accumulat
 monitor can hold. It needs no smoothing window, no `tau_erase` and no rectangle, so it is the one
 budget statistic free of every definitional dispute above.
 
-| Delta_e | 0.028 | 0.085 | 0.141 | 0.194 | 0.327 | 0.416 | 0.498 |
-|---------|------:|------:|------:|------:|------:|------:|------:|
-| `full` | 4.4 | 19.7 | 32.3 | **36.6** | 33.5 | 28.2 | 19.2 |
-| `no_swap` | 3.0 | 19.3 | 32.4 | 38.0 | 43.5 | 44.1 | 36.0 |
-| `frozen` | 14.6 | 78.6 | 166.7 | 393.9 | 1063.6 | 1443.0 | **1809.0** |
-| `static` | 2.0 | 11.8 | 28.7 | 47.4 | 104.7 | 139.5 | 190.7 |
+| Delta_e   | 0.028 | 0.085 | 0.141 |    0.194 |  0.327 |  0.416 |      0.498 |
+| --------- | ----: | ----: | ----: | -------: | -----: | -----: | ---------: |
+| `full`    |   4.4 |  19.7 |  32.3 | **36.6** |   33.5 |   28.2 |       19.2 |
+| `no_swap` |   3.0 |  19.3 |  32.4 |     38.0 |   43.5 |   44.1 |       36.0 |
+| `frozen`  |  14.6 |  78.6 | 166.7 |    393.9 | 1063.6 | 1443.0 | **1809.0** |
+| `static`  |   2.0 |  11.8 |  28.7 |     47.4 |  104.7 |  139.5 |      190.7 |
 
 Over `Delta_e` in [0.10, 0.50] the ceiling on the adaptive ensemble varies by a factor of **1.90**
 (19.2 to 36.6) and is non-monotone, peaking at `Delta_e ~ 0.19` and then DECLINING as the drift grows.
@@ -122,10 +122,10 @@ and the reason is adaptation, because removing adaptation restores the scaling.
 
 Operationally, at `lambda = 50`:
 
-| arm | `P(max A_unrefl >= 50)` | `P(>= 25)` |
-|-----|------------------------:|-----------:|
-| `full` | **0.009** | 0.456 |
-| `frozen` | **0.927** | 0.959 |
+| arm      | `P(max A_unrefl >= 50)` | `P(>= 25)` |
+| -------- | ----------------------: | ---------: |
+| `full`   |               **0.009** |      0.456 |
+| `frozen` |               **0.927** |      0.959 |
 
 The adaptive ensemble starves a `lambda = 50` monitor in 99.1 % of runs; the same stream, same seeds,
 same fork, with adaptation suppressed, feeds it in 92.7 %.
@@ -141,30 +141,38 @@ recomputed at the measured base rate before being carried into the manuscript.
 `full` and `no_swap` share one stream, one history and one fork, and differ only by the replacements
 suppressed after the first. Paired sign test at the seed level, arm difference `full - no_swap`:
 
-| quantity | n | positive | median difference | p |
-|----------|--:|---------:|------------------:|--:|
-| `A` (framework, common window) | 1996 | 417 | **-5.15** | 1.6e-158 |
-| `A` (Phase-1, signed) | 1981 | 629 | -9.00 | 1.6e-60 |
-| `tau_erase^argmax` | 1741 | 550 | -74.0 | 2.6e-54 |
+| quantity                       |    n | positive | median difference |        p |
+| ------------------------------ | ---: | -------: | ----------------: | -------: |
+| `A` (framework, common window) | 1996 |      417 |         **-5.15** | 1.6e-158 |
+| `A` (Phase-1, signed)          | 1981 |      629 |             -9.00 |  1.6e-60 |
+| `tau_erase^argmax`             | 1741 |      550 |             -74.0 |  2.6e-54 |
 
 The replacements after the first do erase further evidence, and the effect is not marginal
 statistically: `p ~ 1e-158`. It is marginal **in magnitude**. Decomposing against the `frozen`
 branch, which never adapts again:
 
 ```
-E_total = A_frozen - A_full        median 826.7      evidence erased by all adaptation
-E_first = A_frozen - A_no_swap     median 819.2      erased by the FIRST swap alone
-share_first = E_first / E_total    median 0.993      IQR [0.987, 0.998]   n = 1979
+E_total  = A_frozen - A_full       median 826.7      evidence erased by all adaptation
+E_learn  = A_frozen - A_no_swap    median 819.2      erased by INCREMENTAL LEARNING alone
+share_learn = E_learn / E_total    median 0.993      IQR [0.987, 0.998]   n = 1979
 ```
 
-**99.3 % of the erasure is done by the first replacement.** The Hydra accounts for the remaining
-0.7 %, about 5 units of budget. At the operating points measured here that residue does not change a
-detection outcome — the `full` ceiling is 33.5 at `Delta_e = 0.327` and adding 5 does not reach
-`lambda = 50` — but it would matter to any threshold set within ~5 units of the ceiling.
+**99.3 % of the erasure is done by incremental learning of the M-1 surviving trees.** Both
+counterfactual arms fork AT the first replacement and share it with `full`, so this contrast
+identifies post-fork learning, not the first swap. The first swap's own contribution is NOT
+identified by this design; an arm with replacement suppressed from `tau*` onward would be required.
+Section 8 point 6 bounds it mechanically: 100 % of replacements install a tree that has learned
+nothing, and one member in ten alters one vote in ten.
 
-**Verdict: the Hydra is not the mechanism of the blind spot.** The blind spot is created by the first
-replacement. Repeated replacement is a real, measurable, second-order aggravation, confined to the
-weak band where it exists at all (section 2).
+Replacements after the first account for 0.7 %, about 5 units of budget. Volumetrically marginal,
+decisively not: at `Delta_e = 0.327` suppressing them raises the median ceiling from 31.3 to 41.1
+and lifts detection at `lambda = 50` from 0/100 to 18/100. The residue flips decisions because the
+threshold sits in the upper tail of the ceiling distribution, not because it carries energy.
+
+**Verdict: the Hydra is not the volumetric mechanism of the blind spot.** It is an onset
+accelerator — the forest reacts on `min_i tau_i`, so the learning phase that erases the residual
+starts 4.1x to 8.0x sooner — and a terminal decision lock, removing up to 23 % of residual
+detection (max at `Delta_e = 0.361`). Erasure itself is ordinary incremental learning.
 
 **Where the erasure actually happens.** Segmented regression of `A_unrefl(t)`, one continuous
 one-knot least-squares fit per run on the `full` arm (`n = 2000`, median `R^2 = 0.968`, slopes
@@ -204,11 +212,11 @@ The statistic reports the horizon, not the erasure.
 
 **The gate answered on estimable surrogates.** Direction is robust even though the value is not:
 
-| erasure definition | mean | censored | `kappa` (mean basis) | vs `kappa* = 1.73` |
-|--------------------|-----:|---------:|---------------------:|--------------------|
-| `tau_err(delta_P)` as written | 1818.8 | 6 % | 31.70 | FALSIFIED (not estimable) |
-| argmax `A_unrefl` | 611.9 | 0 % | **10.66** | FALSIFIED |
-| `tau_err(rho = 0.10)` | 557.0 | 0 % | **9.71** | FALSIFIED |
+| erasure definition            |   mean | censored | `kappa` (mean basis) | vs `kappa* = 1.73`        |
+| ----------------------------- | -----: | -------: | -------------------: | ------------------------- |
+| `tau_err(delta_P)` as written | 1818.8 |      6 % |                31.70 | FALSIFIED (not estimable) |
+| argmax `A_unrefl`             |  611.9 |      0 % |            **10.66** | FALSIFIED                 |
+| `tau_err(rho = 0.10)`         |  557.0 |      0 % |             **9.71** | FALSIFIED                 |
 
 `kappa > kappa*` under every definition, by a factor of 6 to 18, on 100 % of runs.
 
@@ -232,13 +240,13 @@ threshold — with `tau*`, `tau_swap^(1/M)`, `tau_erase` and `tau_det` marked. `
 
 Regime labels are assigned from the measurement, not by decree. Ladder at this magnitude:
 
-| lambda | pre-drift false alarms | `P(det <= erase)` | median `tau_det` | regime |
-|-------:|-----------------------:|------------------:|-----------------:|--------|
-| 50 | 0.00 | 0.00 | censored | starvation |
-| 25 | 0.00 | 0.97 | 97 | safe zone |
-| 8 | 0.01 | 1.00 | 22 | safe zone |
-| 4 | 0.60 | 1.00 | 7 | flooding |
-| 2 | 0.98 | 1.00 | 2 | flooding |
+| lambda | pre-drift false alarms | `P(det <= erase)` | median `tau_det` | regime     |
+| -----: | ---------------------: | ----------------: | ---------------: | ---------- |
+|     50 |                   0.00 |              0.00 |         censored | starvation |
+|     25 |                   0.00 |              0.97 |               97 | safe zone  |
+|      8 |                   0.01 |              1.00 |               22 | safe zone  |
+|      4 |                   0.60 |              1.00 |                7 | flooding   |
+|      2 |                   0.98 |              1.00 |                2 | flooding   |
 
 R2's three scenarios do not span the three regimes: `lambda = 8`, which R2's own figure labels
 "SAFE ZONE", is indeed a safe zone here, and no threshold in `R2_LAMBDAS` floods. The ladder is
@@ -293,12 +301,12 @@ Section 10 of the architecture specification is not present in this repository, 
 and (c) are operationalised from the Phase-2 task list and named as such. The one falsification
 criterion that IS committed — the `transfer_S1` blocking gate — is reported in section 6.
 
-| criterion | operational form | status |
-|-----------|------------------|--------|
-| (a) F6 — first swap as adaptation metric | falsified if `tau_swap^(1/M)` tracks the erasure quantities with elasticity 1 and uniform rank correlation | **F6 upheld**: elasticity 0.66 (`z = -14.9` against 1), `tau_swap^(1)/tau_swap^(1/M) = 17.9`, rank correlation collapses to 0.06 in the weak band |
-| (b) F7 — rectangular transient | falsified if `A / A_rect` is bounded and of constant sign | **F7 upheld**: ratio spans 2.70 to -14.12 and changes sign at `Delta_e >= 0.452` |
-| (c) Hydra as causal mechanism | falsified if suppressing every swap after the first leaves the erasure essentially unchanged | **Hydra falsified as the mechanism**: `share_first = 0.993` [0.987, 0.998]. The residual contrast is real (`p = 1.6e-158`) but is 0.7 % of the erasure |
-| transfer_S1 gate | `kappa > kappa*` falsifies the `lambda = 50` starvation certificate | **gate fails, certificate holds**: `kappa` = 9.7 to 31.7 against `kappa* = 1.73` on 100 % of runs, yet `P(det) = 0.000` on 100/100 runs. `W*` is the wrong sufficient statistic; the binding quantity is the budget ceiling `max A_unrefl = 33.5 < lambda = 50` |
+| criterion                                | operational form                                                                                           | status                                                                                                                                                                                                                                                          |
+| ---------------------------------------- | ---------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| (a) F6 — first swap as adaptation metric | falsified if `tau_swap^(1/M)` tracks the erasure quantities with elasticity 1 and uniform rank correlation | **F6 upheld**: elasticity 0.66 (`z = -14.9` against 1), `tau_swap^(1)/tau_swap^(1/M) = 17.9`, rank correlation collapses to 0.06 in the weak band                                                                                                               |
+| (b) F7 — rectangular transient           | falsified if `A / A_rect` is bounded and of constant sign                                                  | **F7 upheld**: ratio spans 2.70 to -14.12 and changes sign at `Delta_e >= 0.452`                                                                                                                                                                                |
+| (c) Hydra as causal mechanism            | falsified if suppressing every swap after the first leaves the erasure essentially unchanged               | **Hydra falsified as the volumetric mechanism, upheld as a decision mechanism**: `share_learn = 0.993` [0.987, 0.998] — suppressing every replacement after the first leaves 99.3 % of the post-fork erasure in place, the work of incremental learning by the surviving trees. The 0.7 % residue is nonetheless real (`p = 1.6e-158`) and lifts detection at `lambda = 50` from 0/100 to 18/100 at `Delta_e = 0.327` (section 5)                                                                                                          |
+| transfer_S1 gate                         | `kappa > kappa*` falsifies the `lambda = 50` starvation certificate                                        | **gate fails, certificate holds**: `kappa` = 9.7 to 31.7 against `kappa* = 1.73` on 100 % of runs, yet `P(det) = 0.000` on 100/100 runs. `W*` is the wrong sufficient statistic; the binding quantity is the budget ceiling `max A_unrefl = 33.5 < lambda = 50` |
 
 ## 10. Reproduction
 

@@ -52,6 +52,9 @@
 \newcommand{\SwapElasticity}{0.66}           % AFT beta\_1
 \newcommand{\SwapElasticityZ}{-14.9}         % z against H0 = 1
 \newcommand{\LambdaFA}{15}                   % R4\_PHT\_LAMBDA, ProteuS pre-drift calibration
+\newcommand{\LambdaOpNarrow}{21.93}          % envelope\_stats.json, lambda\_op\_bootstrap 0.20\_0.40
+\newcommand{\LambdaOpNarrowCI}{[19.88,\,22.40]}
+\newcommand{\WideEnvUnstable}{62.6}          % percent of replicates with lambda\_op below LambdaFA
 \newcommand{\EnvLo}{0.20}\newcommand{\EnvHi}{0.40}
 \newcommand{\DeFloorLo}{0.085}\newcommand{\DeFloorHi}{0.141}
 \newcommand{\QlowFloorLo}{9.38}\newcommand{\QlowFloorHi}{18.32}
@@ -386,7 +389,7 @@ River's default ($M=10$) therefore starves the external CUSUM, as confirmed dire
 \end{empresult}
 
 \begin{remark}[Envelope truncation]\label{rem:envelope}
-  The magnitude grid is uniform in the boundary shift $b$ and therefore strongly non-uniform in $\Delta e$: seven of its twenty points fall in $\Delta e \in [0.475, 0.498]$, where the post-change class prior $\Pr(y=1) = 0.5 - \Delta e$ drops below $2.5\%$ and the post-change concept is close to constant. Over an untruncated envelope the minimum defining $\lambda_{\mathrm{op}}$ is attained inside that cluster and measures the generator rather than the pipeline. We floor the operational envelope at $\EnvLo$ and cap it at $\EnvHi$, where the prior remains at $10\%$.
+  The magnitude grid is uniform in the boundary shift $b$ and therefore strongly non-uniform in $\Delta e$: seven of its twenty points fall in $\Delta e \in [0.475, 0.498]$, where the post-change class prior $\Pr(y=1) = 0.5 - \Delta e$ drops below $2.5\%$ and the post-change concept is close to constant. Over an untruncated envelope the minimum defining $\lambda_{\mathrm{op}}$ is attained inside that cluster and measures the generator rather than the pipeline. Truncation is not a stylistic choice: a seed-level bootstrap of $\min_{\Delta e} q_{0.05}$ over $[\EnvLo, 0.50]$ places the estimate below $\lambda_{\mathrm{FA}}$ in $\WideEnvUnstable\%$ of $10{,}000$ replicates, so the untruncated calibration is not identified at this sample size. We therefore floor the operational envelope at $\EnvLo$ and cap it at $\EnvHi$, where the prior remains at $10\%$; there the certificate is stable, $\lambda_{\mathrm{op}} = \LambdaOpNarrow$ with bootstrap interval $\LambdaOpNarrowCI$ and no replicate below $\lambda_{\mathrm{FA}}$.
 \end{remark}
 
   The minimum over the envelope (rather than evaluation at $\Delta e_{\min}$ alone) is mandatory because $q_{\alpha}(\tau_{\mathrm{ARF}})$ is \emph{non-monotone} in $\Delta e$: a fine-magnitude sweep ($\Delta e \in [0.10,0.50]$, $200$ seeds, $\alpha = 0.05$) run at $T_{\mathrm{drift}} = 2000$ shows $q_{0.05}$ to be magnitude-\emph{independent} (constant at $12.95$) for $\Delta e \le 0.16$. That plateau is a property of the \emph{warm-up}, not of the ARF: repeating the identical sweep at $T_{\mathrm{drift}} = 4000$ dissolves it, $q_{0.05}$ rising $25.70 \to 30.95 \to 54.70 \to 54.70$ over the same four magnitudes. The floor is therefore a guard against an immature ensemble---not, as we previously argued, a signature of noise-driven swaps (Remark~\ref{rem:bgswap})---and it must be re-derived for the warm-up actually deployed. The procedure requires only offline simulation of the target drift, bypassing analytical estimation of $K_{\mathrm{ARF}}$ and $F$.

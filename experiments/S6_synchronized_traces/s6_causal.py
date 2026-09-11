@@ -16,12 +16,13 @@ Three measurements on the campaign artifacts.
    distributional assumption -- the right instrument here, because A is bounded below and skewed.
 
 3. Erasure share. 'frozen' is the branch that never adapts again, so A_frozen is the evidence an
-   external monitor would have received had adaptation stopped at the fork. That gives a clean
-   decomposition of what each mechanism erased:
+   external monitor would have received had adaptation stopped at the fork. Since all three arms
+   fork AFTER the first replacement and therefore carry it identically, the decomposition separates
+   the two mechanisms that act after the fork, not the first swap:
 
-       E_total = A_frozen - A_full        evidence erased by the whole adaptation
-       E_first = A_frozen - A_no_swap     evidence erased by the FIRST swap alone
-       share_first = E_first / E_total    the rest is the Hydra's contribution
+       E_total = A_frozen - A_full        post-fork erasure: incremental learning AND later swaps
+       E_learn = A_frozen - A_no_swap     incremental learning alone, no tree ever replaced again
+       share_learn = E_learn / E_total    the remainder is the Hydra's marginal contribution
 
    Shares are computed per (Delta_e, seed) and aggregated as medians: the ratio is unstable wherever
    E_total is near zero, so a mean over runs would be dominated by those runs alone.
@@ -141,23 +142,42 @@ def contrasts(runs, col):
 
 
 def erasure_share(runs, col="a_fw"):
-    """Median share of the erasure attributable to the first swap, per magnitude and pooled."""
+    """Median share of the post-fork erasure imputable to INCREMENTAL LEARNING, per magnitude
+    and pooled.
+
+    The quantity is not what an earlier revision of this function claimed. All three arms fork at
+    tau_swap^(1/M), AFTER the learn_one that produced the first replacement, so all three carry that
+    replacement identically. No difference between them can therefore be attributed to it: the first
+    swap is common to the factual arm and to both counterfactuals, and this decomposition cannot
+    isolate it.
+
+    What the three arms do separate is everything that happens AFTER the fork:
+
+        e_total = A_frozen - A_full       post-fork erasure: incremental learning AND later swaps
+        e_learn = A_frozen - A_no_swap    incremental learning alone -- 'no_swap' keeps learning with
+                                          both detector paths inert, so no tree is ever replaced again
+        e_total - e_learn                 the marginal contribution of the later replacements, i.e.
+                                          the Hydra
+
+    `median_share_learn` is therefore the fraction of the post-fork erasure done by the ensemble
+    simply continuing to fit the new concept with the trees it already has. Isolating the first swap
+    would need a fourth arm forked BEFORE it fires, which this campaign does not simulate."""
     wide = runs.pivot_table(index=["delta_e", "seed"], columns="arm", values=col)
     need = {"full", "no_swap", "frozen"}
     if not need <= set(wide.columns):
         return {"pooled": None, "per_delta_e": []}
     e_total = wide["frozen"] - wide["full"]
-    e_first = wide["frozen"] - wide["no_swap"]
-    ok = np.isfinite(e_total) & np.isfinite(e_first) & (e_total > 0)
-    share = (e_first[ok] / e_total[ok]).clip(-1.0, 2.0)
-    per = [{"delta_e": float(de), "n": int(g.size), "median_share_first": float(np.median(g)),
+    e_learn = wide["frozen"] - wide["no_swap"]
+    ok = np.isfinite(e_total) & np.isfinite(e_learn) & (e_total > 0)
+    share = (e_learn[ok] / e_total[ok]).clip(-1.0, 2.0)
+    per = [{"delta_e": float(de), "n": int(g.size), "median_share_learn": float(np.median(g)),
             "q25": float(np.quantile(g, 0.25)), "q75": float(np.quantile(g, 0.75))}
            for de, g in share.groupby(level="delta_e") if g.size]
-    return {"pooled": {"n": int(share.size), "median_share_first": float(np.median(share)),
+    return {"pooled": {"n": int(share.size), "median_share_learn": float(np.median(share)),
                        "q25": float(np.quantile(share, 0.25)),
                        "q75": float(np.quantile(share, 0.75)),
                        "median_e_total": float(np.median(e_total[ok])),
-                       "median_e_first": float(np.median(e_first[ok])),
+                       "median_e_learn": float(np.median(e_learn[ok])),
                        "n_dropped_non_positive_e_total": int((~ok).sum())},
             "per_delta_e": per}
 
@@ -297,7 +317,7 @@ def main(which="data"):
         "contrast_full_minus_no_swap": {
             c: contrasts(runs, c)
             for c in ("a_pos_common", "a_signed_common", "a_fw", "a", "tau_erase_fw", "tau_erase")},
-        "erasure_share_first_swap": {c: erasure_share(runs, c)
+        "erasure_share_post_fork": {c: erasure_share(runs, c)
                                      for c in ("a_pos_common", "a_signed_common", "a")},
         "kappa_gate_transfer_S1": {
             **kappa_gate(runs),
@@ -327,14 +347,14 @@ def main(which="data"):
         print(f"    {col:16s} n={p['n']:5d}  positive={p['n_positive']:5d}  "
               f"median diff={p['median_diff']:+9.3f}  p={p['p_value']:.3e}")
 
-    print("\n[3] Share of the erasure attributable to the first swap")
-    for col, res in payload["erasure_share_first_swap"].items():
+    print("\n[3] Share of the post-fork erasure attributable to incremental learning")
+    for col, res in payload["erasure_share_post_fork"].items():
         p = res["pooled"]
         if p is None:
             continue
-        print(f"    {col:16s} median share = {p['median_share_first']:.3f} "
+        print(f"    {col:16s} median share = {p['median_share_learn']:.3f} "
               f"[{p['q25']:.3f}, {p['q75']:.3f}]  n={p['n']}  "
-              f"(median E_total={p['median_e_total']:.2f}, E_first={p['median_e_first']:.2f}, "
+              f"(median E_total={p['median_e_total']:.2f}, E_learn={p['median_e_learn']:.2f}, "
               f"dropped={p['n_dropped_non_positive_e_total']})")
     kg = payload["kappa_gate_transfer_S1"]
     print(f"\n[4] transfer_S1 blocking gate at Delta_e = {kg['delta_e_used']:.4f} "
