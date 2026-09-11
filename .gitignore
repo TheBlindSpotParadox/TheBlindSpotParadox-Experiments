@@ -9,7 +9,12 @@ __pycache__/
 *.gz
 # Mistral Vibe local session & config
 .vibe/
-repomix-output.xml
+
+# Repomix config
+repomix.config.json
+
+# Repomix outputs
+*.xml
 
 # Graphe et visualisations locales
 graphify-out/
