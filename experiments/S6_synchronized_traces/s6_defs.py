@@ -161,7 +161,7 @@ def empirical_delta_e(err_pre, err_post, window=ERR_WINDOW):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
-# framework_v2 definitions (docs/sections/framework_v2.tex, def:times / def:budget / def:kappa)
+# framework_v2 definitions (docs/manuscript/sections/framework_v2.tex, def:times / def:budget / def:kappa)
 # ══════════════════════════════════════════════════════════════════════════════
 # DECLARED DIVERGENCE. The Phase-1 mandate fixed operational surrogates -- tau_err with a W/2
 # hysteresis on a threshold e_pre + rho * Delta_e_emp, tau_erase as the argmax of A_unrefl, A as the
