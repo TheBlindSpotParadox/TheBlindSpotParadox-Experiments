@@ -65,6 +65,21 @@
 \newcommand{\DeCrit}{0.120}                  % measured Action 4: 0.1197, n=300
 \newcommand{\DeCritCI}{[0.114, 0.127]}       % 95% bootstrap CI (10,000 draws)
 
+% ── Stream S2 recomputation at the MEASURED base rate. Source: results/S2_theory/tables/.
+% Every value is read from a committed artifact; none is typed by hand.
+\newcommand{\PzeroMeas}{0.024}               % ssot.P0\_MEASURED; median e\_pre, arm full, n = 2000
+\newcommand{\PzeroBand}{[0.015,\,0.032]}     % central 95 \% of per-run e\_pre, s2\_gate\_T20.json
+\newcommand{\ThetaStar}{0.6813}              % Cramer root at PzeroMeas, delta\_P = DeltaPtext
+\newcommand{\ArlFifteen}{4.0\times10^{6}}    % ARL\_0(lambda = 15), s2\_arl0\_columns.csv
+\newcommand{\ArlFifty}{9.1\times10^{16}}     % ARL\_0(lambda = 50), idem
+\newcommand{\FloorBand}{[13.9,\,18.3]}       % eq:floor\_chord over PzeroBand, s2\_gate\_T20.json
+\newcommand{\ChiLoose}{6.74}                 % chi\^{}2 looseness factor at PzeroMeas
+\newcommand{\FloodLamArf}{20.97}             % mean lambda\_calibrated, pht\_arf\_c1
+\newcommand{\FloodLamHt}{132.50}             % idem, pht\_ht (insects\_per\_episode.parquet)
+\newcommand{\FloodPredArf}{210}              % re-arm model, s2\_flooding\_retrodiction.json
+\newcommand{\FloodPredHt}{28}                % idem
+\newcommand{\FloodArlGap}{3\times10^{4}}     % shortfall factor of the ARL\_0 model
+
 % Artifact repository, anonymised. Declared once here so the venue never leaks into the body.
 % \url{\RepoURL} expands only because this URL carries no catcode-active character. If it ever
 % gains a # % ~ _ or &, switch the call site to \expandafter\url\expandafter{\RepoURL}.
@@ -327,7 +342,11 @@ A high threshold ($\lambda = 50$) produces \emph{complete} starvation: the PHT d
 \end{remark}
 
 \begin{remark}[False-alarm flooding: the non-stationary dual of starvation]\label{rem:flooding}
-  Starvation and flooding are two faces of one root cause---the hyper-reactive internal ADWIN at $c_{\mathrm{int}}{=}1$. A \emph{large, abrupt} change is absorbed one-shot before the external CUSUM accumulates (starvation, recall $\to 0$; Prop.~\ref{prop:starvation}). Under a \emph{weak per-step} signal (low SNR or a gradual onset, even at large aggregate $\Delta e$) it instead swaps continuously on noise (Remark~\ref{rem:bgswap}), injecting spurious post-reset transients read as alarms (precision $\to 0$): on \emph{gradual\_balanced} the $c_{\mathrm{int}}{=}1$ clock inflates the external alarm count to $86$ for a single true drift, against $7$ for the HT baseline (Section~\ref{sec:crossover}). Both deform the error stream---tracking a \emph{genuine} change (starvation) or a \emph{phantom} one (flooding). Crucially, flooding is parametrically controllable (raising $\lambda$ suppresses it), whereas starvation is structural: no CUSUM threshold escapes it (Section~\ref{sec:starvation_boundary}).
+  Starvation and flooding are duals in their effect on $F_1$, not two faces of one cause. Starvation is the erasure of a genuine transient, and the synchronised decomposition assigns $\LearnShare\%$ of that erasure to ordinary incremental learning by the $M{-}1$ surviving trees rather than to the internal clock: the hyper-reactive ADWIN at $c_{\mathrm{int}}{=}1$ fixes \emph{when} adaptation starts, not \emph{what} removes the evidence. Flooding has a different mechanism, and the two should not be attributed to one root cause.
+
+  Read through $\mathrm{ARL}_0$, an alarm raised after the transient is uninformative and arrives under the no-change law at rate $1/\mathrm{ARL}_0$ (Remark~\ref{rem:sufficient}). At the measured base rate $p_0 = \PzeroMeas$ with $\delta_P = \DeltaPtext$ that rate is negligible---$\mathrm{ARL}_0 = \ArlFifteen$ steps at $\lambda = \LambdaFA$---and it accounts for essentially none of the alarms observed: on \emph{gradual\_balanced} it predicts $3\times10^{-3}$ alarms over the armed pre-change span against $86$ measured, short by a factor $\FloodArlGap$. The flooding alarms are not null-regime false alarms, and no recalibration of $\mathrm{ARL}_0$ explains them.
+
+  What produces them is the post-change regime itself. The error rate does not return to its pre-change level on that stream ($0.50$ against $0.058$ for the ARF pipeline), so a monitor re-armed after each alarm crosses $\lambda$ again roughly every $\lambda / (\bar e_{\mathrm{post}} - p_{\mathrm{pre}} - \delta_P)$ steps. That re-arm model, with no fitted constant, returns $\FloodPredArf$ alarms for PHT$+$ARF($c{=}1$) against $86$ measured and $\FloodPredHt$ for PHT$+$HT against $7$, and their ratio $7.6\times$ against a measured $12.2\times$. We claim order-of-magnitude agreement only: Sections~\ref{sec:proteus} and~\ref{sec:crossover} run River's adaptive mean-tracking PageHinkley at $\delta_P = 0.005$, not the fixed-$p_0$ recursion of Eq.~\eqref{eq:cusum}, so this is a consistency check across estimators and is labelled as one. The asymmetry between the two pipelines is a threshold asymmetry: the one-false-alarm-per-warm-up calibration hands the ARF $\FloodLamArf$ and the HT $\FloodLamHt$, a factor of $6.3$, because bagging halves the ARF's pre-change error volatility (Section~\ref{sec:crossover}). The variance reduction that makes the ARF a good classifier buys it a low threshold, and a low threshold is what floods once the error stream stays elevated. Flooding remains parametrically controllable---alarms scale as $1/\lambda$ in the re-arm model---whereas starvation is structural: no CUSUM threshold escapes it (Section~\ref{sec:starvation_boundary}).
 \end{remark}
 
 \subsection{Theoretical Bounds: The Starvation Boundary}\label{sec:starvation_boundary}
