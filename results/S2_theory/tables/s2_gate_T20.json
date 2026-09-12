@@ -1,0 +1,233 @@
+{
+  "R1a": {
+    "A1": {
+      "arl0_same_first_sig_fig": {
+        "lambda25": true,
+        "lambda50": true,
+        "lambda8": true
+      },
+      "delta_P": 0.01,
+      "p_0": 0.05,
+      "theta_rel_error": 5.535535882313737e-05,
+      "theta_within_1e-3": true,
+      "verdict": "REPRODUCED"
+    },
+    "principal": {
+      "arl0_same_first_sig_fig": {
+        "lambda25": true,
+        "lambda50": true,
+        "lambda8": true
+      },
+      "delta_P": 0.01,
+      "p_0": 0.024,
+      "theta_rel_error": 1.3576914855187969e-05,
+      "theta_within_1e-3": true,
+      "verdict": "REPRODUCED"
+    },
+    "superseded": {
+      "arl0_same_first_sig_fig": {
+        "lambda25": true,
+        "lambda50": true,
+        "lambda8": true
+      },
+      "delta_P": 0.005,
+      "p_0": 0.05,
+      "theta_rel_error": 0.00020143152572707346,
+      "theta_within_1e-3": true,
+      "verdict": "REPRODUCED"
+    }
+  },
+  "budget_restitution": {
+    "claim_transfer_S1": {
+      "A_band": [
+        16.8,
+        18.1
+      ],
+      "K": 18.5,
+      "alpha_exp": 0.98,
+      "over_delta_e": [
+        0.1,
+        0.5
+      ],
+      "surpassed_by": "the rectangular surrogate A = q(tau_ARF)(Delta_e - delta_P), withdrawn at .tex L385"
+    },
+    "measured": {
+      "argmax_delta_e": 0.193621,
+      "max": 36.602499999999324,
+      "min": 19.243000000000002,
+      "monotone": false,
+      "over_delta_e": [
+        0.140949,
+        0.497661
+      ],
+      "per_magnitude": {
+        "0.028186": 4.4440000000000115,
+        "0.085449": 19.686999999999998,
+        "0.140949": 32.25599999999998,
+        "0.193621": 36.602499999999324,
+        "0.242568": 35.41050000000078,
+        "0.287108": 34.4984999999991,
+        "0.326793": 33.51150000000007,
+        "0.361418": 31.66800000000014,
+        "0.390998": 30.41049999999975,
+        "0.415743": 28.14750000000028,
+        "0.436013": 25.61549999999984,
+        "0.452271": 24.023499999999654,
+        "0.465040": 22.475499999999947,
+        "0.474860": 21.000000000000014,
+        "0.482255": 20.19450000000001,
+        "0.487707": 19.728000000000016,
+        "0.491644": 19.510500000000004,
+        "0.494428": 19.41700000000002,
+        "0.496355": 19.286500000000007,
+        "0.497661": 19.243000000000002
+      },
+      "ratio_max_over_min": 1.902120251519998,
+      "statistic": "median max_t A_unrefl, arm 'full' (runs.parquet:a_unrefl_peak)"
+    },
+    "verdict": "the profile is a hump peaking near Delta_e = 0.19 and declining thereafter, not the claimed plateau; the constant sits above the claimed band at every magnitude of the envelope"
+  },
+  "eps_sensitivity": {
+    "at": {
+      "ARL_0": 9.134992042124318e+16,
+      "W": 57.4,
+      "delta_e": 0.326793,
+      "lambda": 50.0
+    },
+    "note": "ARL_0 = (exp(theta lambda) - theta lambda - 1)/(theta delta_P) contains no eps. eps enters thm:floor through d(1-eps||alpha) and eq:starve_boundary through sqrt(W/2 ln(W/eps)).",
+    "per_eps": [
+      {
+        "eps": 0.01,
+        "floor": 1.9058858892845465,
+        "lambda_starve": 33.944776547288726
+      },
+      {
+        "eps": 0.05,
+        "floor": 1.7953111388254266,
+        "lambda_starve": 32.40410764165098
+      },
+      {
+        "eps": 0.1,
+        "floor": 1.6607894717676426,
+        "lambda_starve": 31.68652771351151
+      }
+    ]
+  },
+  "floor_restitution": [
+    {
+      "S1_inputs": {
+        "ARL_0": 20357404.056175437,
+        "alpha": 2.7017197206593587e-06,
+        "delta_P": 0.005,
+        "p_0": 0.05
+      },
+      "S2_inputs": {
+        "ARL_0": 9.134992042124318e+16,
+        "alpha": 6.020804369218683e-16,
+        "delta_P": 0.01,
+        "p_0": 0.024
+      },
+      "W": 55.0,
+      "delta_e": 0.33,
+      "floor_at_S1_inputs": 1.4496855380315008,
+      "floor_at_S2_inputs": 1.7991658695723591,
+      "lambda": 50.0,
+      "rectangular_surrogate_budget_S1": 17.875,
+      "reproduces_R1b": true,
+      "transfer_S1_value": 1.45
+    },
+    {
+      "S1_inputs": {
+        "ARL_0": 20357404.056175437,
+        "alpha": 6.385882976103939e-07,
+        "delta_P": 0.005,
+        "p_0": 0.05
+      },
+      "S2_inputs": {
+        "ARL_0": 9.134992042124318e+16,
+        "alpha": 1.4230992145425978e-16,
+        "delta_P": 0.01,
+        "p_0": 0.024
+      },
+      "W": 13.0,
+      "delta_e": 0.1,
+      "floor_at_S1_inputs": 6.2773379287861335,
+      "floor_at_S2_inputs": 7.943218158014996,
+      "lambda": 50.0,
+      "rectangular_surrogate_budget_S1": 1.235,
+      "reproduces_R1b": false,
+      "transfer_S1_value": 4.56
+    }
+  ],
+  "gate_T2_0": {
+    "concordant": true,
+    "empirical": {
+      "lambda_FA": 15.0,
+      "provenance": "R4_PHT_LAMBDA, ProteuS pre-drift calibration (\\LambdaFA); invariant by construction",
+      "verdict": "NON-EMPTY"
+    },
+    "lambda_op_interval": [
+      19.876,
+      22.398
+    ],
+    "lambda_op_point_estimate_NOT_the_decision_variable": 21.9283,
+    "rule": "R2",
+    "theoretical": {
+      "lambda_FA_ARL": 9.127418656908285,
+      "target_ARL0": 72611.30798907876,
+      "target_definition": "ARL_0(lambda = 15) at p_pre = p_true = 0.05, delta_P = 0.01",
+      "theta_star_at_p_S1": 0.3754792140627619,
+      "theta_star_at_p_true": 0.6812907500479092,
+      "verdict": "NON-EMPTY"
+    },
+    "theoretical_over_sensitivity_band": [
+      {
+        "lambda_FA_ARL": 6.7807635360063125,
+        "p_true": 0.015,
+        "verdict": "NON-EMPTY"
+      },
+      {
+        "lambda_FA_ARL": 11.052750076997858,
+        "p_true": 0.032,
+        "verdict": "NON-EMPTY"
+      }
+    ],
+    "verdict": "NON-EMPTY",
+    "verdict_carried_by": "empirical",
+    "verdict_carried_by_reason": "lambda_FA is a calibration measured on ProteuS pre-drift volatility, not a quantity derived from ARL_0. Recomputing ARL_0 at the measured base rate changes what a given threshold buys in false-alarm time; it does not move a threshold that was set by measurement. The theoretical reading is reported as the consistency check it is.",
+    "verdict_invariant_over_band": true
+  },
+  "p_pre_call_sites": {
+    "R1 external empirical (exp_R1_generate_data.py:81)": "mean of the 1000-step warm-up",
+    "R1 external fixed  (exp_R1_generate_data.py:56)": "0.05 literal -- p_pre != p_true",
+    "R2 external (exp_R2_instrumented_blind_spot.py:90)": "mean of the warm-up, 0.05 if empty",
+    "R3 / R4 / R5": "no p_pre -- River PageHinkley tracks its own mean, delta = 0.005",
+    "S6 audit (s6_recompute_cusum_delta001.py:partition)": "p0_hat per (arm, seed), own warm-up"
+  },
+  "p_true_sensitivity": {
+    "band_definition": "central 95 % of the per-run distribution (q0.025, q0.975)",
+    "band_used": [
+      0.015,
+      0.032
+    ],
+    "estimator": "empirical quantiles of e_pre over the 2000 runs of arm 'full' (per-run pre-drift rate on the 1000-step warm-up, resolution 1e-3)",
+    "max": 0.04,
+    "median": 0.024,
+    "min": 0.012,
+    "n": 2000,
+    "q02p5": 0.015,
+    "q25": 0.021,
+    "q75": 0.027,
+    "q97p5": 0.032,
+    "transfer_S1_asserted_range": [
+      0.012,
+      0.04
+    ],
+    "transfer_S1_range_identified_as": "the per-run MIN and MAX of the same column, not a quantile band and not the per-magnitude dispersion of the median, which is flat at 0.024 on all 20 points"
+  },
+  "reproduction": {
+    "artifact": "results/S6_synchronized_traces/data/runs.parquet",
+    "command": "PYTHONHASHSEED=0 python experiments/S2_theory/s2_arl0.py",
+    "python": "3.12.9"
+  }
+}

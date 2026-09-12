@@ -305,3 +305,27 @@ def require_drift_tracker(model, warning=False):
             f"{type(model).__name__} missing {', '.join(missing)}: incompatible River version. "
             "Ensure River 0.23.0 is installed for proper internal tree swap tracking.")
     return model
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S2 — stopping-time theory at the MEASURED base rate (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# transfer_S1 computes theta*, ARL_0 and lambda_starve at p_0 = 0.05, a value the repository
+# contradicts: the S6 campaign measures the pre-drift error rate of the nominal arm at a median of
+# 0.024, flat across all twenty magnitudes. Action A1 corrected the CUSUM tolerance and left the
+# base rate untouched, so every theoretical numeral currently in transfer_S1 sits on an assumed
+# rate. These two names are the inputs of experiments/S2_theory/, declared here so no S2 script
+# carries either as a local literal.
+P0_MEASURED = 0.024                            # p_true, the classifier's pre-drift error rate.
+                                               # median of e_pre over the 2000 runs of arm 'full'
+                                               # (results/S6_synchronized_traces/data/runs.parquet);
+                                               # identical to p0_hat_median at all 20 magnitudes of
+                                               # tables/cusum_delta001_quantiles.csv. NOT the CUSUM
+                                               # reference rate p_pre, which is a detector parameter
+                                               # and is passed per call site.
+EPS_MISS = 0.05                                # eps, the miss level of def:requirement and of the
+                                               # sqrt(W/2 ln(W/eps)) margin in eq:starve_boundary.
+                                               # ASSUMED, never measured: it is a design target, not
+                                               # a property of the stream. S2 reports the
+                                               # sensitivity of every eps-dependent quantity rather
+                                               # than leaving the assumption silent.
