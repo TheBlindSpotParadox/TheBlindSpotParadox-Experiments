@@ -335,43 +335,46 @@ A high threshold ($\lambda = 50$) produces \emph{complete} starvation: the PHT d
 The Hydra Effect (Section~\ref{sec:hydra}) and the Starvation Effect (Section~\ref{sec:starvation}) combine to define a \emph{structural} boundary---in expectation---on the viability of external monitoring.
 We derive an upper bound on the probability of missed detection and a critical ensemble size $M_{\mathrm{crit}}$ beyond which external detection fails with probability exceeding $1 - r$, where $r$ denotes the reliability target.
 
-\paragraph{Correlation disclaimer.}
-The $M$ trees in the ARF are trained on the \emph{same} data stream via Poisson-weighted bootstrap (Oza bagging with $\lambda = 6$~\cite{gomes_arf_2017}).
-Consequently, the individual detection delays $\tau_1, \ldots, \tau_M$ are \emph{positively correlated}: a drift that is easy for tree $i$ to detect is also easy for tree $j$.
-The independence assumption $\tau_i \perp\!\!\!\perp \tau_j$ used below is therefore a simplification.
-Under conditional independence, $\tau_{\mathrm{ARF}} = \min_i \tau_i$ is stochastically \emph{smaller} than under the true positive correlation; Eq.~\eqref{eq:pmiss} therefore \emph{overestimates} $P_{\mathrm{miss}}$ and serves as an analytical \emph{upper bound} on blind-spot severity. Our claims accordingly rest on the directly measured adaptation time $\tau_{\mathrm{ARF}}$ (Section~\ref{sec:hydra}, a $4$--$8\times$ acceleration that already embeds inter-tree correlation), not on this approximation.
+% Companion treatment, pending the v65 assembly: docs/manuscript/sections/dependence_v2.tex
+% (proofs, the counterexample, the RNG gate, the plug-in refutation and the competing-risks form).
+\paragraph{Dependence: what the bound needs.}
+The $M$ trees in the ARF are trained on the \emph{same} data stream via Poisson-weighted bootstrap (Oza bagging with $\lambda = 6$~\cite{gomes_arf_2017}), so the individual detection delays $\tau_1, \ldots, \tau_M$ are \emph{positively correlated}: a drift that is easy for tree $i$ to detect is also easy for tree $j$.
+Positive correlation is not enough to license the independence formula as an upper bound. What that formula needs is positive \emph{association of the events} $\{\tau_i \le s\}$ at the level $s$, i.e.\ $\mathbb{P}(\tau_i \le s,\ \tau_j \le s) \ge F(s)^2$, and an exchangeable pair with $\mathrm{Corr}(\tau_1,\tau_2) = +0.51$ can fail it: placing mass $0.3$ on each of $(1,100)$ and $(100,1)$ and $0.2$ on each of $(2,2)$ and $(200,200)$ gives $F(2) = 0.5$ but $\mathbb{P}(\min \le 2) = 0.80 > 0.75 = 1 - [1-F(2)]^2$.
+What does license it is the \emph{common-factor} structure --- conditional independence of the $\tau_i$ given the shared stream, which yields the direction by Jensen's inequality --- and that is a hypothesis about River's implementation, not a corollary of shared training data. Instrumenting the forest generator refutes its positional precondition: River threads one generator through all $M$ trees, the Oza weight is a rejection loop whose cost is itself random ($1$--$16$ draws per tree and step, mean $7.07$), and perturbing one tree's state displaces $9{,}839$ of the draw positions consumed by the others.
+We therefore state the boundary below in a form that needs \emph{no} dependence hypothesis, and our claims rest on the directly measured adaptation time $\tau_{\mathrm{ARF}}$ (Section~\ref{sec:hydra}), not on the independence formula.
 
 \begin{proposition}[Starvation Boundary]\label{prop:starvation_boundary}
-  Let $\tau_1, \ldots, \tau_M$ denote the internal detection delays of the $M$ trees in the ARF, and let $F$ denote the marginal CDF of a single $\tau_i$ (empirically estimated from the HAT configuration, $M = 1$).
-  Let $\tau_{\mathrm{det}}^* := \lambda / (\Delta e - \delta_P)$ denote the nominal CUSUM accumulation time.
-  Under conditional independence of the $\tau_i$, the probability of missed detection satisfies:
+  Let $\tau_1, \ldots, \tau_M$ denote the internal detection delays of the $M$ trees in the ARF, and let $F$ denote the marginal CDF of a single $\tau_i$ \emph{inside the ensemble}.
+  Write $P_{\mathrm{miss}}(s) := \mathbb{P}(\tau_{\mathrm{ARF}} \le s)$ for the probability that the ensemble has already adapted by a level $s$, so that the external monitor accumulates against an error stream the classifier has removed.
+  Then, for every $s$ and \emph{whatever} the dependence structure of the $\tau_i$,
   \begin{equation}\label{eq:pmiss}
-    P_{\mathrm{miss}} = \mathbb{P}\!\left(\tau_{\mathrm{ARF}} < \tau_{\mathrm{det}}^*\right) = 1 - \bigl[1 - F(\tau_{\mathrm{det}}^*)\bigr]^M\,.
+    F(s) \;\le\; P_{\mathrm{miss}}(s) \;\le\; \min\bigl(1,\, M\,F(s)\bigr)\,,
   \end{equation}
+  and both ends are attained, so the envelope cannot be tightened without a dependence hypothesis.
+  If in addition the $\tau_i$ are exchangeable and conditionally independent given the shared data stream, the upper end may be replaced by the tighter $1 - \bigl[1 - F(s)\bigr]^M$.
 \end{proposition}
 
 \begin{proof}
-  By Eq.~\eqref{eq:hydra}, $\tau_{\mathrm{ARF}} = \min_{1 \le i \le M} \tau_i$.
-  Proposition~\ref{prop:starvation} gives a sufficient condition under which the external CUSUM misses the drift; evaluated at the mean accumulation rate, it is met whenever $\tau_{\mathrm{ARF}} < \tau_{\mathrm{det}}^*$, which is the regime this proposition quantifies.
-  Under conditional independence:
+  By Eq.~\eqref{eq:hydra}, $\tau_{\mathrm{ARF}} = \min_{1 \le i \le M} \tau_i$, so with $A_i := \{\tau_i \le s\}$ the event $\{\tau_{\mathrm{ARF}} \le s\}$ is $\bigcup_{i} A_i$.
+  Monotonicity gives $\mathbb{P}(\bigcup_i A_i) \ge \mathbb{P}(A_1) = F(s)$; sub-additivity gives $\mathbb{P}(\bigcup_i A_i) \le \sum_i \mathbb{P}(A_i) = M F(s)$, and a probability is at most $1$. The two ends are the Fr\'echet--Hoeffding pair for a union of $M$ equiprobable events, hence attained.
+  For the conditional statement, write $\mathcal{S}$ for the $\sigma$-field of the shared stream and $G := \mathbb{P}(\tau_i > s \mid \mathcal{S})$, which does not depend on $i$ by exchangeability. Conditional independence gives $\mathbb{P}(\tau_{\mathrm{ARF}} > s \mid \mathcal{S}) = G^M$, and since $x \mapsto x^M$ is convex on $[0,1]$, Jensen's inequality and the tower property give
   \[
-    \mathbb{P}\!\left(\tau_{\mathrm{ARF}} \ge \tau_{\mathrm{det}}^*\right) = \prod_{i=1}^{M} \mathbb{P}\!\left(\tau_i \ge \tau_{\mathrm{det}}^*\right) = \bigl[1 - F(\tau_{\mathrm{det}}^*)\bigr]^M\,,
+    \mathbb{P}(\tau_{\mathrm{ARF}} > s) = \mathbb{E}\bigl[G^M\bigr] \;\ge\; \bigl(\mathbb{E}[G]\bigr)^M = \bigl[1 - F(s)\bigr]^M\,,
   \]
-  and Eq.~\eqref{eq:pmiss} follows by complementation.
+  which is the tighter upper end after complementation. Proposition~\ref{prop:starvation} supplies the sufficient condition under which an ensemble that has adapted by $s$ starves the external CUSUM; this proposition bounds the probability of that event.
 \end{proof}
 
-\begin{corollary}[Critical Ensemble Size]\label{cor:mcrit}
-  For a reliability target $r$, i.e.\ a detection guarantee $P_{\mathrm{miss}} \le 1 - r$, the ensemble size must not exceed:
+\begin{corollary}[Ensemble size is not certifiable from the envelope]\label{cor:mcrit}
+  For a reliability target $r = 1 - P_{\mathrm{miss}}$, inverting Eq.~\eqref{eq:pmiss} in $M$ gives the critical ensemble size
   \begin{equation}\label{eq:mcrit}
-    M_{\mathrm{crit}} = \left\lfloor \frac{\ln r}{\ln\!\bigl[1 - F(\tau_{\mathrm{det}}^*)\bigr]} \right\rfloor\,.
+    M_{\mathrm{crit}} = \left\lfloor \frac{\ln r}{\ln\!\bigl[1 - F(s)\bigr]} \right\rfloor\,,
   \end{equation}
-  For $M > M_{\mathrm{crit}}$ this (conservative) certificate no longer holds, and the reliability $r$ must be settled empirically rather than inferred from the bound.
+  \emph{but only for the conditional form} of Eq.~\eqref{eq:pmiss}. The distribution-free upper end saturates as soon as $M F(s) \ge 1$, and in the saturated region $\min(1, M F(s))$ does not depend on $M$ at all: no ensemble size, $M = 1$ included, is certified at any target $r < 1$. At $M = 10$ saturation begins at $F(s) \ge 0.10$, which covers the entire operating range of this work. Eq.~\eqref{eq:mcrit} is therefore not available as a design rule, and the reliability $r$ must be settled empirically.
 \end{corollary}
 
-\paragraph{Numerical example (distribution-free).}
-Corollary~\ref{cor:mcrit} requires the scalar $F(\tau_{\mathrm{det}}^*)$. A Kolmogorov--Smirnov test ($N{=}2000$ bootstrap) rejects an exponential fit of the single-tree delays $\tau_{\mathrm{HAT}}$ at every tested magnitude ($p<0.05$), so we evaluate $M_{\mathrm{crit}}$ directly from the empirical CDF $\widehat{F}$ of $\tau_{\mathrm{HAT}}$.
-At $\Delta e = 0.33$ ($\lambda=50$), instrumentation yields $\mathbb{E}[\tau_{\mathrm{HAT}}] = 463$, $\tau_{\mathrm{det}}^* = 158$, and $\widehat{F}(\tau_{\mathrm{det}}^*) = 0.49$, so the (conservative) independence bound~\eqref{eq:mcrit} yields $M_{\mathrm{crit}} = 0$ at the reliability target $r = 0.95$---it cannot certify reliable detection even for a single tree, a verdict that persists across the operative grid ($\Delta e \ge 0.24$).
-River's default ($M=10$) therefore starves the external CUSUM, as confirmed directly by the measured ${<}1\%$ detection rate in Figure~\ref{fig:pht_scenarios}(A).
+\paragraph{Retraction of the single-tree instantiation.}
+Earlier versions evaluated Eq.~\eqref{eq:mcrit} with $F$ read from the empirical CDF $\widehat{F}$ of the single-tree delays $\tau_{\mathrm{HAT}}$ ($M = 1$), obtaining at $\Delta e = 0.33$, $\lambda = 50$: $\mathbb{E}[\tau_{\mathrm{HAT}}] = 463$, $\widehat{F}(158) = 0.49$ and $M_{\mathrm{crit}} = 0$ at $r = 0.95$. Those numerals reproduce, but the substitution $F = \widehat{F}$ does not survive measurement. A standalone HAT is not a tree inside the ARF---Poisson weighting and a one-feature split rule make the ensemble member's delay law strictly more dispersed---and over the $80$ testable cells of the instrumented grid ($20$ magnitudes $\times$ $\lambda \in \{8, 15, 25, 50\}$ at $M = 10$, $\SixSeeds$ runs each) the plug-in upper end falls \emph{below} the Wilson $95\%$ lower end of the measured $P_{\mathrm{miss}}$ in $10$ of them. The mechanism is the left tail: at $\Delta e = \SixCanonDeltaE$ the fastest of $\SixSeeds$ HAT runs adapts at step $33$, so $\widehat{F}$ vanishes below that, while $4$ of $\SixSeeds$ ARF runs have already adapted by step $25$; symmetrically, the slowest member is up to twice as slow as $\widehat{F}$ predicts. The instantiation is retracted rather than recomputed.
+The ensemble claim rests instead on the measured race. Treating adaptation and detection as competing risks under the common administrative horizon $t_c = 4000$ post-drift steps, the external monitor at $\lambda = 50$ wins \emph{none} of the $2{,}000$ instrumented runs: $\mathbb{P}(\tau_{\mathrm{ARF}} < \tau_{\mathrm{det}}) = 1$ with a paired bootstrap band of $[1.00, 1.00]$ at every magnitude, which is the ${<}1\%$ detection rate of Figure~\ref{fig:pht_scenarios}(A) read as a race rather than as a threshold comparison. Finally, a Kolmogorov--Smirnov test with parametric bootstrap ($N{=}2000$, rate refitted on each replicate) rejects an exponential fit of $\tau_{\mathrm{HAT}}$ at all twenty magnitudes (largest $p = 0.0030$): the $M$-fold identity invoked in Section~\ref{sec:hydra} is a calibration reference for the exponential family, not a property of the measured delay law.
 
 \subsection{The Decoupling Principle}\label{sec:decoupling}
 

@@ -1,0 +1,56 @@
+{
+  "branch": "declared gap",
+  "handed_forward": "record the per-step pre-drift error stream of (i) a standalone HAT and (ii) one tree inside the ARF, on matched seeds and magnitudes, then calibrate both to one false alarm per warm-up and re-derive the factor",
+  "measurable_substitute": {
+    "anchors": [
+      {
+        "E_tau_last_measured": 3063.78,
+        "E_tau_last_model_from_Fhat": 3112.84,
+        "delta_e": 0.1409,
+        "hydra_median_ratio": 5.3234,
+        "hydra_rmst_ratio": 4.1175,
+        "marginal_mismatch_last": 1.016
+      },
+      {
+        "E_tau_last_measured": 1458.72,
+        "E_tau_last_model_from_Fhat": 1326.71,
+        "delta_e": 0.3268,
+        "hydra_median_ratio": 3.0962,
+        "hydra_rmst_ratio": 7.9909,
+        "marginal_mismatch_last": 0.9095
+      }
+    ],
+    "reading": "a mismatch factor far from 1 says the two marginals differ, so the measured Hydra factor mixes a marginal effect with an ensemble-minimum effect and must not be published as a single number",
+    "statement": "the marginal assimilation the manuscript makes silently -- F_hat, the HAT's law, used as the law of a tree INSIDE the ARF -- is testable on committed data through the slowest member: E[tau_(10)] measured on runs.parquet against E[max of 10 draws from F_hat]"
+  },
+  "question": "the Hydra factor compares tau_HAT (M = 1) against tau_ARF (M = 10) at a COMMON NOMINAL internal-clock setting; S2 measured that equal-false-alarm calibration hands the ARF a threshold 6.3x lower than the HT, so part of any measured factor may be a calibration difference",
+  "rule": "docs/prompts/s3-decision-rules.md :: D4-bis",
+  "sensitivity_bound_from_available_variances": {
+    "e_pre_by_arm": {
+      "frozen": {
+        "count": 2000,
+        "mean": 0.02388,
+        "std": 0.004589
+      },
+      "full": {
+        "count": 2000,
+        "mean": 0.02388,
+        "std": 0.004589
+      },
+      "no_swap": {
+        "count": 2000,
+        "mean": 0.02388,
+        "std": 0.004589
+      },
+      "static": {
+        "count": 2000,
+        "mean": 0.03403,
+        "std": 0.009168
+      }
+    },
+    "reading": "the only committed pre-drift variance contrast is adaptive-ARF (arm full) against non-adaptive bagged HT (arm static), both at M = 10. It bounds the effect of ADAPTATION on the pre-drift error stream, not the effect of ENSEMBLE SIZE, and is reported as a bound of the wrong contrast rather than as a substitute for the missing one.",
+    "variance_ratio_static_over_full": 3.9913
+  },
+  "verdict": "NOT PRODUCED -- the committed artifacts do not carry the inputs",
+  "why": "no committed artifact records the pre-drift error STREAM of a single tree, either standalone or inside the ARF. R6 commits tau_hat only (4 columns, no e_pre); runs.parquet commits e_pre for ensemble arms at n_models = 10 exclusively (arms present: ['frozen', 'full', 'no_swap', 'static']); no traces.parquet is committed. The equal-budget threshold is therefore not computable without a new campaign."
+}

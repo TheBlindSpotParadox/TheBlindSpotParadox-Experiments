@@ -1,0 +1,245 @@
+{
+  "D1": {
+    "n_shift": 9839,
+    "residue_ok": false,
+    "verdict": "DOES NOT FACTORISE"
+  },
+  "D2": {
+    "carrying_bound": "boole",
+    "reason": "D1 = DOES NOT FACTORISE; rule D2 keys the carrier to D1, never to which bound is tighter"
+  },
+  "D5": {
+    "boole_saturates_from_F": 0.1,
+    "branch": "b",
+    "mcrit_inversion_available": false,
+    "verdict": "WITHDRAWAL"
+  },
+  "D6": {
+    "n_boot": 2000,
+    "n_magnitudes": 20,
+    "n_rejecting_exponential": 20,
+    "p_max": 0.003,
+    "seed_source": "np.random.SeedSequence(ssot.SEED_SCHEME_SEEDSEQ_ENTROPY).spawn",
+    "verdict": "L194 HALF GIVES"
+  },
+  "D7": {
+    "anchors_at_canonical_point": {
+      "M1": {
+        "M": 1,
+        "carrying_bound": 0.49,
+        "deviation": 0.0,
+        "measured": 0.49,
+        "measured_n": 100,
+        "model": 0.49,
+        "test": "identity (tautological: model at M=1 is F_hat on the same sample)",
+        "verdict": "IDENTITY HOLDS"
+      },
+      "M10": {
+        "M": 10,
+        "bound_holds": true,
+        "carrying_bound": 1.0,
+        "deviation": 0.0011900000000000244,
+        "measured": 1.0,
+        "measured_n": 100,
+        "measured_wilson": [
+          0.963,
+          1.0
+        ],
+        "model": 0.99881,
+        "model_verdict": "REPRODUCES",
+        "verdict": "BOUND HOLDS"
+      }
+    },
+    "grid": {
+      "mechanism": "Boole and Jensen are statements about the marginal F of a tree INSIDE the ARF. No committed artifact carries that marginal, so both are evaluated with the plug-in F = F_HAT, the assimilation the manuscript makes silently at prop:starvation_boundary. The refutation is of that SUBSTITUTION, not of either inequality: the ARF member's left tail is strictly faster than any HAT run, so F_HAT(s) = 0 where the ARF has already adapted in a measurable fraction of runs. No F_hat, no s and no M is adjusted to recover the bound.",
+      "n_boole_refuted": 10,
+      "n_carrier_refuted": 10,
+      "n_jensen_refuted": 11,
+      "n_testable_cells": 80,
+      "refuted_cells": [
+        {
+          "F_hat": 0.02,
+          "bound_boole": 0.2,
+          "delta_e": 0.1409,
+          "lambda": 25.0,
+          "measured_pmiss": 0.29,
+          "min_tau_arf": 5.0,
+          "min_tau_hat": 4.0,
+          "tau_det_star": 190.91,
+          "wilson_lo": 0.210148
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.2426,
+          "lambda": 8.0,
+          "measured_pmiss": 0.02,
+          "min_tau_arf": 5.0,
+          "min_tau_hat": 46.0,
+          "tau_det_star": 34.4,
+          "wilson_lo": 0.005502
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.2871,
+          "lambda": 8.0,
+          "measured_pmiss": 0.02,
+          "min_tau_arf": 25.0,
+          "min_tau_hat": 42.0,
+          "tau_det_star": 28.87,
+          "wilson_lo": 0.005502
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.3268,
+          "lambda": 8.0,
+          "measured_pmiss": 0.04,
+          "min_tau_arf": 24.0,
+          "min_tau_hat": 33.0,
+          "tau_det_star": 25.25,
+          "wilson_lo": 0.015663
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.3614,
+          "lambda": 8.0,
+          "measured_pmiss": 0.01,
+          "min_tau_arf": 20.0,
+          "min_tau_hat": 33.0,
+          "tau_det_star": 22.76,
+          "wilson_lo": 0.001767
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.4157,
+          "lambda": 8.0,
+          "measured_pmiss": 0.01,
+          "min_tau_arf": 17.0,
+          "min_tau_hat": 20.0,
+          "tau_det_star": 19.72,
+          "wilson_lo": 0.001767
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.436,
+          "lambda": 8.0,
+          "measured_pmiss": 0.01,
+          "min_tau_arf": 17.0,
+          "min_tau_hat": 20.0,
+          "tau_det_star": 18.78,
+          "wilson_lo": 0.001767
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.4523,
+          "lambda": 8.0,
+          "measured_pmiss": 0.02,
+          "min_tau_arf": 17.0,
+          "min_tau_hat": 20.0,
+          "tau_det_star": 18.09,
+          "wilson_lo": 0.005502
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.465,
+          "lambda": 8.0,
+          "measured_pmiss": 0.01,
+          "min_tau_arf": 17.0,
+          "min_tau_hat": 20.0,
+          "tau_det_star": 17.58,
+          "wilson_lo": 0.001767
+        },
+        {
+          "F_hat": 0.0,
+          "bound_boole": 0.0,
+          "delta_e": 0.4749,
+          "lambda": 8.0,
+          "measured_pmiss": 0.01,
+          "min_tau_arf": 17.0,
+          "min_tau_hat": 20.0,
+          "tau_det_star": 17.21,
+          "wilson_lo": 0.001767
+        }
+      ],
+      "verdict": "BOUND REFUTED"
+    }
+  },
+  "D8": {
+    "as_written": "REPAIRED / RETAINED",
+    "best_bound_at": {
+      "F_hat": 0.0,
+      "M": 2,
+      "bound_boole": 0.0,
+      "delta_e": 0.2426,
+      "lambda": 8.0
+    },
+    "best_bound_on_grid": 0.0,
+    "bound_informative_somewhere": true,
+    "carrying_bound": "boole",
+    "mcrit_branch": "b",
+    "operative_grid": {
+      "M_min": 2,
+      "delta_e_min": 0.24,
+      "lambdas": [
+        8.0,
+        15.0,
+        25.0,
+        50.0
+      ],
+      "n_points": 384
+    },
+    "recorded_gap": "the criterion fires on cells where the plug-in F_hat is refuted by the M = 10 measurement (D7). The rule was committed on the plug-in evaluation and is applied as committed; the restricted reading is reported beside it rather than substituted for it.",
+    "restricted": {
+      "best_bound_at": {
+        "F_hat": 0.0,
+        "M": 2,
+        "bound_boole": 0.0,
+        "delta_e": 0.4823,
+        "lambda": 8.0
+      },
+      "best_bound_on_grid": 0.0,
+      "bound_informative_somewhere": true,
+      "carrying_bound": "boole",
+      "mcrit_branch": "b",
+      "operative_grid": {
+        "M_min": 2,
+        "delta_e_min": 0.24,
+        "lambdas": [
+          8.0,
+          15.0,
+          25.0,
+          50.0
+        ],
+        "n_points": 330
+      },
+      "threshold": 0.5,
+      "verdict": "REPAIRED / RETAINED"
+    },
+    "restricted_to_unrefuted_cells": "REPAIRED / RETAINED",
+    "threshold": 0.5,
+    "verdict": "REPAIRED / RETAINED"
+  },
+  "canonical_point": {
+    "F_hat": 0.49,
+    "boole_M10": 1.0,
+    "delta_e": 0.3268,
+    "jensen_M10": 0.99881,
+    "lambda": 50.0,
+    "mcrit_from_jensen_r095": 0.0,
+    "measured_M10": 1.0,
+    "tau_det_star": 157.83
+  },
+  "estimator_conventions": {
+    "F_hat": "#{tau <= s} / n_total, censored runs kept in the denominator (s < t_c)",
+    "delta_P": 0.01,
+    "horizon": 4000,
+    "tau_arf_source": "R2 scenario A; identical to scenarios B and C (asserted in demo())"
+  }
+}

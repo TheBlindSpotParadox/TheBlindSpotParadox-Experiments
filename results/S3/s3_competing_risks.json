@@ -1,0 +1,39 @@
+{
+  "D3": {
+    "n_cells": 40,
+    "tolerance": 1e-09,
+    "verdict": "REPRODUCED",
+    "worst_deviation_from_committed_rmst": 0.0,
+    "worst_identity_deviation": 9.094947017729282e-13
+  },
+  "D4": {
+    "factor": 1.5,
+    "n_agree": 13,
+    "n_magnitudes": 20,
+    "verdict": "DISAGREE"
+  },
+  "D4bis": {
+    "branch": "declared gap",
+    "verdict": "NOT PRODUCED -- the committed artifacts do not carry the inputs"
+  },
+  "P3": {
+    "bootstrap": {
+      "n_boot": 10000,
+      "pairing": "on seed, per magnitude",
+      "seed": 20260906
+    },
+    "censored_frac": 0.0,
+    "detector_fired_ever_frac": {
+      "A": 0.0025,
+      "B": 0.3925,
+      "C": 0.9615
+    },
+    "detector_won_frac": {
+      "A": 0.0,
+      "B": 0.042,
+      "C": 0.9335
+    },
+    "horizon": 4000,
+    "reading": "the race carries no censored unit: tau_ARF is observed on every run at every magnitude (censored_frac_arf = 0 on all 20), so a NaN tau_det is the detector LOSING, not a missing observation. tau_det* never enters."
+  }
+}
