@@ -1,3 +1,8 @@
+# DEPRECATED PRE-S7 HISTORICAL SNAPSHOT — DO NOT USE AS AN INTEGRITY ORACLE
+# Retained for lineage only. Five of its eleven entries no longer verify, two of the paths no
+# longer resolve (a v63 manuscript absent from the repository, and framework_v2.tex moved to
+# docs/manuscript/sections/ by action A5). The live oracle is artifacts_sha256_pre_ssot.txt, whose
+# deviations are declared in authorized_deviations.txt. Nothing in the test suite reads this file.
 60e7bc24c85b79da6e84806c79b282992f8333b11b0a23bb8a43da535560c363  docs/manuscript/articleA_blindspot_v63_camera_ready.tex
 bc15dc27c371dcf013315b7516cf00fc9a538318673347da49d1e20b4cae2a65  docs/manuscript/articleA_blindspot_v64_camera_ready.tex
 10a1f8bf69e52c82311e27a5620da0a62e6c9a34da11b394ed38c02e33bc5894  docs/manuscript/tables/table1_proteus_summary.tex
