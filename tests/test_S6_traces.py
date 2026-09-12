@@ -59,6 +59,9 @@ def traces():
 def runs():
     return pq.read_table(_smoke("runs.parquet")).to_pandas()
 
+@pytest.mark.filterwarnings(
+    "ignore:This process .* is multi-threaded, use of fork:DeprecationWarning"
+)
 
 def test_parquet_replay_is_byte_identical():
     seed, delta_e = runner.common.seed_pool(1)[0], ssot.S6_SMOKE_DELTA_E[1]
