@@ -54,8 +54,8 @@ withdrawn estimator; they are to be restated against the measured evidence ceili
    `DELTA_P = 0.005` (R3, R4, R5). R1 and R9 were on the wrong one and are regenerated;
    R3/R4/R5 were correct and are untouched. The quantified consequence — factor 1.89 on
    `theta*`, 3.3 orders of magnitude on `ARL_0` at `lambda = 50` — is confirmed and tabulated
-   above. `R8_DELTA_P` stays at 0.005, frozen pending action A2: its only consumer is the
-   withdrawn rectangular surrogate.
+   above. `R8_DELTA_P` was frozen at 0.005 pending action A2 and is now **removed**: R8 simulates
+   no CUSUM, and the tolerance had exactly one consumer, the withdrawn rectangular surrogate.
 3. Assumption `ass:repair` (no recovery without replacement) is refutable and unverified. Falsified by any transient recovery driven by data rather than by swaps.
 4. `W` treated as deterministic throughout. Must be handled as a random variable in S2, or the Proposition-9 defect is reproduced.
 

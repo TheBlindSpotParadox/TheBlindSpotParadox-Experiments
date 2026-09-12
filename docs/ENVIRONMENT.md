@@ -69,9 +69,9 @@ Every figure below was measured in stream S7-bis on the host above, `PYTHONHASHS
 | R4 | `./run_experiment_R4.sh` | 3 241 s (54 min 01 s) | identical (4 CSVs + Table I `.tex`) |
 | R6 | `./run_experiment_R6.sh` | 34 s | identical |
 | R7 | `./run_experiment_R7.sh` | 732 s (12 min 12 s) | identical |
-| R8 | `./run_experiment_R8.sh` | 244 s (4 min 04 s) | identical |
+| R8 | `./run_experiment_R8.sh` | 244 s (4 min 04 s) | **deviates since A2** (both aggregation CSVs lose the purged `lambda_limit` column; the per-seed raw grids stay byte-identical). The `_tdrift4000` arm is a second invocation, `… exp_R8_lambda_op_sweep.py 4000`, not run by the wrapper |
 | R9 | `./run_experiment_R9.sh` | 53 s | **deviates since A1** (`exp_R9_mcrit_comparison.csv`; its input `results_instrumented_A_ADWIN_HAT.csv` stays identical) |
-| **subtotal R1–R4, R6–R9** | | **7 095 s = 1 h 58 min 15 s** | **31 of 34 baseline hashes identical**; the three deviations (`hydra_survival.csv`, and the two A1 artifacts above) are declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
+| **subtotal R1–R4, R6–R9** | | **7 095 s = 1 h 58 min 15 s** | **29 of 34 baseline hashes identical**; the five deviations (`hydra_survival.csv`, the two A1 artifacts and the two A2 artifacts above) are declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
 | R-1 (S7-bis) | `python experiments/R9_mcrit/exp_R9_generate_data.py 1` | 46 s | new artifact (matched-clock M=1 run) |
 | R5 | `./run_experiment_R5.sh` | **not re-measured in this stream** | untouched |
 

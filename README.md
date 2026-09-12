@@ -257,18 +257,23 @@ chmod +x run_experiment_R7.sh
 
 > **Reproducibility:** `tests/test_R7_regime1.py` re-derives the artifact and asserts the three qualitative claims of the Regime-1 subsection (mismatched miss $>50\%$ at high magnitude; matched and decoupled miss $<5\%$ above the weak-signal band).
 
-### Experiment R8: The Decoupling Principle ($\lambda_{\mathrm{op}}$ sweep)
-Consolidates the worst-case $\lambda_{\mathrm{op}}$ bound for the Decoupling Principle (Definition 11). Measures strictly the internal adaptation time $\tau_{\mathrm{ARF}}$ of the ARF ($c_{\mathrm{int}}=1, M=10$) over a fine grid of magnitudes to locate the global minimum of the limit capacity.
+### Experiment R8: $\tau_{\mathrm{ARF}}$ distribution and its warm-up sensitivity
+Measures the internal adaptation time $\tau_{\mathrm{ARF}}$ of the ARF ($c_{\mathrm{int}}=1, M=10$) over a fine magnitude grid, at two warm-up lengths. No external detector is simulated and nothing accumulates evidence here, so the experiment consumes no drift tolerance.
+
+It supplies the two statements of Definition 11's closing paragraph: at $T_{\mathrm{drift}}=2000$ the quantile $q_{0.05}(\tau_{\mathrm{ARF}})$ is magnitude-independent, constant at $12.95$ for $\Delta e \le 0.16$; the identical sweep at $T_{\mathrm{drift}}=4000$ dissolves that plateau ($25.70 \to 30.95 \to 54.70 \to 54.70$). The pair is what identifies the low-magnitude floor as a property of an **immature ensemble** rather than a signature of noise-driven swaps, correcting the submitted version.
 
 ```bash
 chmod +x run_experiment_R8.sh
-./run_experiment_R8.sh
+./run_experiment_R8.sh                                              # T_drift = 2000
+python experiments/R8_lambda_op_sweep/exp_R8_lambda_op_sweep.py 4000  # warm-up parity arm
 ```
 
 **Expected Artifacts:**
-- **Data:** `results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep.csv`
+- **Data:** `results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep.csv` and `..._tdrift4000.csv`, plus the per-seed raw grids `exp_R8_fine_grid_raw{,_tdrift4000}.csv`
 
-> **Reproducibility:** `tests/test_R8_lambda_op.py` re-derives the artifact and asserts the three numerical claims of Definition 11.
+> **Reproducibility:** `tests/test_R8_lambda_op.py` re-derives both artifacts and asserts the plateau, its dissolution, and the absence of the withdrawn `lambda_limit` column.
+>
+> **Action A2.** $\lambda_{\mathrm{op}}$ is no longer computed here. The rectangular surrogate $q_{\alpha}(\tau_{\mathrm{ARF}})\cdot(\Delta e - \delta_P)$ is withdrawn in the manuscript of record (Definition 11, step 4): synchronised S6 instrumentation invalidated its constant-accumulation-rate assumption. $\lambda_{\mathrm{op}}$ is now defined on the measured evidence ceiling $A_{\mathrm{swap}}$ and reported by `results/S6_synchronized_traces/tables/envelope_stats.json`. The `lambda_limit` column and the constant `R8_DELTA_P` are purged, not merely unread.
 
 ### Experiment R9: The Critical Ensemble Size ($M_{\mathrm{crit}}$)
 Records, per drift magnitude and seed, the internal adaptation delay $\tau_{\mathrm{HAT}}$ of a single Hoeffding Adaptive Tree. The empirical CDF of $\tau_{\mathrm{HAT}}$ is consumed to derive the distribution-free critical ensemble size $M_{\mathrm{crit}}$. The comparison table reports $M_{\mathrm{crit}}$ at the reliability targets $r \in \{0.99, 0.95, 0.50\}$, where $r = 1 - P_{\mathrm{miss}}$ is the target detection guarantee of Corollary 2 ($M_{\mathrm{crit}} = \lfloor \ln r / \ln(1 - F) \rfloor$). Under this formula a **larger** $M_{\mathrm{crit}}$ is **permissive** (it certifies a larger ensemble), so the low-$r$ column is the permissive end, not a conservative one. The manuscript's worked example is stated at $r = 0.95$. The operational quantity $P_{\mathrm{miss}}(M{=}10)$ is $r$-independent.
@@ -286,6 +291,6 @@ chmod +x run_experiment_R9.sh
 
 ## 5. Artifact Scope & Configuration Notes
 
-**Pipelines covered by this repository:** Figure 1 (R1), Figures 2A–2C (R2), Figure 3 (R3), Table I and the KSWIN $\alpha$-sweep (R4), Table II and the flooding decomposition (R5), the Hydra Effect acceleration bounds (R6), the clock-mismatch / Regime-1 matrix (R7), the Decoupling Principle bound (R8), and the Critical Ensemble Size example (R9).
+**Pipelines covered by this repository:** Figure 1 (R1), Figures 2A–2C (R2), Figure 3 (R3), Table I and the KSWIN $\alpha$-sweep (R4), Table II and the flooding decomposition (R5), the Hydra Effect acceleration bounds (R6), the clock-mismatch / Regime-1 matrix (R7), the $\tau_{\mathrm{ARF}}$ warm-up sensitivity behind Definition 11's closing paragraph (R8), and the Critical Ensemble Size example (R9).
 
 **ARF detector configuration (intentional heterogeneity):** in R1, R2 and R5 the ARF pins both its internal `drift_detector` and `warning_detector` to `ADWIN(clock=c_int)`. In R3 and R4 only the `drift_detector` is pinned; the `warning_detector` keeps river's default (`ADWIN(clock=32)`). This matches exactly how the submitted manuscript artifacts were generated. Throughout the paper, $c_{\mathrm{int}}$ refers to the clock of the **drift** detector.

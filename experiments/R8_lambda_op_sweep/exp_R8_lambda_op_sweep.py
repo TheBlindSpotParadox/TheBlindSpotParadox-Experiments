@@ -2,11 +2,23 @@
 """
 exp_R8_lambda_op_sweep.py
 =========================
-Consolidation of the worst-case lambda_op bound for the Decoupling Principle (Definition 11).
-Strictly measures the internal adaptation time tau_ARF of the ARF (c_int=1, M=10) over a
-fine grid of magnitudes to locate the global minimum of the limit capacity:
-    lambda_limit(Delta_e) = q_05(tau_ARF(Delta_e)) * (Delta_e - delta_P).
-The external CUSUM is NOT simulated here (unnecessary for measuring tau_ARF).
+Distribution of the internal adaptation time tau_ARF of the ARF (c_int=1, M=10) over a fine
+magnitude grid, and its sensitivity to the warm-up length. The external CUSUM is NOT simulated:
+nothing here accumulates evidence, so the experiment consumes no drift tolerance.
+
+What it establishes (.tex L395). At T_drift = 2000 the quantile q_05(tau_ARF) is
+magnitude-independent, constant at 12.95 for Delta_e <= 0.16. Re-running the identical sweep at
+T_drift = 4000 dissolves that plateau (25.70 -> 30.95 -> 54.70 -> 54.70 over the same four
+magnitudes), which is what identifies it as a property of an immature ensemble rather than a
+signature of noise-driven swaps. Both configurations are committed; `tests/test_R8_lambda_op.py`
+guards each.
+
+A2 removed the column `lambda_limit = q_05(tau_ARF) * (Delta_e - delta_P)` and the constant
+`R8_DELTA_P` it consumed. That rectangular surrogate assumed a constant accumulation rate over a
+transient of length tau_ARF; synchronised S6 instrumentation invalidated both halves of the
+assumption and the manuscript withdrew it at .tex L385, where lambda_op is now defined on the
+measured evidence ceiling A_swap (results/S6_synchronized_traces/tables/envelope_stats.json).
+The file name is retained for artifact-path continuity.
 
 Methodological alignments:
   1. Timing aligns with Experiment R1 (warmup=1000, gap=1000 -> drift at t=2000;
@@ -45,7 +57,6 @@ N_MODELS      = ssot.R8_N_MODELS           # M = 10
 C_INT         = ssot.R8_C_INT              # Blind spot configuration
 N_SEEDS       = ssot.R8_N_SEEDS
 DELTA_E_GRID  = ssot.R8_DELTA_E_GRID
-DELTA_P       = ssot.R8_DELTA_P            # PH/CUSUM tolerance
 Q_LEVEL       = ssot.R8_Q_LEVEL
 OVERLAP_REF   = {0.10: 12.95, 0.25: 48.90, 0.40: 26.95}  # Reference q05 to reproduce from R1
 
@@ -103,35 +114,24 @@ def main(t_drift: int = T_DRIFT):
         finite = sub["tau_arf"].dropna().to_numpy()
         n_fin = finite.size
         q05 = float(np.quantile(finite, Q_LEVEL)) if n_fin else np.nan
-        lam_limit = q05 * (de - DELTA_P) if n_fin else np.nan
         records.append({
             "delta_e": round(float(de), 4),
             "n_finite": n_fin,
             "miss_rate": round(float(sub["tau_arf"].isna().mean()), 3),
             "q05_tau_arf": round(q05, 3),
-            "lambda_limit": round(lam_limit, 3),
         })
     table = pd.DataFrame.from_records(records)
     table.to_csv(out_csv, index=False)
 
-    # --- Global minimum search --------------------------------------------------
-    valid = table.dropna(subset=["lambda_limit"])
-    idx_min = valid["lambda_limit"].idxmin()
-    de_crit = valid.loc[idx_min, "delta_e"]
-    lam_min = valid.loc[idx_min, "lambda_limit"]
-
-    print("\n=== FINE GRID CALIBRATION TABLE ===")
+    # --- Warm-up plateau, the quantity the manuscript reads off this sweep (.tex L395) ------
+    low = table[table["delta_e"] <= 0.16]["q05_tau_arf"].to_numpy()
+    print("\n=== FINE GRID tau_ARF TABLE ===")
     print(table.to_string(index=False))
     print("-" * 60)
-    print(f"Global minimum lambda_limit = {lam_min:.3f} reached at Delta_e = {de_crit}")
-    print(f"  -> Worst-case bound for the Decoupling Principle on [0.10, 0.50].")
-    print(f"  -> If envelope is floored at Delta_e_min = 0.20, calculating minimum over "
-          f"[0.20, 0.50]:")
-    sub20 = valid[valid["delta_e"] >= 0.20]
-    if not sub20.empty:
-        i20 = sub20["lambda_limit"].idxmin()
-        print(f"     min lambda_limit[0.20,0.50] = {sub20.loc[i20,'lambda_limit']:.3f} "
-              f"at Delta_e = {sub20.loc[i20,'delta_e']}")
+    print(f"q05(tau_ARF) over Delta_e <= 0.16 at t_drift={t_drift}: {list(low)}")
+    print("  -> plateau PRESENT: magnitude-independent, the immature-ensemble floor"
+          if np.ptp(low) == 0 else
+          "  -> plateau DISSOLVED: q05 rises with magnitude, the floor was a warm-up artefact")
 
 
 if __name__ == "__main__":

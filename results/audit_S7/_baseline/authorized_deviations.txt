@@ -26,6 +26,20 @@ results/R9_mcrit/data/exp_R9_mcrit_comparison.csv
     results_instrumented_A_ADWIN_HAT.csv verifies byte-for-byte: delta_P enters the analysis stage
     only, so no stream was regenerated.
 
+results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep.csv
+results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep_tdrift4000.csv
+    A2: purge withdrawn rectangular surrogate lambda_limit from R8 artifacts. The column
+    lambda_limit = q05(tau_ARF) * (Delta_e - delta_P) is the estimator the manuscript withdraws at
+    .tex L385, and its two target values (4.2 at Delta_e = 0.20, ceiling 12.4 over [0.20, 0.50])
+    have zero occurrences in the manuscript of record. The registry constant R8_DELTA_P it consumed
+    is removed with it: R8 simulates no CUSUM and accumulates nothing.
+    Strictly a column deletion. The four surviving columns (delta_e, n_finite, miss_rate,
+    q05_tau_arf) are unchanged on all 21 rows of both files, and the per-seed raw grids
+    exp_R8_fine_grid_raw{,_tdrift4000}.csv verify BYTE-FOR-BYTE against the frozen baseline --
+    the proof that no stream, no seed and no RNG call site moved. The four numerals .tex L395
+    reads off this sweep reproduce exactly: q05(tau_ARF) = 12.95 flat over Delta_e <= 0.16 at
+    T_drift = 2000, rising 25.70 / 30.95 / 54.70 / 54.70 at T_drift = 4000.
+
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt
-    -> expected: 31 OK, 3 FAILED (the three files above).
+    -> expected: 29 OK, 5 FAILED (the five files above).

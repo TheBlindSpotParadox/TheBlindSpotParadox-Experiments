@@ -50,7 +50,7 @@ to reproduce the submitted streams bit-for-bit.
 | R5 | `ADWIN(clock=clock)` (`exp_R5_common.py:52-55`) | **pinned** `ADWIN(clock=clock)` (`:52-55`) | PHT with **bisection-calibrated** λ on the warm-up error stream, budget `PHT_TARGET_FA = 1` fallback 3 (`:59-85`), or `ADWIN(clock=clock)` (`:126`) | river default 0.002 | λ calibrated per (variant, seed), recorded in `lambda_calibrated` | `PHT_DELTA = 0.005` (`exp_R5_config.py:85`) |
 | R6 | `ADWIN(clock=C_INT=1)` (`:41`) | **pinned** `ADWIN(clock=1)` (`:42`) | none (τ_HAT only) | river default 0.002 | — | — |
 | R7 | `ADWIN(clock=c_int)` (`:49`) | **pinned** `ADWIN(clock=c_int)` (`:50`) | `ADWIN(delta=EXT_DELTA, clock=c_ext)` (`:51`) | internal river default 0.002 / **external `EXT_DELTA = 0.002`** (`:32`) | — | — |
-| R8 | `ADWIN(clock=C_INT=1)` (`:56`) | **pinned** `ADWIN(clock=1)` (`:57`) | none simulated; λ_limit computed analytically (`:106`) | river default 0.002 | λ_limit = `q05(τ_ARF)·(Δe − δ_P)`, **withdrawn** at `.tex` L385 | `DELTA_P = 0.005`, **frozen pending A2** |
+| R8 | `ADWIN(clock=C_INT=1)` (`:56`) | **pinned** `ADWIN(clock=1)` (`:57`) | none simulated; nothing accumulates | river default 0.002 | — (λ_limit **purged** by A2) | **none** — `R8_DELTA_P` removed by A2 |
 | R9 | `ADWIN(clock=C_INT=1)` (`:38`) | **pinned** `ADWIN(clock=1)` (`:39`) | `ADWIN(delta=0.002, clock=C_EXT=32)` (`:40`) | 0.002 explicit external | downstream `LAMBDAS = [8, 25, 50]` | **0.01** ← `CUSUM_DELTA_P` (A1) |
 
 **Action A1 — δ_P is two quantities, not one contested value.** The manuscript states both, each for
@@ -62,6 +62,17 @@ reading the PageHinkley tolerance for a StrictCUSUM quantity and are regenerated
 already correct and are untouched, artifact hashes unchanged. The S6 campaign traces stay at 0.005 —
 a recorded property of the committed Parquet, re-accumulated post hoc at 0.01 by
 `s6_recompute_cusum_delta001.py`, which is where every published S6 numeral comes from.
+
+**Action A2 — R8 requalified, not retired.** The plan's three options (removal, historical annex,
+repointing the test at `envelope_stats.json`) all rest on R8 being dead. It is not: `q05_tau_arf`
+supplies four live numerals to `.tex` L395 — the plateau at 12.95 for Δe ≤ 0.16 at
+`T_drift = 2000`, and its dissolution to 25.70 / 30.95 / 54.70 / 54.70 at `T_drift = 4000`. That
+pair is the refutation of the noise-driven-swap reading, so removing R8 would orphan a current
+result. What was dead is one column: `lambda_limit`, the rectangular surrogate withdrawn at
+`.tex` L385, whose target values (4.2, 12.4) have zero occurrences in the manuscript of record.
+The column and `R8_DELTA_P` are purged, the two aggregation artifacts regenerated, and the test
+repointed onto what the sweep actually establishes — including the `_tdrift4000` arm, which was
+cited by the manuscript and guarded by nothing.
 
 ### README §5 verdict — verified in source, not copied
 

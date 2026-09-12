@@ -161,11 +161,10 @@ R8_N_MODELS = N_MODELS
 R8_C_INT = C_INT
 R8_N_SEEDS = 200
 R8_DELTA_E_GRID = np.linspace(0.10, 0.50, 21)
-R8_DELTA_P = DELTA_P                           # FROZEN pending A2, deliberately not CUSUM_DELTA_P:
-                                               # its sole consumer is the rectangular surrogate
-                                               # q05(tau_ARF)*(Delta_e - delta_P), withdrawn at .tex
-                                               # L385. Re-tuning it would move an artifact hash for
-                                               # a formula the manuscript no longer states.
+                                               # A2: R8_DELTA_P removed. R8 simulates no CUSUM and
+                                               # consumes no drift tolerance; its only user was the
+                                               # rectangular surrogate q05(tau_ARF)*(Delta_e -
+                                               # delta_P), withdrawn at .tex L385 and purged here.
 R8_Q_LEVEL = 0.05
 R8_PREQUENTIAL_PREDICT = False                 # tau_ARF only; predict_one intentionally omitted
 R8_PARITY_T_DRIFT = 4000                       # S7/G1: warm-up parity sweep, written alongside 2000

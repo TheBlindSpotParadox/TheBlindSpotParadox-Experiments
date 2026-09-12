@@ -65,6 +65,10 @@ AUTHORIZED_DELTAS = {
     ("experiments/R9_mcrit/exp_R9_compute_mcrit.py", "DELTA_P"):
         "A1: 0.005 -> 0.01. tau_det* = lambda/(Delta_e - delta_P) of cor:mcrit is the Eq. (cusum) "
         "accumulation time, same StrictCUSUM family as R1 and R2",
+    ("experiments/R8_lambda_op_sweep/exp_R8_lambda_op_sweep.py", "DELTA_P"):
+        "A2: removed, with the registry constant R8_DELTA_P it aliased. R8 simulates no CUSUM and "
+        "accumulates nothing; the tolerance had exactly one consumer, the rectangular surrogate "
+        "q05(tau_ARF)*(Delta_e - delta_P) withdrawn at .tex L385 and purged from the artifacts",
 }
 
 # Registry names carried in function-argument defaults or call keywords instead of at module level
