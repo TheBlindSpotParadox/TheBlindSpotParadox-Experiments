@@ -323,6 +323,31 @@ and no false alarms are raised at that threshold, so precision, recall and `F1` 
 discarded a column that was never going to disagree with the one it kept — which is itself worth
 one sentence, since it means Table I's `F1` carries no false-alarm information at all.
 
+### Patch T-A(ii) — `res:tension`, the `lambda_FA` provenance — **DEFERRED, do not apply before the v65 assembly**
+
+Target: `docs/manuscript/articleA_blindspot_v64_camera_ready.tex` (`main` L416, pre-patch L397).
+Two sites state that `lambda_FA = 15` was calibrated: the macro comment at `main` L55
+(*"R4\_PHT\_LAMBDA, ProteuS pre-drift calibration"*) and `res:tension` in the body. The ProteuS
+pre-change volatility is identically zero (§2.7), so neither is reproducible. `lambda_FA` is a
+declared operating threshold, and `res:tension`'s conclusion does not depend on its provenance.
+
+**Status: DEFERRED,** for the same reason as Patch T-B: `res:tension` sits at pre-patch L397, inside
+`\subsection{The Decoupling Principle}\label{sec:decoupling}` (pre-patch L376-L411), the fourth of
+the excluded subsections. The payload is recorded with its anchor and applied at assembly.
+
+~~~~~~~~~
+docs/manuscript/articleA_blindspot_v64_camera_ready.tex
+<<<<<<< SEARCH
+  With $\lambda_{\mathrm{FA}} = \LambdaFA$ calibrated on pre-change volatility and $\alpha = 0.05$, the measured ceiling gives $q_{0.05} = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \lambda_{\mathrm{FA}}\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$ and non-empty for every envelope floored at or above $\DeFloorHi$. The detectability floor $\Delta e_c := \inf\{\Delta e : q_{0.05}(\Delta e) \ge \lambda_{\mathrm{FA}}\}$ lies strictly inside that interval, at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Standard synthetic benchmarks operate below it, which is why the failure mode does not surface on them.
+=======
+  With $\lambda_{\mathrm{FA}} = \LambdaFA$ as the declared false-alarm threshold of Section~\ref{sec:proteus} and $\alpha = 0.05$, the measured ceiling gives $q_{0.05} = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \lambda_{\mathrm{FA}}\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$ and non-empty for every envelope floored at or above $\DeFloorHi$. The detectability floor $\Delta e_c := \inf\{\Delta e : q_{0.05}(\Delta e) \ge \lambda_{\mathrm{FA}}\}$ lies strictly inside that interval, at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Standard synthetic benchmarks operate below it, which is why the failure mode does not surface on them.
+>>>>>>> REPLACE
+~~~~~~~~~
+
+The preamble comment at `main` L55 should read `% R4\_PHT\_LAMBDA, declared; see transfer\_S2bis
+\S2.7` rather than `ProteuS pre-drift calibration`. That line is outside every excluded subsection
+and can be changed now; it is a one-line edit and is not shipped as a payload.
+
 ### 2.8 Which of S2's patches this supersedes
 
 **Patch A (12 macros) is not superseded**; S2-bis consumes it and extends it with Patch T-A(0)
