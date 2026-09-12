@@ -27,7 +27,7 @@ Définition 11 : ils sont structurels, pas compressifs. À conserver.
 
 ### 2.1 Figure 4 fusionnée dans la Figure 2 — POINT DUR
 
-`articleA_blindspot_v64_camera_ready.tex:292`, entre les sous-sections `sec:hardware` et
+Le commentaire est ancré par son texte, non par son numéro de ligne — celui-ci dérive à chaque ajout au préambule. Dans `articleA_blindspot_v64_camera_ready.tex`, entre les sous-sections `sec:hardware` et
 `sec:complexity` :
 
 ```latex
