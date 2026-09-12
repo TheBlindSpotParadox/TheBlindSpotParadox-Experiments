@@ -183,3 +183,70 @@ def test_every_cited_key_resolves_in_the_bibliography():
                 for k, f in sorted(cited.items()) if k not in entries]
     assert not dangling, (
         "citations with no bibliography entry:\n  " + "\n  ".join(dangling))
+
+
+# Environments the document class or a package in the preamble supplies (IEEEtran, amsmath, amsthm,
+# graphicx, tikz, enumitem). Anything a section uses outside this set must carry its own \newtheorem
+# in the main document, or the assembly halts -- which is how framework_v2.tex's \begin{lemma}
+# survived three streams unnoticed. Declared by name, not by silence: adding to this set asserts the
+# preamble provides it, so it is a claim to check, not a way to quiet a surprise.
+STANDARD_ENVIRONMENTS = {
+    "document", "abstract", "IEEEkeywords", "thebibliography",
+    "figure", "figure*", "table", "table*", "tabular", "tabularx", "center",
+    "align", "align*", "equation", "equation*", "gather", "gather*", "split",
+    "cases", "array", "subequations", "proof",
+    "itemize", "enumerate", "description", "tikzpicture",
+}
+
+BEGIN_RE = re.compile(r"\\begin\{([A-Za-z][A-Za-z0-9*]*)\}")
+NEWTHEOREM_RE = re.compile(r"\\newtheorem\*?\{([^}]*)\}")
+LABEL_RE = re.compile(r"\\label\{([^}]*)\}")
+REF_RE = re.compile(r"\\(?:eq)?ref\{([^}]*)\}|\\hyperref\[([^}]*)\]")
+
+
+def _tex_sources():
+    """(main document, [every other .tex under docs/manuscript/])."""
+    mains = main_tex_documents()
+    main = mains[0] if mains else None
+    return main, [p for p in sorted(MANUSCRIPT_DIR.rglob("*.tex")) if p != main]
+
+
+def test_sections_assemble_into_the_main_document():
+    """Action A7 follow-up. The section drafts are not \\input by the main document, so nothing
+    compiles them and LaTeX reports none of their defects. Two were live when this was written:
+    framework_v2.tex used \\begin{lemma} against a preamble declaring no lemma environment, and
+    intro_v2.tex referenced a figure no file included. Both halt or deface an assembly; neither was
+    visible from the main document's own clean compile.
+
+    Static substitutes for that compile, with no toolchain dependency:
+      - a theorem-like environment must be declared by \\newtheorem in the main document, whose
+        preamble is the one an assembly will use. Environments supplied by the document class or by
+        a loaded package are out of scope -- a static check cannot honestly verify package
+        availability -- and are named in STANDARD_ENVIRONMENTS rather than passed over in silence;
+      - a \\ref target must be defined somewhere in the manuscript tree."""
+    main, others = _tex_sources()
+    if main is None or not others:
+        pytest.skip("no main document or no section fragment to check")
+
+    main_src = main.read_text(encoding="utf-8")
+    available = set(NEWTHEOREM_RE.findall(main_src)) | STANDARD_ENVIRONMENTS
+
+    undeclared, dangling = [], []
+    labels = set(LABEL_RE.findall(main_src))
+    for p in others:
+        labels |= set(LABEL_RE.findall(p.read_text(encoding="utf-8")))
+
+    for p in others:
+        src = p.read_text(encoding="utf-8")
+        rel = os.path.relpath(p, ROOT_DIR)
+        undeclared += [f"{rel}: \\begin{{{e}}}" for e in sorted(set(BEGIN_RE.findall(src)))
+                       if e not in available]
+        dangling += [f"{rel}: \\ref{{{t}}}" for t in
+                     sorted({a or b for a, b in REF_RE.findall(src)} - labels) if t]
+
+    assert not undeclared, (
+        f"environments used by a section but neither declared nor used in {main.name}; an "
+        "assembly halts on these:\n  " + "\n  ".join(undeclared))
+    assert not dangling, (
+        "\\ref targets defined in no .tex of the manuscript tree; these typeset as ??:\n  "
+        + "\n  ".join(dangling))

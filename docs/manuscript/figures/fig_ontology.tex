@@ -10,7 +10,7 @@
   box/.style   ={draw, rounded corners=1pt, align=center, inner sep=2pt,
                  text width=30mm, minimum height=6mm},
   loop/.style  ={box, fill=black!5},
-  out/.style   ={box, text width=25mm},
+  outcome/.style={box, text width=25mm},   % not `out`: /tikz/out is reserved by to[out=..]
   bad/.style   ={box, very thick, text width=25mm},
   ar/.style    ={-{Latex[length=1.4mm]}, thin},
   fb/.style    ={-{Latex[length=1.4mm]}, thin, dashed}
@@ -32,14 +32,14 @@
 \node[bad,  below left=6mm and -6mm of cmp] (blind)
   {$\tau_{\mathrm{erase}} < T$\\\textbf{starvation}\\missed detection
    $\Rightarrow$ \textbf{blind spot}};
-\node[out,  below right=6mm and -6mm of cmp] (late)
+\node[outcome, below right=6mm and -6mm of cmp] (late)
   {$\tau_{\mathrm{erase}} \geq T$\\alarm fires; if delayed,\\after recovery};
 
-\node[out, below=6mm of blind, text width=34mm, xshift=6mm] (flood)
+\node[outcome, below=6mm of blind, text width=34mm, xshift=6mm] (flood)
   {Lower $\lambda$ to fit the window\\$\Rightarrow$ alarm flooding under
    volatility};
 
-\node[out, right=3mm of res, text width=21mm, xshift=6mm] (px)
+\node[outcome, right=3mm of res, text width=21mm, xshift=6mm] (px)
   {Monitor on $P(X)$:\\outside the loop};
 
 \draw[ar] (chg) -- (res);
