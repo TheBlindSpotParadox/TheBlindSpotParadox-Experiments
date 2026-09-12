@@ -6,8 +6,8 @@ named module-level constants, no experiment logic. The only callable is the Rive
 guard, shared by every script that instruments `_drift_tracker` / `_warning_tracker`.
 
 Registry (S7/CONFIG §6): N_STEPS, T_DRIFT, CENSORING_HORIZON, N_MODELS, SEED_SCHEME,
-BOUNDARY_SHIFTS, DELTA_E_GRID, C_INT, C_EXT, EXT_DELTA, DELTA_P, LAMBDAS, WARMUP_WINDOW,
-DELTA_E_WINDOW, N_SEEDS_REAL, TAU_TOL.
+BOUNDARY_SHIFTS, DELTA_E_GRID, C_INT, C_EXT, EXT_DELTA, DELTA_P, CUSUM_DELTA_P, LAMBDAS,
+WARMUP_WINDOW, DELTA_E_WINDOW, N_SEEDS_REAL, TAU_TOL.
 
 Intentional per-experiment divergences are DERIVED CONSTANTS carrying an `R<n>_` prefix and a motive,
 never local literals. Stream-scoped constants that belong to no single R<n> carry the stream prefix
@@ -49,7 +49,13 @@ BOUNDARY_SHIFTS = np.linspace(0.1, 4.0, 20)    # Delta_e = Phi(b/sqrt(2)) - 0.5
 C_INT = 1                                      # internal ADWIN clock (blind-spot configuration)
 C_EXT = 32                                     # River's default external clock
 EXT_DELTA = 0.002                              # external ADWIN sensitivity
-DELTA_P = 0.005                                # PageHinkley / CUSUM drift tolerance
+# Two detector families, two tolerances. They are not a discrepancy: the manuscript states both,
+# each for its own detector. A1 splits the name so no further call site can conflate them.
+DELTA_P = 0.005                                # River PageHinkley tolerance (R3, R4, R5). The .tex
+                                               # names it at L480 for the adaptive mean-tracking PHT,
+                                               # explicitly distinct from the fixed-p_0 Eq. (cusum).
+CUSUM_DELTA_P = 0.01                           # StrictCUSUM (fixed p_0) tolerance, Eq. (cusum) and
+                                               # \DeltaPtext. Governs R1, R2, R9 and the S6 audit.
 
 # Seed schemes. The naive integer range is deliberate ("AE Visual Match"): it reproduces the feature
 # streams of the submitted manuscript bit-for-bit. Do not replace it with a SeedSequence.
@@ -69,7 +75,7 @@ R1_DELTA_E = 0.25                              # single magnitude; the sweep is 
 R1_LAMBDAS = [2.5, 5.0, 10.0, 15.0, 20.0, 25.0, 50.0, 100.0]  # S7/G2: 15 and 20 added to measure
                                                # lambda* instead of interpolating it across [10, 25]
 R1_N_MODELS = N_MODELS
-R1_DELTA_P = DELTA_P
+R1_DELTA_P = CUSUM_DELTA_P                     # A1: R1 runs StrictCUSUM, not River's PHT
 R1_WARMUP_WINDOW = 1000                        # pre-drift error buffer for the empirical CUSUM p_pre
 R1_C_INT = C_INT
 
@@ -84,7 +90,7 @@ R2_SEEDS = SEED_SCHEME_NAIVE_1_100
 R2_WARMUP_WINDOW = 1000                        # last 1000 pre-drift steps calibrate p_pre
 R2_LAMBDAS = [50.0, 25.0, 8.0]                 # scenarios A / B / C (declared; SCENARIOS carries the
                                                # display strings and is not a registry name)
-R2_CUSUM_DELTA = 0.01                          # NOT DELTA_P: R2's StrictCUSUM tolerance is 0.01
+R2_CUSUM_DELTA = CUSUM_DELTA_P                 # retained name; the value now lives in the registry
 
 # ══════════════════════════════════════════════════════════════════════════════
 # R3 — regime crossover (Figure 3)
@@ -155,7 +161,11 @@ R8_N_MODELS = N_MODELS
 R8_C_INT = C_INT
 R8_N_SEEDS = 200
 R8_DELTA_E_GRID = np.linspace(0.10, 0.50, 21)
-R8_DELTA_P = DELTA_P
+R8_DELTA_P = DELTA_P                           # FROZEN pending A2, deliberately not CUSUM_DELTA_P:
+                                               # its sole consumer is the rectangular surrogate
+                                               # q05(tau_ARF)*(Delta_e - delta_P), withdrawn at .tex
+                                               # L385. Re-tuning it would move an artifact hash for
+                                               # a formula the manuscript no longer states.
 R8_Q_LEVEL = 0.05
 R8_PREQUENTIAL_PREDICT = False                 # tau_ARF only; predict_one intentionally omitted
 R8_PARITY_T_DRIFT = 4000                       # S7/G1: warm-up parity sweep, written alongside 2000
@@ -173,7 +183,8 @@ R9_DELTA_E_WINDOW = 500                        # pre/post window for the empiric
 R9_BOUNDARY_SHIFTS = BOUNDARY_SHIFTS
 R9_SEEDS = SEED_SCHEME_NAIVE_1_100
 R9_LAMBDAS = [8, 25, 50]
-R9_DELTA_P = DELTA_P
+R9_DELTA_P = CUSUM_DELTA_P                     # A1: tau_det* = lambda/(Delta_e - delta_P) is the
+                                               # Eq. (cusum) accumulation time of cor:mcrit
 R9_RELIABILITY_TARGETS = [0.99, 0.95, 0.50]    # S7/TASK 3: r = 1 - P_miss, replaces the beta letter
 R9_DKW_ALPHA = 0.05
 R9_TARGET_DELTAS = [0.10, 0.15, 0.20, 0.25, 0.33, 0.40, 0.50]
@@ -260,11 +271,11 @@ S6_PARQUET_VERSION = "2.6"
 S6_PARQUET_ROW_GROUP = 100_000
 S6_PARQUET_PARTITION_FMT = "{:.6f}"            # delta_e -> hive directory name
 
-# S6 post-hoc audit of the external CUSUM. The campaign accumulates at DELTA_P = 0.005; the
-# manuscript text states 0.01, and transfer_S1 open item 2 flags the factor of two as unresolved.
-# The audit re-accumulates the committed traces at the manuscript value so the two can be compared
-# without re-running anything.
-S6_AUDIT_DELTA_P = R2_CUSUM_DELTA              # 0.01, the manuscript tolerance
+# S6 post-hoc audit of the external CUSUM. The committed campaign traces accumulate at DELTA_P =
+# 0.005; the audit re-accumulates them at the StrictCUSUM tolerance so the two can be compared
+# without re-running anything. transfer_S1 open item 2 is closed by A1: the factor of two was one
+# registry name covering two detector families, not a single contested value.
+S6_AUDIT_DELTA_P = CUSUM_DELTA_P               # 0.01, the manuscript tolerance
 S6_AUDIT_LAMBDAS = [15.0, 50.0]                # 15 brackets the measured lambda_op envelope
                                                # (q05 floor 15.2 over Delta_e >= 0.20); 50 is the
                                                # threshold the starvation certificate is stated at

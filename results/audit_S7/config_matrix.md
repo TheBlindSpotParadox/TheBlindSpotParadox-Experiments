@@ -43,15 +43,25 @@ to reproduce the submitted streams bit-for-bit.
 
 | Exp | ARF `drift_detector` | ARF `warning_detector` | external monitor | ADWIN `delta` | CUSUM / PHT threshold | `DELTA_P` |
 |-----|----------------------|------------------------|------------------|---------------|-----------------------|-----------|
-| R1 | `ADWIN(clock=1)` (`:50`) | **`ADWIN(clock=1)` pinned** (`:50`) | `StrictCUSUM(p_pre, DELTA_P, λ)` (`:51`, `:76`) | river default 0.002 | λ ∈ {2.5, 5, 10, 25, 50, 100} | 0.005 (`:26`) |
-| R2 | `ADWIN(clock=c_int)` (`:67`) | **pinned** `ADWIN(clock=c_int)` (`:67`) | `StrictCUSUM(p_pre_emp, δ=0.01, λ)` (`:87`) | river default 0.002 | λ ∈ {50, 25, 8} (`:55-57`) | 0.01 (hard-coded `:87`) |
+| R1 | `ADWIN(clock=1)` (`:50`) | **`ADWIN(clock=1)` pinned** (`:50`) | `StrictCUSUM(p_pre, DELTA_P, λ)` (`:51`, `:76`) | river default 0.002 | λ ∈ {2.5, 5, 10, 15, 20, 25, 50, 100} (S7/G2) | **0.01** ← `CUSUM_DELTA_P` (A1) |
+| R2 | `ADWIN(clock=c_int)` (`:67`) | **pinned** `ADWIN(clock=c_int)` (`:67`) | `StrictCUSUM(p_pre_emp, δ=`ssot.R2_CUSUM_DELTA`, λ)` (`:91`) | river default 0.002 | λ ∈ {50, 25, 8} (`:55-57`) | 0.01 ← `CUSUM_DELTA_P` (A1 de-literalised `:91`) |
 | R3 | `ADWIN(clock=1)` (`:74`) | **river default** `ADWIN(clock=32)` | `PageHinkley(threshold=25.0, delta=0.005)` (`:81`, `:107`) | river default 0.002 | 25.0 | 0.005 |
 | R4 | `adwin(c)` = `ADWIN(delta=0.002, clock=c)` (`:163`, `:174`) | **river default** for `make_arf` (`:173-174`); **both pinned** for `make_srp` (`:178`) | `pht()` = `PageHinkley(threshold=15.0)`, `adwin(c)`, `EDDM()`, `kswin(seed)` = `KSWIN(alpha=0.005, window_size=100, stat_size=30)` (`:162-170`) | 0.002 (explicit) | PHT 15.0; KSWIN α=0.005 | PHT river default 0.005 (`:162` comment) |
 | R5 | `ADWIN(clock=clock)` (`exp_R5_common.py:52-55`) | **pinned** `ADWIN(clock=clock)` (`:52-55`) | PHT with **bisection-calibrated** λ on the warm-up error stream, budget `PHT_TARGET_FA = 1` fallback 3 (`:59-85`), or `ADWIN(clock=clock)` (`:126`) | river default 0.002 | λ calibrated per (variant, seed), recorded in `lambda_calibrated` | `PHT_DELTA = 0.005` (`exp_R5_config.py:85`) |
 | R6 | `ADWIN(clock=C_INT=1)` (`:41`) | **pinned** `ADWIN(clock=1)` (`:42`) | none (τ_HAT only) | river default 0.002 | — | — |
 | R7 | `ADWIN(clock=c_int)` (`:49`) | **pinned** `ADWIN(clock=c_int)` (`:50`) | `ADWIN(delta=EXT_DELTA, clock=c_ext)` (`:51`) | internal river default 0.002 / **external `EXT_DELTA = 0.002`** (`:32`) | — | — |
-| R8 | `ADWIN(clock=C_INT=1)` (`:56`) | **pinned** `ADWIN(clock=1)` (`:57`) | none simulated; λ_limit computed analytically (`:102`) | river default 0.002 | λ_limit = `q05(τ_ARF)·(Δe − δ_P)` | `DELTA_P = 0.005` (`:44`) |
-| R9 | `ADWIN(clock=C_INT=1)` (`:38`) | **pinned** `ADWIN(clock=1)` (`:39`) | `ADWIN(delta=0.002, clock=C_EXT=32)` (`:40`) | 0.002 explicit external | downstream `LAMBDAS = [8, 25, 50]` | `DELTA_P = 0.005` (`exp_R9_compute_mcrit.py:22`) |
+| R8 | `ADWIN(clock=C_INT=1)` (`:56`) | **pinned** `ADWIN(clock=1)` (`:57`) | none simulated; λ_limit computed analytically (`:106`) | river default 0.002 | λ_limit = `q05(τ_ARF)·(Δe − δ_P)`, **withdrawn** at `.tex` L385 | `DELTA_P = 0.005`, **frozen pending A2** |
+| R9 | `ADWIN(clock=C_INT=1)` (`:38`) | **pinned** `ADWIN(clock=1)` (`:39`) | `ADWIN(delta=0.002, clock=C_EXT=32)` (`:40`) | 0.002 explicit external | downstream `LAMBDAS = [8, 25, 50]` | **0.01** ← `CUSUM_DELTA_P` (A1) |
+
+**Action A1 — δ_P is two quantities, not one contested value.** The manuscript states both, each for
+its own detector: the fixed-`p_0` StrictCUSUM of `eq:cusum` at `\DeltaPtext = 0.01` (`.tex` L277),
+and River's adaptive mean-tracking PageHinkley at 0.005 (`.tex` L480, named there as explicitly
+distinct from `eq:cusum`). `config/experiment_ssot.py` now carries one name per family:
+`CUSUM_DELTA_P = 0.01` (R1, R2, R9, S6 audit) and `DELTA_P = 0.005` (R3, R4, R5). R1 and R9 were
+reading the PageHinkley tolerance for a StrictCUSUM quantity and are regenerated; R3/R4/R5 were
+already correct and are untouched, artifact hashes unchanged. The S6 campaign traces stay at 0.005 —
+a recorded property of the committed Parquet, re-accumulated post hoc at 0.01 by
+`s6_recompute_cusum_delta001.py`, which is where every published S6 numeral comes from.
 
 ### README §5 verdict — verified in source, not copied
 

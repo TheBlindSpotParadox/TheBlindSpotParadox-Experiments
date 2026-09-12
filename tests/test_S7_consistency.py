@@ -58,12 +58,36 @@ AUTHORIZED_DELTAS = {
         "S7/G2: 15 and 20 added so lambda* is measured, not interpolated across [10, 25]",
     ("experiments/R9_mcrit/exp_R9_compute_mcrit.py", "BETAS"):
         "S7/TASK 3: reliability letter beta -> r; BETAS replaced by RELIABILITY_TARGETS",
+    ("experiments/R1_race_condition/exp_R1_generate_data.py", "DELTA_P"):
+        "A1: 0.005 -> 0.01. R1 runs StrictCUSUM, whose tolerance the manuscript states at "
+        "\\DeltaPtext in Eq. (cusum) and L277. 0.005 is River's PageHinkley tolerance (R3/R4/R5, "
+        ".tex L480) and was inherited from the single pre-A1 registry name",
+    ("experiments/R9_mcrit/exp_R9_compute_mcrit.py", "DELTA_P"):
+        "A1: 0.005 -> 0.01. tau_det* = lambda/(Delta_e - delta_P) of cor:mcrit is the Eq. (cusum) "
+        "accumulation time, same StrictCUSUM family as R1 and R2",
 }
 
 # Registry names carried in function-argument defaults or call keywords instead of at module level
 # (S7-bis/section 5, option A). Only a bare literal is a violation: a Name/Attribute default resolves
 # to a module-level constant, which the module-level walk already guards.
 GUARDED_PARAMS = {"n_steps", "tp", "t_drift", "n_models", "threshold"}
+
+# Action A1. StrictCUSUM is the fixed-p_0 accumulator of eq:cusum; its tolerance is
+# CUSUM_DELTA_P = 0.01 (.tex L277), never the River PageHinkley tolerance DELTA_P = 0.005
+# (.tex L480). Both lived under one registry name until A1, and neither offending site was
+# reachable by the guards above: R1 inherited the wrong value through a correctly-routed alias,
+# and R2 carried a bare 0.01 as a call keyword whose parameter name `delta` cannot join
+# GUARDED_PARAMS without firing on River's own ADWIN/PageHinkley surface. This guard is therefore
+# scoped to the class rather than to the parameter name, and resolves the argument through the
+# class's own __init__ signature so a positional delta is caught as readily as a keyword.
+CUSUM_CLASS = "StrictCUSUM"
+CUSUM_DELTA_EXEMPT = {
+    "experiments/S6_synchronized_traces/s6_detectors.py":
+        "the committed S6 campaign traces were accumulated at DELTA_P = 0.005, which is a recorded "
+        "property of the Parquet corpus and not a live choice; s6_recompute_cusum_delta001.py "
+        "re-accumulates them at CUSUM_DELTA_P post hoc, and every published S6 numeral comes from "
+        "that audit path",
+}
 
 SAFE_BUILTINS = {n: getattr(builtins, n)
                  for n in ("list", "range", "dict", "tuple", "set", "int", "float", "str",
@@ -134,6 +158,59 @@ def param_literals(path):
     return out
 
 
+def module_namespace(path):
+    """The module-level constants of `path` as live values, for evaluating an expression in context."""
+    ns = {"np": np, "ssot": ssot}
+    for name, entry in module_constants(path, {"ssot": ssot}).items():
+        if entry["value"] is None:
+            continue
+        try:
+            ns[name] = ast.literal_eval(entry["value"])
+        except Exception:
+            pass
+    return ns
+
+
+def cusum_delta_sites(path):
+    """[(site, resolved delta or UNRESOLVED)] for every StrictCUSUM construction in `path`."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    idx = default = None
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.ClassDef) and node.name == CUSUM_CLASS):
+            continue
+        init = next((n for n in node.body
+                     if isinstance(n, ast.FunctionDef) and n.name == "__init__"), None)
+        params = [a.arg for a in init.args.posonlyargs + init.args.args][1:] if init else []
+        if "delta" not in params:
+            continue
+        idx = params.index("delta")
+        first_default = len(params) - len(init.args.defaults)
+        default = init.args.defaults[idx - first_default] if idx >= first_default else None
+
+    out, ns = [], None
+    for node in ast.walk(tree):
+        if not (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                and node.func.id == CUSUM_CLASS):
+            continue
+        arg = next((k.value for k in node.keywords if k.arg == "delta"), None)
+        if arg is None and idx is not None and idx < len(node.args):
+            arg = node.args[idx]
+        if arg is None:
+            arg = default
+        if arg is None:
+            out.append((f"{CUSUM_CLASS}(...)  [no delta argument and no resolvable signature]",
+                        UNRESOLVED))
+            continue
+        src = ast.unparse(arg)
+        ns = module_namespace(path) if ns is None else ns
+        try:
+            out.append((f"{CUSUM_CLASS}(... delta={src})",
+                        eval(src, {"__builtins__": SAFE_BUILTINS}, ns)))
+        except Exception:
+            out.append((f"{CUSUM_CLASS}(... delta={src})", UNRESOLVED))
+    return out
+
+
 def census():
     return {str(p.relative_to(ROOT_DIR)): module_constants(p, {"ssot": ssot})
             for p in sorted((ROOT_DIR / "experiments").rglob("*.py"))}
@@ -164,6 +241,27 @@ def test_ssot_registry_and_no_value_drift():
     assert not local_literals, "registry constants re-bound to local literals:\n  " + "\n  ".join(local_literals)
     assert not missing, "module-level constants removed without authorisation:\n  " + "\n  ".join(missing)
     assert not drift, "resolved values drifted from the Phase-0 oracle:\n  " + "\n  ".join(drift)
+
+
+def test_strict_cusum_runs_at_the_cusum_tolerance():
+    bad, checked = [], 0
+    for p in sorted((ROOT_DIR / "experiments").rglob("*.py")):
+        rel = str(p.relative_to(ROOT_DIR))
+        if rel in CUSUM_DELTA_EXEMPT:
+            continue
+        for site, delta in cusum_delta_sites(p):
+            checked += 1
+            if delta is UNRESOLVED:
+                bad.append(f"{rel}: {site} -- extend the guard, do not silence it")
+            elif delta != ssot.CUSUM_DELTA_P:
+                bad.append(f"{rel}: {site} -> {delta}, expected CUSUM_DELTA_P = {ssot.CUSUM_DELTA_P}")
+
+    assert checked >= 3, (
+        f"guard inspected {checked} StrictCUSUM constructions, expected at least the three of R1 "
+        f"(x2) and R2. The class was renamed or moved: re-point CUSUM_CLASS rather than leave a "
+        f"guard that verifies nothing.")
+    assert not bad, ("StrictCUSUM constructed at a tolerance other than the registry's "
+                     "CUSUM_DELTA_P:\n  " + "\n  ".join(bad))
 
 
 def test_no_compiled_bytecode_tracked():

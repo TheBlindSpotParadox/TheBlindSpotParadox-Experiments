@@ -63,15 +63,15 @@ Every figure below was measured in stream S7-bis on the host above, `PYTHONHASHS
 
 | stage | command | wall clock | artifact identity vs. `artifacts_sha256_pre_ssot.txt` |
 |-------|---------|-----------:|------------------------------------------------------|
-| R1 | `./run_experiment_R1.sh` | 1 066 s (17 min 46 s) | identical |
+| R1 | `./run_experiment_R1.sh` | 1 066 s (17 min 46 s) | **deviates since A1** (`R1_race_condition.parquet`), declared in `authorized_deviations.txt` |
 | R2 | `./run_experiment_R2.sh` | 1 186 s (19 min 46 s) | identical (3 parquets **and** 3 PNGs) |
 | R3 | `./run_experiment_R3.sh` | 539 s (8 min 59 s) | identical (measured twice, 539 s both times) |
 | R4 | `./run_experiment_R4.sh` | 3 241 s (54 min 01 s) | identical (4 CSVs + Table I `.tex`) |
 | R6 | `./run_experiment_R6.sh` | 34 s | identical |
 | R7 | `./run_experiment_R7.sh` | 732 s (12 min 12 s) | identical |
 | R8 | `./run_experiment_R8.sh` | 244 s (4 min 04 s) | identical |
-| R9 | `./run_experiment_R9.sh` | 53 s | identical |
-| **subtotal R1–R4, R6–R9** | | **7 095 s = 1 h 58 min 15 s** | **33 of 34 baseline hashes identical**; the single deviation is `results/audit_S7/hydra_survival.csv`, declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
+| R9 | `./run_experiment_R9.sh` | 53 s | **deviates since A1** (`exp_R9_mcrit_comparison.csv`; its input `results_instrumented_A_ADWIN_HAT.csv` stays identical) |
+| **subtotal R1–R4, R6–R9** | | **7 095 s = 1 h 58 min 15 s** | **31 of 34 baseline hashes identical**; the three deviations (`hydra_survival.csv`, and the two A1 artifacts above) are declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
 | R-1 (S7-bis) | `python experiments/R9_mcrit/exp_R9_generate_data.py 1` | 46 s | new artifact (matched-clock M=1 run) |
 | R5 | `./run_experiment_R5.sh` | **not re-measured in this stream** | untouched |
 

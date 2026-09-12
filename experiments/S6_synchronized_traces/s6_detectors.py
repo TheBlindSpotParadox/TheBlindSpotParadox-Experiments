@@ -2,10 +2,13 @@
 
 Two problems this file closes.
 
-1. `StrictCUSUM` was defined inside `exp_R2_instrumented_blind_spot.py` with `delta=0.01` hard-coded
-   at the call site, while `config.experiment_ssot.DELTA_P = 0.005` is the registry tolerance and R1
-   uses it. S6 has ONE implementation, defaulting to `DELTA_P`; R2's 0.01 stays reachable as
-   `R2_CUSUM_DELTA` for anyone reproducing that figure.
+1. `StrictCUSUM` was defined inside `exp_R2_instrumented_blind_spot.py`, duplicating R1's copy. S6
+   has ONE implementation. Its default stays `DELTA_P = 0.005`, which is what the committed campaign
+   traces were accumulated at and therefore a property of the artifact, not a live choice: A1 set the
+   StrictCUSUM tolerance to `CUSUM_DELTA_P = 0.01` and the traces are re-accumulated at that value
+   post hoc by `s6_recompute_cusum_delta001.py`, so no trace is regenerated. Every published S6
+   numeral comes from that audit path; `a_unrefl` alone remains at 0.005, declared in
+   `s6_envelope_stats.py` item 3.
 
 2. PHT, ADWIN and KSWIN each expose a different surface, so every experiment re-wrote the same glue.
    Each wrapper here exposes `.update(x)`, `.drift_detected`, `.statistic()`, `.threshold` and

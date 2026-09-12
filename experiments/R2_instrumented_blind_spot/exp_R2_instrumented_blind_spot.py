@@ -88,7 +88,7 @@ def run_instrumented_arf_pht(boundary_shift, seed, cfg):
                 errors_pre.append(error)
         elif t == T_DRIFT:
             p_pre_empirical = np.mean(errors_pre) if errors_pre else 0.05
-            ext_pht = StrictCUSUM(p_pre=p_pre_empirical, delta=0.01, threshold=cfg['lambda'])
+            ext_pht = StrictCUSUM(p_pre=p_pre_empirical, delta=ssot.R2_CUSUM_DELTA, threshold=cfg['lambda'])
 
         swaps_before = sum(arf._drift_tracker.values())
         arf.learn_one(x_dict, y)
