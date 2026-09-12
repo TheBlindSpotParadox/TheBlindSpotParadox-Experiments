@@ -22,16 +22,35 @@ is now `CUSUM_DELTA_P`. Cramer root from `E[exp(theta (X - p_0 - delta_P))] = 1`
 `ARL_0` from Siegmund (1985), `(exp(theta* lambda) - theta* lambda - 1) / (theta* delta_P)`. The
 0.005 column reproduces exactly under that pair, which is what licenses the 0.01 column.
 
-| quantity | `delta_P = 0.005` (superseded) | `delta_P = 0.01` (A1) |
-|---|---|---|
-| Cramer root `theta*` | 0.1983 | 0.3755 |
-| approximation `2 delta_P / (p_0(1-p_0))` | 0.2105 (+6.2 %) | 0.4211 (+12.1 %) |
-| `ARL_0` at `lambda = 8` | 2.3e3 | 4.3e3 |
-| `ARL_0` at `lambda = 25` | 1.4e5 | 3.2e6 |
-| `ARL_0` at `lambda = 50` | 2.0e7 | 3.8e10 |
+| quantity | `p_0 = 0.05`, `delta_P = 0.005` (superseded) | `p_0 = 0.05`, `delta_P = 0.01` (A1) | **`p_0 = 0.024`, `delta_P = 0.01` (S2 input)** |
+|---|---|---|---|
+| Cramer root `theta*` | 0.1983 | 0.3755 | **0.6813** |
+| approximation `2 delta_P / (p_0(1-p_0))` | 0.2105 (+6.2 %) | 0.4211 (+12.1 %) | **0.8538 (+25.3 %)** |
+| `ARL_0` at `lambda = 8` | 2.3e3 | 4.3e3 | **3.3e4** |
+| `ARL_0` at `lambda = 25` | 1.4e5 | 3.2e6 | **3.7e9** |
+| `ARL_0` at `lambda = 50` | 2.0e7 | 3.8e10 | **9.1e16** |
 
-The closed-form approximation to `theta*` loses half its accuracy at the arbitrated tolerance
-(6.2 % -> 12.1 %): S2 must carry the numerical root, not the approximation.
+The closed-form approximation to `theta*` degrades monotonically as the setting approaches the
+measured one: +6.2 % -> +12.1 % -> +25.3 %. S2 must carry the numerical root, never the
+approximation.
+
+**`p_0 = 0.05` IS NOT MEASURED, AND THE MEASUREMENT CONTRADICTS IT (item M3).** Action A1 corrected
+`delta_P` while leaving `p_0` at the assumed 0.05. The S6 campaign measures the pre-drift error rate
+over 2,000 runs of the nominal arm at **median 0.0240**, mean 0.0239, range [0.012, 0.040]
+(`results/S6_synchronized_traces/data/runs.parquet`, column `e_pre`); `S6_causal_evidence.md`
+section 8 point 4 records the same. The third column above is therefore not an alternative but the
+correction still owed: at the measured base rate `theta*` nearly doubles again and `ARL_0` at
+`lambda = 50` gains six further orders of magnitude. **The first two columns are wrong by a factor
+larger than the one A1 fixed.**
+
+It is given here so that S2 does not have to rediscover the formula, not as an arbitration. Two
+questions stay open and belong to S2, not to this note:
+
+1. Whether a single pooled `p_0` is admissible at all. `e_pre` spans [0.012, 0.040] across the
+   magnitude grid — a factor of 3.3 — because a far-shifted boundary makes the classes more
+   separable (`S6_causal_evidence.md` L94). A per-magnitude `p_0`, or an interval, may be the
+   honest object.
+2. Whether `eps = 0.05` survives the same scrutiny. It was never measured either.
 
 NOT RECOMPUTED, blocking for S2 — each of the three lines below is stated in terms of the
 rectangular surrogate `A = q(tau_ARF) (Delta_e - delta_P)`, which the manuscript withdraws at

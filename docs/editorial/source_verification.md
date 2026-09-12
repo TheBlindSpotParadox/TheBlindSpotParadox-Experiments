@@ -71,3 +71,21 @@ Sources citables : 23. Sources écartées : 3 (Azure, Arize, Fiddler).
 Corrections factuelles : 2 (abrogation SR 11-7, sous-titre Isermann).
 Réserves à revérifier avant soumission : 3 (Digital Omnibus, acte d'exécution
 Art. 72, statut commercial SageMaker Model Monitor).
+## Péremption des réserves (M7)
+
+Les statuts **P** ci-dessus portent des réserves dont la validité est datée. La session de
+vérification est du **2026-09-06** ; le registre n'avait aucune date de péremption, et les trois
+réserves étaient calées sur un calendrier de soumission conférence abandonné par l'action A9.
+
+`expires_on` n'est **pas** une propriété de la source : c'est une cadence de re-vérification. La
+date ne prédit pas que l'information devienne fausse ce jour-là, elle force à rouvrir le dossier.
+`tests/test_manuscript_integrity.py::test_source_reservations_have_not_expired` échoue au-delà.
+
+| source | expires_on | motif de la réserve |
+|---|---|---|
+| EU AI Act, Art. 72 et Art. 15(4) — libellé | 2027-03-06 | Dispositions amendées par le Digital Omnibus on AI ; le portail officiel affiche un texte non à jour. Citer par numéro et objet reste correct, jamais le libellé littéral. |
+| EU AI Act, Art. 72 — acte d'exécution | 2027-03-06 | Échéance légale au 2 février 2026, adoption effective non vérifiée. Ne pas affirmer qu'il existe. |
+| AWS SageMaker Model Monitor — statut commercial | 2027-03-06 | Fermé aux nouveaux clients au 30/07/2026, pas de nouvelles fonctionnalités. Témoin de la pratique établie, jamais état de l'art courant. |
+
+Horizon de six mois à compter de la session de vérification. À la péremption : rouvrir chaque
+ligne, revérifier en session, puis repousser la date ou déclasser la source en **X**.

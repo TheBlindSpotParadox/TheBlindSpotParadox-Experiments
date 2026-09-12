@@ -54,10 +54,14 @@ texte, la troisième peut rester en note.
 
 ### 2.3 Résumé calibré conférence
 
-254 mots, un seul paragraphe. Contrainte de longueur levée. Indépendamment du format, son contenu
-est périmé : il annonce encore un ensemble admissible vide et une immunité KSWIN que les streams
-S6 et S7-bis ont retirées. Réécriture à traiter comme une action distincte, pas comme un
-desserrage typographique.
+**Réglé dans le même lot — ce paragraphe est conservé pour la traçabilité.** Le résumé faisait
+254 mots, un seul paragraphe, et son contenu était périmé : ensemble admissible annoncé vide sans
+condition, immunité KSWIN, cause racine unique. Les trois sont purgés (A8/A9, puis M1), et les
+grandeurs mesurées y sont entrées par macro : `\DeCrit`, `\DeCritCI`, `\LambdaOpNarrow`,
+`\LambdaOpNarrowCI`, `\LearnShare`. Il fait 339 mots.
+
+Ce qui subsiste sur ce point n'est plus un desserrage typographique mais une calibration : la
+limite de mots de la revue retenue, inconnue tant que M8 n'est pas tranché.
 
 ### 2.4 Compression native des citations
 

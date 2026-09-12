@@ -28,6 +28,7 @@ Usage:  python -m pytest tests/test_manuscript_integrity.py -v
 import hashlib
 import os
 import re
+from datetime import date
 from pathlib import Path
 
 import pytest
@@ -280,3 +281,36 @@ def test_proscribed_sources_are_not_cited():
     assert not used, (
         "citations of sources marked X in docs/editorial/source_verification.md:\n  "
         + "\n  ".join(used))
+
+
+SOURCE_LEDGER = ROOT_DIR / "docs" / "editorial" / "source_verification.md"
+EXPIRY_RE = re.compile(r"^\|\s*(?P<source>[^|]+?)\s*\|\s*(?P<date>\d{4}-\d{2}-\d{2})\s*\|", re.MULTILINE)
+
+
+def test_source_reservations_have_not_expired():
+    """Action M7. The status-P reservations in the verification ledger are perishable.
+
+    Two of the three are regulatory -- an EU AI Act article amended by a pending omnibus, and an
+    implementing act whose adoption was unconfirmed -- and the third is the commercial status of a
+    managed service already closed to new customers. They were pinned to a conference submission
+    calendar that action A9 abandoned, which pushed the re-check out indefinitely.
+
+    This is deliberately a dated failure. expires_on is a re-verification cadence, not a claim that
+    the source turns false on that day; the test exists so the cadence cannot be ignored by
+    default. On failure: re-verify in session, then push the date out or downgrade the source to X.
+    """
+    if not SOURCE_LEDGER.is_file():
+        pytest.skip(f"{SOURCE_LEDGER.name} absent")
+
+    rows = EXPIRY_RE.findall(SOURCE_LEDGER.read_text(encoding="utf-8"))
+    assert rows, (
+        f"no `| source | expires_on |` row found in {SOURCE_LEDGER.name}. The reservations section "
+        "was removed or its table reformatted; restore it rather than delete this guard.")
+
+    today = date.today()
+    expired = [f"{src} expired {d} ({(today - date.fromisoformat(d)).days} days ago)"
+               for src, d in rows if date.fromisoformat(d) < today]
+    assert not expired, (
+        "source reservations past their re-verification date. Re-verify in session, then either "
+        f"push expires_on in {SOURCE_LEDGER.name} or downgrade the source to status X:\n  "
+        + "\n  ".join(expired))

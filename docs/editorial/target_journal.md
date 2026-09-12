@@ -35,15 +35,40 @@ Neuf pipelines expérimentaux, 1 h 58 de reproduction mesurée hors R5 (`docs/EN
 4. **Contenu déporté en note de bas de page à remonter.** Trois notes, dont une de 598 caractères
    portant les trois calibrations de λ et une de 410 caractères portant les critères d'exclusion
    INSECTS. Ce sont des choix méthodologiques, pas des apartés.
-5. **Résumé.** 254 mots aujourd'hui, calibré sur un format conférence. Il annonce encore un
-   ensemble admissible vide et une immunité KSWIN que le corpus a retirées ; sa réécriture est
-   indépendante de la cible mais conditionnée par elle en longueur.
+5. **Résumé — réécrit dans le même lot, ne reste que la longueur.** Le contenu périmé est purgé
+   (actions A8/A9 puis M1) : l'ensemble admissible est désormais énoncé vide *sous* le plancher
+   mesuré et non vide au-dessus, KSWIN est qualifié d'observation restreinte au régime testé et
+   non d'immunité, et la revendication de cause unique est remplacée par la décomposition
+   onset / effacement / verrou. 339 mots aujourd'hui contre 254 avant le lot : la contrainte de
+   longueur conférence est levée, mais un résumé de journal reste à calibrer sur les limites de
+   la revue retenue, seul point encore ouvert sur ce bloc.
+
+## Contrainte d'ordonnancement — la conversion de classe précède l'assemblage (M8)
+
+**`IEEEtran → svjour3` doit être faite AVANT l'assemblage v65, pas après.** Ce n'est pas une
+préférence de séquence, c'est une dépendance :
+
+- elle invalide tout réglage de flottants — largeurs `figure*`/`table*`, `\columnsep`, placement —
+  donc tout desserrage appliqué sous IEEEtran serait à refaire ;
+- elle rend `\usepackage{cite}` inadapté : Springer n'emploie pas la compression `[1]-[3]`, et la
+  bibliographie change de style (`spbasic`/`spmpsci` contre `IEEEtran`), ce qui peut déplacer des
+  clés et rouvrir la garde A6 ;
+- `\IEEEoverridecommandlockouts`, `\IEEEkeywords` et l'environnement `IEEEkeywords` n'existent pas
+  sous `svjour3` : ils sont dans `STANDARD_ENVIRONMENTS` de
+  `tests/test_manuscript_integrity.py`, qui devra être révisé dans le même mouvement ;
+- les trois sections v2 compilent aujourd'hui contre le préambule IEEEtran. La garde
+  `test_sections_assemble_into_the_main_document` les vérifie contre le document principal : elle
+  suivra automatiquement la conversion, mais seulement si la conversion est faite d'abord.
+
+Assembler puis convertir signifie payer deux fois le desserrage et rouvrir trois gardes. Convertir
+puis assembler ne coûte qu'une passe.
 
 ## Ce que ce document ne tranche pas
 
-- Le choix final entre MLJ et DAMI.
-- Le format exact (Springer `svjour3` contre la classe IEEEtran actuelle), qui imposera une
-  conversion de préambule et invalidera les réglages de flottants.
+- **Le choix final entre MLJ et DAMI — escaladé, bloquant pour la séquence ci-dessus.** La
+  conversion de classe ne peut pas commencer sans lui, et l'assemblage ne peut pas commencer sans
+  la conversion. C'est donc le premier arbitrage du Lot 3, pas un détail de forme. Il commande
+  aussi la limite de mots du résumé, seul point resté ouvert sur ce bloc.
 - Le sort de l'étiquette `ICDM 2026`, encore affirmée dans 12 fichiers du dépôt
   (`config/experiment_ssot.py`, `exp_R5_config.py`, `run_all.sh`, les 9 `run_experiment_R*.sh`).
   Elle est factuellement périmée dès la présente action ; la correction est un `sed` d'une ligne,
