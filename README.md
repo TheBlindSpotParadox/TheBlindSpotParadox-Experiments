@@ -65,7 +65,7 @@ gunzip -k data/baf/*.gz
 │   ├── R4_proteus_evaluation/
 │   │   ├── exp_R4_main_table.py
 │   │   └── exp_R4_kswin_sweep.py
-│   └── R5_real_world_evaluation/
+│   ├── R5_real_world_evaluation/
 │       ├── exp_R5_config.py
 │       ├── exp_R5_common.py
 │       ├── exp_R5_compute_baf.py
@@ -74,7 +74,7 @@ gunzip -k data/baf/*.gz
 │       ├── exp_R5_make_table2.py
 │       ├── exp_R5_preflight.py
 │       └── exp_R5_smoke_test.py
-│   └── R6_hydra_factor/
+│   ├── R6_hydra_factor/
 │       ├── exp_R6_generate_data.py
 │       └── exp_R6_compute_hydra.py
 │   ├── R7_clock_mismatch/
@@ -82,14 +82,31 @@ gunzip -k data/baf/*.gz
 │   │   └── exp_R7_compute_regime1.py
 │   ├── R8_lambda_op_sweep/
 │   │   └── exp_R8_lambda_op_sweep.py
-│   └── R9_mcrit/
-│       ├── exp_R9_generate_data.py
-│       └── exp_R9_compute_mcrit.py
+│   ├── R9_mcrit/
+│   │   ├── exp_R9_generate_data.py
+│   │   └── exp_R9_compute_mcrit.py
+│   ├── S2_theory/                           # stopping-time theory at the measured base rate
+│   │   ├── s2_arl0.py
+│   │   ├── s2_eddm.py
+│   │   └── s2_w_random.py
+│   ├── S2bis_calibration/                   # equal-false-alarm-budget calibration
+│   │   ├── s2bis_lambda_eq.py
+│   │   ├── s2bis_proteus_calibration.py
+│   │   └── s2bis_r1_ppre.py
+│   └── S6_synchronized_traces/              # causal arms, envelope statistics, gates
+│       ├── gates/
+│       ├── s6_runner.py
+│       └── ...
 ├── tests/
 │   ├── test_R6_hydra.py
 │   ├── test_R7_regime1.py
 │   ├── test_R8_lambda_op.py
-│   └── test_R9_mcrit.py
+│   ├── test_R9_mcrit.py
+│   ├── test_S2_theory.py
+│   ├── test_S2bis_calibration.py
+│   ├── test_S6_traces.py
+│   ├── test_S7_consistency.py
+│   └── test_manuscript_integrity.py
 ├── results/
 │   ├── R1_race_condition/
 │   │   ├── data/                            
@@ -114,9 +131,18 @@ gunzip -k data/baf/*.gz
 │   │   └── tables/                        
 │   ├── R8_lambda_op_sweep/
 │   │   └── data/                            
-│   └── R9_mcrit/
-│       ├── data/                            
-│       └── figures/                        
+│   ├── R9_mcrit/
+│   │   ├── data/                            
+│   │   └── figures/                        
+│   ├── S2_theory/
+│   │   └── tables/
+│   ├── S2bis_calibration/
+│   │   └── tables/
+│   ├── S6_synchronized_traces/
+│   │   ├── data/
+│   │   └── tables/
+│   └── audit_S7/
+│       └── _baseline/
 └── logs/
     ├── pytest/
     ├── R1_race_condition/

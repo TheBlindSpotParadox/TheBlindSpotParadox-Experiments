@@ -267,3 +267,89 @@ def test_no_frozen_artifact_outside_the_s2bis_tree_was_written():
     assert produced, "no S2-bis artifact produced"
     bad = [n for n in produced if not n.startswith("s2bis_")]
     assert not bad, bad
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 4. The manuscript payloads: every SEARCH anchor must still resolve
+# ══════════════════════════════════════════════════════════════════════════════
+def _search_blocks(path):
+    import re
+    return re.findall(r"<<<<<<< SEARCH\n(.*?)\n=======\n(.*?)\n>>>>>>> REPLACE",
+                      path.read_text(encoding="utf-8"), re.S)
+
+
+def _manuscript_of_record():
+    """The manuscript as it stands on `main`, which is where the writing stream applies.
+
+    S2's patches A and B landed on `main` at `688bcf5`; this branch forked before them, so the
+    worktree copy is the PRE-patch text and an anchor written against the live document does not
+    resolve in it. The name is read from `docs/manuscript/CURRENT` on the same ref, never
+    hard-coded. Falls back to the worktree copy when `main` is unreachable (a clone with no such
+    ref), so the check still runs, and skips when neither is readable."""
+    import subprocess
+    for ref in ("main", "origin/main"):
+        try:
+            name = subprocess.run(["git", "-C", str(ROOT_DIR), "show", f"{ref}:docs/manuscript/CURRENT"],
+                                  capture_output=True, text=True, check=True, timeout=30).stdout.strip()
+            tex = subprocess.run(["git", "-C", str(ROOT_DIR), "show", f"{ref}:docs/manuscript/{name}"],
+                                 capture_output=True, text=True, check=True, timeout=30).stdout
+            return f"{ref}:docs/manuscript/{name}", tex
+        except Exception:                                        # noqa: BLE001, PERF203
+            continue
+    current = (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(encoding="utf-8").strip()
+    path = ROOT_DIR / "docs" / "manuscript" / current
+    if not path.exists():
+        pytest.skip(f"neither main nor {path.relative_to(ROOT_DIR)} is readable")
+    return str(path.relative_to(ROOT_DIR)), path.read_text(encoding="utf-8")
+
+
+def test_transfer_payload_anchors_resolve_uniquely():
+    """A SEARCH/REPLACE payload is only applicable while its anchor is present and unique. This is
+    the check that catches a stale anchor before the writing stream tries to apply it, and it is
+    why `docs/theory/transfer_S2bis.md` anchors on verbatim text and never on a line number.
+
+    The target is the manuscript of record named by `docs/manuscript/CURRENT`, never a hard-coded
+    filename. Both anchors of this stream sit outside the region S2's patches A and B touched, so
+    they resolve identically before and after `688bcf5`."""
+    doc = ROOT_DIR / "docs" / "theory" / "transfer_S2bis.md"
+    _need(doc, "the S2-bis transfer document is a deliverable of this stream")
+    where, tex = _manuscript_of_record()
+    blocks = _search_blocks(doc)
+    assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
+    bad = [(i, b[:80], tex.count(b)) for i, (b, _) in enumerate(blocks, 1) if tex.count(b) != 1]
+    assert not bad, ("SEARCH anchors that do not resolve to exactly one occurrence of "
+                     f"{where}:\n  " + "\n  ".join(f"block {i} ({n}x): {t!r}" for i, t, n in bad))
+
+
+def test_transfer_payloads_do_not_touch_the_excluded_subsections():
+    """`CLAUDE.md` excludes four inline subsections until the v65 assembly: sec:race, sec:hydra,
+    sec:starvation, sec:decoupling. A payload whose anchor falls inside one of them would be lost
+    at assembly or duplicated and divergent. Checked by character offset against the manuscript,
+    not by eye."""
+    doc = ROOT_DIR / "docs" / "theory" / "transfer_S2bis.md"
+    _need(doc, "the S2-bis transfer document is a deliverable of this stream")
+    _, tex = _manuscript_of_record()
+    starts = sorted(tex.index(f"\\label{{{lbl}}}")
+                    for lbl in ("sec:race", "sec:hydra", "sec:starvation", "sec:decoupling")
+                    if f"\\label{{{lbl}}}" in tex)
+    # Each excluded subsection runs to the next \subsection or \section, whichever comes first.
+    import re
+    bounds = []
+    for s in starts:
+        nxt = [m.start() for m in re.finditer(r"\n\\(sub)?section\{", tex) if m.start() > s]
+        bounds.append((s, min(nxt) if nxt else len(tex)))
+    # A payload MAY target the excluded material -- some fixes belong there -- but only if it is
+    # explicitly marked DEFERRED in the prose introducing it, so no one applies it by mistake.
+    raw = doc.read_text(encoding="utf-8")
+    unmarked = []
+    for i, (srch, _) in enumerate(_search_blocks(doc), 1):
+        at = tex.find(srch)
+        if at < 0 or not any(lo <= at < hi for lo, hi in bounds):
+            continue
+        intro = raw[max(0, raw.index(srch) - 1400):raw.index(srch)]
+        if "DEFERRED" not in intro:
+            unmarked.append((i, srch[:80]))
+    assert not unmarked, (
+        "SEARCH blocks anchored inside an excluded subsection (sec:race / sec:hydra / "
+        "sec:starvation / sec:decoupling) and NOT marked DEFERRED:\n  "
+        + "\n  ".join(f"block {i}: {t!r}" for i, t in unmarked))

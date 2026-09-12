@@ -332,8 +332,17 @@ def decompose_b4(sweep, variant, rng):
     """Rule B4. Four cells {ARF, HT} x {lambda_ref, lambda_eq}, on the log scale where every cell is
     strictly positive and on the difference scale otherwise -- the substitution is declared, never
     patched with an epsilon."""
-    ht_r, arf_r, _ = _paired(sweep, variant, "lambda_ref")
-    ht_e, arf_e, _ = _paired(sweep, variant, "lambda_eq_span")
+    ht_r, arf_r, idx_r = _paired(sweep, variant, "lambda_ref")
+    ht_e, arf_e, idx_e = _paired(sweep, variant, "lambda_eq_span")
+    # The two roles must be read on the SAME seeds. They coincide unless a cell's two calibrations
+    # returned the identical float, in which case `sweep_tasks` deduplicated the threshold and one
+    # role is short. Restricting both to the common seeds keeps the pairing honest; when the index
+    # sets already agree this is the identity and the arrays are untouched.
+    if idx_r != idx_e:
+        keep = sorted(set(idx_r) & set(idx_e))
+        pick = lambda a, ix: np.asarray([a[ix.index(s)] for s in keep])      # noqa: E731
+        ht_r, arf_r = pick(ht_r, idx_r), pick(arf_r, idx_r)
+        ht_e, arf_e = pick(ht_e, idx_e), pick(arf_e, idx_e)
     cells = {"F1_HT_lambda_ref": float(ht_r.mean()), "F1_ARF_lambda_ref": float(arf_r.mean()),
              "F1_HT_lambda_eq": float(ht_e.mean()), "F1_ARF_lambda_eq": float(arf_e.mean())}
     positive = all(v > 0 for v in cells.values())

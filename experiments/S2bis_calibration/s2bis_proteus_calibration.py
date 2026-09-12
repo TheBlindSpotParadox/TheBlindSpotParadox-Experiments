@@ -105,6 +105,9 @@ COUPLES = [
     ("PHT + RF (Static)", 1, "rf"),
 ]
 HEADLINE = [("PHT + HT", 1), ("PHT + ARF", 1)]      # the pair carrying Table I's blind-spot collapse
+# Table I's 0/1080 row and its comparator. EDDM carries no threshold to equalise (see
+# `family_requirements`), so it is instrumented for ARMING instead of calibrated.
+EDDM_COUPLES = [("EDDM + HT", 1, "ht"), ("EDDM + ARF", 1, "arf")]
 REGIMES = [("IID", r4.ETF_PARAMS_A), ("Cal. A", r4.ETF_PARAMS_A), ("Cal. B", r4.ETF_PARAMS_B)]
 
 
@@ -178,9 +181,59 @@ def calibration_verdict(error_stream, lam, target_fa=cfg.PHT_TARGET_FA):
             pht = drift.PageHinkley(threshold=lam, delta=cfg.PHT_DELTA)
     if lam >= LAMBDA_HI:
         return "SATURATED", n
+    if lam <= LAMBDA_LO * (1.0 + 1e-4):
+        # UNDECLARED DEGENERATE CASE, discovered in measurement. Rule B7 declares the bisection
+        # CEILING terminal and says nothing about the FLOOR. A lambda_eq returned at the lower end
+        # of the bracket means the budget is met at every admissible threshold and constrains
+        # nothing: it is a bound, exactly as SATURATED is, and must never be read as a calibrated
+        # value. The rules file is NOT retro-edited; the gap is declared in
+        # docs/theory/transfer_S2bis.md.
+        return "NOT BINDING", n
     if n > target_fa:
         return "NOT ATTAINABLE", n
     return "OK", n
+
+
+def eddm_arming(df, model):
+    """Is EDDM armed at the change point on this stream? Measured, not assumed.
+
+    River's EDDM takes `warm_start` MONITORED ERRORS -- not steps -- before it can signal, and it
+    tracks the distance BETWEEN errors against a running maximum. The loop is R4's
+    `run_concept_drift` verbatim, with the error count instrumented. On detection R4 rebuilds the
+    detector and clones the model, so the warm start restarts; the first arming is recorded
+    relative to the change point.
+
+    The change point is `ssot.R4_T_DRIFT`, read here and not passed: R4 has exactly one, and a
+    parameter default carrying it would be a bare literal on a registry name, which
+    `tests/test_S7_consistency.py:77` rejects by design."""
+    t_drift = ssot.R4_T_DRIFT
+    y, X = df['regime'].values, df[['log_return', 'rolling_vol']].values
+    det, dets = r4.eddm(), []
+    n_err, n_err_at_drift, t_armed = 0, None, None
+    for t in range(len(df)):
+        x = {0: X[t, 0], 1: X[t, 1]}
+        yt = int(y[t])
+        yp = model.predict_one(x) or 0
+        e = float(yp != yt)
+        n_err += int(e)
+        if t_armed is None and n_err >= ssot.S2BIS_EDDM_WARM_START:
+            t_armed = t
+        if t == t_drift:
+            n_err_at_drift = n_err
+        det.update(e)
+        model.learn_one(x, yt)
+        if det.drift_detected:
+            dets.append(t)
+            det = r4.eddm()
+            model = model.clone()
+    return {"n_pre_drift_errors": int(n_err_at_drift if n_err_at_drift is not None else n_err),
+            "warm_start_required": int(ssot.S2BIS_EDDM_WARM_START),
+            "armed_at_t": (int(t_armed) if t_armed is not None else None),
+            "armed_at_change_point": bool(t_armed is not None and t_armed <= t_drift),
+            "arming_lag_after_change": (None if t_armed is None else int(t_armed - t_drift)),
+            "n_detections": len(dets),
+            "first_detection": (int(min(dets)) if dets else None),
+            "n_errors_total": int(n_err)}
 
 
 # ─── the worker ───────────────────────────────────────────────────────────────────────────────────
@@ -197,7 +250,7 @@ def process_transition_seed(trans, seed):
     random.seed(safe_seed)
 
     from_t, to_t, w, name = trans
-    cal_rows, sweep_rows = [], []
+    cal_rows, sweep_rows, eddm_rows = [], [], []
     for regime, params in REGIMES:
         df, dpts = r4.simulate_stream(params[from_t], params[to_t], regime, w, seed=seed)
         tau = max(ssot.R4_TAU_TOL_FLOOR, w)
@@ -215,6 +268,12 @@ def process_transition_seed(trans, seed):
                              "deviation_from_ref": float(lam - LAMBDA_REF),
                              "ratio_to_ref": float(lam / LAMBDA_REF),
                              "p_true_pre_drift": float(np.mean(errs)),
+                             "n_pre_drift_errors": int(np.sum(errs)),
+                             # The target is a deterministic step function of t alone
+                             # (simulate_stream:105, regime = (f_t > 0.5)), so the pre-drift label
+                             # may be constant. Recorded from the stream, not inferred.
+                             "pre_drift_label_n_distinct":
+                                 int(pd.Series(df['regime'].values[:ssot.R4_T_DRIFT]).nunique()),
                              "span_len": len(errs), "verdict_B7": verdict,
                              "attained_fa": attained})
 
@@ -233,7 +292,13 @@ def process_transition_seed(trans, seed):
                 sweep_rows.append({"Calibration": regime, "Detector": label, "Clock": clock,
                                    "Dataset": name, "w": w, "Seed": seed,
                                    "lambda": float(lam), "lambda_role": role, **m})
-    return cal_rows, sweep_rows
+
+        # 3. EDDM arming, for T-D. Not calibrated -- EDDM has no threshold of the same kind.
+        for label, clock, kind in EDDM_COUPLES:
+            a = eddm_arming(df, build_classifier(kind, seed, clock))
+            eddm_rows.append({"Calibration": regime, "Detector": label, "Clock": clock,
+                              "Dataset": name, "w": w, "Seed": seed, **a})
+    return cal_rows, sweep_rows, eddm_rows
 
 
 # ─── family requirements at the common alpha implied by lambda_eq ─────────────────────────────────
@@ -369,6 +434,42 @@ def r4_non_regression(sweep):
                               and (j.ADD_s2bis.isna() == j.ADD_r4.isna()).all())}
 
 
+def _num(x):
+    """JSON carries no NaN. A statistic with no defined value is written as null, not as a token a
+    strict reader rejects -- no artifact under results/S2_theory/ emits one and none is introduced
+    here. `default=float` would render NaN verbatim, so the conversion happens at the source."""
+    v = float(x)
+    return v if np.isfinite(v) else None
+
+
+def eddm_summary(eddm):
+    """T-D. Whether the 0/1080 is an unarmed detector, measured on the stream that produces it."""
+    out = []
+    for (det, clk), g in eddm.groupby(["Detector", "Clock"]):
+        armed = g.armed_at_change_point
+        out.append({"couple": f"{det} (c={int(clk)})", "n_runs": int(len(g)),
+                    "n_pre_drift_errors_median": float(g.n_pre_drift_errors.median()),
+                    "n_pre_drift_errors_max": int(g.n_pre_drift_errors.max()),
+                    "warm_start_required": int(ssot.S2BIS_EDDM_WARM_START),
+                    "share_armed_at_change_point": float(armed.mean()),
+                    # null when the detector never armed on any run of the couple -- that is the
+                    # measurement, not a missing value.
+                    "arming_lag_after_change_median": _num(
+                        g.arming_lag_after_change.median(skipna=True)),
+                    "share_never_armed": float(g.armed_at_t.isna().mean()),
+                    "detection_rate": float((g.n_detections > 0).mean()),
+                    "n_detections_mean": float(g.n_detections.mean())})
+    return {"per_couple": out,
+            "reading": "River's EDDM takes warm_start MONITORED ERRORS before it can signal. The "
+                       "share armed at the change point is measured here on the stream that "
+                       "produces the 0/1080, not transferred from the S6 traces.",
+            "s2_artifact_assumption": "results/S2_theory/tables/s2_eddm.json carries "
+                                      "n_0_errors = 96.0 for the 'R4 ProteuS' history, obtained as "
+                                      "p_0(S6) = 0.024 x 4000 pre-drift steps. That is the S6 "
+                                      "Bernoulli base rate applied to the ProteuS span length, not "
+                                      "a ProteuS measurement; the column measured here replaces it."}
+
+
 def summarise(cal, sweep):
     per_couple = (cal.groupby(["Detector", "Clock"])
                   .agg(lambda_eq_mean=("lambda_eq", "mean"),
@@ -384,7 +485,9 @@ def summarise(cal, sweep):
         at = {}
         for role in ("lambda_ref", "lambda_eq"):
             r = s[s.lambda_role == role]
-            at[role] = {"F1_mean": float(r.F1.mean()), "ADD_mean": float(r.ADD.mean(skipna=True)),
+            # ADD is null exactly when the couple detects nothing anywhere at that threshold --
+            # the blind-spot collapse itself, and R4 renders it as $\infty$ in Table I.
+            at[role] = {"F1_mean": float(r.F1.mean()), "ADD_mean": _num(r.ADD.mean(skipna=True)),
                         "precision_mean": float(r.precision.mean()),
                         "recall_mean": float(r.recall.mean()),
                         "alarms_mean": float(r.n_detections.mean()),
@@ -395,7 +498,7 @@ def summarise(cal, sweep):
                      "lambda_eq_mean": float(c.lambda_eq_mean),
                      "lambda_eq_median": float(c.lambda_eq_median),
                      "lambda_eq_range": [float(c.lambda_eq_min), float(c.lambda_eq_max)],
-                     "lambda_eq_std": float(c.lambda_eq_std),
+                     "lambda_eq_std": _num(c.lambda_eq_std),
                      "deviation_from_15_mean": float(c.lambda_eq_mean - LAMBDA_REF),
                      "ratio_to_15_mean": float(c.ratio_to_ref_mean),
                      "p_true_pre_drift_mean": float(c.p_true_pre_drift_mean),
@@ -416,15 +519,23 @@ def main(transitions=None, seed_list=None):
     nested = Parallel(n_jobs=-1)(delayed(process_transition_seed)(t, s)
                                  for t, s in tqdm(grid, desc="S2-bis ProteuS"))
 
-    cal = pd.DataFrame([r for sub, _ in nested for r in sub]).sort_values(
-        ["Detector", "Clock", "Calibration", "Dataset", "Seed"]).reset_index(drop=True)
-    sweep = pd.DataFrame([r for _, sub in nested for r in sub]).sort_values(
+    key = ["Detector", "Clock", "Calibration", "Dataset", "Seed"]
+    cal = pd.DataFrame([r for sub, _, _ in nested for r in sub]).sort_values(
+        key).reset_index(drop=True)
+    sweep = pd.DataFrame([r for _, sub, _ in nested for r in sub]).sort_values(
         ["Detector", "Clock", "Calibration", "Dataset", "lambda", "Seed"]).reset_index(drop=True)
+    eddm = pd.DataFrame([r for _, _, sub in nested for r in sub]).sort_values(
+        key).reset_index(drop=True)
     cal.to_csv(OUT_DIR / "s2bis_lambda_eq_proteus.csv", index=False)
     sweep.to_csv(OUT_DIR / "s2bis_proteus_sweep.csv", index=False)
+    eddm.to_csv(OUT_DIR / "s2bis_proteus_eddm_arming.csv", index=False)
 
     couples = summarise(cal, sweep)
     lam_eq = {(r["Detector"], r["Clock"]): r["lambda_eq_mean"] for r in couples}
+    # A lambda_eq at the bracket floor is a bound, not a calibration, so the family table is also
+    # read at the threshold R4 actually deploys and at the measured operational threshold.
+    lam_eq[("R4 deployed lambda_ref", 0)] = float(LAMBDA_REF)
+    lam_eq[("S6 measured lambda_op", 0)] = 21.9283
     payload = {
         "design": {
             "lambda_ref": float(LAMBDA_REF),
@@ -444,6 +555,7 @@ def main(transitions=None, seed_list=None):
             "scoring": "r4.evaluate's matching, closed window [d, d + tau], "
                        "tau = max(R4_TAU_TOL_FLOOR, w)"},
         "per_couple": couples,
+        "eddm_arming_T_D": eddm_summary(eddm),
         "r4_non_regression_at_lambda_ref": r4_non_regression(sweep),
         "family_requirements_at_lambda_eq": family_requirements(lam_eq),
         "cor_split_crossings": cor_split_crossings(),
@@ -502,6 +614,7 @@ def demo():
     assert calibration_verdict([0.0] * 10, 40.0)[0] == "NOT ARMED"
     assert calibration_verdict([0.0] * 100, LAMBDA_HI)[0] == "SATURATED"
     assert calibration_verdict([0.0] * 100, 40.0)[0] == "OK"
+    assert calibration_verdict([0.0] * 100, LAMBDA_LO)[0] == "NOT BINDING"
 
     # 5. cor:split's crossings are solved on the exact curves and bracket the ladder correctly:
     #    the KSWIN crossing sits between lambda = 15 and lambda = 25, the ADWIN one above 25.
