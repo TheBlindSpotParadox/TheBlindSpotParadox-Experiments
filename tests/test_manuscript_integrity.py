@@ -27,6 +27,7 @@ Usage:  python -m pytest tests/test_manuscript_integrity.py -v
 """
 import hashlib
 import os
+import re
 from pathlib import Path
 
 import pytest
@@ -134,3 +135,51 @@ def test_current_manuscript_is_unique_and_live():
         + "\n  ".join(os.path.relpath(p, ROOT_DIR) for p in undeclared))
     assert target in mains, (
         f"CURRENT names {name}, but it carries no \\documentclass and is not compilable on its own")
+
+
+CITE_RE = re.compile(r"\\[a-zA-Z]*cite[a-zA-Z]*\s*(?:\[[^\]]*\]\s*)*\{([^}]*)\}")
+# A .bib entry key: @type{key, ... }. @string macro definitions carry no comma and are excluded --
+# they define journal abbreviations (IEEEabrv.bib), which \cite never resolves against.
+ENTRY_RE = re.compile(r"^@(?!string\b)[a-zA-Z]+\s*\{\s*([^,\s]+)\s*,", re.MULTILINE | re.IGNORECASE)
+
+
+def cited_keys():
+    """{key: [files citing it]} over every .tex under docs/manuscript/, sections included."""
+    out = {}
+    for tex in sorted(MANUSCRIPT_DIR.rglob("*.tex")):
+        for group in CITE_RE.findall(tex.read_text(encoding="utf-8", errors="ignore")):
+            for key in (k.strip() for k in group.split(",")):
+                if key:
+                    out.setdefault(key, []).append(os.path.relpath(tex, ROOT_DIR))
+    return out
+
+
+def bib_entries():
+    """{key: [bib files defining it]} over every .bib under docs/manuscript/."""
+    out = {}
+    for bib in sorted(MANUSCRIPT_DIR.glob("*.bib")):
+        for key in ENTRY_RE.findall(bib.read_text(encoding="utf-8", errors="ignore")):
+            out.setdefault(key, []).append(bib.name)
+    return out
+
+
+def test_every_cited_key_resolves_in_the_bibliography():
+    """Action A6. The v2 sections are not \\input by the manuscript yet, so LaTeX cannot report a
+    dangling citation in them: the failure would surface only on assembly day, as a page of
+    undefined references. This resolves them now, against the same bibliography the document loads.
+
+    It also fails on a duplicate entry key, which BibTeX reports as a warning and is easy to miss --
+    the failure mode a second .bib file would have reintroduced."""
+    entries, cited = bib_entries(), cited_keys()
+    assert entries, f"no .bib entry found under {MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/"
+    assert cited, "no citation found; the check verifies nothing as written"
+
+    duplicates = [f"{k} defined in {', '.join(f)}" for k, f in sorted(entries.items()) if len(f) > 1]
+    assert not duplicates, (
+        "duplicate bibliography keys; BibTeX resolves one and warns about the rest:\n  "
+        + "\n  ".join(duplicates))
+
+    dangling = [f"{k}  cited by {', '.join(sorted(set(f)))}"
+                for k, f in sorted(cited.items()) if k not in entries]
+    assert not dangling, (
+        "citations with no bibliography entry:\n  " + "\n  ".join(dangling))
