@@ -1,0 +1,323 @@
+% docs/manuscript/sections/prop3_v2.tex
+% Stream S2, deliverable 1. Appendix: the domain of Proposition 3, W as a random variable,
+% and the proofs of thm:floor (tightened), prop:invariance and cor:split.
+% Every numeral is read from results/S2_theory/tables/ or results/S6_synchronized_traces/tables/.
+% Produced by experiments/S2_theory/{s2_arl0.py, s2_w_random.py, s2_eddm.py}.
+
+\section{Proposition 3: Domain, Randomness of \texorpdfstring{$W$}{W}, and Proofs}\label{sec:prop3}
+
+\subsection{Where Eq.~\eqref{eq:markov_bound} says anything}\label{sec:prop3_domain}
+
+Proposition~\ref{prop:starvation} is sound: Azuma--Hoeffding applied to the
+centred walk, Doob's maximal inequality on the exponential submartingale, a
+union bound over the at most $W$ reflection restart points, with the
+$\sqrt{W \ln(W/\varepsilon)}$ fluctuation margin retained and $s_0$ carried
+explicitly. What was never stated is the set on which it is not vacuous.
+
+\begin{definition}[Informative domain]\label{def:eq4_domain}
+  Eq.~\eqref{eq:markov_bound} bounds a probability, so its content is
+  $\min\{1,\, W e^{-\frac{2}{W}(\lambda - s_0 - \mu W)_+^2}\}$. Write
+  \[
+    \mathcal{D} \;:=\; \bigl\{ (W, \lambda) \;:\; \mu W < \lambda - s_0 \bigr\},
+    \qquad \mu := \Delta e - \delta_P .
+  \]
+  Outside $\mathcal{D}$ the positive part vanishes, the exponential is $1$, and
+  the bound returns $W \ge 1$: it is \emph{vacant}. Membership of $\mathcal{D}$
+  is necessary but not sufficient --- $W e^{-\frac{2}{W}(\cdot)^2}$ must also
+  fall below $1$ --- and the two criteria are reported separately below.
+\end{definition}
+
+Instantiated at $\delta_P = \DeltaPtext$, $s_0 = 0$, on the three measured
+estimators of $W$ (mean over $100$ seeds per magnitude, arm \texttt{full}) and
+the threshold ladder $\lambda \in \{8, 15, 25, 50\}$, the $240$ pairs split
+$188$ vacant and $52$ inside $\mathcal{D}$, of which $32$ yield a bound
+strictly below $1$. At the canonical magnitude $\Delta e = 0.3268$:
+
+\smallskip
+\centerline{\begin{tabular}{lrrrrr}
+  \toprule
+  $W$ estimator & mean $W$ & $\mu W$ & $\lambda = 15$ & $\lambda = 25$ & $\lambda = 50$ \\
+  \midrule
+  $\tau_{\mathrm{swap}}^{(1/M)}$ & 57.4  & 18.2  & vacant & $1.0$ & $2.7\!\times\!10^{-14}$ \\
+  $\tau_{\mathrm{erase}}$        & 611.9 & 193.8 & vacant & vacant & vacant \\
+  $\tau_{\mathrm{err}}(0.10)$    & 557.0 & 176.4 & vacant & vacant & vacant \\
+  \bottomrule
+\end{tabular}}
+\smallskip
+
+\noindent This is Remark~\ref{rem:transient_length} verified rather than
+asserted: $\mu W = \SixMuWfirst$ at the first replacement and $\SixMuWerase$ at
+erasure reproduce from the campaign to the printed precision. The remark's
+diagnosis is also correct and is the one that matters --- the hypothesis that
+fails is the \emph{constant accumulation rate} $\mu$ across the window, not the
+fluctuation term. The error excess decays inside the window; a bound that
+charges it at rate $\mu$ for the whole of $W$ is bounding a trajectory that does
+not occur.
+
+Two readings deserve to be separated. Across the grid, Eq.~\eqref{eq:markov_bound}
+is informative essentially only at $\lambda = 50$ under the first-swap window,
+and at $\lambda = 25$ for $\Delta e \ge 0.436$. That is a narrow domain --- and
+it contains the operating point at which the starvation certificate is stated.
+The proposition is not vacuous where it is used; it is vacuous almost everywhere
+else, and the submitted version said neither.
+
+\subsection{\texorpdfstring{$W$}{W} is a random variable}\label{sec:prop3_random}
+
+Reviewer~\#1 faults Proposition~9 for treating a random window as a constant.
+Proposition~\ref{prop:starvation} is stated at a single $W$, and the campaign
+measures a distribution whose spread straddles $\partial\mathcal{D}$. The
+statement that bounds the ensemble of runs is therefore
+
+\begin{equation}\label{eq:eq4_integrated}
+  \mathbb{P}(S^* \ge \lambda)
+  \;\le\;
+  \mathbb{E}_W\Bigl[\min\bigl\{1,\, W e^{-\frac{2}{W}(\lambda - s_0 - \mu W)_+^2}\bigr\}\Bigr],
+\end{equation}
+the expectation taken over the law of $W$ at that magnitude, by conditioning on
+$W$ and applying Eq.~\eqref{eq:markov_bound} pathwise.
+
+\begin{remark}[The cap is not cosmetic, and it fixes a floor]\label{rem:eq4_cap}
+  A run whose transient exceeds the horizon contributes $T_h = \SixHorizon$ to
+  the uncapped integrand, so an uncapped ``bound'' reports $2500$ on a
+  probability. Capped, such a run contributes exactly $1$, and
+  \eqref{eq:eq4_integrated} is bounded below by the censoring fraction alone:
+  $\mathbb{E}_W[\cdot] \ge \mathbb{P}(W \ge T_h)$ at every $\lambda$. On the
+  arm integrated over, that fraction is $8.21\%$ ($162$ of $1{,}974$
+  complete-case runs; $8.20\%$, $164$ of $2{,}000$, on the whole arm). Any
+  claim that \eqref{eq:eq4_integrated} is small at some $\lambda$ is therefore
+  bounded away from truth by the censoring before the drift magnitude is even
+  consulted.
+\end{remark}
+
+Two estimators bracket the integral. The plug-in holds censored runs at their
+censoring time and so understates $W$ and the bound; the parametric estimator
+integrates the log-normal accelerated-failure-time law already fitted to these
+traces with exact right censoring, and so extrapolates past the horizon. Over
+the twenty magnitudes:
+
+\smallskip
+\centerline{\begin{tabular}{rccc}
+  \toprule
+  $\lambda$ & deterministic $\bar{W}$ & plug-in & parametric \\
+  \midrule
+   8 & $1.000$ & $1.000$ & $0.9994$--$1.000$ \\
+  15 & $1.000$ & $1.000$ & $0.9902$--$1.000$ \\
+  25 & $1.000$ & $1.000$ & $0.9487$--$0.9998$ \\
+  50 & $1.000$ & $1.000$ & $0.7526$--$0.9951$ \\
+  \bottomrule
+\end{tabular}}
+\smallskip
+
+\noindent Treating $W$ as random does not repair Eq.~\eqref{eq:markov_bound};
+it makes its vacancy unconditional. The deterministic and plug-in readings are
+vacant at every magnitude and every threshold. The parametric reading is
+formally non-vacant, and its best value over the whole grid is $0.753$: a bound
+of $0.75$ on a crossing probability whose measured value is $0.000$ at
+$\lambda = 50$. We report that as what it is --- the bound is not wrong, it is
+empty --- and we do not present it as a repair.
+
+\subsection{What actually carries the published result}\label{sec:prop3_loadbearing}
+
+Proposition~\ref{prop:certificate} is deterministic. Its chain
+$S_{\max}(H) \ge A_{\mathrm{swap}} \ge A_{\mathrm{sig}}(H) - H\delta_P$ uses no
+distributional assumption, no rate model and no window length; it is an
+inequality between three quantities measured on the same trajectory. Both
+Definition~\ref{def:decoupling}(i-bis) and Empirical
+Result~\ref{res:tension} route through $A_{\mathrm{swap}}$, and the
+synchronised campaign states outright that $W^*$ is the wrong sufficient
+statistic: at $\Delta e = 0.3268$, $\kappa$ exceeds its critical value by a
+factor of $6$ to $18$ on $100\%$ of runs --- the gate that was supposed to
+falsify the $\lambda = 50$ certificate --- and the certificate nonetheless holds,
+with $0$ detections in $100$ runs, because the ceiling
+$\max_t A_{\mathrm{unrefl}} = 33.5$ is simply below $\lambda = 50$ however long
+the transient lasts.
+
+Proposition~\ref{prop:certificate} is therefore the load-bearing statement.
+Proposition~\ref{prop:starvation} is a scope statement: it says where a
+fluctuation argument can still say something about the crossing probability,
+and \S\ref{sec:prop3_domain} says that this is a small set. The two are not in
+competition and neither subsumes the other.
+
+\paragraph{The removal branch, argued on both sides.}
+Keeping Eq.~\eqref{eq:markov_bound} costs a proposition that is vacant at the
+measured operating point under two of its three window estimators, and invites
+a referee to ask why a bound that returns $\ge 1$ on $188$ of $240$ measured
+configurations is in the paper at all. Removing it costs the only statement
+that quantifies the fluctuation margin --- the $\sqrt{W \ln(W/\varepsilon)}$
+term, which is what explains why the empirical crossover is a finite-width
+stochastic transition rather than a sharp threshold --- and the only bridge to
+the post-transient reading of Remark~\ref{rem:sufficient}.
+
+The rule fixed before the domain table was computed retains it on a
+non-empty informative domain and withdraws it on an empty one. The domain is
+not empty: $32$ of $240$ measured pairs, including the $(\lambda = 50,
+W = \tau_{\mathrm{swap}}^{(1/M)})$ pair at which the certificate is stated.
+Eq.~\eqref{eq:markov_bound} is therefore \textbf{retained, restricted to
+$\mathcal{D}$, and demoted}: it is presented as a scope statement about
+fluctuation arguments, with its domain table, and never as the mechanism of the
+blind spot. The mechanism is Proposition~\ref{prop:certificate}.
+
+\subsection{Proofs}\label{sec:prop3_proofs}
+
+\begin{proof}[Proof of Theorem~\ref{thm:floor}, and its tightening]
+  The proof in \S\ref{sec:requirement} is correct and is not restated. Two
+  points are recorded.
+
+  \emph{The chain rule.} $\mathrm{KL}(P_1 \Vert P_0) = \sum_t \mathbb{E}_1
+  \bigl[d(\bar{e}_t^{(1)} \Vert \bar{e}_t^{(0)})\bigr]$ holds for the laws of
+  the $W$ observed errors in the conditional form, the expectation being over
+  the filtration generated by the past. The product form quoted in the proof is
+  the special case of independent increments; under a learning classifier the
+  errors are not independent, and the bound $u_t \le \Delta_{\max}$ must be read
+  as a bound on the conditional excess $\bar{e}_t(\mathcal{F}_{t-1}) - p_0$,
+  which is what $\Delta_{\max}$ is defined to be. With that reading every step
+  goes through unchanged, and the theorem stands.
+
+  \emph{The relaxation.} The step $d(x \Vert y) \le (x-y)^2/(y(1-y))$ is the
+  $\chi^2$ bound, applied $W$ times. It is unnecessary: $u \mapsto
+  d(p_0 + u \Vert p_0)$ is convex on $[0, \Delta_{\max}]$ and vanishes at
+  $u = 0$, so the chord through the endpoints gives
+  $d(p_0+u \Vert p_0) \le (u/\Delta_{\max})\,d_{\max}$ with $d_{\max} :=
+  d(p_0 + \Delta_{\max} \Vert p_0)$, whence $\mathrm{KL}(P_1 \Vert P_0) \le
+  (d_{\max}/\Delta_{\max})(A + W\delta_P)$ and Eq.~\eqref{eq:floor_chord}.
+  Since $d_{\max} \le \Delta_{\max}^2/(p_0(1-p_0))$ is the same $\chi^2$ bound
+  applied once, \eqref{eq:floor_chord} is never weaker
+  than~\eqref{eq:floor}. At $p_0 = 0.024$, $\Delta_{\max} = 0.3268$ the ratio
+  is $6.74$; over the sensitivity band $[0.015, 0.032]$ it runs from $9.00$ to
+  $5.72$. The relaxation is loosest exactly where the measured base rate sits,
+  which is why it was invisible at the assumed $p_0 = 0.05$.
+  \textbf{Status: PROVED} (as stated), and tightened.
+\end{proof}
+
+\begin{proof}[Proof of Proposition~\ref{prop:invariance}]
+  Under hypothesis~(i), $A = (\Delta e - \delta_P)W$; substituting
+  hypothesis~(ii), $W = K(\Delta e)^{-\alpha}$, gives
+  $A = K(\Delta e)^{-\alpha}(\Delta e - \delta_P) =
+  K(\Delta e)^{1-\alpha}(1 - \delta_P/\Delta e)$, which is
+  Eq.~\eqref{eq:invariance}. At $\alpha = 1$ the prefactor is $1$ and
+  $A = K(1 - \delta_P/\Delta e) \to K$ as $\Delta e/\delta_P \to \infty$,
+  monotonically from below. \textbf{Status: PROVED UNDER STATED CONDITION.}
+
+  The condition is the whole content of the caveat. Hypothesis~(i) is the
+  rectangular surrogate, withdrawn on measurement: $A/A_{\mathrm{rect}}$ spans
+  $2.70$ to $-14.12$ and changes sign. Hypothesis~(ii) holds at
+  $\hat\alpha \approx 0.98$, and Eq.~\eqref{eq:invariance} then predicts a
+  spread of $(\Delta e)^{0.02}$, a factor $1.03$ over
+  $\Delta e \in [0.10, 0.50]$, against a measured factor of $1.90$ that is not
+  monotone. The proposition is thus a true statement about a model the
+  repository has withdrawn, and it explains $3\%$ of a $90\%$ effect. What
+  survives is Remark~\ref{rem:invariance_measured}'s counterfactual: the same
+  ceiling on the branch where adaptation is suppressed spreads by a factor of
+  $124$ and is monotone.
+\end{proof}
+
+\begin{proof}[Proof of Corollary~\ref{cor:split}]
+  Fix $W$, $\varepsilon$, $n_{\mathrm{stat}}$ and let $\alpha \to 0$. The
+  $\varepsilon$-margin $\sqrt{(W/2)\ln(1/\varepsilon)}$ is common to the three
+  and constant, so only the $\alpha$-price matters.
+
+  \emph{CUSUM.} $\lambda(\alpha)$ is defined by
+  $\alpha = W/\mathrm{ARL}_0(\lambda)$ with Siegmund's
+  $\mathrm{ARL}_0(\lambda) = (e^{\theta^* \lambda} - \theta^*\lambda - 1)/
+  (\theta^*\delta_P)$. Taking logarithms,
+  $\theta^*\lambda = \ln(1/\alpha) + \ln(W\theta^*\delta_P) + \ln(1 +
+  O(\theta^*\lambda e^{-\theta^*\lambda}))$, so
+  $\lambda(\alpha) = \theta^{*-1}\ln(1/\alpha)\,(1+o(1))$: linear in
+  $\ln(1/\alpha)$, with no $W$ in the leading term.
+
+  \emph{ADWIN and KSWIN.} By Eqs.~\eqref{eq:Radwin}--\eqref{eq:Rkswin} the
+  $\alpha$-prices are $\sqrt{(W/2)\ln(4W/\alpha)}$ and
+  $\sqrt{n_{\mathrm{stat}}\ln(2/\alpha)}$, both
+  $\Theta(\sqrt{\ln(1/\alpha)})$ at fixed $W$ and $n_{\mathrm{stat}}$.
+
+  A linear function of $\ln(1/\alpha)$ exceeds any square-root function of it
+  beyond a finite crossing point, so for every fixed budget $A$ there is
+  $\alpha^\dagger > 0$ below which $R_{\mathrm{CUSUM}} > A \ge
+  R_{\mathrm{ADWIN}} \wedge R_{\mathrm{KSWIN}}$ fails for the cumulative monitor
+  alone. The $W$-scalings are read directly off the same three expressions:
+  $\lambda(\alpha)$ carries no $W$; $\sqrt{(W/2)\ln(4W/\alpha)} \to 0$ as
+  $W \to 0$ because $W\ln W \to 0$; and $\sqrt{n_{\mathrm{stat}}\ln(2/\alpha)}$
+  carries no $W$ either. \textbf{Status: PROVED.}
+
+  The last of those three corrects the submitted statement, which placed the
+  $\alpha$-price of $R_{\mathrm{KSWIN}}$ ``inside a square root of $W$''.
+  Eq.~\eqref{eq:Rkswin} contains no such $W$, and the correction matters: KSWIN
+  escapes not because its requirement vanishes with the transient but because
+  its $\alpha$-price is set by the statistic size, which the practitioner
+  chooses, instead of by a threshold that must grow like $\ln(1/\alpha)$.
+  Remark~\ref{rem:split_measured} evaluates all three at a common $\alpha$ and
+  exhibits the crossing at $\ln(1/\alpha) \approx 13$.
+\end{proof}
+
+\subsection{EDDM}\label{sec:prop3_eddm}
+
+No $R_{\mathrm{EDDM}}$ is delivered, and the requirement is withdrawn from the
+family of \S\ref{sec:requirement}. The reasons are stated so that the
+withdrawal is not read as an oversight.
+
+EDDM compares $p'_i + 2s'_i$, the cumulative mean and standard deviation of
+inter-error distances since the last reset, against the running maximum of that
+same path. Modelling the distances as geometric at rate $p_0$ before the change
+and $p_1$ after, and writing $f$ for the post-change share of errors since the
+reset, $d := 1/p$ and $\sigma^2 := (1-p)/p^2$,
+\begin{equation}\label{eq:eddm_level}
+  \mathrm{level}(f) =
+  \frac{(1-f)d_0 + f d_1 + 2\sqrt{(1-f)\sigma_0^2 + f\sigma_1^2
+        + f(1-f)(d_0-d_1)^2}}{d_0 + 2\sigma_0},
+\end{equation}
+decreasing from $\mathrm{level}(0) = 1$, so detection requires
+$f \ge f^\dagger := \inf\{f : \mathrm{level}(f) < \beta\}$ and hence
+$W_{\mathrm{EDDM}} = (n_0/p_1)\,f^\dagger/(1-f^\dagger)$ post-change steps,
+with $n_0$ the pre-change error count since the last reset. The between-group
+term $f(1-f)(d_0-d_1)^2$, which the normal approximation on geometric distances
+omits, grows with the contrast at the same time as the mean falls, and the two
+largely cancel: $f^\dagger$ is nearly invariant in the drift magnitude, $0.235$
+to $0.240$ over $p_1 \in [0.10, 0.70]$, so $W_{\mathrm{EDDM}} \approx
+0.31\, n_0/p_1$. It therefore shortens with the drift magnitude much as a
+first-passage time does. What distinguishes it is the factor $n_0$: a threshold
+test requires an \emph{absolute} amount of evidence, whereas EDDM requires a
+fixed \emph{share} of its own history, so its requirement grows without bound as
+the stationary phase lengthens. No first-passage bound carries such a term.
+
+This closed form does not reproduce the measured collapse, and the rule fixed in
+advance makes withdrawal the outcome in that case. At the ProteuS pre-change
+history it returns $168$--$281$ steps against the normal approximation's $155$:
+the same order of magnitude, not the ``no detection'' that $0$ alarms in
+$1{,}080$ runs requires. Worse, it cannot be evaluated where the collapse is
+measured: the ProteuS artifacts record $F_1$, ADD and seed and no error stream,
+so neither $p_0$ nor $p_1$ nor the transient length is available there.
+
+The one stream on which the inputs do exist cannot arbitrate either. On the
+synchronised traces, the detector has not completed its $30$-error warm start at
+the change point in $95\%$ of runs --- $1{,}000$ pre-change steps at
+$p_0 = 0.024$ furnish about $24$ errors --- so every alarm is post-warm-start by
+construction; on the \texttt{static} arm, which does warm up, it alarms
+\emph{before} the change point in $60\%$ of runs. The decisive control is that
+the three adaptive arms return the same alarm rate to within $0.08$, although
+they differ by exactly the adaptation under study, and the \texttt{frozen} arm
+never adapts at all. A statistic that cannot tell those three apart is not
+reporting on drift.
+
+The \emph{empirical} EDDM result is untouched by this: $0$ detections in
+$1{,}080$ runs against $882$ for the same detector on a non-adaptive learner,
+sign test $p \approx 1.9\times10^{-9}$, is a measurement and stands on its own.
+What is withdrawn is the claim that a requirement $R_{\mathrm{EDDM}}$ of the
+form of Eqs.~\eqref{eq:Rcusum}--\eqref{eq:Rkswin} governs it.
+
+\subsection{Proof status}\label{sec:prop3_status}
+
+\centerline{\begin{tabular}{llp{0.42\linewidth}}
+  \toprule
+  Statement & Status & Condition \\
+  \midrule
+  Thm.~\ref{thm:floor} & PROVED & chain rule read conditionally; tightened by
+    Eq.~\eqref{eq:floor_chord} \\
+  Prop.~\ref{prop:invariance} & PROVED UNDER STATED CONDITION &
+    rectangular transient and $\alpha = 1$; both measured false \\
+  Cor.~\ref{cor:split} & PROVED & at fixed $W$, $\varepsilon$,
+    $n_{\mathrm{stat}}$, as $\alpha \to 0$ \\
+  Prop.~\ref{prop:order} & PROVED & drift not resolved before the first
+    replacement; holds on $1{,}835/1{,}836$ estimable runs \\
+  $R_{\mathrm{EDDM}}$ & NOT PRODUCED & withdrawn; the empirical result stands \\
+  \bottomrule
+\end{tabular}}

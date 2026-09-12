@@ -153,6 +153,24 @@ def detection_floor(p0, delta_max, w, alpha, eps=EPS, delta_p=DELTA_P_CUSUM):
     return p0 * (1.0 - p0) / delta_max * kl_binary(1.0 - eps, alpha) - w * delta_p
 
 
+def detection_floor_chord(p0, delta_max, w, alpha, eps=EPS, delta_p=DELTA_P_CUSUM):
+    """thm:floor with the chi-square relaxation replaced by the chord bound on a convex map.
+
+    The proof of thm:floor bounds each term of the chain rule by
+    d(x || y) <= (x-y)^2 / (y(1-y)), the chi-square relaxation. But u |-> d(p_0 + u || p_0) is
+    CONVEX on [0, Delta_max] and vanishes at u = 0, so the chord through the endpoints already
+    gives d(p_0 + u || p_0) <= (u / Delta_max) d(p_0 + Delta_max || p_0), hence
+
+        KL(P_1 || P_0) <= (d_max / Delta_max) (A + W delta_P),
+        A >= Delta_max d(1 - eps || alpha) / d_max - W delta_P,   d_max := d(p_0 + Delta_max||p_0).
+
+    This is never weaker than eq:floor -- d_max <= Delta_max^2/(p_0(1-p_0)) is the same chi-square
+    bound applied once instead of W times -- and the gap is the audit finding: the relaxation is
+    loosest exactly where the measured base rate now sits."""
+    d_max = kl_binary(p0 + delta_max, p0)
+    return delta_max / d_max * kl_binary(1.0 - eps, alpha) - w * delta_p
+
+
 def lambda_starve(w, mu, eps=EPS, s0=0.0):
     """eq:starve_boundary -- lambda >= s_0 + mu W + sqrt(W/2 ln(W/eps)).
 
@@ -331,6 +349,165 @@ def eps_sensitivity(w=57.4, delta_e=0.326793):
                         for e in (0.01, 0.05, 0.10)]}
 
 
+def floor_and_family(band, ceiling, w=57.4, delta_e=0.326793, lam=50.0,
+                     n_stat=30, kswin_alpha=None):
+    """thm:floor as an INTERVAL over the p_true band, and the three family requirements.
+
+    ARL_0 moves nine orders of magnitude across the band, so no scalar evaluation of the floor is
+    reportable. The floor depends on ARL_0 only through ln(1/alpha), which is why the interval it
+    induces is narrow: that is a property of the bound, and it is the reason the floor can be
+    stated robustly where ARL_0 itself cannot."""
+    kswin_alpha = ssot.R4_KSWIN_ALPHA if kswin_alpha is None else kswin_alpha
+    rows = []
+    for p in sorted({band[0], P_TRUE, band[1]}):
+        theta = cramer_root(p, p, DELTA_P_CUSUM)
+        a = arl0(lam, theta, DELTA_P_CUSUM)
+        alpha = w / a
+        rows.append({"p_true": p, "theta_star": theta, "ARL_0": a, "alpha": alpha,
+                     "floor_chi2": detection_floor(p, delta_e, w, alpha),
+                     "floor_chord": detection_floor_chord(p, delta_e, w, alpha),
+                     "kl_exact_at_delta_max": kl_binary(p + delta_e, p),
+                     "kl_chi2_at_delta_max": delta_e ** 2 / (p * (1 - p))})
+    for r in rows:
+        r["chi2_looseness_factor"] = r["kl_chi2_at_delta_max"] / r["kl_exact_at_delta_max"]
+
+    # Family requirements. cor:split compares three monitors, so they must be read at the SAME
+    # windowed false-alarm level -- that is the whole purpose of def:monitor. Evaluating KSWIN at
+    # its deployed alpha while ADWIN inherits the CUSUM's would compare calibrations, not families.
+    margin = np.sqrt(w / 2.0 * np.log(1.0 / EPS))
+    theta = cramer_root(P_TRUE, P_TRUE, DELTA_P_CUSUM)
+    ceil_here = float(ceiling.loc[ceiling.index[np.argmin(np.abs(ceiling.index - delta_e))]])
+
+    ladder = []
+    for lam_i in LAMBDA_LADDER:
+        a_i = w / arl0(lam_i, theta, DELTA_P_CUSUM)
+        r = {"lambda_cusum": lam_i, "alpha": a_i, "log_1_over_alpha": float(np.log(1.0 / a_i)),
+             "R_CUSUM": lam_i + margin,
+             "R_ADWIN": float(np.sqrt(w / 2.0 * np.log(4.0 * w / a_i)) + margin),
+             "R_KSWIN": float(np.sqrt(n_stat * np.log(2.0 / a_i)) + margin)}
+        r["met_by"] = {k: bool(ceil_here >= v) for k, v in r.items() if k.startswith("R_")}
+        ladder.append(r)
+
+    req = {"epsilon_margin_sqrt_W_over_2_log_1_over_eps": margin,
+           "common_alpha_ladder": ladder,
+           "n_stat": n_stat,
+           "deployed_alphas": {
+               "KSWIN_R4": kswin_alpha, "ADWIN_R4": ssot.R4_ADWIN_DELTA,
+               "R_KSWIN_at_deployed_alpha":
+                   float(np.sqrt(n_stat * np.log(2.0 / kswin_alpha)) + margin),
+               "note": "the deployed detectors do NOT share a false-alarm level: KSWIN runs at "
+                       "alpha = 0.005 and ADWIN at delta = 0.002, while a lambda = 50 CUSUM at "
+                       "this base rate runs at alpha ~ 6e-16. The measured F1 separation is "
+                       "therefore not a like-for-like family comparison, and cor:split's content "
+                       "is the SCALING in ln(1/alpha), not a verdict at one operating point."},
+           "scaling": {
+               "R_CUSUM": "lambda(alpha) = ln(1/alpha)/theta* (1+o(1)): LINEAR in ln(1/alpha), "
+                          "and free of W",
+               "R_ADWIN": "sqrt(W/2 ln(4W/alpha)): SQUARE ROOT of ln(1/alpha), and vanishes "
+                          "with W",
+               "R_KSWIN": "sqrt(n_stat ln(2/alpha)): SQUARE ROOT of ln(1/alpha), and free of W "
+                          "-- eq:Rkswin carries no W in its alpha term, which cor:split as "
+                          "written asserts that it does",
+               "theta_star_inverse": float(1.0 / theta)},
+           "measured_ceiling_median_A_unrefl": ceil_here}
+    return {"at": {"delta_e": delta_e, "W": w, "lambda": lam, "eps": EPS,
+                   "band": list(band)},
+            "floor_over_band": rows,
+            "floor_chi2_interval": [min(r["floor_chi2"] for r in rows),
+                                    max(r["floor_chi2"] for r in rows)],
+            "floor_chord_interval": [min(r["floor_chord"] for r in rows),
+                                     max(r["floor_chord"] for r in rows)],
+            "family_requirements": req,
+            "reading": "the floor is logarithmic in ARL_0, so nine orders of magnitude of "
+                       "uncertainty on ARL_0 collapse to a narrow interval on the floor. At the "
+                       "canonical operating point the measured ceiling clears the floor but not "
+                       "R_CUSUM, and clears R_KSWIN: the blind spot at lambda = 50 is a property "
+                       "of the monitor's calibration, not an information-theoretic limit."}
+
+
+def flooding_retrodiction():
+    """T2.3. Can an ARL_0 model recover the 86 alarms of INSECTS gradual_balanced?
+
+    `rem:flooding` states the flooding count as a consequence of the internal ADWIN clock. Two
+    models are put to the artifact, and both are reported whatever they return.
+
+      (A) ARL_0 model, as the task specifies it: alarms ~ (stream length)/ARL_0 at the recomputed
+          ARL_0, p_true = 0.024, delta_P = 0.01, lambda = R4_PHT_LAMBDA = 15.
+      (B) re-arm model: after a change the error rate does NOT return to p_pre on this stream, so
+          a monitor re-armed after each alarm crosses lambda deterministically every
+          lambda / (e_post - p_pre - delta_P) steps.
+
+    DECLARED CAVEAT. R4 and R5 run River's adaptive mean-tracking PageHinkley at DELTA_P = 0.005,
+    not the fixed-p_0 StrictCUSUM of eq:cusum at 0.01; the manuscript already states that
+    distinction. Both models below are therefore order-of-magnitude consistency checks on a
+    different estimator, and are labelled as such. Neither is a fit."""
+    epi = pd.read_parquet(ssot.RESULTS_DIR / "R5_real_world_evaluation" / "data"
+                          / "insects_per_episode.parquet")
+    g = epi[epi.variant == "gradual_balanced"]
+    n_total = float(g.n_total.median())
+    drift_pos = float(g.drift_pos.median())
+    warmup = n_total * 0.10                     # exp_R5_config.INSECTS_WARMUP_FRACTION
+    post = n_total - drift_pos
+    null_span = drift_pos - warmup              # armed, pre-change: the only span ARL_0 governs
+
+    theta = cramer_root(P_TRUE, P_TRUE, DELTA_P_CUSUM)
+    a15 = arl0(LAMBDA_FA_EMPIRICAL, theta, DELTA_P_CUSUM)
+
+    out = {"stream": {"variant": "gradual_balanced", "n_total": n_total, "drift_pos": drift_pos,
+                      "warmup_steps": warmup, "armed_pre_change_span": null_span,
+                      "post_change_span": post, "tau_tol": float(g.tau_tol.median()),
+                      "delta_e": 0.450341},
+           "model_A_ARL0": {
+               "definition": "E[alarms] = armed pre-change span / ARL_0",
+               "p_true": P_TRUE, "delta_P": DELTA_P_CUSUM,
+               "lambda": float(LAMBDA_FA_EMPIRICAL), "ARL_0": a15,
+               "expected_alarms": null_span / a15},
+           "pipelines": []}
+
+    for pipe in ("pht_arf_c1", "pht_ht"):
+        s = g[g.pipeline == pipe]
+        e_pre, e_post = float(s.e_pre.median()), float(s.e_post.median())
+        lam = float(s.lambda_calibrated.mean())
+        measured = float(s.n_detections_total.mean())
+        rate = e_post - e_pre - DELTA_P_SUPERSEDED
+        out["pipelines"].append({
+            "pipeline": pipe, "e_pre": e_pre, "e_post": e_post,
+            "lambda_calibrated_mean": lam,
+            "lambda_calibrated_min": float(s.lambda_calibrated.min()),
+            "lambda_calibrated_max": float(s.lambda_calibrated.max()),
+            "measured_alarms_mean": measured,
+            "measured_false_alarms_mean": float(s.run_n_fp.mean()),
+            "measured_precision_median": float(s.run_precision.median()),
+            "model_B_accumulation_rate_per_step": rate,
+            "model_B_steps_per_alarm": lam / rate if rate > 0 else np.inf,
+            "model_B_expected_alarms": post * rate / lam if rate > 0 else np.inf,
+        })
+
+    arf, ht = out["pipelines"]
+    out["verdict"] = {
+        "model_A_ratio_predicted_over_measured":
+            out["model_A_ARL0"]["expected_alarms"] / arf["measured_alarms_mean"],
+        "model_B_ratio_predicted_over_measured_arf":
+            arf["model_B_expected_alarms"] / arf["measured_alarms_mean"],
+        "model_B_ratio_predicted_over_measured_ht":
+            ht["model_B_expected_alarms"] / ht["measured_alarms_mean"],
+        "measured_alarm_ratio_arf_over_ht":
+            arf["measured_alarms_mean"] / ht["measured_alarms_mean"],
+        "model_B_predicted_alarm_ratio":
+            arf["model_B_expected_alarms"] / ht["model_B_expected_alarms"],
+        "threshold_ratio_ht_over_arf": ht["lambda_calibrated_mean"] / arf["lambda_calibrated_mean"],
+        "reading": "the ARL_0 model is out by four orders of magnitude because 84.7 of the 85.7 "
+                   "alarms are not null-regime false alarms: they occur after a genuine change, "
+                   "in a regime whose error rate is 0.50 against a reference of 0.058. The "
+                   "re-arm model recovers both counts to a factor of 2-4 and their ratio to a "
+                   "factor of 1.7, using no fitted constant. The threshold is not shared: the "
+                   "one-false-alarm-per-warm-up calibration hands the ARF 20.97 and the HT "
+                   "132.50, a factor of 6.3 that the pipelines' pre-change volatility fixes, "
+                   "not their post-change behaviour.",
+    }
+    return out
+
+
 def main():
     OUT_DIR.mkdir(parents=True, exist_ok=True)
     w_table, ceiling, e_pre = windows()
@@ -374,6 +551,7 @@ def main():
         "eps_sensitivity": eps_sensitivity(),
         "budget_restitution": budget_restitution(ceiling),
         "floor_restitution": floors,
+        "floor_and_family": floor_and_family(band["band_used"], ceiling),
         # No absolute path is recorded: the interpreter is pinned in docs/ENVIRONMENT.md, and an
         # artifact carrying a server path is not portable evidence.
         "reproduction": {"python": sys.version.split()[0],
@@ -383,6 +561,9 @@ def main():
     }
     (OUT_DIR / "s2_gate_T20.json").write_text(json.dumps(payload, indent=2, sort_keys=True,
                                                          default=float) + "\n", encoding="utf-8")
+    flood = flooding_retrodiction()
+    (OUT_DIR / "s2_flooding_retrodiction.json").write_text(
+        json.dumps(flood, indent=2, sort_keys=True, default=float) + "\n", encoding="utf-8")
 
     pd.set_option("display.width", 200)
     print("=== T2.0 columns: theta*, ARL_0 -- Cramer root, Siegmund (1985) ===")
@@ -427,9 +608,48 @@ def main():
               f"{r['floor_at_S1_inputs']:.3f} (reproduces: {r['reproduces_R1b']}) | "
               f"at S2 inputs {r['floor_at_S2_inputs']:.3f}")
     print()
+    ff = payload["floor_and_family"]
+    print("=== T2.5(c) thm:floor audited at the measured base rate, stated over the band ===")
+    for r in ff["floor_over_band"]:
+        print(f"  p_true = {r['p_true']:.3f}  ARL_0 = {r['ARL_0']:.3g}  alpha = {r['alpha']:.3g}  "
+              f"floor(chi2) = {r['floor_chi2']:7.3f}  floor(chord) = {r['floor_chord']:7.3f}  "
+              f"chi2 looseness = {r['chi2_looseness_factor']:.2f}x")
+    print(f"  floor interval over the band: chi-square "
+          f"[{ff['floor_chi2_interval'][0]:.2f}, {ff['floor_chi2_interval'][1]:.2f}], chord "
+          f"[{ff['floor_chord_interval'][0]:.2f}, {ff['floor_chord_interval'][1]:.2f}]")
+    q = ff["family_requirements"]
+    print(f"  measured ceiling {q['measured_ceiling_median_A_unrefl']:.2f}; the three "
+          f"requirements at a COMMON alpha (def:monitor), margin = "
+          f"{q['epsilon_margin_sqrt_W_over_2_log_1_over_eps']:.2f}")
+    print(f"  {'lambda':>7s} {'alpha':>10s} {'ln(1/a)':>8s} {'R_CUSUM':>9s} {'R_ADWIN':>9s} "
+          f"{'R_KSWIN':>9s}   met")
+    for r in q["common_alpha_ladder"]:
+        print(f"  {r['lambda_cusum']:7.0f} {r['alpha']:10.2e} {r['log_1_over_alpha']:8.2f} "
+              f"{r['R_CUSUM']:9.2f} {r['R_ADWIN']:9.2f} {r['R_KSWIN']:9.2f}   "
+              + ", ".join(k[2:] for k, v in r["met_by"].items() if v))
+    print(f"  R_KSWIN at its DEPLOYED alpha = {q['deployed_alphas']['KSWIN_R4']}: "
+          f"{q['deployed_alphas']['R_KSWIN_at_deployed_alpha']:.2f} (met: "
+          f"{q['measured_ceiling_median_A_unrefl'] >= q['deployed_alphas']['R_KSWIN_at_deployed_alpha']})")
+    print()
+    v = flood["verdict"]
+    print("=== T2.3 flooding retrodiction, INSECTS gradual_balanced ===")
+    print(f"  model A (ARL_0 at p_true = {P_TRUE}, delta_P = {DELTA_P_CUSUM}, lambda = "
+          f"{LAMBDA_FA_EMPIRICAL:g}): {flood['model_A_ARL0']['expected_alarms']:.4g} alarms "
+          f"expected against {flood['pipelines'][0]['measured_alarms_mean']:.1f} measured "
+          f"-- out by {1 / v['model_A_ratio_predicted_over_measured']:.3g}x")
+    for p in flood["pipelines"]:
+        print(f"  model B {p['pipeline']:12s} lambda_cal = {p['lambda_calibrated_mean']:7.2f}, "
+              f"rate = {p['model_B_accumulation_rate_per_step']:.4f}/step -> "
+              f"{p['model_B_expected_alarms']:6.1f} expected against "
+              f"{p['measured_alarms_mean']:6.1f} measured")
+    print(f"  alarm ratio ARF/HT: measured {v['measured_alarm_ratio_arf_over_ht']:.2f}x, "
+          f"model B {v['model_B_predicted_alarm_ratio']:.2f}x; calibrated-threshold ratio "
+          f"HT/ARF = {v['threshold_ratio_ht_over_arf']:.2f}x")
+    print()
     print(f"wrote {OUT_DIR.relative_to(ROOT_DIR)}/"
-          "{s2_arl0_columns.csv, s2_lambda_starve.csv, s2_gate_T20.json}")
-    return cols, starve, payload
+          "{s2_arl0_columns.csv, s2_lambda_starve.csv, s2_gate_T20.json, "
+          "s2_flooding_retrodiction.json}")
+    return cols, starve, payload, flood
 
 
 def _same_sig_fig(x, y):

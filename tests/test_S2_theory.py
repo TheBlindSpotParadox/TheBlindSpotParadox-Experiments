@@ -27,8 +27,11 @@ import pytest
 ROOT_DIR = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT_DIR))
 sys.path.insert(0, str(ROOT_DIR / "experiments" / "S2_theory"))
+sys.path.insert(0, str(ROOT_DIR / "experiments" / "S6_synchronized_traces"))
 from config import experiment_ssot as ssot  # noqa: E402
 import s2_arl0 as s2  # noqa: E402
+import s2_eddm as ed  # noqa: E402
+import s2_w_random as wr  # noqa: E402
 
 RUNS = ssot.RESULTS_DIR / "S6_synchronized_traces" / "data" / "runs.parquet"
 DELTA_P = ssot.CUSUM_DELTA_P
@@ -148,6 +151,84 @@ def test_budget_is_negative_above_delta_e_0p452_so_positive_budget_bounds_are_vo
     # void rather than violated, and must be declared so.
     alpha = 57.4 / s2.arl0(50.0, s2.cramer_root(s2.P_TRUE, s2.P_TRUE, DELTA_P), DELTA_P)
     assert s2.detection_floor(s2.P_TRUE, 0.498, 57.4, alpha) > 0.0
+
+
+def test_chord_floor_is_never_weaker_than_the_chi_square_floor():
+    """The tightening of thm:floor must dominate eq:floor everywhere, or it is not a tightening."""
+    alpha = 57.4 / s2.arl0(50.0, s2.cramer_root(s2.P_TRUE, s2.P_TRUE, DELTA_P), DELTA_P)
+    for p in (0.005, 0.015, 0.024, 0.05, 0.10, 0.30):
+        for dmax in (0.02, 0.10, 0.3268, 0.45):
+            if p + dmax >= 1.0:
+                continue
+            chi2 = s2.detection_floor(p, dmax, 57.4, alpha)
+            chord = s2.detection_floor_chord(p, dmax, 57.4, alpha)
+            assert chord >= chi2 - 1e-9, (p, dmax, chi2, chord)
+            # equality only in the limit Delta_max/p -> 0
+            assert s2.kl_binary(p + dmax, p) <= dmax ** 2 / (p * (1 - p)) + 1e-12
+
+
+def test_chord_floor_is_also_vacuous_at_both_ends_of_p0():
+    """The tightening must not smuggle in a bound that survives where the premise dies."""
+    for p in (1e-9, 1 - 1e-9 - 0.3268):
+        f = s2.detection_floor_chord(p, 0.3268, 57.4, 1e-12)
+        assert np.isfinite(f)
+    # as p_0 -> 0 with Delta_max fixed, d_max -> +inf and the prefactor Delta_max/d_max -> 0
+    pref = [0.3268 / s2.kl_binary(p + 0.3268, p) for p in (1e-6, 1e-4, 1e-2, 0.024)]
+    assert pref[0] < pref[1] < pref[2] < pref[3]
+
+
+def test_cor_split_scaling_in_log_one_over_alpha():
+    """R_CUSUM advances by 1/theta* per unit of ln(1/alpha); the other two advance as its root."""
+    theta = s2.cramer_root(s2.P_TRUE, s2.P_TRUE, DELTA_P)
+    w = 57.4
+    lams = np.array([8.0, 15.0, 25.0, 50.0])
+    alphas = np.array([w / s2.arl0(l, theta, DELTA_P) for l in lams])
+    slope = np.diff(lams) / np.diff(np.log(1.0 / alphas))
+    # lambda(alpha) = ln(1/alpha)/theta* (1 + o(1)): the slope APPROACHES 1/theta* from below as
+    # the threshold grows, and the o(1) is still visible on the 8 -> 15 segment.
+    assert np.all(np.diff(slope) > 0) and np.all(slope < 1.0 / theta)
+    assert slope[-1] == pytest.approx(1.0 / theta, rel=1e-4), (slope, 1.0 / theta)
+
+    adwin = np.sqrt(w / 2.0 * np.log(4.0 * w / alphas))
+    kswin = np.sqrt(30.0 * np.log(2.0 / alphas))
+    for arr in (adwin, kswin):                    # square-root growth: ratio of squares is linear
+        r = np.polyfit(np.log(1.0 / alphas), arr ** 2, 1)
+        assert r[0] > 0 and np.corrcoef(np.log(1.0 / alphas), arr ** 2)[0, 1] > 0.999
+    # the crossing exists and is inside the measured ladder
+    assert lams[0] < adwin[0] and lams[-1] > adwin[-1]
+
+
+def test_eq4_integrated_bound_is_at_least_the_censoring_fraction():
+    """Rule R4's structural floor, on the shape of the estimator rather than on the campaign."""
+    w = np.concatenate([np.full(80, 30.0), np.full(20, np.nan)])
+    cens = ~np.isfinite(w)
+    for lam in (8.0, 15.0, 25.0, 50.0):
+        assert wr.plugin_bound(w, cens, lam, 0.3168) >= cens.mean() - 1e-12
+    assert wr.eq4(15.0, 2500.0, 0.3168) == 1.0
+    assert wr.eq4(15.0, 2500.0, 0.3168, cap=False) == 2500.0
+
+
+def test_eddm_closed_form_scales_with_the_pre_change_history():
+    """The term the normal approximation omits: W_EDDM is proportional to n_0, not to 1/Delta_e."""
+    assert abs(ed.level(0.0, 0.024, 0.354) - 1.0) < 1e-12
+    f = np.linspace(0.0, 1.0, 201)
+    assert np.all(np.diff(ed.level(f, 0.024, 0.354)) < 0)
+    a, b = ed.w_eddm(0.024, 0.354, 24.0), ed.w_eddm(0.024, 0.354, 96.0)
+    assert abs(b / a - 4.0) < 1e-9
+    assert np.isnan(ed.f_star(0.05, 0.05)) and ed.w_eddm(0.05, 0.05, 50.0) == np.inf
+    # The required post-change SHARE of errors is nearly invariant in the drift magnitude, which
+    # is what leaves W_EDDM ~ 0.31 n_0 / p_1. It does shorten with the magnitude; the term that
+    # distinguishes it from a first-passage bound is n_0, not the magnitude scaling.
+    fs = np.array([ed.f_star(0.024, p1) for p1 in (0.10, 0.20, 0.354, 0.50, 0.70)])
+    assert fs.max() - fs.min() < 0.01, fs
+    for p1 in (0.10, 0.354, 0.70):
+        ratio = ed.f_star(0.024, p1) / (1 - ed.f_star(0.024, p1))
+        assert ed.w_eddm(0.024, p1, 96.0) == pytest.approx(96.0 / p1 * ratio, rel=1e-9)
+
+
+def test_eddm_vectorisation_matches_river():
+    """Absence of a closed form is a finding; a wrong recursion is not. Certify against River."""
+    ed._certify_against_river()
 
 
 def test_transfer_S1_column_reproduces_under_R1a():

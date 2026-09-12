@@ -113,6 +113,133 @@
       }
     ]
   },
+  "floor_and_family": {
+    "at": {
+      "W": 57.4,
+      "band": [
+        0.015,
+        0.032
+      ],
+      "delta_e": 0.326793,
+      "eps": 0.05,
+      "lambda": 50.0
+    },
+    "family_requirements": {
+      "common_alpha_ladder": [
+        {
+          "R_ADWIN": 27.673144304550895,
+          "R_CUSUM": 17.27240617375013,
+          "R_KSWIN": 23.819849936801965,
+          "alpha": 0.0017274248811412396,
+          "lambda_cusum": 8.0,
+          "log_1_over_alpha": 6.361123487411912,
+          "met_by": {
+            "R_ADWIN": true,
+            "R_CUSUM": true,
+            "R_KSWIN": true
+          }
+        },
+        {
+          "R_ADWIN": 31.095628814023126,
+          "R_CUSUM": 24.27240617375013,
+          "R_KSWIN": 28.127902442278447,
+          "alpha": 1.4262966471055741e-05,
+          "lambda_cusum": 15.0,
+          "log_1_over_alpha": 11.157844137189564,
+          "met_by": {
+            "R_ADWIN": true,
+            "R_CUSUM": true,
+            "R_KSWIN": true
+          }
+        },
+        {
+          "R_ADWIN": 35.19141874192201,
+          "R_CUSUM": 34.27240617375013,
+          "R_KSWIN": 32.9352296801344,
+          "alpha": 1.5675606966210765e-08,
+          "lambda_cusum": 25.0,
+          "log_1_over_alpha": 17.97116002924978,
+          "met_by": {
+            "R_ADWIN": false,
+            "R_CUSUM": false,
+            "R_KSWIN": true
+          }
+        },
+        {
+          "R_ADWIN": 43.34029936386919,
+          "R_CUSUM": 59.27240617375013,
+          "R_KSWIN": 41.99697340564525,
+          "alpha": 6.283530378057317e-16,
+          "lambda_cusum": 50.0,
+          "log_1_over_alpha": 35.00342950326751,
+          "met_by": {
+            "R_ADWIN": false,
+            "R_CUSUM": false,
+            "R_KSWIN": false
+          }
+        }
+      ],
+      "deployed_alphas": {
+        "ADWIN_R4": 0.002,
+        "KSWIN_R4": 0.005,
+        "R_KSWIN_at_deployed_alpha": 22.67926771600675,
+        "note": "the deployed detectors do NOT share a false-alarm level: KSWIN runs at alpha = 0.005 and ADWIN at delta = 0.002, while a lambda = 50 CUSUM at this base rate runs at alpha ~ 6e-16. The measured F1 separation is therefore not a like-for-like family comparison, and cor:split's content is the SCALING in ln(1/alpha), not a verdict at one operating point."
+      },
+      "epsilon_margin_sqrt_W_over_2_log_1_over_eps": 9.27240617375013,
+      "measured_ceiling_median_A_unrefl": 33.51150000000007,
+      "n_stat": 30,
+      "scaling": {
+        "R_ADWIN": "sqrt(W/2 ln(4W/alpha)): SQUARE ROOT of ln(1/alpha), and vanishes with W",
+        "R_CUSUM": "lambda(alpha) = ln(1/alpha)/theta* (1+o(1)): LINEAR in ln(1/alpha), and free of W",
+        "R_KSWIN": "sqrt(n_stat ln(2/alpha)): SQUARE ROOT of ln(1/alpha), and free of W -- eq:Rkswin carries no W in its alpha term, which cor:split as written asserts that it does",
+        "theta_star_inverse": 1.467802109348584
+      }
+    },
+    "floor_chi2_interval": [
+      1.5218886134831808,
+      1.9536887714045976
+    ],
+    "floor_chord_interval": [
+      13.87540995284638,
+      18.287840934914684
+    ],
+    "floor_over_band": [
+      {
+        "ARL_0": 1.1009601950284895e+23,
+        "alpha": 5.213630816009171e-22,
+        "chi2_looseness_factor": 8.999448164169365,
+        "floor_chi2": 1.5218886134831808,
+        "floor_chord": 18.287840934914684,
+        "kl_chi2_at_delta_max": 7.227997620913706,
+        "kl_exact_at_delta_max": 0.8031600926033934,
+        "p_true": 0.015,
+        "theta_star": 0.9683665001803464
+      },
+      {
+        "ARL_0": 9.134992042124318e+16,
+        "alpha": 6.283530378057317e-16,
+        "chi2_looseness_factor": 6.742438250738245,
+        "floor_chi2": 1.7953111388254266,
+        "floor_chord": 15.400934050316744,
+        "kl_chi2_at_delta_max": 4.559155773949795,
+        "kl_exact_at_delta_max": 0.6761879908133535,
+        "p_true": 0.024,
+        "theta_star": 0.6812907500479092
+      },
+      {
+        "ARL_0": 109761428983522.64,
+        "alpha": 5.229523752703408e-13,
+        "chi2_looseness_factor": 5.7164513749914985,
+        "floor_chi2": 1.9536887714045976,
+        "floor_chord": 13.87540995284638,
+        "kl_chi2_at_delta_max": 3.4476260604661677,
+        "kl_exact_at_delta_max": 0.603105989066739,
+        "p_true": 0.032,
+        "theta_star": 0.5422423578035611
+      }
+    ],
+    "reading": "the floor is logarithmic in ARL_0, so nine orders of magnitude of uncertainty on ARL_0 collapse to a narrow interval on the floor. At the canonical operating point the measured ceiling clears the floor but not R_CUSUM, and clears R_KSWIN: the blind spot at lambda = 50 is a property of the monitor's calibration, not an information-theoretic limit."
+  },
   "floor_restitution": [
     {
       "S1_inputs": {

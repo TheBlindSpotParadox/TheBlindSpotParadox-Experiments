@@ -90,6 +90,34 @@ learners replaced in $(\tau^*, t]$.
   $\tau_{\mathrm{swap}}^{(1/M)} \le \tau_{\mathrm{erase}}$.
 \end{proposition}
 
+\begin{proof}
+  Monotonicity is immediate from Definition~\ref{def:times}: enlarging $\rho$
+  weakens the constraint defining $\tau_{\mathrm{err}}(\rho)$, so its infimum
+  cannot increase; raising $q$ strengthens the constraint defining
+  $\tau_{\mathrm{swap}}^{(q)}$, so its infimum cannot decrease.
+
+  For the inequality, write $t_1 := \tau_{\mathrm{swap}}^{(1/M)}$ and suppose
+  $\tau_{\mathrm{erase}} < t_1$. By Definition~\ref{def:times},
+  $\tau_{\mathrm{erase}} = \tau_{\mathrm{err}}(\delta_P)$ is the infimum of the
+  times $t$ at which $\bar{e}_s \le p_0 + \delta_P$ holds \emph{for every}
+  $s \ge t$. So $\tau_{\mathrm{erase}} < t_1$ exhibits a
+  $t < t_1$ at which the error is already within tolerance for all subsequent
+  $s$ --- which is exactly the hypothesis excluded. Hence
+  $t_1 \le \tau_{\mathrm{erase}}$.
+
+  The universal quantifier over $s \ge t$ is what carries the argument, and it
+  is why the ordering does not need the withdrawn pointwise assumption of
+  Remark~\ref{rem:order}: a transient dip of $\bar{e}$ below $p_0 + \delta_P$
+  at some $t < t_1$ does not make $t$ admissible unless the error stays there,
+  so it cannot move $\tau_{\mathrm{err}}$. The hypothesis excluded above is
+  strictly weaker than that assumption --- it forbids \emph{resolution} before
+  the first replacement, not \emph{elevation} at every step before it --- and it
+  is the weakest hypothesis under which the conclusion can hold, since its
+  negation is the conclusion's negation. Measured status: the conclusion holds
+  in $1{,}835$ of the $1{,}836$ runs where $\tau_{\mathrm{erase}}$ is
+  estimable, and in all $2{,}000$ under the hysteresis estimator.
+\end{proof}
+
 \begin{remark}[The ordering is measured; the assumption behind it is withdrawn]\label{rem:order}
   The submitted version derived the inequality from an assumption of \emph{no
   recovery without replacement}: $\bar{e}_t > p_0 + \delta_P$ pointwise on
@@ -129,6 +157,13 @@ the definition, which is a claim about measured quantities and not a definition.
 Measured, $\kappa \ge 1$ in $1{,}835/1{,}836$ runs, median $14.6$; the single
 exception is a run whose $200$-step trailing mean reports erasure before the first
 replacement, a lag artefact of the estimator rather than a recovery.
+$\kappa \ge 1$ is exactly the conclusion of Proposition~\ref{prop:order} divided
+by $\tau_{\mathrm{swap}}^{(1/M)} - \tau^* > 0$, so it inherits that
+proposition's hypothesis and nothing more: it holds whenever the drift is not
+resolved before the first replacement, and it is not an assumption of
+Definition~\ref{def:kappa}. Definition~\ref{def:kappa} requires only
+$\tau_{\mathrm{swap}}^{(1/M)} > \tau^*$, which the campaign satisfies on
+$2{,}000$ of $2{,}000$ cells.
 
 \subsection{Proof Budget}\label{sec:budget}
 
@@ -146,15 +181,42 @@ $\delta_P$. A rectangular transient of height $\Delta e$ and duration $W$
 gives $A = (\Delta e - \delta_P)\,W$.
 
 \begin{proposition}[Budget invariance]\label{prop:invariance}
-  If the adaptation time obeys a power law
-  $W(\Delta e) = K (\Delta e)^{-\alpha}$ with $\alpha = 1$, then
-  $A = K (1 - \delta_P/\Delta e) \to K$ as $\Delta e / \delta_P \to \infty$:
-  the proof budget is asymptotically independent of the drift magnitude.
+  Assume (i) a \emph{rectangular} transient, $A = (\Delta e - \delta_P) W$, and
+  (ii) an adaptation time obeying the power law
+  $W(\Delta e) = K (\Delta e)^{-\alpha}$. Then
+  \begin{equation}\label{eq:invariance}
+    A \;=\; K (\Delta e)^{1-\alpha}\bigl(1 - \delta_P/\Delta e\bigr),
+  \end{equation}
+  so at $\alpha = 1$ exactly, $A = K(1 - \delta_P/\Delta e) \to K$ as
+  $\Delta e / \delta_P \to \infty$: the proof budget is asymptotically
+  independent of the drift magnitude. For $\alpha \ne 1$ the budget is not
+  constant but varies as $(\Delta e)^{1-\alpha}$.
+  Proof: Appendix~\ref{sec:prop3}.
 \end{proposition}
 
 Proposition~\ref{prop:invariance} is the formal content of the paradox.
 Increasing the magnitude of a drift does not increase the evidence delivered
 to an external monitor, because adaptation accelerates in proportion.
+
+\begin{remark}[Both hypotheses are measured, and both are contradicted]\label{rem:invariance_measured}
+  Hypothesis~(i) is the rectangular surrogate that synchronised instrumentation
+  withdraws: $A/A_{\mathrm{rect}}$ spans $2.70$ to $-14.12$ over the magnitude
+  grid and \emph{changes sign} at $\Delta e \ge 0.452$, where the adapted
+  ensemble ends the window below its pre-change error rate. Hypothesis~(ii) is
+  measured at $\hat\alpha \approx 0.98$, not $1$; by~\eqref{eq:invariance} that
+  predicts a spread of $(0.50/0.10)^{0.02} = 1.03$ over the envelope. The
+  measured threshold-free ceiling $\max_t A_{\mathrm{unrefl}}$ spreads by a
+  factor $1.90$ ($19.2$ to $36.6$) and is \emph{non-monotone}, peaking near
+  $\Delta e \approx 0.19$; the claimed band $A \in [16.8, 18.1]$ with $K = 18.5$
+  is exceeded at every magnitude of the envelope.
+
+  What survives is the comparative statement, and it survives on a
+  counterfactual rather than on a power law: on the \texttt{no\_swap} and
+  \texttt{frozen} branches of the same streams, where adaptation is suppressed,
+  the same ceiling spreads by a factor of $124$ and is monotone increasing.
+  Invariance is therefore an \emph{effect of adaptation}, demonstrated by
+  removing it, and not a consequence of an exponent equal to one.
+\end{remark}
 
 \subsection{Proof Requirement}\label{sec:requirement}
 
@@ -214,6 +276,40 @@ detects, and the blind spot is information-theoretic. When $A$ exceeds it
 while remaining below $R(D,\varepsilon,\alpha)$, the blind spot is a property
 of $D$'s calibration, and a different monitor family escapes it.
 
+\begin{remark}[The $\chi^2$ step is where~\eqref{eq:floor} loses its strength]\label{rem:floor_tight}
+  The proof relaxes each chain-rule term by $d(x \Vert y) \le (x-y)^2/(y(1-y))$,
+  which is the $\chi^2$ bound. Since $u \mapsto d(p_0 + u \Vert p_0)$ is convex
+  on $[0, \Delta_{\max}]$ and vanishes at $u = 0$, the chord through the
+  endpoints gives directly
+  $d(p_0+u \Vert p_0) \le (u/\Delta_{\max})\, d_{\max}$ with
+  $d_{\max} := d(p_0 + \Delta_{\max} \Vert p_0)$, hence the strictly stronger
+  \begin{equation}\label{eq:floor_chord}
+    A \;\ge\; \frac{\Delta_{\max}}{d_{\max}}\, d(1-\varepsilon \Vert \alpha)
+              \;-\; W \delta_P .
+  \end{equation}
+  The two coincide only as $\Delta_{\max}/p_0 \to 0$. At the measured
+  $p_0 = 0.024$ and $\Delta_{\max} = 0.3268$ the $\chi^2$ step costs a
+  factor $6.74$, so~\eqref{eq:floor} understates the floor by nearly an order of
+  magnitude precisely at the operating point the experiments occupy. All floors
+  quoted below use~\eqref{eq:floor_chord}.
+\end{remark}
+
+\begin{remark}[The floor is logarithmic in $\mathrm{ARL}_0$, and only that makes it reportable]\label{rem:floor_band}
+  $\mathrm{ARL}_0$ is not a determined quantity on these streams. The pre-change
+  error rate is measured per run, and over the central $95\%$ of its empirical
+  distribution, $p_0 \in [0.015, 0.032]$, the Cram\'er root moves from $0.968$ to
+  $0.542$ and $\mathrm{ARL}_0$ at $\lambda = 50$ spans $1.1\times10^{14}$ to
+  $1.1\times10^{23}$ --- nine orders of magnitude. No scalar evaluation of any
+  quantity consuming $\mathrm{ARL}_0$ is reportable at that dispersion.
+
+  The floor is the exception, because $\mathrm{ARL}_0$ enters it only through
+  $\alpha = W/\mathrm{ARL}_0$ inside $d(1-\varepsilon \Vert \alpha)$, hence only
+  through $\ln(1/\alpha)$. Over the same band, \eqref{eq:floor_chord} at
+  $\Delta e = 0.3268$, $W = 57.4$, $\lambda = 50$ evaluates to
+  $[13.9,\, 18.3]$ --- a $\pm 14\%$ interval. Every floor in this paper is stated
+  as that interval, never as its midpoint.
+\end{remark}
+
 \paragraph{Family instantiations.} Write $\lambda(\alpha)$ for the CUSUM
 threshold calibrated to level $\alpha$, $n_{\mathrm{stat}}$ for the KSWIN
 statistic size, and $\sigma^2 \le 1/4$ for the per-step error variance.
@@ -230,15 +326,76 @@ Up to universal constants,
      \label{eq:Rkswin}
 \end{align}
 
+The family is deliberately not closed over every cumulative detector.
+EDDM~\cite{baena_eddm_2006} is \emph{not} instantiated here, and no
+$R_{\mathrm{EDDM}}$ is claimed. Its statistic is not an accumulated sum
+compared against a fixed threshold but a ratio of the cumulative mean and
+standard deviation of inter-error distances to the \emph{running maximum} of
+that same path, reset on detection. Two consequences place it outside
+Definition~\ref{def:requirement} as instantiated above: the comparison level is
+not computed at all while the running maximum is still being raised, and the
+statistic is diluted by every pre-change error since the last reset, so the
+post-change evidence required grows with the length of the stationary history
+and does not scale as $\lambda/\Delta e$. Modelling it is left open
+(Appendix~\ref{sec:prop3}); the \emph{empirical} EDDM collapse of
+Section~\ref{sec:proteus} is a measurement and stands independently of any
+requirement being assigned to it.
+
 \begin{corollary}[Family split]\label{cor:split}
-  The false-alarm price enters $R_{\mathrm{CUSUM}}$ additively and
-  independently of $W$, and enters $R_{\mathrm{ADWIN}}$ and
-  $R_{\mathrm{KSWIN}}$ inside a square root of $W$. Hence, as $W \to 0$,
-  $R_{\mathrm{CUSUM}} \to \lambda(\alpha) > 0$ whereas
-  $R_{\mathrm{ADWIN}} \to 0$. Cumulative monitors carry an incompressible
-  requirement that short transients cannot meet; windowed monitors do not.
+  Let $\alpha \to 0$ at fixed $W$, $\varepsilon$ and $n_{\mathrm{stat}}$. Then
+  \begin{equation}\label{eq:split_alpha}
+    R_{\mathrm{CUSUM}} = \tfrac{1}{\theta^*}\ln\tfrac{1}{\alpha}\,(1+o(1)),
+    \qquad
+    R_{\mathrm{ADWIN}},\ R_{\mathrm{KSWIN}}
+      = \Theta\Bigl(\sqrt{\ln\tfrac{1}{\alpha}}\Bigr),
+  \end{equation}
+  where $\theta^*$ is the Cram\'er root of the error increment. The
+  false-alarm price is therefore \emph{linear} in $\ln(1/\alpha)$ for the
+  cumulative monitor and \emph{square-root} for the windowed and
+  distributional ones, so for every fixed budget $A$ there is a level
+  $\alpha^\dagger$ below which the cumulative monitor alone fails.
+  In $W$ the three separate differently again: the $\alpha$-price of
+  $R_{\mathrm{CUSUM}}$ is free of $W$, that of $R_{\mathrm{ADWIN}}$ vanishes as
+  $W \to 0$, and that of $R_{\mathrm{KSWIN}}$ is free of $W$ and set by
+  $n_{\mathrm{stat}}$ alone. Proof: Appendix~\ref{sec:prop3}.
 \end{corollary}
 
-Corollary~\ref{cor:split} derives the empirically observed separation
-between the cumulative and the windowed families from the scaling of
-$R$ in $W$, rather than positing it as a taxonomy.
+Corollary~\ref{cor:split} derives the empirically observed separation between
+the cumulative and the windowed families from a scaling law rather than
+positing it as a taxonomy. The submitted version stated the split in $W$ alone
+and placed the $\alpha$-price of $R_{\mathrm{KSWIN}}$ ``inside a square root of
+$W$'', which~\eqref{eq:Rkswin} contradicts: that term carries no $W$. The
+operative axis is $\alpha$, which the practitioner sets, rather than $W$, which
+the classifier does.
+
+\begin{remark}[The split, at the measured operating point]\label{rem:split_measured}
+  At $\Delta e = 0.3268$, $W = 57.4$, $\varepsilon = 0.05$,
+  $n_{\mathrm{stat}} = 30$ and $\theta^* = 0.6813$, with every monitor read at
+  the \emph{same} $\alpha$ as Definition~\ref{def:monitor} requires, the three
+  requirements and the measured ceiling $\max_t A_{\mathrm{unrefl}} = 33.5$ give
+
+  \smallskip
+  \centerline{\begin{tabular}{rrrrrl}
+    \toprule
+    $\lambda$ & $\alpha$ & $\ln\frac{1}{\alpha}$ &
+      $R_{\mathrm{CUSUM}}$ & $R_{\mathrm{ADWIN}}$ / $R_{\mathrm{KSWIN}}$ & met \\
+    \midrule
+     8 & $1.7\!\times\!10^{-3}$  &  6.4 & 17.3 & 27.7 / 23.8 & all three \\
+    15 & $1.4\!\times\!10^{-5}$  & 11.2 & 24.3 & 31.1 / 28.1 & all three \\
+    25 & $1.6\!\times\!10^{-8}$  & 18.0 & 34.3 & 35.2 / 32.9 & KSWIN \\
+    50 & $6.3\!\times\!10^{-16}$ & 35.0 & 59.3 & 43.3 / 42.0 & none \\
+    \bottomrule
+  \end{tabular}}
+  \smallskip
+
+  \noindent The CUSUM column advances by $1.468$ per unit of $\ln(1/\alpha)$,
+  which is $1/\theta^*$ to three digits, and is the cheapest of the three until
+  $\ln(1/\alpha) \approx 13$; past that it is the dearest.
+  Read against $\eqref{eq:floor_chord}$, whose interval at this point is
+  $[13.9, 18.3]$, the arithmetic settles what kind of blind spot this is: at
+  $\lambda = 50$ the budget clears the information-theoretic floor by a factor
+  between $1.8$ and $2.4$ and fails $R_{\mathrm{CUSUM}}$ by $25.8$ units.
+  The evidence is there; the cumulative monitor cannot spend it at that
+  false-alarm level. That is the second regime of Theorem~\ref{thm:floor}, and
+  it is why a detector-side resolution exists at all.
+\end{remark}
