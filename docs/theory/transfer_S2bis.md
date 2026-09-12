@@ -3,7 +3,7 @@
 Parent `3f59b35`, branch `stream-s2bis`. Decision rules fixed before measurement in
 `docs/prompts/s2bis-decision-rules.md` (`acbf764`).
 
-**Headline.** The published flooding ratio is reproduced exactly (10.570 against Table II's 10.57)
+**Headline.** The published flooding ratio is reproduced to four figures (10.570 against Table II's 10.57)
 and **collapses to 1.270 [1.156, 1.426]** once each pipeline's false-alarm budget is set over the
 span its detector actually runs armed. Rule B3 fires **COLLAPSE**; 89.9 % of the published
 log-ratio is threshold-attributable. The flooding half of the thesis is reformulated, not
@@ -458,9 +458,43 @@ side by side and neither absorbed.
 
 ---
 
+## 4 bis. T-D — EDDM: the `0/1080` is an arming failure
+
+Measured on the streams that produce it, with `exp_R4_main_table.run_concept_drift` instrumented
+for the error count; the instrumented loop reproduces R4's own detections exactly, so it is R4's
+pipeline and not a re-implementation
+(`results/S2bis_calibration/tables/s2bis_proteus_eddm_arming.csv`).
+
+| | EDDM + HT | EDDM + ARF (`c_int = 1`) |
+|---|---:|---:|
+| pre-change errors at `t = T_DRIFT` | **0** | **0** |
+| errors required (`warm_start`) | 30 | 30 |
+| errors over the whole 8 000-step stream | 32 | **9** |
+| step of the 30th error | ~4 030 (30 steps **after** the change) | **never** |
+| detections | 1 | **0** |
+
+**Both prior readings of the `0/1080` are wrong.** The brief transferred the S6 warm-start control
+(24 errors against 30) from a 1 000-step Bernoulli trace to ProteuS. The plan corrected it with
+`n_0_errors = 96.0` from `s2_eddm.json` — but that figure is `p_0(S6) = 0.024 x 4000`, the S6 base
+rate applied to the ProteuS span *length*, and no ProteuS measurement of it existed before this
+stream, because `exp_R4_main_table.py` records no error stream. The measured value is **0**.
+
+The conclusion the brief reached is right and its reason is not: the `0/1080` **is** an unarmed
+detector, because the ProteuS pre-change label is constant and the classifier is exact before the
+change, and on the ARF arm the detector never arms at any point in the run. That is an *arming*
+failure, not an accumulation failure: `prop:starvation`'s stopping-time argument never gets the
+chance to apply. Full reading, and the site inventory, in
+`docs/theory/S2bis_narrative_payload.md` (T-D). **No patch applied.**
+
+This strengthens the phenomenon rather than weakening it — *nine errors in eight thousand steps* is
+a sharper statement of evidence erasure than any alarm count — while withdrawing the mechanism
+attributed to it.
+
+---
+
 ## 5. Divergences from `plans/PLAN_S2-bis.md`, declared rather than silently absorbed
 
-Three. In each case the plan's statement is contradicted by the repository's own arithmetic or by
+Four. In each case the plan's statement is contradicted by the repository's own arithmetic or by
 measurement, and the code follows the arithmetic while this document records the divergence.
 
 1. **`lambda_eq` is monotone INCREASING in `p_true`, not decreasing.** The plan's guard-rail list
@@ -480,7 +514,7 @@ measurement, and the code follows the arithmetic while this document records the
    the two-pass formula, not dispersion. `nunique()` compares the stored values themselves and is
    the estimator the rule means.
 
-5. **Both manuscript sites the plan directs T-A and T-B at are inside the excluded subsections.**
+4. **Both manuscript sites the plan directs T-A and T-B at are inside the excluded subsections.**
    `plans/PLAN_S2-bis.md` sends the T-B sentence to `.tex:287` and the `lambda_FA` provenance is
    carried by `res:tension` at `.tex:397`; the exclusion spans measured from the manuscript's own
    headings are `sec:race` L168-184, `sec:hydra` L185-209, **`sec:starvation` L210-295** and
@@ -492,7 +526,7 @@ measurement, and the code follows the arithmetic while this document records the
 
 And one **undeclared degenerate case discovered in measurement**:
 
-6. **Rule B7 declares the bisection CEILING terminal and says nothing about the FLOOR.** On ProteuS
+5. **Rule B7 declares the bisection CEILING terminal and says nothing about the FLOOR.** On ProteuS
    `lambda_eq` returns the lower end of `S2BIS_LAMBDA_BRACKET` for every couple, which means the
    budget is met at every admissible threshold and constrains nothing. That is a bound, exactly as
    `SATURATED` is, and must never be read as a calibrated value. The code reports it as

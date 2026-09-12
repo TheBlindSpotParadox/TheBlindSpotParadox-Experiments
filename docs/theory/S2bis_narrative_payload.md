@@ -45,8 +45,10 @@ Three statement-level rules this block must keep:
    magnitude across `p_true in [0.015, 0.032]` (`1.1e14` to `1.1e23` at `lambda = 50`); the floor
    survives that only because `ARL_0` enters it through `ln(1/alpha)` alone. Rule B8.
 2. The chord bound, not the chi-square relaxation, is the one quoted. At `p_true = 0.024` the
-   chi-square step is loose by `\ChiLoose` and returns a floor of 1.80; the chord bound returns
-   15.40. Quoting 1.80 would make the clearance look ten times larger than it is.
+   chi-square step is loose by a factor `\ChiLoose` on the KL term and returns a floor of **1.80**
+   where the chord bound returns **15.40**. Quoting 1.80 would put the clearance under the measured
+   ceiling at `33.51 - 1.80 = 31.7` instead of `33.51 - 15.40 = 18.1`, overstating it by a factor
+   1.75 — and it is the clearance, not the floor, that the blind-spot claim rests on.
 3. `lambda_op` is quoted as its bootstrap interval. The point estimate 21.9283 is never the
    decision variable — the S6 near-miss at `q05(S_max) = 15.219` against a threshold of 15.00 is
    why.
@@ -149,10 +151,12 @@ restatement.
 > operational: *set the monitor's threshold from the false-alarm budget of the span it will
 > actually run armed over, on the error stream of the classifier it will actually be paired with,
 > and check that the resulting requirement lies below the measured evidence ceiling.* Each clause
-> is load-bearing and each is violated somewhere in the literature this paper reviews --- budgets
-> set on a warm-up an order of magnitude shorter than the armed span, thresholds shared across
-> classifiers whose error volatility differs by a factor of six, and detector families compared at
-> false-alarm levels thirteen orders of magnitude apart.
+> is load-bearing, and each is violated somewhere in the experiments this paper itself reports ---
+> a budget set on a warm-up $\SpanOverWarm$ times shorter than the armed span (Section~\ref{sec:crossover}),
+> one threshold shared across classifiers whose pre-change error volatility differs by a factor of
+> three (Section~\ref{sec:proteus}), and detector families compared at false-alarm levels thirteen
+> orders of magnitude apart (Section~\ref{sec:discussion}). We do not claim the literature does
+> better; we claim we can now say what \emph{better} would mean.
 
 **The flooding half, restated.** Rule B3 returned **COLLAPSE**: the `F1` ratio of
 `10.57` on *gradual\_balanced* — reproduced here to four figures from the raw CSVs — falls to

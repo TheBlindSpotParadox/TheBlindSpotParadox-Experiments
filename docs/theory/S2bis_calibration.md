@@ -38,7 +38,41 @@ per-worker PRNG locks of R4 and R5 verbatim. Neither a global `np.random.seed` n
 
 ## 2. Artifact hashes
 
-*(filled on completion of the two campaigns)*
+**Bit-reproducibility, and how each phase was verified.** The evidence is not uniform across the
+three modules and the difference is declared rather than glossed.
+
+| module | verification | wall clock |
+|---|---|---|
+| `s2bis_r1_ppre.py` | **full double run**, artifacts byte-identical | 1.6 s per run |
+| `s2bis_lambda_eq.py` | **full double run** on the complete 3-variant grid, artifacts byte-identical | 3 768 s then 3 760 s |
+| `s2bis_proteus_calibration.py` | **declared-subset double run** — transition 1 of 12, all 30 seeds, all 3 regimes, all six couples, the full threshold set; same code path, only the number of `(transition, seed)` cells submitted to joblib differs. The full 12-transition grid is then run once | see the table in `docs/ENVIRONMENT.md` |
+
+The subset substitution on Phase 2 is a cost decision and is stated as one: a second full ProteuS
+grid is ~2 h of exclusive host time for a check whose failure mode — joblib result ordering and the
+per-worker PRNG lock — is fully exercised at 30-worker scale. It is weaker evidence than Phase 1's
+and is labelled as such.
+
+```
+fa1826083309e7188b12ddebf2b8682542dcdaf2f56c40a9942d4e717396a962  s2bis_lambda_eq_insects.csv
+34ed59d6237db3e25987d0b000de67011fb99eb1a51331036e4815b6e8e029ef  s2bis_insects_sweep.csv
+9c5432176d38ee7c5b0b83fd7a1b5502403fd82faf3f3e93a028116268d60805  s2bis_flooding_gate.json
+16a30e04440e09462c5949d8207545649ca006ce40c9e53170a2d51646fbc55b  s2bis_r1_counterfactual.csv
+b6792b295888da65f9c1dc49ebf67ac7bb5cba017aed6b86c3a0a15cdb0e34f6  s2bis_r1_ppre.json
+PROTEUS_LAMBDA_EQ_HASH  s2bis_lambda_eq_proteus.csv
+PROTEUS_SWEEP_HASH  s2bis_proteus_sweep.csv
+PROTEUS_EDDM_HASH  s2bis_proteus_eddm_arming.csv
+PROTEUS_GATE_HASH  s2bis_proteus_gate.json
+```
+
+All paths relative to `results/S2bis_calibration/tables/`. S2-bis writes no artifact outside that
+directory. `sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt` reports
+**29 OK and 5 FAILED**, and the five failures are exactly the set declared in
+`results/audit_S7/_baseline/authorized_deviations.txt` — verified by set comparison, not by
+inspection. **S2-bis adds no entry to `authorized_deviations.txt`.**
+
+Both JSON artifacts parse under a strict reader: no `NaN` and no `Infinity` token is emitted, a
+statistic with no defined value being written as `null` instead (`s2bis_proteus_calibration._num`).
+No artifact under `results/S2_theory/` emits one either, and none is introduced here.
 
 ## 3. Measurements
 
