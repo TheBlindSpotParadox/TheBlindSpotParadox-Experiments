@@ -1,4 +1,4 @@
-# The Blind Spot Paradox Experiments
+# When Adaptation Erases the Evidence — Experiments
 
 ## 1. Environment and Dependencies (Prerequisites)
 

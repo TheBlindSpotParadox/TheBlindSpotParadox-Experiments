@@ -2,6 +2,12 @@
 
 ## Manuscript of record
 
+Title, since action A8: **When Adaptation Erases the Evidence: Detectability Limits of Drift
+Monitors Coupled with Adaptive Classifiers**. The previous title, *The Blind Spot Paradox: When
+Adaptive Classifiers Defeat Drift Detectors*, is revoked. The phenomenon keeps the name *blind
+spot* in the body — `sec:blindspot`, `def:blindspot` and contribution (C1) — which the title no
+longer carries; that disjunction is deliberate and open.
+
 **`docs/manuscript/articleA_blindspot_v64_camera_ready.tex`** (bibliography
 `docs/manuscript/articleA_biblio_v64.bib`) is the living manuscript of record. Every
 reconciliation against `results/`, every numeral correction, and every compile check

@@ -44,13 +44,39 @@ Deux termes satisfont les trois conditions. Tous les autres sont traduits.
 
 ## Escalade vers l'instance primaire
 
-Le titre contient `Defeat Drift Detectors`. Le verbe est de la même famille que
-les superlatifs supprimés et sera lu comme tel par un reviewer qui a coché
-« présentation : below average ». Trois options, décision hors périmètre S5 :
+**TRANCHÉ — Action A8.** Le titre retenu est :
+
+> **When Adaptation Erases the Evidence: Detectability Limits of Drift Monitors
+> Coupled with Adaptive Classifiers**
+
+Aucune des trois options ci-dessous n'a été retenue ; elles sont conservées pour
+la traçabilité de l'arbitrage.
+
+L'ancien titre contenait `Defeat Drift Detectors`. Le verbe était de la même
+famille que les superlatifs supprimés et aurait été lu comme tel par un reviewer
+qui a coché « présentation : below average ». Trois options avaient été
+proposées, décision alors hors périmètre S5 :
 
 1. `Monitoring Under Closed-Loop Adaptation: When Self-Repair Starves Drift Detectors`
 2. `The Adaptive Blind Spot: Transient-Change Detection on an Endogenous Error Stream`
 3. `Self-Repair Is Not Self-Report: Drift Monitoring for Adaptive Stream Classifiers`
 
-L'option 3 place la réponse au reviewer #2 dans le titre. L'option 2 est la plus
-neutre et la plus lisible par un comité orienté théorie du changement de point.
+L'option 3 plaçait la réponse au reviewer #2 dans le titre. L'option 2 était la
+plus neutre et la plus lisible par un comité orienté théorie du changement de
+point.
+
+Ce que le titre retenu apporte sur les trois : `Erases the Evidence` nomme le
+mécanisme tel que S6 l'a mesuré — l'effacement vient à 99,3 % de l'apprentissage
+incrémental des arbres survivants, pas des remplacements — et reste agnostique
+quant au mécanisme précis, ce que les options 1 et 3 ne sont pas (`Self-Repair`,
+`Starves` désignent le remplacement). `Detectability Limits` correspond au
+résultat effectivement livré, le plancher mesuré `Δe_c = 0.120 [0.114, 0.127]`,
+et non à l'impossibilité que la v63 annonçait.
+
+**Point ouvert que l'arbitrage ne ferme pas.** Le titre ne contient plus
+`blind spot`, alors que le corps emploie le terme comme nom du phénomène :
+`\section{The Blind Spot Paradox}\label{sec:blindspot}`, `def:blindspot`, la
+contribution (C1) intitulée « The Blind Spot Paradox », et l'ouverture de la
+conclusion. Titre et nom du phénomène peuvent légitimement diverger, mais le
+choix doit être explicite : soit le corps conserve le terme, soit le phénomène
+est rebaptisé avec le titre. Non tranché ici.
