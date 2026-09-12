@@ -1,7 +1,18 @@
-# Cible de publication — Action A9
+# Cible de publication — Action A9, arbitrée en M8
 
-**Tranché.** La cible éditoriale est le **Journal Track ECML PKDD**, en soumission directe à
-**Machine Learning (Springer, MLJ)** ou **Data Mining and Knowledge Discovery (DAMI)**.
+**TRANCHÉ. La cible est _Machine Learning_ (Springer, MLJ), Journal Track ECML PKDD.**
+DAMI est écarté comme cible prioritaire et retenu comme repli éventuel.
+
+- **Classe LaTeX** : `\documentclass[smallextended]{svjour3}` — identique pour MLJ et DAMI, donc
+  le repli ne coûterait pas une seconde conversion.
+- **Cohérence éditoriale** : Gomes et al. ont introduit l'ARF dans MLJ même — vol. 106,
+  p. 1469–1495, `10.1007/s10994-017-5642-8`, clé `gomes_arf_2017`, citée 8 fois dans le corpus.
+  Publier la démonstration de son point aveugle au même endroit place la contribution dans son
+  lieu naturel.
+  *Vérification de cette justification : l'entrée bibliographique était typée `@inproceedings`
+  avec `booktitle = {Machine Learning}`. Corrigée en `@article` / `journal` — sous `spbasic` ou
+  `spmpsci`, Springer aurait rendu l'article fondateur de la revue cible comme un acte de
+  conférence.*
 
 La contrainte des 8 pages est **abandonnée définitivement**. Elle appartenait à la soumission
 ICDM 2026 et n'a plus de portée.
@@ -65,10 +76,13 @@ puis assembler ne coûte qu'une passe.
 
 ## Ce que ce document ne tranche pas
 
-- **Le choix final entre MLJ et DAMI — escaladé, bloquant pour la séquence ci-dessus.** La
-  conversion de classe ne peut pas commencer sans lui, et l'assemblage ne peut pas commencer sans
-  la conversion. C'est donc le premier arbitrage du Lot 3, pas un détail de forme. Il commande
-  aussi la limite de mots du résumé, seul point resté ouvert sur ce bloc.
+- **La limite de mots du résumé sous MLJ.** Il fait 339 mots. À relever dans les instructions aux
+  auteurs de la revue et à appliquer au moment de la conversion, pas avant.
+- **Le sort de `\usepackage{cite}`**, chargé à `.tex:5`. Convention IEEE ; Springer ne l'emploie
+  pas. À retirer pendant la conversion, avec le changement de style bibliographique.
+- **Le nombre de pages compilé**, toujours non mesuré : les flux d'objets du PDF Tectonic sont
+  compressés et aucun extracteur n'est disponible dans les environnements `Trading` ou `tex`.
+  À relever manuellement après la conversion, quand la mise en page sera celle de la cible.
 - Le sort de l'étiquette `ICDM 2026`, encore affirmée dans 12 fichiers du dépôt
   (`config/experiment_ssot.py`, `exp_R5_config.py`, `run_all.sh`, les 9 `run_experiment_R*.sh`).
   Elle est factuellement périmée dès la présente action ; la correction est un `sed` d'une ligne,
