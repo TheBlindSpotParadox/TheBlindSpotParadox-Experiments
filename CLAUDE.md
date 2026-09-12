@@ -7,6 +7,13 @@
 reconciliation against `results/`, every numeral correction, and every compile check
 targets this file and no other.
 
+`docs/manuscript/CURRENT` carries that filename, and is the one place a tool should read it
+from — do not hard-code the name in a new script. `tests/test_manuscript_integrity.py::`
+`test_current_manuscript_is_unique_and_live` enforces the pointer: it fails if `CURRENT` is
+missing or names a file that does not exist, if a stray `.tex` appears at the repository root,
+or if a second compilable manuscript enters `docs/manuscript/` without being declared in that
+test's `ARCHIVED_MAIN_TEX`. Renaming the manuscript means editing `CURRENT`, not the tests.
+
 `docs/manuscript/articleA_blindspot_v63_camera_ready.tex` is **archived**: retained for
 lineage only. It is not edited, not compiled and not cited by any audit artifact. Line
 numbers quoted in reports predating stream S7-bis refer to v63 and do not transfer to

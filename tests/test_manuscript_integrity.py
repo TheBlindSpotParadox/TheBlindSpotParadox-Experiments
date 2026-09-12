@@ -11,6 +11,13 @@ Authored assets with no pipeline counterpart (`fig_ontology.tex`) are out of sco
 the check matches on basename, so a file the pipeline never writes is reported as unmatched and
 must be declared in AUTHORED below rather than pass by silence.
 
+Action A4 adds the single-source check. A second copy of the manuscript, carrying neither the
+S6 nor the S7-bis edits, was being served to an agent reading the project mount rather than the
+repository, and the resulting report described a manuscript two streams behind. The repository has
+never held that copy -- the check below proves it on every run instead of leaving the claim to a
+one-off grep -- and `docs/manuscript/CURRENT` now names the live document in one place any tool
+can read.
+
 Usage:  python -m pytest tests/test_manuscript_integrity.py -v
 """
 import hashlib
@@ -20,15 +27,32 @@ from pathlib import Path
 import pytest
 
 ROOT_DIR = Path(__file__).resolve().parent.parent
-MANUSCRIPT_FIGURES = ROOT_DIR / "docs" / "manuscript" / "figures"
+MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
+MANUSCRIPT_FIGURES = MANUSCRIPT_DIR / "figures"
 RESULTS_DIR = ROOT_DIR / "results"
+CURRENT = MANUSCRIPT_DIR / "CURRENT"
 
 # Assets authored in the manuscript tree, not produced by any experiment.
 AUTHORED = {"fig_ontology.tex"}
 
+# Main documents (a .tex carrying \documentclass) retained for lineage and deliberately NOT the
+# manuscript of record. Empty today: v63 is referenced by CLAUDE.md but is not in the repository.
+# Adding a file here is the declaration the check demands -- it is never a way to silence a
+# surprise, only to record an archive the operator intends to keep.
+ARCHIVED_MAIN_TEX = set()
+
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main_tex_documents():
+    """Every .tex under docs/manuscript/ that carries \\documentclass, i.e. is compilable on its own.
+
+    Discriminating on \\documentclass rather than on a filename pattern is what keeps the include
+    fragments (figures/fig_ontology.tex, tables/*.tex) out without a hand-maintained exclusion list."""
+    return sorted(p for p in MANUSCRIPT_DIR.rglob("*.tex")
+                  if "\\documentclass" in p.read_text(encoding="utf-8", errors="ignore"))
 
 
 def pipeline_counterparts(name):
@@ -63,3 +87,40 @@ def test_manuscript_figures_match_the_pipeline():
     assert not drifted, (
         "manuscript figure copies drifted from the artifacts the experiments produce. Re-copy from "
         "results/, do not re-render into docs/:\n  " + "\n  ".join(drifted))
+
+
+def test_current_manuscript_is_unique_and_live():
+    """docs/manuscript/CURRENT names the one live document, and nothing else claims that role.
+
+    Four failure modes, each observed or narrowly avoided in this project: CURRENT missing or
+    naming a file that does not exist; a stray .tex at the repository root shadowing the real one;
+    a second compilable manuscript in the tree with no declaration saying which is authoritative;
+    and CURRENT pointing at a document that is not the one the tests and the audit trail target."""
+    assert CURRENT.is_file(), (
+        f"{CURRENT.relative_to(ROOT_DIR)} is missing. It must contain the bare filename of the "
+        f"manuscript of record, one line, no path.")
+
+    lines = [ln.strip() for ln in CURRENT.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    assert len(lines) == 1, f"CURRENT must carry exactly one filename, found {len(lines)}: {lines}"
+    name = lines[0]
+    assert "/" not in name and "\\" not in name, f"CURRENT must carry a bare filename, got {name!r}"
+    assert name.endswith(".tex"), f"CURRENT must name a .tex file, got {name!r}"
+
+    target = MANUSCRIPT_DIR / name
+    assert target.is_file(), (
+        f"CURRENT names {name}, which does not exist under "
+        f"{MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/")
+
+    stray = sorted(p.name for p in ROOT_DIR.glob("*.tex"))
+    assert not stray, (
+        "stray .tex at the repository root, shadowing the manuscript of record. A root copy is "
+        "how a superseded manuscript gets read in place of the live one:\n  " + "\n  ".join(stray))
+
+    mains = main_tex_documents()
+    undeclared = [p for p in mains if p != target and p.name not in ARCHIVED_MAIN_TEX]
+    assert not undeclared, (
+        f"more than one compilable manuscript under {MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/ and "
+        f"CURRENT names {name}. Declare the others in ARCHIVED_MAIN_TEX or remove them:\n  "
+        + "\n  ".join(os.path.relpath(p, ROOT_DIR) for p in undeclared))
+    assert target in mains, (
+        f"CURRENT names {name}, but it carries no \\documentclass and is not compilable on its own")
