@@ -62,6 +62,11 @@
 \newcommand{\DeCrit}{0.120}                  % measured Action 4: 0.1197, n=300
 \newcommand{\DeCritCI}{[0.114, 0.127]}       % 95% bootstrap CI (10,000 draws)
 
+% Artifact repository, anonymised. Declared once here so the venue never leaks into the body.
+% \url{\RepoURL} expands only because this URL carries no catcode-active character. If it ever
+% gains a # % ~ _ or &, switch the call site to \expandafter\url\expandafter{\RepoURL}.
+\newcommand{\RepoURL}{https://anonymous.4open.science/r/TheBlindSpot-Experiments}
+
 % ─────────────────────────────────────────────────────────────────
 \IEEEoverridecommandlockouts
 \title{When Adaptation Erases the Evidence: Detectability Limits of Drift Monitors Coupled with Adaptive Classifiers}
@@ -404,7 +409,7 @@ For cumulative-evidence monitors, the most architecturally robust alternative is
 \section{Empirical Validation}\label{sec:experiments}
 % ══════════════════════════════════════════════════════════════════
 
-We validate the phenomenon across two complementary regimes bracketing its operating range: a controlled one (instrumented Bernoulli, Section~\ref{sec:bernoulli_validation}; $\Delta e \in [0.02, 0.50]$) and a realistic financial one (ProteuS, Section~\ref{sec:proteus}; strong structural $\Delta e$). A pipeline-correctness check on standard benchmarks (Section~\ref{sec:crossover}) and their masking effect (Section~\ref{sec:limitations}) complete the picture. All experiments ran on an AMD EPYC 8224P (24 cores, 48 threads) with 192\,GB RAM. On that host the synthetic and ProteuS pipelines (R1--R4, R6--R9) reproduce in $1$\,h\,$58$\,min of measured wall-clock time; the checkpointed real-world BAF evaluation dominates the remaining cost and is timed separately. The host specification, the pinned package versions and the measured per-stage wall-clock times are recorded in \texttt{docs/ENVIRONMENT.md} of the artifact repository. The code to reproduce all experiments is available anonymously at: \url{https://github.com/TheBlindSpot-ICDM2026/The-Blind-Spot-Paradox-Experiments}.
+We validate the phenomenon across two complementary regimes bracketing its operating range: a controlled one (instrumented Bernoulli, Section~\ref{sec:bernoulli_validation}; $\Delta e \in [0.02, 0.50]$) and a realistic financial one (ProteuS, Section~\ref{sec:proteus}; strong structural $\Delta e$). A pipeline-correctness check on standard benchmarks (Section~\ref{sec:crossover}) and their masking effect (Section~\ref{sec:limitations}) complete the picture. All experiments ran on an AMD EPYC 8224P (24 cores, 48 threads) with 192\,GB RAM. On that host the synthetic and ProteuS pipelines (R1--R4, R6--R9) reproduce in $1$\,h\,$58$\,min of measured wall-clock time; the checkpointed real-world BAF evaluation dominates the remaining cost and is timed separately. The host specification, the pinned package versions and the measured per-stage wall-clock times are recorded in \texttt{docs/ENVIRONMENT.md} of the artifact repository. The code to reproduce all experiments is available anonymously at: \url{\RepoURL}.
 
 \subsection{Regime 1: Instrumented Bernoulli Race Validation}\label{sec:bernoulli_validation}
 
