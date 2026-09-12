@@ -250,3 +250,33 @@ def test_sections_assemble_into_the_main_document():
     assert not dangling, (
         "\\ref targets defined in no .tex of the manuscript tree; these typeset as ??:\n  "
         + "\n  ".join(dangling))
+
+
+# Sources carrying status X in docs/editorial/source_verification.md: unverified in session, or
+# rescinded, and therefore not citable. The ledger is a markdown table nobody re-reads before adding
+# a reference; this is what actually holds the line. SR 11-7 was rescinded on 2026-04-17 and
+# replaced by Fed SR 26-2 / OCC 2026-13 -- citing it as a current requirement would be a factual
+# error, not a stylistic one.
+PROSCRIBED_KEYS = {"fiddler", "arize", "azure_data_drift", "azure_ml_drift", "sr_11_7", "sr11_7"}
+
+
+def test_proscribed_sources_are_not_cited():
+    """Action A10. None of the status-X sources may enter the bibliography or be cited.
+
+    Checked in both directions, because either alone leaves a hole: an entry with no citation is a
+    loaded gun the next author finds and fires, and a citation with no entry is a dangling key the
+    bibliography guard would report as a different defect entirely."""
+    entries = {k.lower(): v for k, v in bib_entries().items()}
+    cited = {k.lower(): v for k, v in cited_keys().items()}
+
+    defined = [f"{k} defined in {', '.join(entries[k])}" for k in sorted(PROSCRIBED_KEYS)
+               if k in entries]
+    used = [f"{k} cited by {', '.join(sorted(set(cited[k])))}" for k in sorted(PROSCRIBED_KEYS)
+            if k in cited]
+
+    assert not defined, (
+        "bibliography entries for sources marked X in docs/editorial/source_verification.md:\n  "
+        + "\n  ".join(defined))
+    assert not used, (
+        "citations of sources marked X in docs/editorial/source_verification.md:\n  "
+        + "\n  ".join(used))

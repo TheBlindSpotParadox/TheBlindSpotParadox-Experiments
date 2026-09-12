@@ -1,5 +1,6 @@
 # experiment_ssot.py
-"""Single source of truth for the experimental constants of "The Blind Spot Paradox" (ICDM 2026).
+"""Single source of truth for the experimental constants of the blind spot study
+(Journal Track / Reference Pipeline).
 
 Form generalised from `experiments/R5_real_world_evaluation/exp_R5_config.py`: dynamic `ROOT_DIR`,
 named module-level constants, no experiment logic. The only callable is the River private-attribute
