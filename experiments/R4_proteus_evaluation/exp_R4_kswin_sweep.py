@@ -136,7 +136,11 @@ def run_concept_drift_kswin(df, model, detector_factory):
 
 def kswin(seed, alpha): return drift.KSWIN(alpha=alpha, window_size=100, stat_size=30, seed=seed)
 def adwin(c): return drift.ADWIN(delta=0.002, clock=c)
-def make_arf(seed, c): return forest.ARFClassifier(n_models=ssot.R4_N_MODELS, seed=seed, drift_detector=adwin(c))
+def make_arf(seed, c):
+    # S7-ter/LOT B: warning_detector unified onto the drift detector (was River's ARF default
+    # ADWIN(delta=0.01, clock=32)). Kept identical to exp_R4_main_table.make_arf.
+    return forest.ARFClassifier(n_models=ssot.R4_N_MODELS, seed=seed, drift_detector=adwin(c),
+                                warning_detector=drift.ADWIN(delta=ssot.R4_WARN_DELTA, clock=c))
 
 # ─── Targeted Execution Loop (Alpha Sweep) ────────────────────────────────────
 def process_transition_seed(trans, seed):
@@ -163,11 +167,21 @@ def process_transition_seed(trans, seed):
     return out
 
 # ─── Bootstrap CI & Formatting ────────────────────────────────────────────────
-def bootstrap_ci_half_width(series, n_resamples=1000):
-    arr = series.dropna().values
-    if len(arr) < 2: return 0.0
-    resamples = np.random.choice(arr, size=(n_resamples, len(arr)), replace=True)
-    means = np.mean(resamples, axis=1)
+def bootstrap_ci_half_width(values, seeds, rng, n_resamples=1000):
+    """95% CI half-width, resampling the SEED index -- not the run.
+
+    S7-ter/LOT B-2. The submitted version resampled the 360 rows of a cell off the GLOBAL NumPy
+    state while the Table I caption asserted the seed as the unit of statistical independence. The
+    two are incompatible: the 36 streams a seed produces share that seed's forest initialisation,
+    so a run-level resample understates the width. Scheme reused verbatim from
+    exp_R6_hydra_survival.py:105-111 -- resample seed indices, take percentiles of the per-replicate
+    mean -- on a locally injected default_rng, which is also what the repository's PRNG-isolation
+    rule requires of a bootstrap."""
+    per_seed = pd.Series(values).groupby(seeds).mean().dropna().to_numpy()
+    if len(per_seed) < 2:
+        return 0.0
+    idx = rng.integers(0, len(per_seed), size=(n_resamples, len(per_seed)))
+    means = per_seed[idx].mean(axis=1)
     return (np.percentile(means, 97.5) - np.percentile(means, 2.5)) / 2.0
 
 def format_cell(mean_val, ci_val, is_f1=False):
@@ -221,7 +235,8 @@ def cell_pair(agg, detector, clock, regime_raw, is_kswin):
 def build_table(agg):
     caption = (r"KSWIN sensitivity sweep ($\alpha \in \{0.001, 0.005, 0.01, 0.05\}$) on heteroscedastic ProteuS streams "
                r"(12 transitions $\times$ 30 seeds $=$ 360 runs per cell). Evaluates the robustness of the distribution-based "
-               r"test against false-alarm flooding under high GARCH variance (Cal. B). Mean $\pm$ 95\% CI (1000 bootstrap resamples).")
+               r"test against false-alarm flooding under high GARCH variance (Cal. B). Mean $\pm$ 95\% CI "
+               r"(1000 bootstrap resamples of the 30 seed indices, paired across arms).")
     L = [r"\begin{table*}[t]", r"  \centering", rf"  \caption{{{caption}}}",
          r"  \label{tab:kswin_alpha_sweep}", r"  \begin{tabular}{@{}lrrrrrr@{}}", r"    \toprule",
          r"                                                   & \multicolumn{2}{c}{\textbf{IID Baseline}} & \multicolumn{2}{c}{\textbf{Cal. A (Low GARCH)}} & \multicolumn{2}{c}{\textbf{Cal. B (High GARCH)}} \\",
@@ -253,13 +268,17 @@ def main():
     ])
     sign.to_csv(SIGN_CSV, index=False)
 
-    # C-Level Overflow Prevention applied to the bootstrap global seed
-    safe_bootstrap_seed = BOOTSTRAP_SEED % (2**31 - 1)
-    np.random.seed(safe_bootstrap_seed)
-    agg = df.groupby(['Detector', 'Clock', 'Calibration']).agg(
-        F1_mean=('F1', 'mean'), F1_ci=('F1', bootstrap_ci_half_width),
-        ADD_mean=('ADD', lambda x: np.nan if x.dropna().empty else x.dropna().mean()),
-        ADD_ci=('ADD', bootstrap_ci_half_width)).reset_index()
+    # Aggregation + seed-paired bootstrap on a locally injected generator (S7-ter/LOT B-2).
+    # groupby iterates its keys in sorted order, so one generator consumed across the cells stays
+    # deterministic without a global seeding.
+    rng = np.random.default_rng(BOOTSTRAP_SEED)
+    agg = pd.DataFrame([
+        {'Detector': det, 'Clock': clk, 'Calibration': cal,
+         'F1_mean': g['F1'].mean(),
+         'F1_ci': bootstrap_ci_half_width(g['F1'].to_numpy(), g['Seed'].to_numpy(), rng),
+         'ADD_mean': np.nan if g['ADD'].dropna().empty else g['ADD'].dropna().mean(),
+         'ADD_ci': bootstrap_ci_half_width(g['ADD'].to_numpy(), g['Seed'].to_numpy(), rng)}
+        for (det, clk, cal), g in df.groupby(['Detector', 'Clock', 'Calibration'])])
 
     tex = build_table(agg)
     OUT_TEX.write_text(tex, encoding='utf-8')

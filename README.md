@@ -293,4 +293,11 @@ chmod +x run_experiment_R9.sh
 
 **Pipelines covered by this repository:** Figure 1 (R1), Figures 2A–2C (R2), Figure 3 (R3), Table I and the KSWIN $\alpha$-sweep (R4), Table II and the flooding decomposition (R5), the Hydra Effect acceleration bounds (R6), the clock-mismatch / Regime-1 matrix (R7), the $\tau_{\mathrm{ARF}}$ warm-up sensitivity behind Definition 11's closing paragraph (R8), and the Critical Ensemble Size example (R9).
 
-**ARF detector configuration (intentional heterogeneity):** in R1, R2 and R5 the ARF pins both its internal `drift_detector` and `warning_detector` to `ADWIN(clock=c_int)`. In R3 and R4 only the `drift_detector` is pinned; the `warning_detector` keeps river's default (`ADWIN(clock=32)`). This matches exactly how the submitted manuscript artifacts were generated. Throughout the paper, $c_{\mathrm{int}}$ refers to the clock of the **drift** detector.
+**ARF detector configuration (unified since stream S7-ter):** every ARF in this repository now pins both its internal `drift_detector` and its `warning_detector` to `ADWIN(delta=0.002, clock=c_int)`. Throughout the paper, $c_{\mathrm{int}}$ refers to the clock of the **drift** detector.
+
+Two corrections to the previous wording, both measured on the pinned build rather than inferred:
+
+1. **River's warning default is two parameters, not one.** River 0.23.0 resolves an unset `warning_detector` on `ARFClassifier` to `ADWIN(delta=0.01, clock=32)`, an unset `drift_detector` to `ADWIN(delta=0.001, clock=32)`, and a bare `drift.ADWIN()` to neither, at `delta=0.002, clock=32`. The previous text named the warning default as `ADWIN(clock=32)` and omitted its delta, which made the heterogeneity look like a clock mismatch when it was also a sensitivity mismatch.
+2. **The enumeration was incomplete.** R6, R7, R8 and R9 also pinned both detectors and were outside the list, as did `make_srp` inside R4 itself: R4 was drift-only for its ARF and both-pinned for its SRP, in the same file.
+
+The heterogeneity this section used to document therefore no longer exists. What it cost is recorded, not hidden: `results/audit_S7/_baseline/authorized_deviations.txt` carries the R3 and R4 artifact deviations with their measured effect, and the control arm under River's own defaults is archived beside them in `results/audit_S7/s7ter_arms/`.

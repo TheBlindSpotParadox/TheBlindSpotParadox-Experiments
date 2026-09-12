@@ -75,7 +75,13 @@ def run_single_seed(seed, delta_e, pipeline_type):
     if pipeline_type == 'HT':
         model = tree.HoeffdingTreeClassifier()
     elif pipeline_type == 'ARF':
-        model = forest.ARFClassifier(n_models=ssot.R3_N_MODELS, drift_detector=drift.ADWIN(clock=1), seed=seed)
+        # S7-ter/LOT B: warning_detector unified onto the drift detector. It was left unset,
+        # which River 0.23.0 resolves to ADWIN(delta=0.01, clock=32) -- two parameters away
+        # from drift.ADWIN(clock=1), not one.
+        model = forest.ARFClassifier(n_models=ssot.R3_N_MODELS, drift_detector=drift.ADWIN(clock=1),
+                                     warning_detector=drift.ADWIN(delta=ssot.R3_WARN_DELTA,
+                                                                  clock=ssot.R3_C_WARN),
+                                     seed=seed)
     elif pipeline_type == 'RF_Static':
         # Static Bagging without internal ADWIN tree resets -> Non-Adaptive Ensemble
         model = ensemble.BaggingClassifier(model=tree.HoeffdingTreeClassifier(), n_models=ssot.R3_N_MODELS, seed=seed)

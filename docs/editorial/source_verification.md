@@ -83,9 +83,32 @@ date ne prédit pas que l'information devienne fausse ce jour-là, elle force à
 
 | source | expires_on | motif de la réserve |
 |---|---|---|
-| EU AI Act, Art. 72 et Art. 15(4) — libellé | 2027-03-06 | Dispositions amendées par le Digital Omnibus on AI ; le portail officiel affiche un texte non à jour. Citer par numéro et objet reste correct, jamais le libellé littéral. |
-| EU AI Act, Art. 72 — acte d'exécution | 2027-03-06 | Échéance légale au 2 février 2026, adoption effective non vérifiée. Ne pas affirmer qu'il existe. |
-| AWS SageMaker Model Monitor — statut commercial | 2027-03-06 | Fermé aux nouveaux clients au 30/07/2026, pas de nouvelles fonctionnalités. Témoin de la pratique établie, jamais état de l'art courant. |
+| EU AI Act, Art. 72 et Art. 15(4) — libellé | 2027-03-12 | Le Digital Omnibus on AI n'est plus une proposition : adopté le 08/07/2026, publié au JO le 24/07/2026 (Règlement (UE) 2026/1744), en vigueur depuis le 27/07/2026. Il **n'amende pas** le libellé de l'Art. 15 — il ajoute un Art. 42(3) instaurant une présomption de conformité aux exigences de cybersécurité de l'Art. 15 pour les systèmes conformes au Règlement (UE) 2024/2847. L'Art. 72(3) est amendé. Le portail officiel de la Commission affiche toujours, sur les dispositions amendées, l'avertissement « text displayed on this page has not yet been updated to reflect those amendments » : le texte consolidé reste indisponible sur le portail, donc citer par numéro et objet, jamais le libellé littéral d'une disposition amendée. |
+| EU AI Act, Art. 72 — acte d'exécution | 2027-03-12 | Réserve confirmée et désormais motivée : aucune adoption de l'acte d'exécution à l'échéance légale du 2 février 2026 n'a pu être établie, et l'obligation elle-même a été remplacée par le Digital Omnibus, qui impose à la Commission d'adopter « guidance, including a template, on the post-market monitoring plan by 2 September 2027 ». Ne pas affirmer que l'acte d'exécution existe ; la prochaine échéance à surveiller est le 02/09/2027. |
+| AWS SageMaker Model Monitor — statut commercial | 2027-03-12 | Statut inchangé et reverifié sur la documentation AWS : « no longer open to new customers. Existing customers can continue to use the service as normal. AWS continues to invest in security and availability improvements for Model Monitor, but we do not plan to introduce new features. » Fermeture effective au 30/07/2026. Témoin de la pratique établie, jamais état de l'art courant. |
 
 Horizon de six mois à compter de la session de vérification. À la péremption : rouvrir chaque
 ligne, revérifier en session, puis repousser la date ou déclasser la source en **X**.
+
+### Session de re-vérification du 2026-09-12 (flux S7-ter, LOT E)
+
+Les trois réserves ont été rouvertes et revérifiées en ligne ce jour ; `expires_on` est repoussé de
+six mois, au **2027-03-12**. Aucune ne passe en **X** : les trois restent citables aux conditions
+énoncées ci-dessus, et les trois restent périssables.
+
+Ce que la session a changé, et qui n'était pas connu au 2026-09-06 :
+
+1. **Le Digital Omnibus on AI est en vigueur.** Il n'était qu'une proposition lors de la session
+   précédente. Adopté le 08/07/2026, publié au JO du 24/07/2026 comme Règlement (UE) 2026/1744,
+   en vigueur depuis le 27/07/2026.
+2. **L'Art. 15 n'est pas amendé dans son libellé.** C'est la citation la plus forte du registre et
+   elle en sort renforcée : le texte de l'Art. 15(4) n'est pas touché. Le Digital Omnibus agit à
+   côté, par un nouvel Art. 42(3) qui crée une présomption de conformité aux exigences de
+   cybersécurité de l'Art. 15. La réserve sur le libellé littéral se restreint donc aux
+   dispositions effectivement amendées, dont l'Art. 72.
+3. **L'acte d'exécution de l'Art. 72 n'existe toujours pas, et l'obligation a changé de forme.**
+   L'échéance du 2 février 2026 est dépassée sans adoption établie ; le Digital Omnibus la remplace
+   par une obligation de lignes directrices assorties d'un modèle, à échéance du 2 septembre 2027.
+   L'interdiction d'affirmer que l'acte existe est maintenue et désormais adossée à une raison
+   documentée plutôt qu'à une adoption non vérifiée.
+4. **AWS SageMaker Model Monitor : statut inchangé**, reverifié sur la documentation officielle.

@@ -339,3 +339,99 @@ def test_S6_phase0_gates_all_pass():
             failed.append(f"{gate} ({name}): {payload['verdict']}")
     assert not failed, "Phase-0 gates not passing:\n  " + "\n  ".join(failed)
     assert not json.loads((gates / "g2_api_map.json").read_text(encoding="utf-8"))["missing_attributes"]
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# S7-ter / D-4 — float round-trip guard on every CSV ingestion
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# The hazard this closes is a FUTURE read_csv, not a present one. Measured census at the time of
+# writing: 6 `.merge`/`.join` call sites in the repository, 4 of them on a float key, and exactly
+# one of those reading a CSV (test_tau_hat_identical_between_R6_and_R9 above), already hardened and
+# regression-locked by its `len(m) == len(r6) == len(r9)` assertion. The other three joins are
+# parquet-only, hence binary, hence immune. The specification's figure of "18 float joins" is not
+# reproducible by any grep attempted and its methodology is stated nowhere; it is recorded here as
+# UNRECONCILED rather than silently adopted or silently dropped.
+#
+# Rule: every pandas read_csv under experiments/ and tests/ carries float_precision='round_trip',
+# or is declared below with a motive. Same "option B applied to the remainder, not silence" pattern
+# the SSOT guard above uses for its unguarded perimeter.
+# Exemptions are keyed by `file:enclosing function`, not by line: a line key is invalidated by any
+# edit above the call, which fired twice in one stream on nothing but docstring edits. The function
+# name is stable under reformatting and still names one site precisely, and the staleness assertion
+# below fails loudly if a declared site stops existing.
+READ_CSV_ROOTS = ("experiments", "tests")
+ROUND_TRIP = "round_trip"
+
+_RAW_SOURCE = ("raw benchmark source, ingested once and never joined -- no .merge/.join anywhere "
+               "in this file; the float columns are features, not keys")
+_FORWARDER = ("kwargs-forwarding dispatch helper: the keyword is supplied by the caller, which a "
+              "static walk cannot resolve. Every CSV call site in this file passes it")
+
+READ_CSV_EXEMPTIONS = {
+    "experiments/R5_real_world_evaluation/exp_R5_compute_baf.py:simulate": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_compute_delta_e.py:error_stream_baf": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_compute_delta_e.py:error_stream_insects": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_compute_insects.py:simulate": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_smoke_test.py:smoke_baf": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_smoke_test.py:smoke_insects": _RAW_SOURCE,
+    "tests/test_R8_lambda_op.py:test_withdrawn_surrogate_is_absent_from_the_artifacts":
+        "nrows=0: reads the header row only, parses no float at all",
+    "tests/test_S7_consistency.py:_read": _FORWARDER,
+    "tests/test_R1_race_condition.py:_read": _FORWARDER,
+    "tests/test_R2_starvation.py:_read": _FORWARDER,
+    "tests/test_R3_crossover.py:_read": _FORWARDER,
+    "tests/test_R4_table1.py:_read": _FORWARDER,
+    "tests/test_R5_table2.py:_read": _FORWARDER,
+}
+
+
+def read_csv_sites(path):
+    """[(enclosing function name, lineno, round_trips)] for every pandas read_csv call in `path`."""
+    tree = ast.parse(path.read_text(encoding="utf-8"))
+    scopes = [(n.lineno, n.end_lineno, n.name) for n in ast.walk(tree)
+              if isinstance(n, (ast.FunctionDef, ast.AsyncFunctionDef))]
+    out = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.Call):
+            continue
+        func = node.func
+        name = func.attr if isinstance(func, ast.Attribute) else getattr(func, "id", None)
+        if name != "read_csv":
+            continue
+        enclosing = [s for s in scopes if s[0] <= node.lineno <= s[1]]
+        # innermost wins: the narrowest span containing the call
+        scope = min(enclosing, key=lambda s: s[1] - s[0])[2] if enclosing else "<module>"
+        kw = next((k.value for k in node.keywords if k.arg == "float_precision"), None)
+        out.append((scope, node.lineno,
+                    isinstance(kw, ast.Constant) and kw.value == ROUND_TRIP))
+    return out
+
+
+def test_every_csv_ingestion_round_trips_its_floats():
+    """The default pandas C parser loses 1 ULP on a float key and silently drops the join rows.
+
+    It cost 400 of 2000 rows on the R6/R9 boundary_shift join before the keyword was added there.
+    A bare read_csv is therefore a defect waiting for its first merge, and this walks for it."""
+    bad, seen = [], set()
+    for root in READ_CSV_ROOTS:
+        for p in sorted((ROOT_DIR / root).rglob("*.py")):
+            rel = str(p.relative_to(ROOT_DIR))
+            for scope, lineno, round_trips in read_csv_sites(p):
+                key = f"{rel}:{scope}"
+                seen.add(key)
+                if round_trips or key in READ_CSV_EXEMPTIONS:
+                    continue
+                bad.append(f"{key} (line {lineno}): read_csv without float_precision='{ROUND_TRIP}'")
+
+    assert len(seen) >= 10, (
+        f"guard inspected {len(seen)} read_csv sites, expected at least 10. The walk stopped "
+        f"matching: re-point it rather than leave a guard that verifies nothing.")
+    assert not bad, (
+        "CSV ingestion without float round-trip. Add float_precision='round_trip', or declare the "
+        "site in READ_CSV_EXEMPTIONS with its motive:\n  " + "\n  ".join(bad))
+
+    stale = [f"{key}  ({motive[:48]}...)" for key, motive in READ_CSV_EXEMPTIONS.items()
+             if key not in seen]
+    assert not stale, (
+        "declared read_csv exemptions that no longer point at a read_csv call -- an edit moved the "
+        "line and the exemption now covers nothing:\n  " + "\n  ".join(stale))

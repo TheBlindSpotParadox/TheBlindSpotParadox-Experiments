@@ -40,6 +40,70 @@ results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep_tdrift4000.csv
     reads off this sweep reproduce exactly: q05(tau_ARF) = 12.95 flat over Delta_e <= 0.16 at
     T_drift = 2000, rising 25.70 / 30.95 / 54.70 / 54.70 at T_drift = 4000.
 
+results/R3_regime_crossover/data/R3_regime_crossover_metrics.parquet
+    Stream S7-ter, LOT B. The ARF's warning_detector was unset, which River 0.23.0 resolves to
+    ADWIN(delta=0.01, clock=32). It is now pinned onto the drift detector at
+    ADWIN(delta=R3_WARN_DELTA=0.002, clock=R3_C_WARN=1), aligning R3 on R1, R2, R5-R9 and on
+    exp_R4's make_srp. The change moves TWO River parameters, not one.
+    Scope: exactly the 15 ARF rows move. The 15 HT rows and the 15 RF_Static rows are
+    byte-identical -- neither model carries a warning detector.
+    Measured effect, U0 (river defaults) -> U1 (unified), the numerals the manuscript reads:
+      missed detections at Delta_e = 0.50 :  100 %  -> 80 %
+      missed detections at Delta_e = 0.26 :    1 %  ->  4 %
+      missed detections at Delta_e = 0.16 :    1 %  -> 13 %
+      missed detections at Delta_e = 0.09 :    1 %  -> 69 %
+      acc(ARF) at Delta_e = 0.50          : 0.9840  -> 0.9797   (acc(RF) unchanged at 0.7498)
+      accuracy gap ARF - RF at 0.50       : 23.41 pp -> 22.99 pp
+      fp(HT)/fp(ARF), pooled              : 1.9802  -> 2.0000
+    THE BLIND SPOT IS STRONGER UNDER RIVER'S OWN DEFAULTS, NOT WEAKER. The unified configuration
+    makes the two ADWINs of a member identical clones, so the warning never leads the drift and no
+    background tree ever trains; that attenuates the very starvation the experiment measures. The
+    control arm is archived at results/audit_S7/s7ter_arms/, where r3_u0/ reproduces this file's
+    pre-S7-ter content BYTE FOR BYTE -- parquet and 300-dpi PNG -- from an explicit
+    ADWIN(delta=0.01, clock=32), which is the empirical proof of River's default resolution and of
+    this host's bit-reproducibility of R3.
+    Which arm the manuscript should publish is a scope decision, not an agent's call: ESCALATED to
+    the orchestrator with the measurement above. The repository is self-consistent under U1, the
+    arm the plan ruled.
+    Consequence: results/R3_regime_crossover/figures/Fig_R3_Regime_Crossover.png is regenerated and
+    docs/manuscript/figures/Fig_R3_Regime_Crossover.png re-copied from it, per
+    test_manuscript_assets_match_the_pipeline.
+
+results/R4_proteus_evaluation/data/exp_R4_results_aligned_fusion.csv
+results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
+    Stream S7-ter, LOT B, same unification applied to exp_R4_main_table.make_arf
+    (warning_detector = ADWIN(delta=R4_WARN_DELTA=0.002, clock=c), copying make_srp, which already
+    pinned both).
+    Measured effect: Table I is INVARIANT where the paper's claims live. The three blind-spot
+    collapses (PHT+ARF c=1, EDDM+ARF c=1, SRP+PHT c=1) stay at F1 = 0.00 exactly with ADD undefined
+    in all three GARCH regimes, and the KSWIN resolution stays at F1 = 1.00, ADD = 14 [0] with zero
+    variance at both clocks. Non-ARF rows are byte-identical.
+    What moves: cell means of the ARF rows that had left the warning unset --
+      PHT + ARF c=32   Cal. A 0.63 -> 0.67, Cal. B 0.56 -> 0.61, IID 0.68 -> 0.68
+      EDDM + ARF c=32  IID 0.069 -> 0.092, Cal. B 0.072 -> 0.083
+      ADWIN + ARF c=1  IID 0.961 -> 0.978, Cal. B 0.997 -> 1.000
+    and ONE seed-level count: ADWIN+ARF c=1 detects 1070/1080 runs against 1063/1080 before. The
+    five other contrasts, all six complete separations and every p = 2^-29 are unchanged.
+    exp_R4_results_KSWIN_alpha_sweep.csv and exp_R4_seed_level_tests_KSWIN_alpha_sweep.csv verify
+    BYTE-FOR-BYTE against the frozen baseline: the alpha sweep is invariant under the unification,
+    raw data included.
+    Second, independent change landed in the same regeneration and attributed separately by a second
+    full run (results/audit_S7/s7ter_arms/b31_u1/ vs b32_u1_boot/): the Table I bootstrap now
+    resamples the 30 SEED indices, paired across arms, on a locally injected default_rng, instead of
+    the 360 runs of a cell drawn from the global NumPy state. The caption asserted the seed as the
+    unit of statistical independence while the computation resampled runs; the two now agree.
+    Attribution is mechanical, not argued: between the two runs every raw CSV is byte-identical and
+    only the two rendered .tex files differ. The correction is NOT uniformly conservative -- it
+    measures a different variance component. IID half-widths: PHT+ARF c=32 +/-0.05 -> +/-0.12,
+    SRP+PHT c=32 +/-0.03 -> +/-0.07, but PHT+HT +/-0.04 -> +/-0.02 and EDDM+HT +/-0.05 -> +/-0.01.
+    Consequence: results/R4_proteus_evaluation/tables/table1_proteus_summary.tex is regenerated and
+    docs/manuscript/tables/table1_proteus_summary.tex re-copied from it.
+    results/R4_proteus_evaluation/tables/exp_R4_table_KSWIN_alpha_sweep.tex is regenerated too, for
+    the bootstrap reason alone -- its cell values are unchanged, only the half-widths move. It is not
+    in artifacts_sha256_pre_ssot.txt, so it consumes no deviation and is named here rather than left
+    to be noticed in a diff.
+
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt
-    -> expected: 29 OK, 5 FAILED (the five files above).
+    -> expected since stream S7-ter: 26 OK, 8 FAILED (the eight files above).
+    -> before S7-ter it was 29 OK, 5 FAILED.

@@ -305,3 +305,32 @@ def require_drift_tracker(model, warning=False):
             f"{type(model).__name__} missing {', '.join(missing)}: incompatible River version. "
             "Ensure River 0.23.0 is installed for proper internal tree swap tracking.")
     return model
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S7-ter — warning_detector unification (LOT B)
+# ══════════════════════════════════════════════════════════════════════════════
+# APPEND-ONLY BLOCK. No line above this banner is modified by stream S7-ter: stream S2 appends to
+# this same file in the same wave, and a mid-file edit merges silently wrong past
+# tests/test_S7_consistency.py, whose oracle is value-based and cannot see a rebased comment.
+#
+# Measured on the pinned build: River 0.23.0 resolves an unset ARFClassifier warning_detector to
+# ADWIN(delta=0.01, clock=32) and an unset drift_detector to ADWIN(delta=0.001, clock=32); a bare
+# drift.ADWIN() is neither, at delta=0.002, clock=32. R1, R2, R5-R9 and exp_R4's make_srp pin both
+# detectors at (0.002, c); R3 and exp_R4's make_arf pinned only the drift detector, so their warning
+# ran at (0.01, 32). The unification therefore moves TWO parameters, not the clock alone:
+# delta 0.01 -> 0.002 and clock 32 -> c.
+R3_C_WARN     = C_INT           # was River's ARF warning default clock = 32
+R3_WARN_DELTA = 0.002           # was River's ARF warning default delta = 0.01. Equals the delta of
+                                # R3's own drift.ADWIN(clock=1), which is River's bare-ADWIN default
+R4_WARN_DELTA = R4_ADWIN_DELTA  # 0.002: the warning detector is made an exact clone of the drift one
+
+# R4_C_WARN is deliberately NOT bound. R4 sweeps the internal clock over c in {1, 32} and the warning
+# clock follows the drift clock OF THE SAME PIPELINE; that is a coupling, not a constant, and binding
+# it to a literal is the defect this registry exists to prevent. The coupling is expressed at the
+# call site by reusing the drift detector's own factory, which is make_srp's existing pattern.
+
+# ESCALATED, NOT REWRITTEN: the trailing comment on R3_C_INT above ("warning_detector left at river
+# default (see README §5)") is false once the three call sites change. It is a MID-FILE line and is
+# left untouched for the reason stated in this banner; the one-line correction belongs to the
+# orchestrator's serialised pass, together with README §5 itself.

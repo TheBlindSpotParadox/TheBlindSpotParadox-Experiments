@@ -15,7 +15,7 @@ ROOT_DIR = Path(__file__).resolve().parent.parent
 CSV = ROOT_DIR / "results" / "R9_mcrit" / "data" / "exp_R9_mcrit_comparison.csv"
 
 def test_mcrit_numerical_example():
-    df = pd.read_csv(CSV)
+    df = pd.read_csv(CSV, float_precision="round_trip")
     if "reliability_r" not in df.columns or not np.isclose(df["reliability_r"], 0.95).any():
         pytest.skip("R9 artifact predates RELIABILITY_TARGETS=[0.99,0.95,0.50]; "
                     "test is false by construction until R9 is regenerated")
