@@ -56,7 +56,21 @@ withdrawn estimator; they are to be restated against the measured evidence ceili
    `theta*`, 3.3 orders of magnitude on `ARL_0` at `lambda = 50` — is confirmed and tabulated
    above. `R8_DELTA_P` was frozen at 0.005 pending action A2 and is now **removed**: R8 simulates
    no CUSUM, and the tolerance had exactly one consumer, the withdrawn rectangular surrogate.
-3. Assumption `ass:repair` (no recovery without replacement) is refutable and unverified. Falsified by any transient recovery driven by data rather than by swaps.
+3. ~~Assumption `ass:repair` (no recovery without replacement) is refutable and unverified~~
+   **CLOSED by A7: refuted and withdrawn.** Tested on the committed S6 traces
+   (`experiments/S6_synchronized_traces/s6_audit_ass_repair.py`, 100 seeds x 20 magnitudes of
+   the nominal arm, `delta_P = 0.01`). The pointwise statement holds in 31.0 % of 2,000 runs
+   under a cumulative mean from `tau*`, 83.1 % under a 20-step trailing mean, and is not
+   evaluable at all on the 89.7 % of intervals shorter than the 200-step window `bar_e_t`
+   denotes. The prediction this item anticipated — that transient data-driven recovery falsifies
+   it — is exactly what happens.
+   The ordering it supported survives without it: `tau_err` quantifies over all `s >= t`, so a
+   transient dip does not move `tau_erase`, and `tau_erase >= tau_swap^(1/M)` holds in
+   1,835/1,836 estimable runs. `prop:order` is restated on that measured fact and the assumption
+   is removed from `framework_v2.tex`. The converse half of the ordering,
+   `tau_erase <= tau_swap^(1)`, never followed from the assumption and is withdrawn on its own
+   evidence: 55.3 % where defined, with `tau_swap^(1)` undefined in 11.3 % of runs. `def:kappa`
+   no longer asserts `kappa >= 1` inside the definition; it is measured at 1,835/1,836.
 4. `W` treated as deterministic throughout. Must be handled as a random variable in S2, or the Proposition-9 defect is reproduced.
 
 ## Blocking gate for stream S6

@@ -336,8 +336,17 @@ Stream S6 Phases 0, 1 and 2 complete. Open items handed forward:
    the profile is a hump, not a plateau (section 4).
 3. `transfer_S1` — the starvation certificate should be restated on the budget ceiling and `W*`
    retired (section 6).
-4. `ass:repair` ("no recovery without replacement") remains unverified here and is directly testable
-   on the committed traces: it predicts `bar_e_t > p_0 + delta_P` on `[tau*, tau_swap^(1/M))` for
-   every run.
+4. ~~`ass:repair` ("no recovery without replacement") remains unverified here~~ **CLOSED by A7.**
+   The test this item prescribed was run on these traces:
+   `experiments/S6_synchronized_traces/s6_audit_ass_repair.py`. Verdict at `delta_P = 0.01`, arm
+   `full`, 2,000 runs — the prediction `bar_e_t > p_0 + delta_P` on `[tau*, tau_swap^(1/M))` holds
+   in 31.0 % of runs under a cumulative mean from `tau*` and 83.1 % under a 20-step trailing mean.
+   Under the 200-step window `bar_e_t` actually denotes it is **not evaluable**: the interval is
+   shorter than the window in 89.7 % of runs (mean 94.2 steps, median 40, against a window of 200).
+   That non-estimability is the same defect as open item 1 above, reached from the other side.
+   The assumption is withdrawn from `framework_v2.tex`. What it was introduced to support survives
+   without it, because `tau_err` quantifies over all `s >= t` and transient dips do not move
+   `tau_erase`: the ordering `tau_erase >= tau_swap^(1/M)` holds in 1,835/1,836 estimable runs
+   (2,000/2,000 under the hysteresis estimator), and `kappa >= 1` in 1,835/1,836, median 14.6.
 5. The `static` arm needs a capacity-matched variant before any `static`-versus-`full` claim is
    published (section 8, divergence 5).

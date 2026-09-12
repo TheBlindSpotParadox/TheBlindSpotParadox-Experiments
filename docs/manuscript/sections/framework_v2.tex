@@ -81,26 +81,54 @@ learners replaced in $(\tau^*, t]$.
   \emph{exploitable transient}.
 \end{definition}
 
-\begin{assumption}[No recovery without replacement]\label{ass:repair}
-  On $[\tau^*, \tau_{\mathrm{swap}}^{(1/M)})$ the ensemble error satisfies
-  $\bar{e}_t > p_0 + \delta_P$.
-\end{assumption}
-
 \begin{proposition}[Ordering]\label{prop:order}
   $\rho \mapsto \tau_{\mathrm{err}}(\rho)$ is non-increasing and
-  $q \mapsto \tau_{\mathrm{swap}}^{(q)}$ non-decreasing. Under
-  Assumption~\ref{ass:repair},
-  $\tau_{\mathrm{swap}}^{(1/M)} \le \tau_{\mathrm{erase}}
-   \le \tau_{\mathrm{swap}}^{(1)}$.
+  $q \mapsto \tau_{\mathrm{swap}}^{(q)}$ non-decreasing. If the ensemble error is
+  not already within tolerance for every $s \ge t$ at some
+  $t < \tau_{\mathrm{swap}}^{(1/M)}$ --- that is, if the drift is not resolved
+  before the first replacement --- then
+  $\tau_{\mathrm{swap}}^{(1/M)} \le \tau_{\mathrm{erase}}$.
 \end{proposition}
+
+\begin{remark}[The ordering is measured; the assumption behind it is withdrawn]\label{rem:order}
+  The submitted version derived the inequality from an assumption of \emph{no
+  recovery without replacement}: $\bar{e}_t > p_0 + \delta_P$ pointwise on
+  $[\tau^*, \tau_{\mathrm{swap}}^{(1/M)})$. Synchronised instrumentation refutes
+  it ($100$ seeds $\times$ $20$ magnitudes of the nominal arm, $\delta_P = 0.01$).
+  Under a cumulative mean from $\tau^*$ it holds in $31.0\%$ of $2{,}000$ runs;
+  under a $20$-step trailing mean, in $83.1\%$; and under the $200$-step window
+  $\bar{e}_t$ actually denotes it is not evaluable at all on the $89.7\%$ of
+  intervals shorter than the window itself, holding in $57.0\%$ of the remainder.
+  The failure rate is monotone in magnitude and reaches no majority at any grid
+  point.
+
+  The ordering survives because it never needed that much. $\tau_{\mathrm{err}}$
+  quantifies over \emph{all} $s \ge t$, so the transient dips that break the
+  pointwise reading do not move it: $\tau_{\mathrm{erase}} \ge
+  \tau_{\mathrm{swap}}^{(1/M)}$ in $1{,}835$ of the $1{,}836$ runs where
+  $\tau_{\mathrm{erase}}$ is estimable, and in all $2{,}000$ under the hysteresis
+  estimator. The assumption was strictly stronger than the conclusion it was
+  introduced to support, and false exactly where it exceeded it.
+
+  The converse bound $\tau_{\mathrm{erase}} \le \tau_{\mathrm{swap}}^{(1)}$ of the
+  submitted version did not follow from that assumption in the first place, and is
+  withdrawn on its own evidence: it holds in $55.3\%$ of the runs where both sides
+  are defined, and $\tau_{\mathrm{swap}}^{(1)}$ is itself undefined in $11.3\%$ of
+  runs, the sweep of all $M$ trees never completing within the horizon. Audit:
+  \texttt{experiments/S6\_synchronized\_traces/s6\_audit\_ass\_repair.py}.
+\end{remark}
 
 \begin{definition}[Dilation ratio]\label{def:kappa}
   $\kappa := (\tau_{\mathrm{erase}} - \tau^*) /
-             (\tau_{\mathrm{swap}}^{(1/M)} - \tau^*) \ge 1$.
+             (\tau_{\mathrm{swap}}^{(1/M)} - \tau^*)$.
 \end{definition}
 
 The first swap is retained as an instrumented lower bound on $W$; $\kappa$ is
-measured, never assumed.
+measured, never assumed --- the submitted version asserted $\kappa \ge 1$ inside
+the definition, which is a claim about measured quantities and not a definition.
+Measured, $\kappa \ge 1$ in $1{,}835/1{,}836$ runs, median $14.6$; the single
+exception is a run whose $200$-step trailing mean reports erasure before the first
+replacement, a lag artefact of the estimator rather than a recovery.
 
 \subsection{Proof Budget}\label{sec:budget}
 
