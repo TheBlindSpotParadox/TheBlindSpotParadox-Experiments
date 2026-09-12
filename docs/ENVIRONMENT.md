@@ -58,8 +58,10 @@ toolchain and is not replaced by the Tectonic output.
 
 ## Measured wall-clock times
 
-Every figure below was measured in stream S7-bis on the host above, `PYTHONHASHSEED=0`,
-`joblib` at `n_jobs=-1`, one experiment at a time (no two stages share the 48 threads).
+Every figure below was measured on the host above, `PYTHONHASHSEED=0`, `joblib` at `n_jobs=-1`,
+one experiment at a time (no two stages share the 48 threads). The `R*` rows were measured in
+stream S7-bis; the `S2-bis` rows in stream S2-bis, under the same convention — the S2-bis chain
+waits for the preceding stage to release the 48 threads before starting.
 
 | stage | command | wall clock | artifact identity vs. `artifacts_sha256_pre_ssot.txt` |
 |-------|---------|-----------:|------------------------------------------------------|
@@ -74,6 +76,17 @@ Every figure below was measured in stream S7-bis on the host above, `PYTHONHASHS
 | **subtotal R1–R4, R6–R9** | | **7 095 s = 1 h 58 min 15 s** | **29 of 34 baseline hashes identical**; the five deviations (`hydra_survival.csv`, the two A1 artifacts and the two A2 artifacts above) are declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
 | R-1 (S7-bis) | `python experiments/R9_mcrit/exp_R9_generate_data.py 1` | 46 s | new artifact (matched-clock M=1 run) |
 | R5 | `./run_experiment_R5.sh` | **not re-measured in this stream** | untouched |
+| S2-bis P3 | `python experiments/S2bis_calibration/s2bis_r1_ppre.py` | 1.6 s | new artifacts; **bit-reproducible**, two runs byte-identical |
+| S2-bis P1 | `python experiments/S2bis_calibration/s2bis_lambda_eq.py` | **3 768 s (1 h 02 min 48 s)**, second run 3 760 s | new artifacts; **bit-reproducible on the complete grid**, the two runs byte-identical. 180 detector-free calibration runs + 1 980 full prequential runs on the three INSECTS streams |
+| S2-bis P2 (subset) | `s2bis_proteus_calibration.main(transitions=r4.TRANSITIONS[:1])` | 412 s then 411 s | determinism control on 1 of 12 transitions, all 30 seeds, all 3 regimes; **bit-reproducible**, the two runs byte-identical |
+| S2-bis P2 (full) | `python experiments/S2bis_calibration/s2bis_proteus_calibration.py` | **3 794 s (1 h 03 min 14 s)** | new artifacts; 12 transitions x 30 seeds x 3 regimes, 6 PageHinkley couples calibrated and re-measured at two thresholds, an 8-point ladder on the two headline couples, and the EDDM arming diagnostic |
+| **S2-bis subtotal** | | **7 564 s = 2 h 06 min 04 s** for one full reproduction (P3 + P1 + P2 full); the double runs that prove bit-reproducibility add 4 583 s on top | no R1-R9 artifact regenerated; `sha256sum -c` stays at 29 OK / 5 FAILED and the five are exactly the declared deviations |
+
+S2-bis writes only under `results/S2bis_calibration/`. Its verification differs by phase and the
+difference is declared in `docs/theory/S2bis_calibration.md` §2: P1 and P3 carry a **full** double
+run, P2 a **declared-subset** double run plus one full grid. A second full ProteuS grid is roughly
+an hour of exclusive host time for a check whose failure modes -- joblib result ordering and the
+per-worker PRNG lock -- are already exercised at 30-worker scale.
 
 R5 was not re-executed. Its BAF stage reads three ~85 MB gzipped streams for 30 seeds across three
 pipelines and is documented as long-running in `run_experiment_R5.sh` (step 3). Its artifacts are

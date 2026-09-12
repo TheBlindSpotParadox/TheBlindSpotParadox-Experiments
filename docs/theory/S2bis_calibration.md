@@ -45,7 +45,7 @@ three modules and the difference is declared rather than glossed.
 |---|---|---|
 | `s2bis_r1_ppre.py` | **full double run**, artifacts byte-identical | 1.6 s per run |
 | `s2bis_lambda_eq.py` | **full double run** on the complete 3-variant grid, artifacts byte-identical | 3 768 s then 3 760 s |
-| `s2bis_proteus_calibration.py` | **declared-subset double run** — transition 1 of 12, all 30 seeds, all 3 regimes, all six couples, the full threshold set; same code path, only the number of `(transition, seed)` cells submitted to joblib differs. The full 12-transition grid is then run once | see the table in `docs/ENVIRONMENT.md` |
+| `s2bis_proteus_calibration.py` | **declared-subset double run** — transition 1 of 12, all 30 seeds, all 3 regimes, all six couples, the full threshold set; same code path, only the number of `(transition, seed)` cells submitted to joblib differs. The full 12-transition grid is then run once | 412 s and 411 s (subset), 3 794 s (full grid) |
 
 The subset substitution on Phase 2 is a cost decision and is stated as one: a second full ProteuS
 grid is ~2 h of exclusive host time for a check whose failure mode — joblib result ordering and the
@@ -58,10 +58,10 @@ fa1826083309e7188b12ddebf2b8682542dcdaf2f56c40a9942d4e717396a962  s2bis_lambda_e
 9c5432176d38ee7c5b0b83fd7a1b5502403fd82faf3f3e93a028116268d60805  s2bis_flooding_gate.json
 16a30e04440e09462c5949d8207545649ca006ce40c9e53170a2d51646fbc55b  s2bis_r1_counterfactual.csv
 b6792b295888da65f9c1dc49ebf67ac7bb5cba017aed6b86c3a0a15cdb0e34f6  s2bis_r1_ppre.json
-PROTEUS_LAMBDA_EQ_HASH  s2bis_lambda_eq_proteus.csv
-PROTEUS_SWEEP_HASH  s2bis_proteus_sweep.csv
-PROTEUS_EDDM_HASH  s2bis_proteus_eddm_arming.csv
-PROTEUS_GATE_HASH  s2bis_proteus_gate.json
+0f5c194e01c7790328dcd647c1db06975a139db85965012a6f1cf47e905e4b58  s2bis_lambda_eq_proteus.csv
+cb0796669f1f8e48a94503a2f5e935d8c44136669522c1cd9ee5c7c85022beb5  s2bis_proteus_sweep.csv
+5eec35630231443bc98567046c82c510b8830d2a2315e06ed42aa72d168c95ec  s2bis_proteus_eddm_arming.csv
+f2937054bf3f01105476d21447c947218c7db0c2b312d221d4858cf7612fe908  s2bis_proteus_gate.json
 ```
 
 All paths relative to `results/S2bis_calibration/tables/`. S2-bis writes no artifact outside that
@@ -116,14 +116,34 @@ COLLAPSE on all three variants at `lambda_eq`. On `abrupt_balanced` and
 `incremental_reoccurring_balanced` the residual and threshold terms differ in sign and **no single
 percentage is reported**, per rule B4.
 
-### 3.3 ProteuS — the structural result
+### 3.3 ProteuS — the budget is vacuous and the collapse is a threshold
 
-The pre-drift error rate is **exactly zero** on every transition, regime and seed, because
-`exp_R4_main_table.simulate_stream:105` makes the target a deterministic step function of the time
-index and the classifier predicts the constant pre-change label from the first step. Consequences in
-`transfer_S2bis.md` §2.7. The campaign's own tables are
-`results/S2bis_calibration/tables/s2bis_{lambda_eq_proteus,proteus_sweep,proteus_eddm_arming}.csv`
-and `s2bis_proteus_gate.json`.
+12 transitions x 30 seeds x 3 regimes = 1 080 streams; 6 PageHinkley couples calibrated on the
+warm-up R4 never had and re-measured at `lambda_ref = 15` and at `lambda_eq`; an 8-point ladder on
+the two headline couples; an EDDM arming diagnostic. 28 080 sweep rows.
+
+**Non-regression.** At `lambda = 15` the six couples reproduce R4's own `F1` and `ADD` on all
+**6 480** joined rows: `max_abs_F1_delta = 0.0`, `max_abs_ADD_delta = 0.0`, absent-`ADD` pattern
+identical. The driver is R4's pipeline.
+
+| result | value |
+|---|---|
+| pre-drift error rate | **0.0000, maximum 0**, on all 1 080 streams |
+| `lambda_eq`, all six couples | **1.000**, range `[1.000, 1.000]`, i.e. the bracket floor — **NOT BINDING** |
+| `F1` at `lambda_eq ~ 1`, all six couples | 0.0148, precision 0.0075 — the floor is degenerate, not merely uninformative |
+| `F1` at `lambda = 15` | HT 0.8630 · RF(static) 0.8454 · ARF(`c=32`) 0.6241 · SRP(`c=32`) 0.0870 · **ARF(`c=1`) 0.0000** · **SRP(`c=1`) 0.0000** |
+| **PHT+ARF(`c=1`) at `lambda = 5`** | **`F1` 1.0000, 1080/1080 runs, `ADD` 6.05, precision 1.000** |
+| PHT+ARF(`c=1`) at `lambda = 8` | `F1` 0.9843, 1063/1080, `ADD` 9.08 |
+| measured evidence ceiling, ARF at `c_int = 1` | **`(8, 15]`** — a cliff, not a slope |
+| PHT+HT across the ladder | 0.9269 at 5 down to 0.6509 at 130 — graceful, no cliff |
+| EDDM pre-change errors | 0.0 mean, **0 max**, both arms, 1 080 runs |
+| EDDM+ARF(`c=1`) | 9 errors [6, 12] over the whole stream, **never arms in 100 % of runs**, 0/1080 alarms |
+| EDDM+HT | 32 errors [3, 32], never arms in 17.7 % of runs, 885/1080 raise an alarm (882 score) |
+
+Precision equals `F1` at `lambda = 15` on every couple: one true drift per stream and no false
+alarms at that threshold, so precision, recall and `F1` coincide. The column R4 discarded was never
+going to disagree with the one it kept, which means Table I's `F1` carries no false-alarm
+information.
 
 ### 3.4 R1 / R2 — the reference rate, analytic
 
@@ -142,7 +162,8 @@ and `s2bis_proteus_gate.json`.
 | B4 | `gradual_balanced` **89.9 %** threshold-attributable, both terms positive; the other two variants publish two signed terms and no percentage |
 | B5 | **UNDOCUMENTED DELIBERATE CHOICE** — no re-run warranted |
 | B6 | **REFUTED** on both tests |
-| B7 | fired: one cell **NOT ATTAINABLE**; ProteuS **NOT BINDING**, a floor case the rule did not declare |
+| B7 | fired: one INSECTS cell **NOT ATTAINABLE**; ProteuS **NOT BINDING** on all six couples and all 1 080 streams, a floor case the rule did not declare |
+| R4 non-regression | **identical** on 6 480 rows at `lambda = 15`, `F1` and `ADD` deltas both 0.0 |
 | B8 | applied; `[0.015, 0.032]` used only for S6-anchored statements |
 | B9 | applied; `R_KSWIN` quoted at both `alpha` (22.68 deployed, 41.997 common) |
 | B10 | **PSEUDO-REPLICATED** on all three variants |

@@ -100,6 +100,40 @@ on the threshold axis; and `R_ADWIN` is **not** cleared across most of that inte
 lower bound, 34.19 at the upper, against a ceiling of 33.51), so the windowed monitor is the one
 whose requirement the stream does not reliably meet at the operating point.
 
+**What a common level would require, at the thresholds the paper actually deploys.** Solving
+`R_ADWIN(alpha) = R_CUSUM(lambda)` and `R_KSWIN(alpha) = R_CUSUM(lambda)` — the shared `eps` margin
+cancels, so `alpha = 4W exp(-2 lambda^2 / W)` and `alpha = 2 exp(-lambda^2 / n_stat)` respectively
+(`s2bis_proteus_gate.json`, `family_requirements_at_lambda_eq`):
+
+| CUSUM threshold | `R_CUSUM` | ADWIN would need `alpha` | ADWIN is deployed at | KSWIN would need `alpha` | KSWIN is deployed at |
+|---|---:|---:|---:|---:|---:|
+| `lambda = 15` (Table I's common threshold) | 24.27 | **9.0e-2** | `delta = 0.002` (**45x tighter**) | **1.1e-3** | `alpha = 0.005` (**4.5x looser**) |
+| `lambda_op = 21.93` | 31.20 | 1.2e-5 | `delta = 0.002` (167x looser) | 2.2e-7 | `alpha = 0.005` (2.3e4 x looser) |
+
+At Table I's own operating point the three detectors sit at three different false-alarm levels and
+**the direction differs by family**: ADWIN is deployed far tighter than the CUSUM, KSWIN far looser.
+A table that reads those three columns as a comparison of detector families is comparing
+calibrations. This is the `alpha` disclosure rule B9 makes mandatory, stated at the point where the
+manuscript's own numbers are produced.
+
+**The measurement that settles it.** KSWIN is presented as *"a detector-side architectural
+resolution"* because it returns `F1 = 1.00`, `1080/1080` runs detected, `ADD = 14 [0]`, where
+PHT+ARF(`c=1`) returns `F1 = 0.00`, `0/1080`. Re-running the **same PageHinkley monitor** on the
+**same streams** at `lambda = 5` instead of `lambda = 15`
+(`results/S2bis_calibration/tables/s2bis_proteus_sweep.csv`, 1 080 runs):
+
+| pipeline | `lambda` | `F1` | runs detected | `ADD` | precision |
+|---|---:|---:|---:|---:|---:|
+| KSWIN + ARF (`c=1`), as published | its own `alpha = 0.005` | 1.00 | 1080/1080 | 14 `[0]` | — |
+| **PHT + ARF (`c=1`)** | **5** | **1.0000** | **1080/1080** | **6.05** | **1.000** |
+| PHT + ARF (`c=1`) | 8 | 0.9843 | 1063/1080 | 9.08 | 0.984 |
+| PHT + ARF (`c=1`), as published | 15 | 0.0000 | 0/1080 | — | 0.000 |
+
+The cumulative monitor matches the distributional one's `F1` and **beats its raw delay**, on the
+same pipeline, with no change of detector family — only a threshold three times lower, at a
+false-alarm cost of exactly zero (precision `1.000`: no alarm is raised that is not the true drift).
+The resolution KSWIN is credited with is available inside the family the paper says is defeated.
+
 **Ten sites assert immunity by construction and must be rewritten.** Two sites are already
 correctly hedged and are the phrasing model.
 
@@ -132,11 +166,14 @@ restatement.
    clears the information-theoretic floor (`\FloorBand`); what it does not clear is
    `R_CUSUM(\lambda = 50) = 59.3`. At `lambda_op` the same requirement is 31.2 and the ceiling
    clears it. §(a).
-2. **`lambda = 15` on ProteuS is calibrated on nothing measurable.** The pre-change error rate of
-   that stream is **identically zero** — the target is a deterministic step function of `t` and the
-   classifier predicts the constant majority class perfectly before the change — so every
-   `lambda > 0` meets every false-alarm budget over the pre-change span and no measurement selects
-   15. `transfer_S2bis.md` §2.7.
+2. **`lambda = 15` on ProteuS is calibrated on nothing measurable, and it is the wrong value.**
+   The pre-change error rate of that stream is **identically zero** on all 1 080 runs — the target
+   is a deterministic step function of `t` and the classifier predicts the constant majority class
+   perfectly before the change — so every `lambda > 0` meets every false-alarm budget and no
+   measurement selects 15. At `lambda = 5` the pipeline Table I prints as `F1 = 0.00` detects
+   `1080/1080` with `F1 = 1.00`, `ADD = 6.05` and **zero false alarms**. The evidence ceiling of the
+   ARF at `c_int = 1` on that stream lies in `(8, 15]`, and is measured here for the first time.
+   `transfer_S2bis.md` §2.7.
 3. **The INSECTS threshold asymmetry is an artefact of where the budget is measured.** The factor
    `6.3` that `rem:flooding` attributes to bagging holds on one of three streams and **inverts** on
    the other two once the budget is set over the span the detector actually runs.
@@ -218,13 +255,13 @@ error count and runs it on the streams that produce the `0/1080`
 (`results/S2bis_calibration/tables/s2bis_proteus_eddm_arming.csv`). The instrumented loop reproduces
 R4's own detections exactly, so it is R4's pipeline and not a re-implementation.
 
-| measured on ProteuS | EDDM + HT | EDDM + ARF (`c_int = 1`) |
+| measured on ProteuS, 1 080 runs per couple | EDDM + HT | EDDM + ARF (`c_int = 1`) |
 |---|---:|---:|
-| pre-change errors at `t = T_DRIFT` | **0** | **0** |
+| pre-change errors at `t = T_DRIFT` — mean / **max** | 0.0 / **0** | 0.0 / **0** |
 | errors required (`warm_start`) | 30 | 30 |
-| errors over the **whole** 8 000-step stream | 32 | **9** |
-| step at which the 30th error occurs | ~4 030 (30 steps **after** the change) | **never** |
-| detections | 1 (at ~4 031) | **0** |
+| errors over the **whole** 8 000-step stream — median [min, max] | 32 [3, 32] | **9 [6, 12]** |
+| runs in which the detector **never arms** | 17.7 % | **100 %** |
+| runs raising at least one alarm | 885 / 1 080 | **0 / 1 080** |
 
 The `0/1080` **is** an unarmed detector — the brief's conclusion — but for a mechanism neither the
 brief nor the plan identified. The ProteuS pre-change error rate is **exactly zero**: the target is

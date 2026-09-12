@@ -60,6 +60,8 @@ published.
 | B8 | bands | applied; the `[0.015, 0.032]` band is used only for S6-anchored statements |
 | B9 | `alpha` disclosure | applied; `R_KSWIN` is quoted at both `alpha` everywhere |
 | B10 | pseudo-replication | **PSEUDO-REPLICATED** on all three INSECTS variants |
+| — | R4 non-regression | **identical** on all 6 480 rows at `lambda = R4_PHT_LAMBDA`: `F1` and `ADD` deltas both `0.0`, absent-`ADD` pattern identical (§2.7) |
+| — | bit-reproducibility | P1 and P3 **full double run**, byte-identical; P2 **declared-subset double run** plus one full grid (`S2bis_calibration.md` §2) |
 
 ---
 
@@ -243,53 +245,83 @@ hold on the armed pre-change span of a real stream, and that is the publishable 
 `calibrate_lambda` falls back from `PHT_TARGET_FA = 1` to 3 and the attained count at the returned
 threshold is 3, not 1. Reported with its bound; the cell is not silently read as a calibration.
 
-### 2.7 ProteuS: the budget does not constrain `lambda` at all
+### 2.7 ProteuS: the budget constrains nothing, and the collapse is a threshold
 
-*(the campaign's own numbers are in `docs/theory/S2bis_calibration.md` §3)*
+**Campaign.** 12 transitions x 30 seeds x 3 regimes = 1 080 streams; per stream, 6 PageHinkley
+couples calibrated on the warm-up R4 never had (`[0, R4_T_DRIFT)`, external detector disabled) and
+re-measured at `lambda_ref = 15` and at `lambda_eq`, plus an 8-point ladder on the two headline
+couples and an EDDM arming diagnostic. `joblib.Parallel(n_jobs=-1)` over the (transition, seed)
+grid with `exp_R4_main_table.process_transition_seed`'s per-worker PRNG lock reproduced verbatim.
+**Non-regression: at `lambda = 15` the six couples reproduce R4's own `F1` and `ADD` on all 6 480
+joined rows, `max_abs_F1_delta = 0.0`, `max_abs_ADD_delta = 0.0`, and the absent-`ADD` pattern
+agrees exactly.** This is R4's pipeline, not a re-implementation.
 
-The ProteuS pre-drift span carries an error rate of **exactly zero**, on every transition, every
-regime and every seed. `exp_R4_main_table.simulate_stream:105` builds the target as
-`regime = (f_t > 0.5).astype(int)` with `f_t = expit(4 (t - tp) / w)`, so the label is the constant
-`0` for every `t < tp`, and `run_concept_drift:135`'s `yp = model.predict_one(x) or 0` predicts
-that constant from the first step. The classifier has nothing to be wrong about before the change.
+**(i) The pre-drift error rate is exactly zero, on every one of the 1 080 streams.** Mean 0.0000 and
+**maximum 0** — not a small number, the number zero, on every transition, regime and seed.
+`simulate_stream:105` builds the target as `regime = (f_t > 0.5)` with `f_t = expit(4(t - tp)/w)`,
+constant `0` for every `t < tp`, and `run_concept_drift:135`'s `y_pred = model.predict_one(x) or 0`
+predicts that constant from the first step. The classifier has nothing to be wrong about before the
+change.
 
-Three consequences, all terminal:
+**(ii) `lambda_eq` is therefore at the bracket floor for all six couples**: `1.000`, range
+`[1.000, 1.000]` over 1 080 cells, `x15 = 0.07`. Verdict **NOT BINDING** (§5, item 5). No
+false-alarm budget selects 15, or any other value: with `p_true = 0` there is no positive excursion,
+no Cramér root and `ARL_0 = inf`.
 
-1. **`lambda_eq` is undefined, not large.** With `p_true = 0` there is no positive excursion, no
-   Cramér root and `ARL_0 = inf`; empirically `calibrate_lambda` returns the **floor** of
-   `S2BIS_LAMBDA_BRACKET` for all six couples. Verdict **NOT BINDING** (§5, item 4).
-2. **`R4_PHT_LAMBDA = 15` is not calibrated on anything measurable.** Two sites say it is: the
-   macro comment at `main` L55 (*"R4\_PHT\_LAMBDA, ProteuS pre-drift calibration"*) and, in the
-   body, `res:tension` at `main` L416 — *"With $\lambda_{\mathrm{FA}} = \LambdaFA$ calibrated on
-   pre-change volatility"*. The pre-change volatility is identically zero, so every `lambda > 0`
-   meets every false-alarm budget over that span and no measurement selects 15. The patch is below.
+**(iii) The floor is not merely uninformative, it is degenerate.** At `lambda_eq ~ 1` every couple
+returns the same `F1 = 0.0148` and precision `0.0075`: the monitor floods, the classifier is reset
+every few dozen steps and never learns, so all six pipelines become the same broken pipeline. An
+equal-false-alarm-budget calibration is not a fairer comparison on this stream — it is no comparison
+at all.
 
-### Patch T-A(ii) — `res:tension`, the `lambda_FA` provenance — **DEFERRED, do not apply before the v65 assembly**
+**(iv) The blind-spot collapse is a threshold, and the working threshold is measured.** The ladder on
+the two headline couples, 1 080 runs per point:
 
-Target: `docs/manuscript/articleA_blindspot_v64_camera_ready.tex` (`main` L416, pre-patch L397).
-`lambda_FA` is a declared operating threshold, not a calibration; the claim that it was calibrated
-on pre-change volatility is the one this stream contradicts, and `res:tension`'s conclusion does not
-depend on it.
+| `lambda` | `F1` PHT+ARF(c=1) | runs with a detection | `ADD` | precision | `F1` PHT+HT | runs with a detection |
+|---:|---:|---:|---:|---:|---:|---:|
+| **5** | **1.0000** | **1080/1080** | **6.05** | **1.000** | 0.9269 | 1001/1080 |
+| **8** | **0.9843** | 1063/1080 | 9.08 | 0.984 | 0.8972 | 969/1080 |
+| 15 (`R4_PHT_LAMBDA`) | **0.0000** | **0/1080** | — | 0.000 | 0.8630 | 932/1080 |
+| 25 | 0.0000 | 0/1080 | — | 0.000 | 0.8241 | 890/1080 |
+| 40 | 0.0000 | 0/1080 | — | 0.000 | 0.7981 | 862/1080 |
+| 60 | 0.0000 | 0/1080 | — | 0.000 | 0.7648 | 826/1080 |
+| 90 | 0.0000 | 0/1080 | — | 0.000 | 0.7148 | 772/1080 |
+| 130 | 0.0000 | 0/1080 | — | 0.000 | 0.6509 | 703/1080 |
 
-**Status: DEFERRED,** for the same reason as Patch T-B: `res:tension` sits at pre-patch L397, inside
-`\subsection{The Decoupling Principle}\label{sec:decoupling}` (pre-patch L376-L411), the fourth of
-the excluded subsections. The payload is recorded with its anchor and applied at assembly.
+**At `lambda = 5` the pipeline Table I prints in boldface as `F1 = 0.00` detects in 1 080 runs out of
+1 080, with precision 1.000 and a mean delay of 6.05 steps.** It matches the KSWIN resolution's
+`F1 = 1.00` and beats its raw `ADD` of 14 — with the PageHinkley monitor the manuscript says is
+defeated, and with no architectural change at all. Precision 1.000 means **zero false alarms**, so
+the threshold is not bought at any false-alarm cost; the budget, being vacuous, forbids nothing.
 
-~~~~~~~~~
-docs/manuscript/articleA_blindspot_v64_camera_ready.tex
-<<<<<<< SEARCH
-  With $\lambda_{\mathrm{FA}} = \LambdaFA$ calibrated on pre-change volatility and $\alpha = 0.05$, the measured ceiling gives
-=======
-  With $\lambda_{\mathrm{FA}} = \LambdaFA$ as the declared false-alarm threshold of Section~\ref{sec:proteus} and $\alpha = 0.05$, the measured ceiling gives
->>>>>>> REPLACE
-~~~~~~~~~
+**(v) The evidence ceiling of the ARF at `c_int = 1` on ProteuS lies in `(8, 15]`.** The transition
+is a cliff, not a slope: `0.9843` at 8 and `0.0000` at 15, with nothing in between on the declared
+ladder. This is a direct measurement, on the stream where the collapse is reported, of the quantity
+`A` the paper's whole framework is built on — and the paper measures `A` only on the S6 Bernoulli
+traces. The bracket's resolution is the ladder's; a finer grid would narrow it and is left to a
+stream that declares one.
 
-A second sentence is owed wherever `sec:proteus` introduces the threshold, and the macro comment at
-the preamble should read `% R4\_PHT\_LAMBDA, declared; see transfer\_S2bis \S2.5` rather than
-`ProteuS pre-drift calibration`. Both are one-line edits for the writing stream.
-3. **Table I's `0/1080` and its `p ~ 2e-9` sit on a threshold no property of the stream fixes.**
-   That is not a reason to doubt the measurement — the separation is real and reproduced here — but
-   it removes the fairness defence the caption implies, and it is what a reviewer will ask about.
+The contrast with PHT+HT is the mechanism in one column: the non-adaptive learner degrades
+**gracefully** across the whole ladder (0.9269 -> 0.6509, a factor 1.4 over a factor 26 in
+`lambda`), because its error stream stays elevated and any threshold eventually accumulates. The
+adaptive one has a cliff, because the evidence is erased before accumulation completes. That is
+`prop:starvation`, confirmed — and it is a *ceiling*, not a collapse.
+
+**(vi) Every couple at `lambda = 15`**, with the precision R4 computes and discards:
+
+| couple | `F1` at 15 | precision at 15 | `F1` at `lambda_eq ~ 1` | precision at `lambda_eq` |
+|---|---:|---:|---:|---:|
+| PHT + HT | 0.8630 | 0.8630 | 0.0148 | 0.0075 |
+| PHT + RF (Static) | 0.8454 | 0.8454 | 0.0148 | 0.0074 |
+| PHT + ARF (`c = 32`) | 0.6241 | 0.6241 | 0.0148 | 0.0075 |
+| SRP + PHT (`c = 32`) | 0.0870 | 0.0870 | 0.0148 | 0.0074 |
+| **PHT + ARF (`c = 1`)** | **0.0000** | **0.0000** | 0.0148 | 0.0075 |
+| **SRP + PHT (`c = 1`)** | **0.0000** | **0.0000** | 0.0148 | 0.0074 |
+
+Precision equals `F1` at `lambda = 15` on every couple: there is exactly one true drift per stream
+and no false alarms are raised at that threshold, so precision, recall and `F1` coincide. R4
+discarded a column that was never going to disagree with the one it kept — which is itself worth
+one sentence, since it means Table I's `F1` carries no false-alarm information at all.
 
 ### 2.8 Which of S2's patches this supersedes
 
@@ -465,13 +497,21 @@ for the error count; the instrumented loop reproduces R4's own detections exactl
 pipeline and not a re-implementation
 (`results/S2bis_calibration/tables/s2bis_proteus_eddm_arming.csv`).
 
+Full grid, 1 080 runs per couple:
+
 | | EDDM + HT | EDDM + ARF (`c_int = 1`) |
 |---|---:|---:|
-| pre-change errors at `t = T_DRIFT` | **0** | **0** |
+| pre-change errors at `t = T_DRIFT` — mean / **max** | 0.0 / **0** | 0.0 / **0** |
 | errors required (`warm_start`) | 30 | 30 |
-| errors over the whole 8 000-step stream | 32 | **9** |
-| step of the 30th error | ~4 030 (30 steps **after** the change) | **never** |
-| detections | 1 | **0** |
+| errors over the whole 8 000-step stream — median [min, max] | 32 [3, 32] | **9 [6, 12]** |
+| runs in which the detector **never arms** | 17.7 % | **100 %** |
+| runs raising at least one alarm | 885 / 1 080 | **0 / 1 080** |
+
+The frozen Table I scores EDDM+HT at `882/1080`; the three-run difference is the alarms that fall
+outside the scoring window `[d, d + tau]`, which the arming diagnostic counts and `F1` does not.
+EDDM+ARF is `0/1080` under both readings.
+
+**The pre-change error count is zero on every one of the 1 080 runs — mean and maximum both 0.**
 
 **Both prior readings of the `0/1080` are wrong.** The brief transferred the S6 warm-start control
 (24 errors against 30) from a 1 000-step Bernoulli trace to ProteuS. The plan corrected it with

@@ -1,0 +1,2161 @@
+Calibration,Detector,Clock,Dataset,w,Seed,n_pre_drift_errors,warm_start_required,armed_at_t,armed_at_change_point,arming_lag_after_change,n_detections,first_detection,n_errors_total
+Cal. A,EDDM + ARF,1,BWX->PFF,500,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,27,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->PFF,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,1,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->SPY,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,14,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->SPY,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,19,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->SPY,500,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,21,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->SPY,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->SPY,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->SPY,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,1,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,2,0,30,,False,,0,,11
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,3,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,6,0,30,,False,,0,,11
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,9,0,30,,False,,0,,7
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,10,0,30,,False,,0,,11
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,11,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,12,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,13,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,15,0,30,,False,,0,,7
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,16,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,17,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,19,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,21,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,22,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,25,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,26,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,29,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,BWX->VNQ,100,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->BWX,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->BWX,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,1,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->SPY,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,20,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->SPY,500,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->SPY,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->SPY,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,1,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,2,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,3,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,6,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,9,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,10,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,12,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,13,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,14,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,17,0,30,,False,,0,,12
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,19,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,21,0,30,,False,,0,,11
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,PFF->VNQ,100,30,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,SPY->BWX,500,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,SPY->BWX,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->BWX,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,18,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,SPY->PFF,500,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->PFF,500,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,18,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,SPY->VNQ,100,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,18,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->BWX,1000,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,18,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->PFF,1000,30,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,1,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,2,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,3,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,4,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,5,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,6,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,7,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,8,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,9,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,10,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,11,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,12,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,13,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,14,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,15,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,16,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,17,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,18,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,19,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,20,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,21,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,22,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,23,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,24,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,25,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,26,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,27,0,30,,False,,0,,10
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,28,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,29,0,30,,False,,0,,9
+Cal. A,EDDM + ARF,1,VNQ->SPY,1000,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,1,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->PFF,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->PFF,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->PFF,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,1,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->SPY,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->SPY,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->SPY,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->SPY,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,2,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,6,0,30,,False,,0,,8
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,11,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,17,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,18,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,BWX->VNQ,100,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->BWX,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->BWX,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,1,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->SPY,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->SPY,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->SPY,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->SPY,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,1,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,11,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,18,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,PFF->VNQ,100,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,SPY->BWX,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->BWX,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,SPY->PFF,500,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->PFF,500,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,18,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,SPY->VNQ,100,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,18,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,21,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,29,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->BWX,1000,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,11,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,18,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->PFF,1000,30,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,1,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,2,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,3,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,4,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,5,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,6,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,7,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,8,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,9,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,10,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,11,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,12,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,13,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,14,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,15,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,16,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,17,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,18,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,19,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,20,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,21,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,22,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,23,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,24,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,25,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,26,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,27,0,30,,False,,0,,10
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,28,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,29,0,30,,False,,0,,9
+Cal. B,EDDM + ARF,1,VNQ->SPY,1000,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,9,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->PFF,500,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,19,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->PFF,500,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->PFF,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->PFF,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->PFF,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,4,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,5,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,6,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,8,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,9,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->SPY,500,10,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->SPY,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,14,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,18,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->SPY,500,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,20,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,25,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->SPY,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->SPY,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,1,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,3,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,4,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,6,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->VNQ,100,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,8,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,9,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->VNQ,100,10,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->VNQ,100,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,12,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->VNQ,100,13,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->VNQ,100,14,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->VNQ,100,15,0,30,,False,,0,,7
+IID,EDDM + ARF,1,BWX->VNQ,100,16,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,17,0,30,,False,,0,,11
+IID,EDDM + ARF,1,BWX->VNQ,100,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,19,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,20,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->VNQ,100,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,24,0,30,,False,,0,,8
+IID,EDDM + ARF,1,BWX->VNQ,100,25,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,BWX->VNQ,100,29,0,30,,False,,0,,10
+IID,EDDM + ARF,1,BWX->VNQ,100,30,0,30,,False,,0,,8
+IID,EDDM + ARF,1,PFF->BWX,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,9,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->BWX,500,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,19,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->BWX,500,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->BWX,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->BWX,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->BWX,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,4,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,5,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,6,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,8,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,9,0,30,,False,,0,,8
+IID,EDDM + ARF,1,PFF->SPY,500,10,0,30,,False,,0,,11
+IID,EDDM + ARF,1,PFF->SPY,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,14,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,15,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,18,0,30,,False,,0,,8
+IID,EDDM + ARF,1,PFF->SPY,500,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,20,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,25,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->SPY,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->SPY,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,1,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,3,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,4,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,6,0,30,,False,,0,,8
+IID,EDDM + ARF,1,PFF->VNQ,100,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,8,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,9,0,30,,False,,0,,6
+IID,EDDM + ARF,1,PFF->VNQ,100,10,0,30,,False,,0,,11
+IID,EDDM + ARF,1,PFF->VNQ,100,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,12,0,30,,False,,0,,11
+IID,EDDM + ARF,1,PFF->VNQ,100,13,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,14,0,30,,False,,0,,11
+IID,EDDM + ARF,1,PFF->VNQ,100,15,0,30,,False,,0,,7
+IID,EDDM + ARF,1,PFF->VNQ,100,16,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,17,0,30,,False,,0,,11
+IID,EDDM + ARF,1,PFF->VNQ,100,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,19,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,20,0,30,,False,,0,,8
+IID,EDDM + ARF,1,PFF->VNQ,100,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,25,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,PFF->VNQ,100,29,0,30,,False,,0,,10
+IID,EDDM + ARF,1,PFF->VNQ,100,30,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->BWX,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,9,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->BWX,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->BWX,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->BWX,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,9,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,17,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->PFF,500,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->PFF,500,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->PFF,500,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,6,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->VNQ,100,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,9,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->VNQ,100,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,12,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->VNQ,100,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,17,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->VNQ,100,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,SPY->VNQ,100,27,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,SPY->VNQ,100,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,9,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,17,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->BWX,1000,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->BWX,1000,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->BWX,1000,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->BWX,1000,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,9,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,17,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->PFF,1000,18,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->PFF,1000,27,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->PFF,1000,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->PFF,1000,30,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,1,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,2,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,3,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,4,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,5,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,6,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,7,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,8,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,9,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,10,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,11,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,12,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,13,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,14,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,15,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,16,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,17,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->SPY,1000,18,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->SPY,1000,19,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,20,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,21,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,22,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,23,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,24,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,25,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,26,0,30,,False,,0,,10
+IID,EDDM + ARF,1,VNQ->SPY,1000,27,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,28,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,29,0,30,,False,,0,,9
+IID,EDDM + ARF,1,VNQ->SPY,1000,30,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->PFF,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,9,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,21,0,30,4039.0,False,39.0,1,4040.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,22,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,23,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,28,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->PFF,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,1,0,30,4077.0,False,77.0,1,4078.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,2,0,30,4132.0,False,132.0,1,4133.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,3,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,4,0,30,4035.0,False,35.0,1,4038.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,5,0,30,4052.0,False,52.0,1,4053.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,6,0,30,,False,,0,,25
+Cal. A,EDDM + HT,1,BWX->SPY,500,7,0,30,4183.0,False,183.0,1,4184.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,9,0,30,4195.0,False,195.0,1,4197.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,10,0,30,4151.0,False,151.0,1,4196.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,11,0,30,4067.0,False,67.0,1,4101.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,12,0,30,4040.0,False,40.0,1,4041.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,13,0,30,4065.0,False,65.0,1,4066.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,14,0,30,4066.0,False,66.0,1,4067.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,15,0,30,4067.0,False,67.0,1,4069.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,16,0,30,4130.0,False,130.0,1,4132.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,17,0,30,4071.0,False,71.0,1,4072.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,18,0,30,4095.0,False,95.0,1,4096.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,19,0,30,4058.0,False,58.0,1,4059.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,20,0,30,4113.0,False,113.0,1,4115.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,21,0,30,4065.0,False,65.0,1,4066.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,22,0,30,,False,,0,,21
+Cal. A,EDDM + HT,1,BWX->SPY,500,23,0,30,,False,,0,,29
+Cal. A,EDDM + HT,1,BWX->SPY,500,24,0,30,4138.0,False,138.0,1,4139.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,25,0,30,4030.0,False,30.0,1,4057.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,26,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,27,0,30,4186.0,False,186.0,1,4187.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,28,0,30,4047.0,False,47.0,1,4048.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,29,0,30,4035.0,False,35.0,1,4036.0,32
+Cal. A,EDDM + HT,1,BWX->SPY,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,BWX->VNQ,100,1,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,BWX->VNQ,100,2,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,3,0,30,,False,,0,,6
+Cal. A,EDDM + HT,1,BWX->VNQ,100,4,0,30,,False,,0,,12
+Cal. A,EDDM + HT,1,BWX->VNQ,100,5,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,6,0,30,,False,,0,,8
+Cal. A,EDDM + HT,1,BWX->VNQ,100,7,0,30,,False,,0,,5
+Cal. A,EDDM + HT,1,BWX->VNQ,100,8,0,30,,False,,0,,15
+Cal. A,EDDM + HT,1,BWX->VNQ,100,9,0,30,,False,,0,,11
+Cal. A,EDDM + HT,1,BWX->VNQ,100,10,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,11,0,30,,False,,0,,8
+Cal. A,EDDM + HT,1,BWX->VNQ,100,12,0,30,,False,,0,,8
+Cal. A,EDDM + HT,1,BWX->VNQ,100,13,0,30,,False,,0,,6
+Cal. A,EDDM + HT,1,BWX->VNQ,100,14,0,30,,False,,0,,17
+Cal. A,EDDM + HT,1,BWX->VNQ,100,15,0,30,,False,,0,,8
+Cal. A,EDDM + HT,1,BWX->VNQ,100,16,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,17,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,18,0,30,,False,,0,,10
+Cal. A,EDDM + HT,1,BWX->VNQ,100,19,0,30,,False,,0,,14
+Cal. A,EDDM + HT,1,BWX->VNQ,100,20,0,30,,False,,0,,6
+Cal. A,EDDM + HT,1,BWX->VNQ,100,21,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,BWX->VNQ,100,22,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,BWX->VNQ,100,23,0,30,,False,,0,,6
+Cal. A,EDDM + HT,1,BWX->VNQ,100,24,0,30,,False,,0,,14
+Cal. A,EDDM + HT,1,BWX->VNQ,100,25,0,30,,False,,0,,5
+Cal. A,EDDM + HT,1,BWX->VNQ,100,26,0,30,,False,,0,,17
+Cal. A,EDDM + HT,1,BWX->VNQ,100,27,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,BWX->VNQ,100,28,0,30,,False,,0,,28
+Cal. A,EDDM + HT,1,BWX->VNQ,100,29,0,30,,False,,0,,10
+Cal. A,EDDM + HT,1,BWX->VNQ,100,30,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,PFF->BWX,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,21,0,30,4039.0,False,39.0,1,4040.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,1,0,30,4069.0,False,69.0,1,4070.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,2,0,30,4035.0,False,35.0,1,4036.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,5,0,30,4042.0,False,42.0,1,4043.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,6,0,30,4056.0,False,56.0,1,4058.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,9,0,30,4070.0,False,70.0,1,4071.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,10,0,30,4115.0,False,115.0,1,4116.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,11,0,30,4050.0,False,50.0,1,4051.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,13,0,30,4045.0,False,45.0,1,4046.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,14,0,30,4037.0,False,37.0,1,4038.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,15,0,30,4043.0,False,43.0,1,4044.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,16,0,30,4039.0,False,39.0,1,4040.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,17,0,30,4056.0,False,56.0,1,4057.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,18,0,30,4034.0,False,34.0,1,4035.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,19,0,30,4042.0,False,42.0,1,4043.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,20,0,30,4040.0,False,40.0,1,4041.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,21,0,30,4060.0,False,60.0,1,4061.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,22,0,30,4121.0,False,121.0,1,4122.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,23,0,30,4084.0,False,84.0,1,4085.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,24,0,30,4103.0,False,103.0,1,4104.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,26,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,27,0,30,4052.0,False,52.0,1,4053.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,28,0,30,4044.0,False,44.0,1,4045.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,29,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. A,EDDM + HT,1,PFF->SPY,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,PFF->VNQ,100,1,0,30,,False,,0,,14
+Cal. A,EDDM + HT,1,PFF->VNQ,100,2,0,30,,False,,0,,15
+Cal. A,EDDM + HT,1,PFF->VNQ,100,3,0,30,,False,,0,,12
+Cal. A,EDDM + HT,1,PFF->VNQ,100,4,0,30,,False,,0,,13
+Cal. A,EDDM + HT,1,PFF->VNQ,100,5,0,30,,False,,0,,10
+Cal. A,EDDM + HT,1,PFF->VNQ,100,6,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,PFF->VNQ,100,7,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,PFF->VNQ,100,8,0,30,,False,,0,,26
+Cal. A,EDDM + HT,1,PFF->VNQ,100,9,0,30,,False,,0,,12
+Cal. A,EDDM + HT,1,PFF->VNQ,100,10,0,30,,False,,0,,13
+Cal. A,EDDM + HT,1,PFF->VNQ,100,11,0,30,,False,,0,,23
+Cal. A,EDDM + HT,1,PFF->VNQ,100,12,0,30,,False,,0,,14
+Cal. A,EDDM + HT,1,PFF->VNQ,100,13,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,PFF->VNQ,100,14,0,30,4143.0,False,143.0,1,4145.0,32
+Cal. A,EDDM + HT,1,PFF->VNQ,100,15,0,30,,False,,0,,9
+Cal. A,EDDM + HT,1,PFF->VNQ,100,16,0,30,,False,,0,,13
+Cal. A,EDDM + HT,1,PFF->VNQ,100,17,0,30,,False,,0,,17
+Cal. A,EDDM + HT,1,PFF->VNQ,100,18,0,30,,False,,0,,11
+Cal. A,EDDM + HT,1,PFF->VNQ,100,19,0,30,4084.0,False,84.0,1,4085.0,32
+Cal. A,EDDM + HT,1,PFF->VNQ,100,20,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,PFF->VNQ,100,21,0,30,,False,,0,,7
+Cal. A,EDDM + HT,1,PFF->VNQ,100,22,0,30,,False,,0,,8
+Cal. A,EDDM + HT,1,PFF->VNQ,100,23,0,30,,False,,0,,6
+Cal. A,EDDM + HT,1,PFF->VNQ,100,24,0,30,,False,,0,,20
+Cal. A,EDDM + HT,1,PFF->VNQ,100,25,0,30,,False,,0,,23
+Cal. A,EDDM + HT,1,PFF->VNQ,100,26,0,30,,False,,0,,27
+Cal. A,EDDM + HT,1,PFF->VNQ,100,27,0,30,,False,,0,,12
+Cal. A,EDDM + HT,1,PFF->VNQ,100,28,0,30,,False,,0,,29
+Cal. A,EDDM + HT,1,PFF->VNQ,100,29,0,30,,False,,0,,15
+Cal. A,EDDM + HT,1,PFF->VNQ,100,30,0,30,,False,,0,,10
+Cal. A,EDDM + HT,1,SPY->BWX,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,21,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,21,0,30,4037.0,False,37.0,1,4038.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->PFF,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,1,0,30,4031.0,False,31.0,1,4033.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,9,0,30,4053.0,False,53.0,1,4054.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,21,0,30,4048.0,False,48.0,1,4049.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,22,0,30,4050.0,False,50.0,1,4051.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,23,0,30,4050.0,False,50.0,1,4051.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,28,0,30,4038.0,False,38.0,1,4039.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,SPY->VNQ,100,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,21,0,30,4039.0,False,39.0,1,4040.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->BWX,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,21,0,30,4039.0,False,39.0,1,4040.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->PFF,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,21,0,30,4040.0,False,40.0,1,4041.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. A,EDDM + HT,1,VNQ->SPY,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,1,0,30,4068.0,False,68.0,1,4069.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,21,0,30,4168.0,False,168.0,1,4169.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,28,0,30,4034.0,False,34.0,1,4035.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,29,0,30,4058.0,False,58.0,1,4059.0,32
+Cal. B,EDDM + HT,1,BWX->PFF,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,1,0,30,4077.0,False,77.0,1,4078.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,2,0,30,4043.0,False,43.0,1,4044.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,5,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,9,0,30,4052.0,False,52.0,1,4053.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,15,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,17,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,20,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,21,0,30,4216.0,False,216.0,1,4220.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,22,0,30,4047.0,False,47.0,1,4048.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,23,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,24,0,30,4030.0,False,30.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,26,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,28,0,30,4045.0,False,45.0,1,4046.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,29,0,30,4058.0,False,58.0,1,4059.0,32
+Cal. B,EDDM + HT,1,BWX->SPY,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,1,0,30,4891.0,False,891.0,1,7000.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,2,0,30,,False,,0,,15
+Cal. B,EDDM + HT,1,BWX->VNQ,100,3,0,30,,False,,0,,29
+Cal. B,EDDM + HT,1,BWX->VNQ,100,4,0,30,,False,,0,,17
+Cal. B,EDDM + HT,1,BWX->VNQ,100,5,0,30,,False,,0,,28
+Cal. B,EDDM + HT,1,BWX->VNQ,100,6,0,30,,False,,0,,10
+Cal. B,EDDM + HT,1,BWX->VNQ,100,7,0,30,,False,,0,,14
+Cal. B,EDDM + HT,1,BWX->VNQ,100,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,9,0,30,,False,,0,,17
+Cal. B,EDDM + HT,1,BWX->VNQ,100,10,0,30,,False,,0,,23
+Cal. B,EDDM + HT,1,BWX->VNQ,100,11,0,30,4151.0,False,151.0,1,4152.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,12,0,30,4082.0,False,82.0,1,4083.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,13,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,14,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,15,0,30,4104.0,False,104.0,1,4105.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,16,0,30,,False,,0,,17
+Cal. B,EDDM + HT,1,BWX->VNQ,100,17,0,30,,False,,0,,26
+Cal. B,EDDM + HT,1,BWX->VNQ,100,18,0,30,,False,,0,,28
+Cal. B,EDDM + HT,1,BWX->VNQ,100,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,20,0,30,,False,,0,,18
+Cal. B,EDDM + HT,1,BWX->VNQ,100,21,0,30,,False,,0,,10
+Cal. B,EDDM + HT,1,BWX->VNQ,100,22,0,30,,False,,0,,14
+Cal. B,EDDM + HT,1,BWX->VNQ,100,23,0,30,,False,,0,,28
+Cal. B,EDDM + HT,1,BWX->VNQ,100,24,0,30,,False,,0,,24
+Cal. B,EDDM + HT,1,BWX->VNQ,100,25,0,30,4030.0,False,30.0,1,4061.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,26,0,30,4040.0,False,40.0,1,4042.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,28,0,30,4163.0,False,163.0,1,4290.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,29,0,30,4088.0,False,88.0,1,4091.0,32
+Cal. B,EDDM + HT,1,BWX->VNQ,100,30,0,30,4580.0,False,580.0,1,4581.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,1,0,30,4042.0,False,42.0,1,4043.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,21,0,30,4062.0,False,62.0,1,4063.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,29,0,30,4055.0,False,55.0,1,4056.0,32
+Cal. B,EDDM + HT,1,PFF->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,1,0,30,4069.0,False,69.0,1,4070.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,9,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,21,0,30,4162.0,False,162.0,1,4163.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,22,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,23,0,30,4031.0,False,31.0,1,4032.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,28,0,30,4041.0,False,41.0,1,4042.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,29,0,30,4049.0,False,49.0,1,4050.0,32
+Cal. B,EDDM + HT,1,PFF->SPY,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,1,0,30,4120.0,False,120.0,1,4121.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,2,0,30,,False,,0,,29
+Cal. B,EDDM + HT,1,PFF->VNQ,100,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,5,0,30,4050.0,False,50.0,1,4051.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,6,0,30,,False,,0,,24
+Cal. B,EDDM + HT,1,PFF->VNQ,100,7,0,30,4178.0,False,178.0,1,4179.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,9,0,30,4561.0,False,561.0,0,,30
+Cal. B,EDDM + HT,1,PFF->VNQ,100,10,0,30,4141.0,False,141.0,1,4146.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,11,0,30,4055.0,False,55.0,1,4056.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,13,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,15,0,30,4060.0,False,60.0,1,4062.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,16,0,30,4044.0,False,44.0,1,4045.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,17,0,30,4071.0,False,71.0,1,4072.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,18,0,30,4052.0,False,52.0,1,4053.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,20,0,30,4049.0,False,49.0,1,4051.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,21,0,30,,False,,0,,10
+Cal. B,EDDM + HT,1,PFF->VNQ,100,22,0,30,,False,,0,,19
+Cal. B,EDDM + HT,1,PFF->VNQ,100,23,0,30,,False,,0,,25
+Cal. B,EDDM + HT,1,PFF->VNQ,100,24,0,30,4161.0,False,161.0,1,4162.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,26,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,27,0,30,4055.0,False,55.0,1,4056.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,28,0,30,4047.0,False,47.0,1,4048.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,29,0,30,4057.0,False,57.0,1,4058.0,32
+Cal. B,EDDM + HT,1,PFF->VNQ,100,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,1,0,30,4033.0,False,33.0,1,4034.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,21,0,30,4059.0,False,59.0,1,4060.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,29,0,30,4036.0,False,36.0,1,4037.0,32
+Cal. B,EDDM + HT,1,SPY->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,1,0,30,4031.0,False,31.0,1,4033.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,21,0,30,4058.0,False,58.0,1,4059.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,29,0,30,4034.0,False,34.0,1,4035.0,32
+Cal. B,EDDM + HT,1,SPY->PFF,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,1,0,30,4070.0,False,70.0,1,4071.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,9,0,30,4051.0,False,51.0,1,4052.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,21,0,30,4170.0,False,170.0,1,4171.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,22,0,30,4050.0,False,50.0,1,4051.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,23,0,30,4059.0,False,59.0,1,4066.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,28,0,30,4042.0,False,42.0,1,4043.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,29,0,30,4035.0,False,35.0,1,4036.0,32
+Cal. B,EDDM + HT,1,SPY->VNQ,100,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,1,0,30,4042.0,False,42.0,1,4043.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,21,0,30,4058.0,False,58.0,1,4059.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,29,0,30,4053.0,False,53.0,1,4054.0,32
+Cal. B,EDDM + HT,1,VNQ->BWX,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,1,0,30,4031.0,False,31.0,1,4033.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,21,0,30,4055.0,False,55.0,1,4056.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,29,0,30,4036.0,False,36.0,1,4037.0,32
+Cal. B,EDDM + HT,1,VNQ->PFF,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,19,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,21,0,30,4049.0,False,49.0,1,4050.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,29,0,30,4032.0,False,32.0,1,4033.0,32
+Cal. B,EDDM + HT,1,VNQ->SPY,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,BWX->PFF,500,30,0,30,4033.0,False,33.0,1,4034.0,32
+IID,EDDM + HT,1,BWX->SPY,500,1,0,30,,False,,0,,15
+IID,EDDM + HT,1,BWX->SPY,500,2,0,30,,False,,0,,9
+IID,EDDM + HT,1,BWX->SPY,500,3,0,30,,False,,0,,24
+IID,EDDM + HT,1,BWX->SPY,500,4,0,30,,False,,0,,22
+IID,EDDM + HT,1,BWX->SPY,500,5,0,30,,False,,0,,15
+IID,EDDM + HT,1,BWX->SPY,500,6,0,30,,False,,0,,11
+IID,EDDM + HT,1,BWX->SPY,500,7,0,30,,False,,0,,12
+IID,EDDM + HT,1,BWX->SPY,500,8,0,30,,False,,0,,16
+IID,EDDM + HT,1,BWX->SPY,500,9,0,30,,False,,0,,8
+IID,EDDM + HT,1,BWX->SPY,500,10,0,30,,False,,0,,25
+IID,EDDM + HT,1,BWX->SPY,500,11,0,30,,False,,0,,7
+IID,EDDM + HT,1,BWX->SPY,500,12,0,30,,False,,0,,8
+IID,EDDM + HT,1,BWX->SPY,500,13,0,30,,False,,0,,13
+IID,EDDM + HT,1,BWX->SPY,500,14,0,30,,False,,0,,10
+IID,EDDM + HT,1,BWX->SPY,500,15,0,30,,False,,0,,12
+IID,EDDM + HT,1,BWX->SPY,500,16,0,30,,False,,0,,18
+IID,EDDM + HT,1,BWX->SPY,500,17,0,30,,False,,0,,8
+IID,EDDM + HT,1,BWX->SPY,500,18,0,30,,False,,0,,13
+IID,EDDM + HT,1,BWX->SPY,500,19,0,30,4218.0,False,218.0,1,4219.0,32
+IID,EDDM + HT,1,BWX->SPY,500,20,0,30,,False,,0,,13
+IID,EDDM + HT,1,BWX->SPY,500,21,0,30,,False,,0,,21
+IID,EDDM + HT,1,BWX->SPY,500,22,0,30,,False,,0,,15
+IID,EDDM + HT,1,BWX->SPY,500,23,0,30,7203.0,False,3203.0,0,,30
+IID,EDDM + HT,1,BWX->SPY,500,24,0,30,,False,,0,,13
+IID,EDDM + HT,1,BWX->SPY,500,25,0,30,,False,,0,,21
+IID,EDDM + HT,1,BWX->SPY,500,26,0,30,,False,,0,,14
+IID,EDDM + HT,1,BWX->SPY,500,27,0,30,,False,,0,,12
+IID,EDDM + HT,1,BWX->SPY,500,28,0,30,,False,,0,,20
+IID,EDDM + HT,1,BWX->SPY,500,29,0,30,,False,,0,,16
+IID,EDDM + HT,1,BWX->SPY,500,30,0,30,,False,,0,,8
+IID,EDDM + HT,1,BWX->VNQ,100,1,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,2,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,3,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,4,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,5,0,30,,False,,0,,5
+IID,EDDM + HT,1,BWX->VNQ,100,6,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,7,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,8,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,9,0,30,,False,,0,,7
+IID,EDDM + HT,1,BWX->VNQ,100,10,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,11,0,30,,False,,0,,7
+IID,EDDM + HT,1,BWX->VNQ,100,12,0,30,,False,,0,,9
+IID,EDDM + HT,1,BWX->VNQ,100,13,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,14,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,15,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,16,0,30,,False,,0,,5
+IID,EDDM + HT,1,BWX->VNQ,100,17,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,18,0,30,,False,,0,,8
+IID,EDDM + HT,1,BWX->VNQ,100,19,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,20,0,30,,False,,0,,5
+IID,EDDM + HT,1,BWX->VNQ,100,21,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,22,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,23,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,24,0,30,,False,,0,,6
+IID,EDDM + HT,1,BWX->VNQ,100,25,0,30,,False,,0,,7
+IID,EDDM + HT,1,BWX->VNQ,100,26,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,27,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,28,0,30,,False,,0,,3
+IID,EDDM + HT,1,BWX->VNQ,100,29,0,30,,False,,0,,4
+IID,EDDM + HT,1,BWX->VNQ,100,30,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->BWX,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,19,0,30,4031.0,False,31.0,1,4032.0,32
+IID,EDDM + HT,1,PFF->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->SPY,500,1,0,30,,False,,0,,22
+IID,EDDM + HT,1,PFF->SPY,500,2,0,30,,False,,0,,19
+IID,EDDM + HT,1,PFF->SPY,500,3,0,30,4204.0,False,204.0,1,4420.0,32
+IID,EDDM + HT,1,PFF->SPY,500,4,0,30,4229.0,False,229.0,1,4230.0,32
+IID,EDDM + HT,1,PFF->SPY,500,5,0,30,,False,,0,,25
+IID,EDDM + HT,1,PFF->SPY,500,6,0,30,,False,,0,,23
+IID,EDDM + HT,1,PFF->SPY,500,7,0,30,,False,,0,,19
+IID,EDDM + HT,1,PFF->SPY,500,8,0,30,,False,,0,,26
+IID,EDDM + HT,1,PFF->SPY,500,9,0,30,,False,,0,,11
+IID,EDDM + HT,1,PFF->SPY,500,10,0,30,5250.0,False,1250.0,0,,30
+IID,EDDM + HT,1,PFF->SPY,500,11,0,30,,False,,0,,14
+IID,EDDM + HT,1,PFF->SPY,500,12,0,30,,False,,0,,9
+IID,EDDM + HT,1,PFF->SPY,500,13,0,30,,False,,0,,27
+IID,EDDM + HT,1,PFF->SPY,500,14,0,30,,False,,0,,14
+IID,EDDM + HT,1,PFF->SPY,500,15,0,30,,False,,0,,29
+IID,EDDM + HT,1,PFF->SPY,500,16,0,30,4057.0,False,57.0,1,4058.0,32
+IID,EDDM + HT,1,PFF->SPY,500,17,0,30,,False,,0,,19
+IID,EDDM + HT,1,PFF->SPY,500,18,0,30,,False,,0,,13
+IID,EDDM + HT,1,PFF->SPY,500,19,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->SPY,500,20,0,30,,False,,0,,25
+IID,EDDM + HT,1,PFF->SPY,500,21,0,30,5525.0,False,1525.0,0,,30
+IID,EDDM + HT,1,PFF->SPY,500,22,0,30,,False,,0,,27
+IID,EDDM + HT,1,PFF->SPY,500,23,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,PFF->SPY,500,24,0,30,,False,,0,,22
+IID,EDDM + HT,1,PFF->SPY,500,25,0,30,4608.0,False,608.0,1,5907.0,32
+IID,EDDM + HT,1,PFF->SPY,500,26,0,30,,False,,0,,19
+IID,EDDM + HT,1,PFF->SPY,500,27,0,30,,False,,0,,23
+IID,EDDM + HT,1,PFF->SPY,500,28,0,30,4536.0,False,536.0,1,7488.0,32
+IID,EDDM + HT,1,PFF->SPY,500,29,0,30,,False,,0,,25
+IID,EDDM + HT,1,PFF->SPY,500,30,0,30,,False,,0,,13
+IID,EDDM + HT,1,PFF->VNQ,100,1,0,30,,False,,0,,6
+IID,EDDM + HT,1,PFF->VNQ,100,2,0,30,,False,,0,,9
+IID,EDDM + HT,1,PFF->VNQ,100,3,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,4,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,5,0,30,,False,,0,,5
+IID,EDDM + HT,1,PFF->VNQ,100,6,0,30,,False,,0,,6
+IID,EDDM + HT,1,PFF->VNQ,100,7,0,30,,False,,0,,6
+IID,EDDM + HT,1,PFF->VNQ,100,8,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,9,0,30,,False,,0,,7
+IID,EDDM + HT,1,PFF->VNQ,100,10,0,30,,False,,0,,6
+IID,EDDM + HT,1,PFF->VNQ,100,11,0,30,,False,,0,,7
+IID,EDDM + HT,1,PFF->VNQ,100,12,0,30,,False,,0,,9
+IID,EDDM + HT,1,PFF->VNQ,100,13,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,14,0,30,,False,,0,,5
+IID,EDDM + HT,1,PFF->VNQ,100,15,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,16,0,30,,False,,0,,5
+IID,EDDM + HT,1,PFF->VNQ,100,17,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,18,0,30,,False,,0,,8
+IID,EDDM + HT,1,PFF->VNQ,100,19,0,30,,False,,0,,10
+IID,EDDM + HT,1,PFF->VNQ,100,20,0,30,,False,,0,,5
+IID,EDDM + HT,1,PFF->VNQ,100,21,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,22,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,23,0,30,,False,,0,,5
+IID,EDDM + HT,1,PFF->VNQ,100,24,0,30,,False,,0,,7
+IID,EDDM + HT,1,PFF->VNQ,100,25,0,30,,False,,0,,7
+IID,EDDM + HT,1,PFF->VNQ,100,26,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,27,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,28,0,30,,False,,0,,3
+IID,EDDM + HT,1,PFF->VNQ,100,29,0,30,,False,,0,,4
+IID,EDDM + HT,1,PFF->VNQ,100,30,0,30,,False,,0,,5
+IID,EDDM + HT,1,SPY->BWX,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,19,0,30,4041.0,False,41.0,1,4042.0,32
+IID,EDDM + HT,1,SPY->BWX,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,23,0,30,4072.0,False,72.0,1,4073.0,32
+IID,EDDM + HT,1,SPY->BWX,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->BWX,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,19,0,30,4041.0,False,41.0,1,4042.0,32
+IID,EDDM + HT,1,SPY->PFF,500,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,23,0,30,4056.0,False,56.0,1,4058.0,32
+IID,EDDM + HT,1,SPY->PFF,500,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->PFF,500,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,2,0,30,4071.0,False,71.0,1,4072.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,4,0,30,4070.0,False,70.0,1,4071.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,5,0,30,4065.0,False,65.0,1,4076.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,6,0,30,4048.0,False,48.0,1,4049.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,7,0,30,4045.0,False,45.0,1,4046.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,9,0,30,4057.0,False,57.0,1,4058.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,10,0,30,4058.0,False,58.0,1,4059.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,11,0,30,4050.0,False,50.0,1,4051.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,12,0,30,4074.0,False,74.0,1,4076.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,13,0,30,4034.0,False,34.0,1,4035.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,15,0,30,4039.0,False,39.0,1,4040.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,18,0,30,4082.0,False,82.0,1,4085.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,19,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,21,0,30,4035.0,False,35.0,1,4036.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,22,0,30,4034.0,False,34.0,1,4056.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,23,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,24,0,30,4069.0,False,69.0,1,4070.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,25,0,30,4081.0,False,81.0,1,4082.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,26,0,30,4059.0,False,59.0,1,4060.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,27,0,30,4048.0,False,48.0,1,4059.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,28,0,30,4038.0,False,38.0,1,4039.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,SPY->VNQ,100,30,0,30,4070.0,False,70.0,1,4071.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,19,0,30,4041.0,False,41.0,1,4042.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,23,0,30,4052.0,False,52.0,1,4054.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->BWX,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,19,0,30,4041.0,False,41.0,1,4042.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,23,0,30,4052.0,False,52.0,1,4054.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->PFF,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,1,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,2,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,3,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,4,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,5,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,6,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,7,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,8,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,9,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,10,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,11,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,12,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,13,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,14,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,15,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,16,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,17,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,18,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,19,0,30,4036.0,False,36.0,1,4037.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,20,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,21,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,22,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,23,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,24,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,25,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,26,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,27,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,28,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,29,0,30,4030.0,False,30.0,1,4031.0,32
+IID,EDDM + HT,1,VNQ->SPY,1000,30,0,30,4030.0,False,30.0,1,4031.0,32
