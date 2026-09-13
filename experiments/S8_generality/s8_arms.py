@@ -21,11 +21,12 @@ regenerated -- the identity of the trunk rows with the committed S6 rows IS the 
 (D3-bis), and regenerating S6 would move `envelope_stats.json` and the manuscript macros for
 nothing.
 
+  d0      mechanical reproduction of every published numeral this stream carries forward
   smoke   5 seeds x 3 magnitudes x 5 arms
   full    100 seeds x 20 magnitudes x 5 arms
   causal  trunk gate (D3-bis), the four-term decomposition (D1/D2), detection counts (D3)
 
-Usage:  PYTHONHASHSEED=0 python experiments/S8_generality/s8_arms.py [smoke|full|causal]
+Usage:  PYTHONHASHSEED=0 python experiments/S8_generality/s8_arms.py [d0|smoke|full|causal]
 """
 import json
 import sys
@@ -197,6 +198,93 @@ def run_causal(which="data"):
     return payload
 
 
+# ══════════════════════════════════════════════════════════════════════════════
+# D0 -- mechanical reproduction of every published numeral S8 re-uses
+# ══════════════════════════════════════════════════════════════════════════════
+PUBLISHED = {
+    # numeral: (quoted value, tolerance, source of the quotation)
+    "learn_share_a_pos_common": (0.993371, 1e-6, "docs/theory/S6_causal_evidence.md:157"),
+    "hydra_rmst_ratio_de0141": (4.1175, 1e-4, "docs/theory/transfer_S3.md, hydra_survival.csv"),
+    "hydra_rmst_ratio_de0327": (7.9900, 5e-3, "docs/theory/transfer_S3.md, .tex sec:hydra"),
+    "a_over_a_rect_min": (-14.12, 5e-3, "docs/theory/S6_causal_evidence.md section 3"),
+    "switch_point_canonical": (0.452271, 1e-6, "docs/theory/S6_causal_evidence.md section 3"),
+}
+
+
+def _cmp(name, measured):
+    quoted, tol, source = PUBLISHED[name]
+    ok = np.isfinite(measured) and abs(measured - quoted) <= tol
+    return {"numeral": name, "quoted": quoted, "measured": float(measured), "tolerance": tol,
+            "source": source, "verdict": "REPRODUCED" if ok else "UNREPRODUCED"}
+
+
+def d0_reproduction():
+    """Re-derive, from the committed artifacts, every published numeral S8 carries forward.
+
+    D0 forbids carrying a numeral on the strength of the planning phase's reading. Two of the five
+    cannot be recomputed from the S6 corpus alone -- `a_pos_common` is a trace-level quantity and
+    `results/S6_synchronized_traces/data/traces.parquet/` is gitignored and regenerable -- so they
+    are recomputed on the S8 campaign, whose `full` / `no_swap` / `frozen` rows the D3-bis gate has
+    shown identical to the S6 rows column by column. That conditionality is stated, not hidden."""
+    out, sources = [], {}
+
+    s6_runs = S6_DIR / "data" / "runs.parquet"
+    if s6_runs.exists():
+        runs = pq.read_table(s6_runs).to_pandas()
+        full = runs[runs.arm == "full"].copy()
+        full["ratio"] = full.a / full.a_rect
+        med = full.groupby("delta_e").ratio.median().sort_index()
+        neg = med[med < 0]
+        out.append(_cmp("a_over_a_rect_min", float(med.min())))
+        out.append(_cmp("switch_point_canonical", float(neg.index[0]) if len(neg) else np.nan))
+        sources["a_over_a_rect"] = str(s6_runs.relative_to(ssot.ROOT_DIR))
+
+    hydra = ssot.RESULTS_DIR / "audit_S7" / "hydra_survival.csv"
+    if hydra.exists():
+        h = pd.read_csv(hydra, float_precision="round_trip").set_index("delta_e")
+        for de, name in ((0.140949, "hydra_rmst_ratio_de0141"),
+                         (0.326793, "hydra_rmst_ratio_de0327")):
+            row = h.loc[min(h.index, key=lambda d: abs(d - de))]
+            r = _cmp(name, float(row.rmst_ratio))
+            r["ci"] = [float(row.rmst_ratio_ci_lo), float(row.rmst_ratio_ci_hi)]
+            r["arm"] = "ARF(M=1) against ARF(M=10) -- the object .tex:224 calls a HAT"
+            out.append(r)
+        sources["hydra"] = str(hydra.relative_to(ssot.ROOT_DIR))
+
+    s8_causal = RESULTS_DIR / "data" / "s8_causal.json"
+    if s8_causal.exists():
+        payload = json.loads(s8_causal.read_text(encoding="utf-8"))
+        pooled = payload["erasure_share_post_fork"]["a_pos_common"]["pooled"]
+        r = _cmp("learn_share_a_pos_common", float(pooled["median_share_learn"]))
+        r["note"] = ("recomputed on the S8 campaign's tau_swap-anchored arms; valid because D3-bis "
+                     "shows those rows identical to the committed S6 rows")
+        r["iqr"] = [float(pooled["q25"]), float(pooled["q75"])]
+        out.append(r)
+        sources["learn_share"] = str(s8_causal.relative_to(ssot.ROOT_DIR))
+
+    missing = sorted(set(PUBLISHED) - {r["numeral"] for r in out})
+    return {"sources": sources, "items": out, "not_checkable": missing,
+            "verdict": ("UNREPRODUCED" if any(r["verdict"] == "UNREPRODUCED" for r in out)
+                        else "REPRODUCED" if not missing else "PARTIAL")}
+
+
+def run_d0():
+    tables = RESULTS_DIR / "tables"
+    tables.mkdir(parents=True, exist_ok=True)
+    payload = d0_reproduction()
+    (tables / "s8_d0_reproduction.json").write_text(
+        json.dumps(payload, indent=2, sort_keys=True, default=float) + "\n", encoding="utf-8")
+    print("=== D0 reproduction of the numerals S8 carries forward ===")
+    for r in payload["items"]:
+        print(f"  {r['numeral']:28s} quoted {r['quoted']:>10.6f}  measured {r['measured']:>10.6f}"
+              f"  -> {r['verdict']}   [{r['source']}]")
+    if payload["not_checkable"]:
+        print(f"  not checkable on this tree: {payload['not_checkable']}")
+    print(f"  overall: {payload['verdict']}")
+    print(f"[INFO] wrote {(tables / 's8_d0_reproduction.json').relative_to(ssot.ROOT_DIR)}")
+    return payload
+
+
 def demo():
     """Self-check of the two non-trivial helpers, on constructed inputs."""
     recs = [{"delta_e": 0.25, "arm": "full", "seed": 7,
@@ -219,5 +307,7 @@ if __name__ == "__main__":
         run_campaign(mode)
     elif mode == "causal":
         run_causal(sys.argv[2] if len(sys.argv) > 2 else "data")
+    elif mode == "d0":
+        run_d0()
     else:
-        raise SystemExit(f"usage: s8_arms.py [smoke|full|causal|demo]  (got {mode!r})")
+        raise SystemExit(f"usage: s8_arms.py [smoke|full|causal|d0|demo]  (got {mode!r})")

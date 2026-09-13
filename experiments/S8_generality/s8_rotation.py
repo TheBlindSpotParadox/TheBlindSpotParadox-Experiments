@@ -279,9 +279,11 @@ def compare(which="data"):
         raw, agg = ladder(b, runs)
         agg.to_csv(tables / f"s8_rotation_ladder_{eta_tag(eta)}.csv", index=False)
         e_pre = runs[runs.arm == "full"].groupby("delta_e").e_pre.agg(["median", "std", "min", "max"])
+        # D5 asks for ONE lambda whose pre-drift false-alarm rate lies strictly inside (0, 1) --
+        # at the same grid point, not a rate of 0 at one magnitude and 1 at another.
         binding = [float(lam) for lam in LADDER
-                   if (0.0 < agg[f"fa_rate_lambda{lam:g}"]).any()
-                   and (agg[f"fa_rate_lambda{lam:g}"] < 1.0).any()]
+                   if ((agg[f"fa_rate_lambda{lam:g}"] > 0.0)
+                       & (agg[f"fa_rate_lambda{lam:g}"] < 1.0)).any()]
         payload["per_eta"][eta_tag(eta)] = {
             "eta": float(eta),
             "e_pre": {"median": float(e_pre["median"].median()),
