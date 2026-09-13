@@ -15,8 +15,8 @@ Manuscrit de référence lu depuis `docs/manuscript/CURRENT`, jamais depuis le P
 | ------------------------------------------ | -------------------------------------------------------------------- |
 | SHA annoncé par le prompt                  | `bf28a694`, puis `519c145` par le plan                               |
 | SHA de départ **mesuré** (`git rev-parse`) | `0ddaf51` — `519c145` en est le parent direct                        |
-| SHA d'arrivée du code                      | `5d1150b`                                                            |
-| commits de la passe                        | `cefa94e` (manuscrit), `5d1150b` (alignement U0), puis ce rapport    |
+| SHA d'arrivée du code                      | `5d1150b`, puis la garde d'idempotence de §3d                        |
+| commits de la passe                        | `cefa94e` (manuscrit), `5d1150b` (alignement U0), `ff45479` (ce rapport), puis la garde (§3d) |
 | `main` vs `origin/main` au départ          | `0 0` — aucun push exécuté par cette passe                           |
 | arbre de travail au départ                 | `git status --porcelain` vide                                        |
 
@@ -110,6 +110,47 @@ valant **1** avant chaque édition.
 | `sec:solution_rf` (R4)     | —                            | L529                         | L541                 |
 | `sec:crossover` (BAF)      | —                            | L519                         | L531                 |
 
+### 3d. Garde d'ancres — généralisation d'idempotence
+
+`tests/test_S2bis_calibration.py::test_transfer_payload_anchors_resolve_uniquely` lit le manuscrit
+**depuis `git show main:`** (L289-296), pas depuis l'arbre de travail. La porte 1 est donc restée
+verte tant que les charges étaient non commitées et a viré à **121 passed / 1 failed** à l'instant
+où `cefa94e` est entré dans `main` : la garde exigeait que **chaque** bloc SEARCH de
+`transfer_S2bis.md` résolve exactement une fois, et l'application de T-A(i) consomme son ancre.
+
+La garde encodait une **précondition** — « le payload n'est pas encore appliqué » — que la passe
+sérialisée qu'elle protège détruit par construction. Elle est généralisée en **invariant
+d'idempotence** : un payload est valide dans exactement deux états, discriminés par le couple
+(ancres subsistant hors du remplacement, remplacements trouvés) :
+
+| couple   | état                | verdict |
+| -------- | ------------------- | ------- |
+| `(1, 0)` | EN ATTENTE          | valide  |
+| `(0, 1)` | APPLIQUÉ            | valide  |
+| `(0, 0)` | ancre périmée       | échec   |
+| `(1, 1)` | **duplication** — appliqué alors que l'original subsiste | échec |
+| autre    | ancre ambiguë       | échec   |
+
+La forme disjonctive `count(b) != 1 and count(r) != 1` est **rejetée** : elle est aveugle au cas
+`(1, 1)`, c'est-à-dire exactement la duplication que la correction d'ancre de §3b a évitée à la main.
+
+Le premier terme est **net du remplacement** (`count(b) − count(r)·r.count(b)`) parce qu'un payload
+en *append* ré-émet sa propre ancre comme première ligne de son REPLACE. Sans ce nettage, la forme
+stricte brute classe T-A(0) — correctement appliqué, vérifié octet pour octet — en duplication.
+Mesure des quatre blocs sur `main` après la passe :
+
+| bloc                            | brut `(b, r)` | net `(b − r·b, r)` | verdict | formule brute |
+| ------------------------------- | ------------- | ------------------ | ------- | ------------- |
+| 1 — T-A(ii), différé            | `(1, 0)`      | `(1, 0)`           | OK      | OK            |
+| 2 — T-A(0), appliqué (*append*) | `(1, 1)`      | `(0, 1)`           | OK      | **faux positif** |
+| 3 — T-A(i), appliqué            | `(0, 1)`      | `(0, 1)`           | OK      | OK            |
+| 4 — T-B, différé                | `(1, 0)`      | `(1, 0)`           | OK      | OK            |
+
+Les deux contre-épreuves sont exécutées, pas supposées : en injectant l'ancre de T-A(i) à côté de
+son remplacement le couple devient `(1, 1)` → **échec** ; en effaçant le remplacement il devient
+`(0, 0)` → **échec**. La garde conserve donc son pouvoir de détection sur les deux payloads
+différés, qui sont le seul enjeu réel pour l'assemblage v65.
+
 ---
 
 ## 4. Alignement U0 des cinq sites de prose
@@ -149,7 +190,11 @@ PYTHONHASHSEED=0 /home/m53/miniforge3/envs/Trading/bin/python -m pytest tests/ -
 → 122 passed in 32.84s
 ```
 
-122 tests collectés, 0 erreur de collecte, 0 échec. Aucune assertion n'a été modifiée par la passe.
+122 tests collectés, 0 erreur de collecte, 0 échec. Séquence mesurée, sans lissage : `122 passed`
+avant commit, `121 passed / 1 failed` après `cefa94e` (la garde d'ancres lit `main`, §3d),
+`122 passed` après la généralisation d'idempotence. Aucune assertion numérique n'a été modifiée par
+la passe ; la seule assertion touchée est le prédicat de la garde, et son pouvoir de détection est
+prouvé par deux contre-épreuves (§3d).
 
 **Porte 2 — oracle gelé et égalité stricte des ensembles.**
 
@@ -235,6 +280,12 @@ Chacun est mesuré sur le dépôt vivant, jamais recopié d'un rapport.
 7. **Aucune déviation autorisée n'est consommée par la passe.** Le numéral `1070/1080` de la charge 7
    est tiré de `authorized_deviations.txt` L56, déclaré par S7-ter lors de la régénération de R4 ;
    la passe le transcrit dans le manuscrit, elle ne régénère aucun artefact.
+
+8. **La garde d'ancres mesurait une précondition, pas un invariant.** Elle lit `main`, donc elle
+   passe au rouge au commit de la charge qu'elle a validée en amont. Généralisée en invariant
+   d'idempotence `(1, 0)` ou `(0, 1)`, net du remplacement (§3d). Le durcissement n'est pas un
+   assouplissement : la forme disjonctive `!= 1 and != 1` laissait passer la duplication `(1, 1)`,
+   la forme retenue l'échoue, contre-épreuve exécutée.
 
 ---
 

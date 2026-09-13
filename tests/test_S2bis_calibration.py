@@ -309,16 +309,27 @@ def test_transfer_payload_anchors_resolve_uniquely():
     why `docs/theory/transfer_S2bis.md` anchors on verbatim text and never on a line number.
 
     The target is the manuscript of record named by `docs/manuscript/CURRENT`, never a hard-coded
-    filename. Both anchors of this stream sit outside the region S2's patches A and B touched, so
-    they resolve identically before and after `688bcf5`."""
+    filename. T-A(0) and T-A(i) are anchored on the text S2's patches A and B put there and resolve
+    against `main` from `688bcf5` on; T-A(ii) and T-B sit outside that region entirely.
+
+    IDEMPOTENCE. The serialised pass applies payloads to `main`, which consumes their anchors, so
+    "the anchor resolves once" is a precondition, not an invariant. A payload is valid in exactly
+    two states and the pair (anchors standing outside the replacement, replacements found)
+    discriminates them: (1, 0) PENDING, or (0, 1) APPLIED. Every other pair is a defect -- (0, 0) a
+    stale anchor, (1, 1) a duplication (applied while the original still stands), anything higher an
+    ambiguous anchor. The first component is netted against the replacement because an append-style
+    payload re-emits its own anchor as the first line of its replacement (T-A(0)): counting raw
+    occurrences would read that legitimate applied state as a duplication."""
     doc = ROOT_DIR / "docs" / "theory" / "transfer_S2bis.md"
     _need(doc, "the S2-bis transfer document is a deliverable of this stream")
     where, tex = _manuscript_of_record()
     blocks = _search_blocks(doc)
     assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
-    bad = [(i, b[:80], tex.count(b)) for i, (b, _) in enumerate(blocks, 1) if tex.count(b) != 1]
-    assert not bad, ("SEARCH anchors that do not resolve to exactly one occurrence of "
-                     f"{where}:\n  " + "\n  ".join(f"block {i} ({n}x): {t!r}" for i, t, n in bad))
+    bad = [(i, b[:80], state) for i, (b, r) in enumerate(blocks, 1)
+           if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) not in [(1, 0), (0, 1)]]
+    assert not bad, ("SEARCH/REPLACE payloads that are neither pending (1, 0) nor applied (0, 1) "
+                     f"against {where}, as (anchors outside the replacement, replacements):\n  "
+                     + "\n  ".join(f"block {i} {n}: {t!r}" for i, t, n in bad))
 
 
 def test_transfer_payloads_do_not_touch_the_excluded_subsections():
