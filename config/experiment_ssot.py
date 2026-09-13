@@ -495,3 +495,76 @@ S8_MINIMAL_N_BINS = 32                         # numeric-feature histogram width
                                                # Gaussian summary, this one on equal-width bins
 S8_MINIMAL_N_SEEDS = 100
 S8_MINIMAL_DELTA_E = S8_PER_TREE_DELTA_E
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S9 — detector coverage, the KSWIN failure region, input-space arm (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# S9 answers reviewer #3. V7 of S6 instrumented CUSUM alone: PHT, ADWIN and KSWIN carry no
+# synchronised trajectory, so the "structurally immune" claim of .tex:500 rests on no measurement of
+# this repository. P1 closes that by REPLAY on the committed S6 traces -- no new simulation -- and
+# the decision rules are frozen beforehand in docs/prompts/s9-decision-rules.md.
+
+# --- P1 / T9.1: the offline replay ---------------------------------------------------------------
+S9_WARMUP_WINDOW = S6_WARMUP_WINDOW             # 1000 pre-drift steps: p_0 calibration AND the
+                                                # history KSWIN's reference window is drawn from
+S9_T_HORIZON = S6_T_HORIZON                     # 2500, the window every published S6 numeral uses
+S9_TRACE_PRE = 200                              # stored pre-drift span. The detectors are FED from
+                                                # -S9_WARMUP_WINDOW; only the last 200 steps before
+                                                # tau* are written, enough to show each statistic's
+                                                # pre-drift baseline without a 5x larger artifact
+S9_OFFLINE_ARMS = tuple(a for a in S6_ARM_NAMES if a != "static")   # full, no_swap, frozen -- one
+                                                # trajectory, three replacement policies.
+                                                # s6_recompute_cusum_delta001 excludes 'static' for
+                                                # the same reason: a six-fold capacity deficit makes
+                                                # its evidence ceiling incomparable
+S9_SEED_MASTER = SEED_SCHEME_SEEDSEQ_ENTROPY    # 42; every KSWIN reservoir seed is derived from it
+                                                # by SeedSequence per (arm, seed, delta_e, input arm)
+
+# Two input arms, declared and never merged. (i) the raw per-step error of the trace; (ii) the R4
+# convention of run_concept_drift_kswin -- a moving average over S9_KSWIN_BUFFER steps, the detector
+# updated only once the buffer is full. The smoothed arm is the one .tex:500 was measured on and the
+# one whose ties invalidate the exact ks_2samp p-value (s9-decision-rules.md A.3 item 3).
+S9_INPUT_ARMS = ("raw", "smoothed")
+
+# --- KSWIN, as deployed by R4 --------------------------------------------------------------------
+S9_KSWIN_WINDOW = 100                           # W_win, exp_R4_main_table.py:167
+S9_KSWIN_STAT = 30                              # n_stat, idem. river samples the reference from the
+                                                # first W_win - n_stat = 70 entries, which is the
+                                                # contamination horizon of branch B3
+S9_KSWIN_BUFFER = 30                            # W_buf, exp_R4_main_table.py:147
+S9_KSWIN_LAG = 15                               # W_buf / 2, exp_R4_main_table.py:52. NOT W/2 of
+                                                # def:times: the exploitable transient is 57.4
+S9_KSWIN_ALPHA_GRID = [0.001, 0.005, 0.01, 0.05]   # the sweep .tex:500 calls hyper-parameter robust
+S9_NSTAT_GRID = [10, 20, 30, 50]                # river samples range(W_win - n_stat) for n_stat
+                                                # points, so n_stat <= W_win / 2 = 50 is a hard
+                                                # ceiling. The grid brackets the measured transient
+                                                # W = 57.4 from below and reaches n_stat > W at the
+                                                # high-magnitude end, which is where branch B2 lives
+S9_KSWIN_ST_FLOOR = 0.1                         # river/drift/kswin.py: the alarm needs st > 0.1 as
+                                                # well as p_value <= alpha. An alpha-free floor of
+                                                # 0.1 * n_stat excess errors that eq:Rkswin omits
+
+# --- Alarm-disabled sentinels: one pass per detector, every threshold read off it -----------------
+# river's PageHinkley and KSWIN both reset their state on the update following a detection, so a
+# trace taken at a live threshold is threshold-dependent. Taken at a threshold that never fires it
+# is exact for EVERY threshold up to the first crossing -- which is the only region def:requirement
+# reads, P(tau_det <= tau* + W). Beyond the first alarm the replay reconstructs nothing and claims
+# nothing. The reservoir draw is then identical across the alpha grid, so the comparison is paired.
+S9_PHT_TRACE_THRESHOLD = float("inf")
+S9_KSWIN_TRACE_ALPHA = 1e-300                   # the exact two-sample p-value at n = m = 30 bottoms
+                                                # out at 2 / C(60,30) ~ 1.7e-17, so this never fires
+S9_OFFLINE_LAMBDAS = [5.0, 8.0, 15.0, 25.0, 50.0]  # covers the ProteuS evidence ceiling (8, 15] of
+                                                # transfer_S2bis.md 2.7(v) and the R2 scenarios
+                                                # A / B / C; 5 is the threshold at which PHT+ARF(c=1)
+                                                # returns 1080/1080 at ADD = 6.05
+S9_ADWIN_DELTA = EXT_DELTA                      # 0.002, river's default and R4's deployed value
+S9_ADWIN_CLOCK = C_INT                          # 1, the blind-spot configuration
+
+# --- The requirement, and the anchor its identity is checked against -----------------------------
+S9_EPS = 0.05                                   # the miss level of def:requirement, the value
+                                                # s2bis_proteus_gate.json's epsilon_margin uses
+S9_W_TRANSIENT_REF = 57.4                       # rem:split_measured / s2bis_proteus_gate.json .at.W
+S9_DELTA_E_REF = S8_DECISION_DELTA_E            # 0.326793, the canonical grid point nearest 0.33
+S9_BOOTSTRAP_SEED = S2BIS_BOOTSTRAP_SEED        # 12345, the repository's one bootstrap seed
+S9_SMOKE_N_SEEDS = S6_SMOKE_N_SEEDS             # 5 seeds per arm, for the shape check
+S9_SMOKE_DELTA_E = S6_SMOKE_DELTA_E             # the three Phase-0 anchors
