@@ -13,10 +13,19 @@ a separate model class and is simulated independently on that same stream.
   static   the non-adaptive reference of R3: BaggingClassifier over HoeffdingTreeClassifier, which
            learns but never resets a tree.
 
-The forks are taken AFTER the learn_one that produced the first replacement, so both branches carry
-that one swap and neither takes another: 'no_swap' has zero ADDITIONAL swap, which is the invariant
-`tests/test_S6_traces.py` asserts. The traced prefix of a branch is the prefix of 'full' -- it is
-the same trajectory -- and `fork_t_rel` marks where they part.
+Stream S8 adds two arms forked at tau* instead, requested by `arms` and off by default so the S6
+corpus and its frozen contract are untouched:
+
+  no_swap_ab_initio  fork at tau* -- the drift instant, BEFORE the first replacement -- both internal
+                     detector paths inert. Learning continues, no tree is EVER replaced.
+  frozen_ab_initio   same fork, learn_one no longer called. The single reference anchored at tau*.
+
+The S6 forks are taken AFTER the learn_one that produced the first replacement, so both branches
+carry that one swap and neither takes another: 'no_swap' has zero ADDITIONAL swap, which is the
+invariant `tests/test_S6_traces.py` asserts. The traced prefix of a branch is the prefix of 'full'
+-- it is the same trajectory -- and `fork_t_rel` marks where they part. That fork point is ENDOGENOUS
+(it depends on the arm), which is why the ab initio branches exist: tau* is exogenous, fixed by the
+protocol, so the four arms become a decomposition anchored on one common reference.
 
 Stream construction. `rng.normal(size=(n, 2))` fills row-major and is bit-identical to 2n sequential
 scalar `rng.normal()` calls, so materialising the stream preserves the two-draws-per-step invariant
@@ -55,6 +64,7 @@ T_HORIZON = ssot.S6_T_HORIZON
 Q_GRID = ssot.S6_Q_GRID
 RHO_GRID = ssot.S6_RHO_GRID
 ARM_NAMES = ssot.S6_ARM_NAMES
+AB_INITIO_ARMS = ssot.S8_AB_INITIO_ARMS
 RESULTS_DIR = ssot.RESULTS_DIR / "S6_synchronized_traces"
 
 
@@ -134,8 +144,27 @@ def _concat(*segs):
     return out
 
 
+def _first_increment_per_tree(replaced_per_step, n_models=N_MODELS):
+    """[tau_i] -- the post-drift step at which tree i was replaced for the FIRST time, NaN if never.
+
+    `transfer_S3.md` section 6 open item 1 declares that no committed artifact carries the per-tree
+    tau_i of the ARF, only the four order statistics tau_swap^(q). The information is already in
+    `segment`'s per-key tracker diff; this persists it. Order statistics of this vector recover
+    tau_swap^(q) exactly, so the two are checkable against each other."""
+    tau = np.full(n_models, np.nan)
+    for t, replaced in enumerate(replaced_per_step):
+        for i in replaced:
+            if np.isnan(tau[i]):
+                tau[i] = float(t)
+    return tau
+
+
 def _metrics(seed, delta_e, arm, post, err_pre, pre_swaps, fork_t_rel, n_nodes_at_drift):
-    """One runs.parquet record plus the derived trace columns, from the raw post-drift segment."""
+    """One runs.parquet record plus the derived trace columns, from the raw post-drift segment.
+
+    `per_tree_tau` rides on the record but is NOT a RUNS_SCHEMA field -- `s6_writer.write_runs`
+    projects onto the schema and drops it, so the frozen Parquet contract is unchanged and the
+    vector is available to whichever campaign pilot wants to persist it."""
     err_post = post["err"].astype(np.float64)
     e_pre, delta_e_emp = defs.empirical_delta_e(err_pre, err_post)
     trees_cum = defs.distinct_trees_cum(post["replaced"])
@@ -164,6 +193,7 @@ def _metrics(seed, delta_e, arm, post, err_pre, pre_swaps, fork_t_rel, n_nodes_a
         "n_nodes_mean_at_horizon": float(post["n_nodes_mean"][horizon]),
         "n_active_leaves_mean_at_horizon": float(post["n_active_leaves_mean"][horizon]),
         "err_post_mean": float(err_post[:horizon + 1].mean()),
+        "per_tree_tau": _first_increment_per_tree(post["replaced"]),
     }
     for q in Q_GRID:
         record[writer.tau_swap_col(q)] = defs.tau_swap(trees_cum, N_MODELS, q)
@@ -195,14 +225,18 @@ def _frame(seed, delta_e, arm, pre, post, derived):
     }
 
 
-def simulate(seed, delta_e, arms=ARM_NAMES):
+def simulate(seed, delta_e, arms=ARM_NAMES, stream_fn=make_stream):
     """One (seed, Delta_e) cell -> (records, frames) for the requested arms.
 
     'full' is always simulated: it is the trunk the two forks are taken from and the only arm that
     locates tau_swap^(1/M). Restricting `arms` to ('full',) skips the two branch replays and the
     independent static run, which is what the refinement sweep wants -- Delta_e_c is a property of
-    the nominal arm and the counterfactuals would triple its cost for nothing."""
-    safe_seed, x, y = make_stream(seed, delta_e)
+    the nominal arm and the counterfactuals would triple its cost for nothing.
+
+    `stream_fn(seed, delta_e) -> (safe_seed, X, y)` is the generator. The default is the canonical
+    boundary-shift family; stream S8 injects the rotation family through the same signature, which
+    is what makes the two comparable seed by seed rather than only in distribution."""
+    safe_seed, x, y = stream_fn(seed, delta_e)
     records, frames = [], []
 
     # --- adaptive trunk: warm-up, then the post-drift run up to the first replacement ------------
@@ -211,6 +245,11 @@ def simulate(seed, delta_e, arms=ARM_NAMES):
     pre, _ = segment(arf, x, y, T_DRIFT - TRACE_PRE, T_DRIFT)
     pre_swaps = len(arf._drift_tracker)
     nodes_at_drift = _forest_shape(arf)[0]
+
+    # Taken BEFORE the head segment, hence at tau* and before any post-drift replacement. `deepcopy`
+    # reads state and consumes no entropy, so the trunk below stays bit-identical whether or not the
+    # ab initio arms are requested -- which the S8 trunk acceptance gate verifies on runs.parquet.
+    drift_src = copy.deepcopy(arf) if set(AB_INITIO_ARMS) & set(arms) else None
 
     head, fork_abs = segment(arf, x, y, T_DRIFT, N_STEPS, stop_on_new_tree=True)
     fork_taken = fork_abs < N_STEPS
@@ -246,6 +285,19 @@ def simulate(seed, delta_e, arms=ARM_NAMES):
         records.append(rec)
         frames.append(_frame(seed, delta_e, arm, pre, post, der))
 
+    # --- ab initio branches: forked at tau*, before any post-drift replacement ---------------------
+    # The post segment is the WHOLE [T_DRIFT, N_STEPS) window, with no `_concat(head, ...)`: these
+    # branches share no post-drift prefix with 'full'. That absence of a shared prefix is exactly
+    # what identifies the effect of the first replacement. `fork_t_rel = 0.0` marks the fork at tau*.
+    for arm in [a for a in AB_INITIO_ARMS if a in arms]:
+        branch = copy.deepcopy(drift_src)
+        branch._drift_detection_disabled = True
+        branch._warning_detection_disabled = True
+        seg, _ = segment(branch, x, y, T_DRIFT, N_STEPS, learn=(arm == "no_swap_ab_initio"))
+        rec, der = _metrics(seed, delta_e, arm, seg, pre["err"], pre_swaps, 0.0, nodes_at_drift)
+        records.append(rec)
+        frames.append(_frame(seed, delta_e, arm, pre, seg, der))
+
     # --- static reference: independent model class on the same stream -----------------------------
     if "static" not in arms:
         return records, frames
@@ -261,18 +313,21 @@ def simulate(seed, delta_e, arms=ARM_NAMES):
     return records, frames
 
 
-def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6", arms=ARM_NAMES):
+def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6", arms=ARM_NAMES,
+             stream_fn=make_stream):
     """Simulate the grid one magnitude at a time, writing each trace partition before the next.
 
     The full grid is 100 x 20 x 4 arms x 5000 traced steps = 40 million rows; holding them all in
     the parent to write once at the end costs several GB for no benefit, and the hive layout is one
-    file per magnitude anyway. Records are small and are written once at the end, sorted."""
+    file per magnitude anyway. Records are small and are written once at the end, sorted, and are
+    also returned under `record_rows` so a pilot can persist the off-schema columns (`per_tree_tau`)
+    without a second pass over the corpus."""
     t0 = time.perf_counter()
     root = writer.trace_root(out_dir, reset=True)
     records, rows, parts = [], 0, []
     bar = tqdm(delta_e_grid, desc=desc)
     for de in bar:
-        out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de, arms) for s in seeds)
+        out = Parallel(n_jobs=n_jobs)(delayed(simulate)(s, de, arms, stream_fn) for s in seeds)
         frames = [f for _, frs in out for f in frs]
         records += [r for recs, _ in out for r in recs]
         rows += sum(f["t_rel"].size for f in frames)
@@ -282,7 +337,7 @@ def campaign(seeds, delta_e_grid, out_dir, n_jobs=-1, desc="S6", arms=ARM_NAMES)
     return {"cells": len(seeds) * len(delta_e_grid), "records": len(records),
             "frames": len(parts), "trace_rows": rows,
             "runs_path": writer.write_runs(records, out_dir), "traces_path": root, "parts": parts,
-            "wall_clock_s": time.perf_counter() - t0}
+            "record_rows": records, "wall_clock_s": time.perf_counter() - t0}
 
 
 def demo():
@@ -293,7 +348,8 @@ def demo():
     ref = np.array([[rng.normal(), rng.normal()] for _ in range(64)])
     assert np.array_equal(x[:64], ref), "materialised stream broke the two-draws-per-step convention"
 
-    records, frames = simulate(common.seed_pool(1)[0], 0.40)
+    seed = common.seed_pool(1)[0]
+    records, frames = simulate(seed, 0.40)
     by_arm = {r["arm"]: r for r in records}
     assert set(by_arm) == set(ARM_NAMES), sorted(by_arm)
     assert by_arm["full"]["swaps_total"] >= by_arm["no_swap"]["swaps_total"]
@@ -302,9 +358,35 @@ def demo():
     for f in frames:
         assert np.all(np.diff(f["err_cum"]) >= 0) and np.all(np.diff(f["swaps_cum"]) >= 0)
         assert np.all(f["a_refl"] >= f["a_unrefl"] - 1e-9)
+
+    # tau_swap^(q) is the q-th order statistic of the per-tree vector, by definition of both.
+    swapped = np.sort(by_arm["full"]["per_tree_tau"])
+    k = int(np.ceil(Q_GRID[0] * N_MODELS))
+    assert np.isnan(by_arm["full"][writer.tau_swap_col(Q_GRID[0])]) == np.isnan(swapped[k - 1]) and (
+        np.isnan(swapped[k - 1]) or swapped[k - 1] == by_arm["full"][writer.tau_swap_col(Q_GRID[0])]), \
+        "per-tree tau vector disagrees with the published order statistic"
+
+    # S8 arms: the intervention is proved by two invariants, not by the arm name.
+    s8, s8_frames = simulate(seed, 0.40, arms=ssot.S8_ARM_NAMES)
+    by_s8 = {r["arm"]: r for r in s8}
+    assert set(by_s8) == set(ssot.S8_ARM_NAMES), sorted(by_s8)
+    for arm in AB_INITIO_ARMS:
+        assert by_s8[arm]["swaps_total"] == 0, (arm, by_s8[arm]["swaps_total"])
+        assert by_s8[arm]["trees_swapped_total"] == 0, arm
+        assert by_s8[arm]["fork_t_rel"] == 0.0, arm
+        assert np.all(np.isnan(by_s8[arm]["per_tree_tau"])), arm
+    # the trunk is unperturbed by the extra deepcopy: same record, arm by arm
+    for arm in ("full", "no_swap", "frozen"):
+        assert by_s8[arm]["a_unrefl_peak"] == by_arm[arm]["a_unrefl_peak"], arm
+        assert by_s8[arm]["e_pre"] == by_arm[arm]["e_pre"], arm
+    frozen_ab = [f for f in s8_frames if f["arm"][0] == "frozen_ab_initio"][0]
+    post = frozen_ab["t_rel"] >= 0
+    assert (frozen_ab["n_nodes_mean"][post] == frozen_ab["n_nodes_mean"][post][0]).all(), \
+        "frozen_ab_initio forest moved after tau*"
+
     print("s6_runner demo: OK  " + ", ".join(
-        f"{a}: swaps={by_arm[a]['swaps_total']} trees={by_arm[a]['trees_swapped_total']}"
-        for a in ARM_NAMES))
+        f"{a}: swaps={by_s8[a]['swaps_total']} trees={by_s8[a]['trees_swapped_total']}"
+        for a in ssot.S8_ARM_NAMES) + f", static: swaps={by_arm['static']['swaps_total']}")
 
 
 if __name__ == "__main__":

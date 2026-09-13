@@ -392,3 +392,106 @@ S2BIS_BOOTSTRAP_SEED = 12345                   # same generator seed as the S6 e
                                                # and R4's bootstrap CI; paired over seeds, never
                                                # over runs
 S2BIS_N_BOOTSTRAP = 10_000                     # seed-paired resamples of the F1 ratio (rule B3)
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S8 — mechanistic generality, rotation generator, ab initio arms (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# S8 answers reviewer #2 experimentally: the blind spot is measured (a) with the replacement
+# mechanism suppressed from tau* onward, which rem:cf_scope declares missing, (b) on a generator
+# whose post-drift class prior does not collapse, (c) across internal drift mechanisms and ensemble
+# families other than ADWIN/ARF, and (d) on a NumPy re-implementation sharing no line with River.
+# Every name here is either an alias of the canonical family (so the campaigns stay comparable to
+# R2/R6/R7 and to S6) or a value this stream introduces with its motive.
+
+# --- P1 / T8.1: the two ab initio arms -----------------------------------------------------------
+S8_N_STEPS = S6_N_STEPS
+S8_T_DRIFT = S6_T_DRIFT
+S8_N_MODELS = S6_N_MODELS
+S8_C_INT = S6_C_INT
+S8_T_HORIZON = S6_T_HORIZON
+S8_WARMUP_WINDOW = S6_WARMUP_WINDOW
+S8_SEED_MASTER = S6_SEED_MASTER
+S8_CAMPAIGN_SEEDS = S6_CAMPAIGN_SEEDS          # cardinal only; the VALUES come from
+                                               # _gate_common.seed_pool(SeedSequence(42).spawn(n))
+S8_CAMPAIGN_BOUNDARY_SHIFTS = S6_CAMPAIGN_BOUNDARY_SHIFTS
+S8_SMOKE_N_SEEDS = S6_SMOKE_N_SEEDS
+S8_SMOKE_DELTA_E = S6_SMOKE_DELTA_E
+
+# S6_ARM_NAMES is the FROZEN contract of the committed S6 corpus (tests/test_S6_traces.py asserts
+# equality against it on the committed smoke artifact) and is therefore not extended. The S8
+# campaign declares its own arm tuple; 'static' is excluded, S6_causal_evidence.md section 8.5
+# declaring it unmatched in capacity and unusable as a control.
+S8_AB_INITIO_ARMS = ("no_swap_ab_initio", "frozen_ab_initio")
+# 'no_swap_ab_initio'  deepcopy fork at tau* -- BEFORE the first replacement, the exogenous instant
+#                      the protocol fixes -- with both internal detector paths made inert. Learning
+#                      continues, no tree is ever replaced. Isolates every replacement at once.
+# 'frozen_ab_initio'   same fork, learn_one no longer called. The single reference anchored at tau*,
+#                      without which the erasure decomposition is not additive.
+S8_ARM_NAMES = ("full", "no_swap", "frozen") + S8_AB_INITIO_ARMS
+S8_AUDIT_DELTA_P = S6_AUDIT_DELTA_P            # 0.01: the external CUSUM tolerance every published
+                                               # S6 numeral is read at
+S8_DECISION_LAMBDA = 50.0                      # D3: the starvation-certificate threshold, the one
+                                               # at which 0/100 and 18/100 were published
+S8_DECISION_DELTA_E = 0.326793                 # D3 anchor, the canonical grid point nearest 0.33
+S8_SIGN_TEST_ALPHA = 0.01                      # D1
+S8_INERT_BAND = (0.0, 0.05)                    # D1: CI inclusion band for an INERT verdict
+S8_BOOTSTRAP_SEED = S2BIS_BOOTSTRAP_SEED       # 12345, the repository's one bootstrap seed
+S8_N_BOOTSTRAP = S2BIS_N_BOOTSTRAP             # 10 000 seed-paired resamples
+S8_CI_LEVEL = 0.95
+
+# --- P1 / T8.2: rotation generator ---------------------------------------------------------------
+# Pre-drift labelling is the canonical x0 + x1 > 0, which IS the rotation at phi = pi/4; only the
+# post-drift half-plane turns. Delta_e = (1 - 2 eta) |phi - pi/4| / pi is exact under an isotropic
+# Gaussian, the class prior stays 50/50 at every magnitude, and the Bayes error is eta rather than 0
+# -- which is what keeps the pre-drift null non-degenerate (D5).
+S8_ROTATION_PHI0 = float(np.pi / 4)            # canonical pre-drift normal direction
+S8_ETA_GRID = [0.0, 0.05]                      # declared label noise; eta = 0 is the arm comparable
+                                               # to the canonical family, eta = 0.05 the arm with a
+                                               # binding false-alarm budget
+S8_DELTA_E_SE_TOL = 3.0                        # D4: |measured - predicted| <= 3 SE at every point
+S8_ROTATION_ARMS = ("full",)                   # the switch point and the generator identity are
+                                               # properties of the nominal arm alone, S6_REFINE_ARMS
+                                               # precedent
+
+# --- P1 / T8.6: standalone R7 figure -------------------------------------------------------------
+S8_R7_FIGURE_NAME = "Fig_R7_clock_mismatch.png"
+
+# --- P2 / T8.3: internal mechanisms x ensemble families, at equal evidence budget -----------------
+# ARFClassifier._drift_detector_input returns int(not y_true == y_pred): a 0/1 stream, which is
+# exactly what river.drift.binary.DDM / EDDM consume and an admissible input for ADWIN,
+# PageHinkley and KSWIN. DDM and EDDM live under river.drift.binary, not river.drift.
+S8_INTERNAL_MECHANISMS = ("ADWIN", "DDM", "EDDM", "PageHinkley", "KSWIN")
+S8_ENSEMBLE_FAMILIES = ("ARF", "SRP", "LeveragingBagging", "ADWINBagging", "HAT")
+# 'OzaBagADWIN' does not exist under river 0.23.0; the object is ADWINBaggingClassifier.
+# 'HAT' is river.tree.HoeffdingAdaptiveTreeClassifier -- the real Bifet-Gavalda HAT, never executed
+# in this repository before S8, and NOT the ARF(M=1) the manuscript calls a HAT at .tex:224.
+S8_MECH_DELTA_E = [0.028186, 0.140949, 0.242568, 0.326793, 0.415743, 0.452271]
+                                               # six canonical grid points: the weak band, the two
+                                               # S3 anchors, mid band, and the magnitude at which
+                                               # the canonical A/A_rect sign turns
+S8_MECH_N_SEEDS = 30                           # R4's seed budget; the grid is 9 pipelines wide
+S8_MECH_ETA = 0.05                             # the rotation arm carrying a binding FA budget
+S8_CONTROL_LAMBDAS = [50.0, 25.0]              # common-threshold control arm, R2's scenarios A / B
+S8_LAMBDA_BRACKET = S2BIS_LAMBDA_BRACKET       # (1.0, 500.0), exp_R5_common.calibrate_lambda
+S8_PHT_TARGET_FA = 1                           # one false alarm per warm-up; 3 is the declared
+                                               # fallback of calibrate_lambda
+
+# --- P2 / T8.3-bis: the marginal of one tree INSIDE the ARF ---------------------------------------
+S8_PER_TREE_DELTA_E = [0.326793, 0.140949]     # the two S3 anchors, nothing else: the per-tree
+                                               # error stream costs M predict_one per step
+S8_PER_TREE_N_SEEDS = 100
+S8_MARGINAL_N_MODELS = R6_N_MODELS             # 1 -- the ARF(M=1) the Hydra anchors were measured
+                                               # on, kept as the paired arm (D8)
+
+# --- P3 / T8.4: replication outside River ---------------------------------------------------------
+S8_MINIMAL_N_MODELS = N_MODELS
+S8_MINIMAL_POISSON_LAMBDA = 6.0                # River ARF's lambda_value default, re-implemented
+S8_MINIMAL_ADWIN_DELTA = EXT_DELTA             # 0.002, River's ADWIN default confidence
+S8_MINIMAL_ADWIN_CLOCK = C_INT                 # the blind-spot configuration
+S8_MINIMAL_GRACE_PERIOD = 200                  # HoeffdingTree default split-attempt period
+S8_MINIMAL_SPLIT_CONFIDENCE = 1e-7             # HoeffdingTree default delta
+S8_MINIMAL_TIE_THRESHOLD = 0.05                # HoeffdingTree default tau
+S8_MINIMAL_N_BINS = 32                         # numeric-feature histogram width; River splits on a
+                                               # Gaussian summary, this one on equal-width bins
+S8_MINIMAL_N_SEEDS = 100
+S8_MINIMAL_DELTA_E = S8_PER_TREE_DELTA_E
