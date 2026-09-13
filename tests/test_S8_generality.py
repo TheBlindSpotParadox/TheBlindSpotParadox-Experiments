@@ -21,7 +21,12 @@ Stream S8 generality suite -- one invariant per piece of non-trivial logic the s
    are fixed by `s6_writer`, and `figures/` holds manuscript twins whose names are fixed by
    `tests/test_manuscript_integrity.py`'s `results/*/figures/<name>` glob.
 
-Assertions 4 and 5 read committed artifacts and skip with an explicit motive when absent, so the
+6. Manuscript payloads. Every SEARCH anchor of `docs/theory/transfer_S8.md` resolves in its target
+   file and is in exactly one of the two valid states, and none of them falls inside a subsection
+   `CLAUDE.md` excludes. Same invariant `tests/test_S2bis_calibration.py` enforces on its own
+   transfer document, transposed to a payload set that targets three files rather than one.
+
+Assertions 4 to 6 read committed artifacts and skip with an explicit motive when absent, so the
 suite is green on a fresh clone and enforcing after a smoke run.
 
 Usage:  PYTHONHASHSEED=0 python -m pytest tests/test_S8_generality.py -v
@@ -196,3 +201,80 @@ def test_s8_writes_nothing_under_the_frozen_trees():
     bad = [str(p.relative_to(ssot.RESULTS_DIR))
            for name in frozen for p in (ssot.RESULTS_DIR / name).rglob("s8_*") if p.exists()]
     assert not bad, "stream S8 wrote inside a frozen tree:\n  " + "\n  ".join(bad)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 6. the manuscript payloads: every SEARCH anchor must resolve, and none inside the excluded zone
+# ══════════════════════════════════════════════════════════════════════════════
+# Same invariant `tests/test_S2bis_calibration.py` enforces on transfer_S2bis.md, transposed. S8's
+# payloads differ in one respect: they target THREE files -- the manuscript of record and two v2
+# section fragments -- so each block names its target on the line above the anchor and the guard
+# resolves against that file rather than against a single hard-coded document.
+TRANSFER = ROOT_DIR / "docs" / "theory" / "transfer_S8.md"
+EXCLUDED_LABELS = ("sec:race", "sec:hydra", "sec:starvation", "sec:decoupling")
+
+
+def _payload_blocks(path):
+    """[(target path, search, replace)] for every fenced SEARCH/REPLACE payload in `path`."""
+    import re
+    return re.findall(r"^([\w./-]+\.tex)\n<<<<<<< SEARCH\n(.*?)\n=======\n(.*?)\n>>>>>>> REPLACE",
+                      path.read_text(encoding="utf-8"), re.S | re.M)
+
+
+def _excluded_spans(tex):
+    """[(lo, hi)] character spans of the four inline subsections CLAUDE.md excludes."""
+    import re
+    starts = sorted((m.start(), m.group(1)) for label in EXCLUDED_LABELS
+                    for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(" + label + r")\}", tex))
+    heads = sorted(m.start() for m in re.finditer(r"\\subsection\{", tex))
+    spans = []
+    for pos, _ in starts:
+        after = [h for h in heads if h > pos]
+        spans.append((pos, after[0] if after else len(tex)))
+    return spans
+
+
+def test_transfer_S8_payload_anchors_resolve_uniquely():
+    """A SEARCH/REPLACE payload is applicable only while its anchor is present and unique.
+
+    Valid in exactly two states, as S2-bis established: (1, 0) PENDING or (0, 1) APPLIED, the first
+    component netted against the replacement so an append-style payload that re-emits its own anchor
+    is not read as a duplication."""
+    if not TRANSFER.exists():
+        pytest.skip("transfer_S8.md not written yet")
+    blocks = _payload_blocks(TRANSFER)
+    assert blocks, "no SEARCH/REPLACE block found in transfer_S8.md"
+    bad = []
+    for i, (target, search, replace) in enumerate(blocks, 1):
+        path = ROOT_DIR / target
+        if not path.exists():
+            bad.append(f"block {i}: target {target} does not exist")
+            continue
+        tex = path.read_text(encoding="utf-8")
+        state = (tex.count(search) - tex.count(replace) * replace.count(search), tex.count(replace))
+        if state not in [(1, 0), (0, 1)]:
+            bad.append(f"block {i} {state} in {target}: {search[:70]!r}")
+    assert not bad, ("S8 payloads that are neither pending (1, 0) nor applied (0, 1), as "
+                     "(anchors outside the replacement, replacements):\n  " + "\n  ".join(bad))
+
+
+def test_transfer_S8_payloads_avoid_the_excluded_subsections():
+    """`CLAUDE.md` excludes sec:race, sec:hydra, sec:starvation and sec:decoupling until the v65
+    assembly. A payload anchored inside one is lost at assembly or duplicated and divergent --
+    exactly the failure that had v63 edited while v64 was live, transposed one level down."""
+    if not TRANSFER.exists():
+        pytest.skip("transfer_S8.md not written yet")
+    current = (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(encoding="utf-8").strip()
+    main_tex = ROOT_DIR / "docs" / "manuscript" / current
+    tex = main_tex.read_text(encoding="utf-8")
+    spans = _excluded_spans(tex)
+    assert len(spans) == len(EXCLUDED_LABELS), f"excluded subsections not located: {len(spans)}"
+    bad = []
+    for i, (target, search, _) in enumerate(_payload_blocks(TRANSFER), 1):
+        if Path(target).name != current:
+            continue
+        pos = tex.find(search)
+        if pos >= 0 and any(lo <= pos < hi for lo, hi in spans):
+            bad.append(f"block {i}: {search[:70]!r}")
+    assert not bad, ("S8 payloads anchored inside a subsection CLAUDE.md excludes; they belong in "
+                     "docs/manuscript/sections/framework_v2.tex:\n  " + "\n  ".join(bad))
