@@ -1,0 +1,24 @@
+{
+  "env": {
+    "executable": "/home/m53/miniforge3/envs/Trading/bin/python",
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "eta": 0.05,
+  "magnitudes": 20,
+  "mode": "full",
+  "oracle": "results/S8_rotation_generator/data/eta0.05/runs.parquet",
+  "seeds": 100,
+  "trace_rows": 10000000,
+  "trunk_identity": {
+    "columns_compared": 30,
+    "columns_divergent": {},
+    "rows_joined": 2000,
+    "rows_new": 2000,
+    "rows_ref": 2000,
+    "verdict": "PRESERVED"
+  },
+  "wall_clock_s": 1886.8
+}

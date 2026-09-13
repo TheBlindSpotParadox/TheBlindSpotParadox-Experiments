@@ -87,6 +87,20 @@ waits for the preceding stage to release the 48 threads before starting.
 | S8 P2 (mechanisms)        | `python experiments/S8_generality/s8_mechanisms.py full`            | 684 s (11 min 24 s) | new artifacts; 9 pipelines x 6 magnitudes x 30 seeds = 1 620 cells, one external calibration per pipeline (1 620 / 1 620 verdicts `OK`) |
 | S8 P2-bis (marginal)      | `python experiments/S8_generality/s8_marginal.py full`              | 65.3 s | new artifacts; 400 cells, per-member pre-drift error stream over the 1 000-step warm-up at the two S3 anchors |
 | S8 P3 (NumPy replication) | `python experiments/S8_generality/s8_minimal_arf.py full`           | 45 s | new artifacts; 200 cells, no River import in the module. MOA declared infeasible: `java: command not found`, no MOA jar under `/home/m53`, `skmultiflow` absent and incompatible with py3.12 / numpy 1.26 |
+| S9 P1 (offline replay)    | `python experiments/S9_detector_coverage/s9_offline_detectors.py data`    | ~12 min per pass, **run twice** | new artifacts; 20 magnitudes x 3 arms x 100 seeds x 2 input arms = 12 000 cells, 32.4 M trace rows. Both passes byte-identical on all 20 partition files and both JSON tables |
+| S9 P2 (dilution grid)     | `python experiments/S9_detector_coverage/s9_kswin_dilution.py data`       | ~35 min | new artifacts; 192 000 runs, no classifier in the loop. Determinism verified on the smoke grid, not on the full one |
+| S9 P2 (input space)       | `python experiments/S9_detector_coverage/s9_input_space.py data`          | **60.3 s** | new artifacts; 2 000 runs, HDDDM in NumPy, gamma calibration + positive-control ladder. Two passes byte-identical |
+| S9 P2 (rotation traces)   | `python experiments/S9_detector_coverage/s9_rotation_traces.py full`      | **1 886.8 s (31 min 27 s)** | re-simulation of S8's `eta = 0.05` arm into S9's own tree, 2 000 records, 10 M trace rows. Trunk identity against S8's committed `runs.parquet`: **PRESERVED**. S8's artifacts are not touched |
+| S9 P2 (family ordering)   | `python experiments/S9_detector_coverage/s9_family_ordering.py data s6` and `... data rotation` | ~4 min each | new artifacts; 4 000 runs per source, five families x two calibration settings |
+| **S9 subtotal**           |                                                                     | **~1 h 40 min** | no R1-R9, S6 or S8 artifact regenerated in place; `sha256sum -c` stays at **27 OK / 7 FAILED** and the seven are exactly the declared deviations. **No entry added to `authorized_deviations.txt`** |
+
+**These five figures are upper bounds, and are recorded as such.** The P2 stages were run with two
+and sometimes three campaigns sharing the 24-thread host, so every wall clock above includes
+contention that a sequential reproduction would not pay. The only stage timed by its own script
+under a known load is the rotation regeneration (`1 886.8 s`, measured while the dilution grid held
+roughly half the host). They are reported rather than re-measured on an idle host, and flagged
+rather than quietly presented as clean reproduction costs.
+
 | **S8 subtotal**           |                                                                     | **3 957 s = 1 h 05 min 57 s** | no R1-R9 and no S6 artifact regenerated; `sha256sum -c` stays at **27 OK / 7 FAILED** and the seven are exactly the declared deviations. **No entry added to `authorized_deviations.txt`** |
 
 S2-bis writes only under `results/S2bis_calibration/`. Its verification differs by phase and the

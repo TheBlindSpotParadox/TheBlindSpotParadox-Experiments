@@ -35,3 +35,4 @@ results/S8_rotation_generator/data/*/traces.parquet/
 # Traces brutes volumineuses S9 (rejeu hors ligne, regenerables depuis le corpus S6)
 results/S9_detector_coverage/data/traces.parquet
 results/S9_detector_coverage/smoke/traces.parquet
+results/S9_detector_coverage/rotation_eta*/traces.parquet

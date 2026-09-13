@@ -568,3 +568,75 @@ S9_DELTA_E_REF = S8_DECISION_DELTA_E            # 0.326793, the canonical grid p
 S9_BOOTSTRAP_SEED = S2BIS_BOOTSTRAP_SEED        # 12345, the repository's one bootstrap seed
 S9_SMOKE_N_SEEDS = S6_SMOKE_N_SEEDS             # 5 seeds per arm, for the shape check
 S9_SMOKE_DELTA_E = S6_SMOKE_DELTA_E             # the three Phase-0 anchors
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S9 / P2 — the falsification grid, the input-space arm, the family ordering
+# ══════════════════════════════════════════════════════════════════════════════
+# --- T9.2: controlled-transient grid, the only regime where branch B2 is decidable ------------
+# The S6 corpus cannot decide D3: its exploitable transient bottoms out at W = 199, so
+# `W < n_stat` has zero cells there. T9.2 therefore drives the error stream DIRECTLY -- a
+# rectangular transient of declared height and declared duration, no classifier in the loop --
+# which is the only way to put the monitor alone on trial. A = (Delta_e - delta_P) W is then exact
+# by construction rather than measured, and the two competing predictions are separable.
+S9_T92_P0 = 0.024                               # measured S6 pre-drift error rate, the null this
+                                                # grid inherits from the canonical family
+S9_T92_PRE = 400                                # pre-drift span: fills W_win = 100 four times over
+                                                # and gives every cell a false-alarm window
+S9_T92_POST = 300                               # post-transient span at p_0 again. A monitor that
+                                                # fires here fired too late; without it, "late" and
+                                                # "never" are the same measurement
+S9_T92_W_GRID = [5, 10, 15, 20, 25, 30, 40, 50, 60, 80, 120, 200]
+                                                # brackets every n_stat of S9_NSTAT_GRID from both
+                                                # sides, and reaches past W_win - n_stat = 70 where
+                                                # branch B3 puts the reference window itself
+                                                # post-drift
+S9_T92_DELTA_E_GRID = [round(0.05 * k, 4) for k in range(1, 21)]
+                                                # 0.05 .. 1.00. The canonical grid stops at 0.498,
+                                                # and B2's region -- W < n_stat AND A >= R_KSWIN --
+                                                # is EMPTY below Delta_e = 0.457 for every cell of
+                                                # S9_NSTAT_GRID x S9_KSWIN_ALPHA_GRID. Delta_e = 1.0
+                                                # is not an extrapolation: it is the ProteuS
+                                                # operating point (exp_R4_main_table.py:105)
+S9_T92_N_SEEDS = 100                            # eps = 0.05 is the miss level D3 reads against; a
+                                                # smaller n cannot resolve it
+
+# --- T9.3: HDDDM, input-space arm, contribution (C4) --------------------------------------------
+# Ditzler & Polikar 2011. Batch histograms per feature, Hellinger distance to a reference batch,
+# adaptive threshold on the first difference of that distance. Re-implemented in NumPy: no drift
+# detector in river operates on P(X), and `frouros`/`menelaus` are not in the pinned environment.
+S9_HDDDM_BATCH = 100                            # batch size. 8000 steps -> 80 batches, 40 of them
+                                                # pre-drift, enough history for the adaptive
+                                                # threshold to be estimated before tau*
+S9_HDDDM_GAMMA = 3.0                            # beta = mean(|eps|) + gamma * std(|eps|), the
+                                                # paper's lambda, renamed: lambda is the CUSUM
+                                                # threshold everywhere else in this repository.
+                                                # CALIBRATED, not chosen: at gamma = 1 the threshold
+                                                # sits near the 84th percentile of |eps| and fires
+                                                # on 2.8 of 40 stationary batches per run. Each
+                                                # firing resets the reference and blinds the
+                                                # detector for MIN_HISTORY + 1 batches, so the
+                                                # positive control came out NON-MONOTONE in the
+                                                # shift (1.00 / 0.90 / 0.60 at 0.25 / 0.5 / 1.0
+                                                # sigma) -- a large shift landing in a blind window
+                                                # is missed outright. gamma = 3 gives 0.60 false
+                                                # alarms per run, the one-per-warm-up convention of
+                                                # S8_PHT_TARGET_FA, and a monotone control. The
+                                                # sweep is recomputed and published by
+                                                # s9_input_space.gamma_calibration()
+S9_HDDDM_ETA = S8_MECH_ETA                      # 0.05, the rotation arm with a non-degenerate null
+S9_HDDDM_N_SEEDS = 100
+S9_HDDDM_MIN_HISTORY = 5                        # batches before the adaptive threshold is armed
+S9_HDDDM_CONTROL_SHIFTS = [0.25, 0.5, 1.0]      # positive-control ladder, in units of the feature
+                                                # sd: a covariate shift HDDDM must find, reported as
+                                                # a sensitivity curve rather than one pass/fail. The
+                                                # verdict gates on the LARGEST -- a shift at the
+                                                # detector's own boundary tests the boundary, not
+                                                # the implementation
+S9_HDDDM_CONTROL_SEEDS = 20
+S9_HDDDM_CONTROL_GATE = 0.95                    # detection rate required at the largest shift
+
+# --- T9.4: family ordering at equalised alpha and at the published settings ----------------------
+S9_T94_COUPLE = "R4 deployed lambda_ref (c=0)"  # the s2bis_proteus_gate.json row carrying
+                                                # lambda_eq = 15, the Table I operating point
+S9_EDDM_WARM_START = 30                         # river's EDDM warm_start: the MONITORED ERRORS it
+                                                # needs before it can signal at all. D9's column
