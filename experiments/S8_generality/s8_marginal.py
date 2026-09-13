@@ -156,9 +156,7 @@ def campaign(seeds, anchors=ANCHORS, arms=ARM_N_MODELS, n_jobs=-1, desc="S8 marg
 # ══════════════════════════════════════════════════════════════════════════════
 # D8 -- the decomposition
 # ══════════════════════════════════════════════════════════════════════════════
-def requirement(lam, w, eps=EPS):
-    """R = lambda + sqrt(W/2 ln(1/eps)), the epsilon-margin form of s2bis family_requirements."""
-    return float(lam) + float(np.sqrt(max(w, 0.0) / 2.0 * np.log(1.0 / eps)))
+requirement = mech.requirement          # one definition of R, shared with the T8.4 replication
 
 
 def hydra_decomposition(df, control=CONTROL_LAMBDA):
@@ -218,9 +216,10 @@ def hydra_decomposition(df, control=CONTROL_LAMBDA):
 
 
 def read(path=None):
-    base = RESULTS_DIR / "data"
-    runs = pd.read_parquet(Path(path) if path else base / "s8_marginal_runs.parquet")
-    tables = RESULTS_DIR / "tables"
+    src = Path(path).resolve() if path else RESULTS_DIR / "data" / "s8_marginal_runs.parquet"
+    runs = pd.read_parquet(src)
+    # a smoke run leaves its numbers inside smoke/, never in the campaign table directory
+    tables = src.parent if src.parent.name == "smoke" else RESULTS_DIR / "tables"
     tables.mkdir(parents=True, exist_ok=True)
     payload = {"n_cells": int(len(runs)), "anchors": sorted(runs.delta_e.unique().tolist()),
                "arms_n_models": sorted(runs.n_models.unique().tolist()),
@@ -273,7 +272,7 @@ if __name__ == "__main__":
     if mode == "demo":
         demo()
     elif mode == "read":
-        read()
+        read(sys.argv[2] if len(sys.argv) > 2 else None)
     elif mode in ("smoke", "full"):
         seeds = common.seed_pool(5 if mode == "smoke" else ssot.S8_PER_TREE_N_SEEDS)
         print(f"[INFO] S8 marginal {mode}: {len(seeds)} seeds x {len(ANCHORS)} anchors x "

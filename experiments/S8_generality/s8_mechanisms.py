@@ -199,6 +199,15 @@ def first_crossing(path, threshold):
     return float(hit[0]) if hit.size else np.nan
 
 
+def requirement(lam, w, eps=ssot.EPS_MISS):
+    """R = lambda + sqrt(W/2 ln(1/eps)), the epsilon-margin form of `def:requirement`.
+
+    Same closed form `s2bis_proteus_calibration.family_requirements` uses for R_CUSUM. Paired with
+    the measured ceiling A it IS `def:blindspot`: the pipeline has a blind spot at (Delta_e, W) when
+    A < R. One definition, read by T8.3-bis and by the T8.4 replication alike."""
+    return float(lam) + float(np.sqrt(max(float(w), 0.0) / 2.0 * np.log(1.0 / eps)))
+
+
 # ══════════════════════════════════════════════════════════════════════════════
 def run_cell(pipeline, seed, delta_e, eta=ETA):
     """One (pipeline, seed, Delta_e) prequential run on the rotation stream."""
@@ -350,9 +359,10 @@ def closed_loop_check(df, reference="ARF_ADWIN", tau_factor=1.5, lam_col="tau_de
 
 
 def read(path=None):
-    path = Path(path) if path else RESULTS_DIR / "data" / "s8_mechanisms_runs.parquet"
+    path = Path(path).resolve() if path else RESULTS_DIR / "data" / "s8_mechanisms_runs.parquet"
     df = pd.read_parquet(path)
-    tables = RESULTS_DIR / "tables"
+    # a smoke run leaves its numbers inside smoke/, never in the campaign table directory
+    tables = path.parent if path.parent.name == "smoke" else RESULTS_DIR / "tables"
     tables.mkdir(parents=True, exist_ok=True)
 
     cal = df.groupby(["axis", "pipeline", "delta_e"], as_index=False).agg(
@@ -422,7 +432,7 @@ if __name__ == "__main__":
     if mode == "demo":
         demo()
     elif mode == "read":
-        read()
+        read(sys.argv[2] if len(sys.argv) > 2 else None)
     elif mode in ("smoke", "full"):
         seeds = common.seed_pool(5 if mode == "smoke" else ssot.S8_MECH_N_SEEDS)
         grid = (ssot.S8_MECH_DELTA_E[:2] if mode == "smoke" else ssot.S8_MECH_DELTA_E)
