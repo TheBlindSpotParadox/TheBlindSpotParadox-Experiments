@@ -120,43 +120,43 @@ Chacun est mesuré sur le build épinglé, jamais recopié d'un rapport.
 
 ## 4. Ce qui a été écrit dans ce dépôt
 
-| fichier | nature |
-|---|---|
-| `docs/manuscript/sections/protocol_v2.tex` | **neuf** — livrable LOT A, section orpheline jusqu'à l'assemblage v65 |
-| `tests/test_R1_race_condition.py`, `test_R2_starvation.py`, `test_R3_crossover.py`, `test_R4_table1.py`, `test_R5_table2.py` | **neufs** — les cinq tests manquants de `regeneration_spec.md` §G3 |
-| `tests/test_S7_consistency.py` | garde AST `float_precision='round_trip'` sur toute ingestion CSV |
-| `tests/test_R9_mcrit.py` | durcissement d'un `read_csv` nu |
-| `config/experiment_ssot.py` | **ajout en fin de fichier uniquement**, bannière `S7-ter` |
-| `experiments/R3_regime_crossover/exp_R3_regime_crossover.py` | `warning_detector` unifié |
-| `experiments/R4_proteus_evaluation/exp_R4_main_table.py` | `warning_detector` unifié + bootstrap apparié graine |
-| `experiments/R4_proteus_evaluation/exp_R4_kswin_sweep.py` | idem |
-| `experiments/R5_real_world_evaluation/exp_R5_compute_delta_e.py`, `exp_R5_config.py`, `run_experiment_R5.sh` | oracle Δe à classifieur gelé |
-| `README.md` §5 | réécrite : l'hétérogénéité documentée n'existe plus |
-| `results/audit_S7/config_matrix.md` | §3 et §7 corrigées, conflation des défauts River nommée |
-| `results/audit_S7/regeneration_spec.md` | §G3 marquée implémentée, quatre valeurs de spécification corrigées contre mesure |
-| `results/audit_S7/reconciliation_report.md` | claim de gel périmé corrigé en place |
-| `results/audit_S7/_baseline/authorized_deviations.txt` | entrées S7-ter |
-| `docs/ENVIRONMENT.md` | couverture du gel, lacunes R5 et S6, vérification de `sha256_pre.txt` |
-| `docs/editorial/source_verification.md` | session de re-vérification datée, `expires_on` repoussé |
-| `results/audit_S7/s7ter_arms/` | **neuf** — archive des bras U0/U1, avec son `README.md` |
+| fichier                                                                                                                      | nature                                                                           |
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------- |
+| `docs/manuscript/sections/protocol_v2.tex`                                                                                   | **neuf** — livrable LOT A, section orpheline jusqu'à l'assemblage v65            |
+| `tests/test_R1_race_condition.py`, `test_R2_starvation.py`, `test_R3_crossover.py`, `test_R4_table1.py`, `test_R5_table2.py` | **neufs** — les cinq tests manquants de `regeneration_spec.md` §G3               |
+| `tests/test_S7_consistency.py`                                                                                               | garde AST `float_precision='round_trip'` sur toute ingestion CSV                 |
+| `tests/test_R9_mcrit.py`                                                                                                     | durcissement d'un `read_csv` nu                                                  |
+| `config/experiment_ssot.py`                                                                                                  | **ajout en fin de fichier uniquement**, bannière `S7-ter`                        |
+| `experiments/R3_regime_crossover/exp_R3_regime_crossover.py`                                                                 | `warning_detector` unifié                                                        |
+| `experiments/R4_proteus_evaluation/exp_R4_main_table.py`                                                                     | `warning_detector` unifié + bootstrap apparié graine                             |
+| `experiments/R4_proteus_evaluation/exp_R4_kswin_sweep.py`                                                                    | idem                                                                             |
+| `experiments/R5_real_world_evaluation/exp_R5_compute_delta_e.py`, `exp_R5_config.py`, `run_experiment_R5.sh`                 | oracle Δe à classifieur gelé                                                     |
+| `README.md` §5                                                                                                               | réécrite : l'hétérogénéité documentée n'existe plus                              |
+| `results/audit_S7/config_matrix.md`                                                                                          | §3 et §7 corrigées, conflation des défauts River nommée                          |
+| `results/audit_S7/regeneration_spec.md`                                                                                      | §G3 marquée implémentée, quatre valeurs de spécification corrigées contre mesure |
+| `results/audit_S7/reconciliation_report.md`                                                                                  | claim de gel périmé corrigé en place                                             |
+| `results/audit_S7/_baseline/authorized_deviations.txt`                                                                       | entrées S7-ter                                                                   |
+| `docs/ENVIRONMENT.md`                                                                                                        | couverture du gel, lacunes R5 et S6, vérification de `sha256_pre.txt`            |
+| `docs/editorial/source_verification.md`                                                                                      | session de re-vérification datée, `expires_on` repoussé                          |
+| `results/audit_S7/s7ter_arms/`                                                                                               | **neuf** — archive des bras U0/U1, avec son `README.md`                          |
 
 ---
 
 ## 5. Vérification — chaque porte est une commande, pas un jugement
 
-| porte | commande | résultat |
-|---|---|---|
-| suite | `PYTHONHASHSEED=0 python -m pytest tests/ -q` | 25 avant la phase D → **62** après, zéro échec |
-| gel | `sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt` | **26 OK / 8 FAILED**, exactement les huit déclarées (29/5 avant ce flux) |
-| A | `pytest tests/test_manuscript_integrity.py -q` avec `protocol_v2.tex` présent | 6/6 : aucun environnement non déclaré, aucun `\ref` pendant, aucune `\cite` non résolue |
-| A (compilation) | `tectonic` sur un harnais reprenant le préambule IEEEtran du manuscrit | compile ; seuls des avertissements `Underfull \hbox` |
-| D | les cinq tests neufs contre les artefacts pré-B | 33 tests verts avant la phase B |
-| D-4 | garde flottante contre un `read_csv` nu introduit délibérément | échoue en nommant le site, repasse après retrait |
-| B | `test_R4_table1.py`, `test_R3_crossover.py` comme instruments | ont mesuré : 1 échec nommé pour R4, 2 pour R3 ; ré-épinglés ensuite |
-| B | `test_manuscript_assets_match_the_pipeline` | vert après recopie de la Table I **et** de la Figure 3 depuis le pipeline |
-| C | `delta_e.parquet` | **OK**, octet pour octet — zéro déviation autorisée consommée |
-| C | `delta_e_oracle.parquet` | 6 lignes, vecteurs de fenêtres identiques à l'adaptatif ligne à ligne |
-| E | `test_source_reservations_have_not_expired` | vert avec la nouvelle date de re-vérification |
+| porte           | commande                                                                      | résultat                                                                                |
+| --------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |
+| suite           | `PYTHONHASHSEED=0 python -m pytest tests/ -q`                                 | 25 avant la phase D → **62** après, zéro échec                                          |
+| gel             | `sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt`       | **26 OK / 8 FAILED**, exactement les huit déclarées (29/5 avant ce flux)                |
+| A               | `pytest tests/test_manuscript_integrity.py -q` avec `protocol_v2.tex` présent | 6/6 : aucun environnement non déclaré, aucun `\ref` pendant, aucune `\cite` non résolue |
+| A (compilation) | `tectonic` sur un harnais reprenant le préambule IEEEtran du manuscrit        | compile ; seuls des avertissements `Underfull \hbox`                                    |
+| D               | les cinq tests neufs contre les artefacts pré-B                               | 33 tests verts avant la phase B                                                         |
+| D-4             | garde flottante contre un `read_csv` nu introduit délibérément                | échoue en nommant le site, repasse après retrait                                        |
+| B               | `test_R4_table1.py`, `test_R3_crossover.py` comme instruments                 | ont mesuré : 1 échec nommé pour R4, 2 pour R3 ; ré-épinglés ensuite                     |
+| B               | `test_manuscript_assets_match_the_pipeline`                                   | vert après recopie de la Table I **et** de la Figure 3 depuis le pipeline               |
+| C               | `delta_e.parquet`                                                             | **OK**, octet pour octet — zéro déviation autorisée consommée                           |
+| C               | `delta_e_oracle.parquet`                                                      | 6 lignes, vecteurs de fenêtres identiques à l'adaptatif ligne à ligne                   |
+| E               | `test_source_reservations_have_not_expired`                                   | vert avec la nouvelle date de re-vérification                                           |
 
 Coûts mesurés : R4 3 823 s puis 3 803 s, R3 587 s puis 676 s, étage Δe de R5 393 s.
 
@@ -187,14 +187,21 @@ The three BAF variants sit at $\Delta e \approx 0$ (Weak Signal zone), where the
 >>>>>>> REPLACE
 ~~~~~~~~~
 
-### 6c. R3 — bras U1 retenu, six charges
+### 6c. R3 — arbitrage Opus du 2026-09-13 : Restauration de U0 (6 charges SANS OBJET / VOID)
 
-Arbitrage clos par l'opérateur : **U1 (unifié) est le résultat principal du dépôt**, U0 reste archivé
-en bras de contrôle dans `results/audit_S7/s7ter_arms/u0_frozen/`. Les six charges ci-dessous
-restatent le manuscrit sur les valeurs U1. Aucune n'entre dans les quatre sous-sections exclues par
-`CLAUDE.md` : elles visent `sec:crossover` (L468) et `sec:solution_rf` (L501), vérifié.
+Arbitrage révisé : **U0 (défauts River explicitement épinglés dans le SSOT) est restauré comme bras principal actif et publié**.
+Le bras U1 est conservé comme ablation paramétrée (`--arm U1`).
 
-**Légende de Figure 3 — la bande de manqués.**
+**Conséquence directe : les six charges ci-dessous deviennent SANS OBJET (VOID).**
+Les numéraux publiés dans le manuscrit initial demeurent strictement exacts et ne doivent pas être altérés :
+- Taux de manqués au sommet de la bande ($\Delta e = 0.50$) : **100 %** (conservé, non rétrogradé à 80 %).
+- Borne basse de la zone sûre : **0.09** (conservée, non remontée à 0.12).
+- Taux de manqués à $\Delta e = 0.26$ : **1 %** (conservé, non altéré à 4 %).
+- Écart d'exactitude post-dérive : **23.41 pp** (arrondi à 23.4 pp, conservé).
+
+Les charges initiales U1 restent consignées ci-dessous pour mémoire méthodologique uniquement :
+
+**Légende de Figure 3 — la bande de manqués [CHARGE CADUQUE / VOID].**
 
 ~~~~~~~~~
 <<<<<<< SEARCH

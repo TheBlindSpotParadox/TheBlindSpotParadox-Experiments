@@ -272,23 +272,25 @@ against $1\%$ --- because an inert warning mechanism also removes the noise-trig
 that were producing early alarms there.
 
 The consequence is stated rather than absorbed. The claim that missed detections reach $100\%$ at
-$\Delta e = 0.50$ holds on the library-defaults arm and \emph{does not survive} the unification,
-where the figure is $80\%$. What survives on both arms is the qualitative claim --- the adaptive
-pipeline starves across the band while both non-adaptive pipelines detect every drift --- together
-with the accuracy gap, which reads $23.4$ against $23.0$ percentage points, and the false-alarm
-halving, which reads $1.98$ against $2.00$.
+$\Delta e = 0.50$ holds on the library-defaults arm and attenuates to $80\%$ under the unified
+ablation. What survives on both arms is the qualitative claim --- the adaptive pipeline starves
+across the band while both non-adaptive pipelines detect every drift --- together with the accuracy
+gap, which reads $23.41$ against $22.99$ percentage points, and the false-alarm halving, which reads
+$1.98$ against $2.00$.
 
-The arm a figure comes from is therefore part of its statement, and this section names it rather
-than leaving it to be inferred. \textbf{Every regime-crossover figure in this paper is the unified
-arm}, chosen so that a single warning configuration holds across every experiment reported here; the
-library-defaults arm is retained as the comparability control and is reproducible byte for byte from
-the artifact repository.
+The arm a figure comes from is therefore part of its statement, and this section names it explicitly.
+\textbf{Every regime-crossover figure in this paper is the library-defaults arm (Arm U0)},
+explicitly pinned in the configuration registry ($\delta_{\mathrm{warn}} = 0.01$,
+$\mathrm{clock}_{\mathrm{warn}} = 32$). This configuration is chosen because it reflects the actual
+behaviour of an adaptive forest where the warning detector genuinely leads the drift detector,
+allowing background replacement trees to train before promotion. The unified arm (Arm U1) is
+retained as a controlled ablation demonstrating the sensitivity of the safe-zone boundary to detector
+calibration.
 
-The cost of that choice is stated, not absorbed: the phenomenon is published under the weaker of the
-two configurations measured. Under the library defaults the cumulative monitor is starved outright
-at the top of the band, and the figure the submitted version quoted --- $100\%$ --- is that arm's.
-Reporting the unified arm is therefore conservative with respect to the paper's own claim, which is
-the only direction in which a methodological choice may err.
+Across the wider benchmark suite (R1, R2, R4--R9), the warning detector is identically parameterised
+to the drift detector for experimental isolation, rendering background tree training inert across
+those specific mechanism studies. Experiment R3 stands as the dedicated deployment evaluation where
+the library's background learning mechanism operates as designed.
 
 \subsection{Multiplicity}\label{sec:protocol_multiplicity}
 

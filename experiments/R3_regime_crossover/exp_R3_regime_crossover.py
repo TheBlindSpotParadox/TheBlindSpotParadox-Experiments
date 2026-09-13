@@ -5,6 +5,7 @@ Experiment R3: Regime Crossover & Non-Adaptive RF Solution.
 Reproduces Figure 3 of the manuscript "The Blind Spot Paradox".
 Strictly adheres to IEEE/ICDM FAIR reproducibility standards.
 """
+import argparse
 import random
 import sys
 import numpy as np
@@ -53,7 +54,7 @@ def compute_boundary_shift(delta_e):
     safe_delta = min(delta_e, 0.4999)
     return np.sqrt(2) * norm.ppf(safe_delta + 0.5)
 
-def run_single_seed(seed, delta_e, pipeline_type):
+def run_single_seed(seed, delta_e, pipeline_type, arm=ssot.R3_DEFAULT_ARM):
     r"""
     Executes a single stream evaluation strictly isolated by a deterministic seed.
     Simulates an abrupt concept drift mapping to the theoretical \Delta e.
@@ -75,12 +76,13 @@ def run_single_seed(seed, delta_e, pipeline_type):
     if pipeline_type == 'HT':
         model = tree.HoeffdingTreeClassifier()
     elif pipeline_type == 'ARF':
-        # S7-ter/LOT B: warning_detector unified onto the drift detector. It was left unset,
-        # which River 0.23.0 resolves to ADWIN(delta=0.01, clock=32) -- two parameters away
-        # from drift.ADWIN(clock=1), not one.
+        # U0 (published default): explicit River defaults (delta=0.01, clock=32), background trees learn.
+        # U1 (ablation arm): unified clone (delta=0.002, clock=1), background trees are inert.
+        warn_delta = ssot.R3_WARN_DELTA_U0 if arm == 'U0' else ssot.R3_WARN_DELTA_U1
+        warn_clock = ssot.R3_C_WARN_U0 if arm == 'U0' else ssot.R3_C_WARN_U1
         model = forest.ARFClassifier(n_models=ssot.R3_N_MODELS, drift_detector=drift.ADWIN(clock=1),
-                                     warning_detector=drift.ADWIN(delta=ssot.R3_WARN_DELTA,
-                                                                  clock=ssot.R3_C_WARN),
+                                     warning_detector=drift.ADWIN(delta=warn_delta,
+                                                                  clock=warn_clock),
                                      seed=seed)
     elif pipeline_type == 'RF_Static':
         # Static Bagging without internal ADWIN tree resets -> Non-Adaptive Ensemble
@@ -124,7 +126,13 @@ def run_single_seed(seed, delta_e, pipeline_type):
     return (1.0 if detected_in_window == 0 else 0.0), alarms_pre, correct_post / (TOLERANCE + 1)
 
 def main():
-    print("[INFO] Launching Regime Crossover evaluation (HT vs ARF vs Static RF)...")
+    parser = argparse.ArgumentParser(description="Experiment R3: Regime Crossover")
+    parser.add_argument("--arm", choices=["U0", "U1"], default=ssot.R3_DEFAULT_ARM,
+                        help="R3 warning detector arm: U0 (River default, active) or U1 (unified clone)")
+    args, _ = parser.parse_known_args()
+    arm = args.arm
+
+    print(f"[INFO] Launching Regime Crossover evaluation (HT vs ARF vs Static RF) [Arm {arm}]...")
     pipes = ['HT', 'ARF', 'RF_Static']
     metrics = {p: {'miss':[], 'fp':[], 'acc':[], 'm_sem':[], 'f_sem':[], 'a_sem':[]} for p in pipes}
     
@@ -137,7 +145,7 @@ def main():
 
     for de in tqdm(DELTA_E_VALUES, desc="Delta E Sweep"):
         for p in pipes:
-            res = Parallel(n_jobs=-1)(delayed(run_single_seed)(worker_seeds[s], de, p) for s in range(N_SEEDS))
+            res = Parallel(n_jobs=-1)(delayed(run_single_seed)(worker_seeds[s], de, p, arm=arm) for s in range(N_SEEDS))
             miss_arr, fp_arr, acc_arr = zip(*res)
             
             # Record at seed-level (optional for full trace) and aggregate

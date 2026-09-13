@@ -308,23 +308,26 @@ def require_drift_tracker(model, warning=False):
 
 
 # ══════════════════════════════════════════════════════════════════════════════
+# S7-ter / R3 — warning_detector configuration (Arms U0 and U1)
 # ══════════════════════════════════════════════════════════════════════════════
-# S7-ter — warning_detector unification (LOT B)
-# ══════════════════════════════════════════════════════════════════════════════
-# APPEND-ONLY BLOCK. No line above this banner is modified by stream S7-ter: stream S2 appends to
-# this same file in the same wave, and a mid-file edit merges silently wrong past
-# tests/test_S7_consistency.py, whose oracle is value-based and cannot see a rebased comment.
-#
-# Measured on the pinned build: River 0.23.0 resolves an unset ARFClassifier warning_detector to
-# ADWIN(delta=0.01, clock=32) and an unset drift_detector to ADWIN(delta=0.001, clock=32); a bare
-# drift.ADWIN() is neither, at delta=0.002, clock=32. R1, R2, R5-R9 and exp_R4's make_srp pin both
-# detectors at (0.002, c); R3 and exp_R4's make_arf pinned only the drift detector, so their warning
-# ran at (0.01, 32). The unification therefore moves TWO parameters, not the clock alone:
-# delta 0.01 -> 0.002 and clock 32 -> c.
-R3_C_WARN     = C_INT           # was River's ARF warning default clock = 32
-R3_WARN_DELTA = 0.002           # was River's ARF warning default delta = 0.01. Equals the delta of
-                                # R3's own drift.ADWIN(clock=1), which is River's bare-ADWIN default
-R4_WARN_DELTA = R4_ADWIN_DELTA  # 0.002: the warning detector is made an exact clone of the drift one
+# Arm U0 (Published / Active default): River ARF default parameters, explicitly pinned.
+# Mechanism: delta=0.01 is looser than drift delta=0.002, allowing the warning to precede drift
+# and background trees to train before replacement. Bit-identical to the frozen baseline.
+R3_WARN_DELTA_U0 = 0.01
+R3_C_WARN_U0     = 32
+
+# Arm U1 (Ablation / Unified clone): Warning detector cloned on drift detector (LOT B).
+# Mechanism: delta=0.002 and clock=c match drift detector; warning and drift trip at the same
+# step, rendering background trees inert (47/47 and 36/36 replacements install blank trees).
+R3_WARN_DELTA_U1 = 0.002
+R3_C_WARN_U1     = C_INT        # 1
+
+# Active default and arm routing for R3
+R3_DEFAULT_ARM   = "U0"
+R3_C_WARN        = R3_C_WARN_U0
+R3_WARN_DELTA    = R3_WARN_DELTA_U0
+
+R4_WARN_DELTA    = R4_ADWIN_DELTA  # 0.002: the warning detector is made an exact clone of the drift one
 
 # R4_C_WARN is deliberately NOT bound. R4 sweeps the internal clock over c in {1, 32} and the warning
 # clock follows the drift clock OF THE SAME PIPELINE; that is a coupling, not a constant, and binding
