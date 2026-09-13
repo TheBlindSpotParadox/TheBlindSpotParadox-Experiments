@@ -26,8 +26,13 @@ repomix.config.json
 graphify-out/
 
 # Traces brutes volumineuses S6 (régénérables en 20 min)
-results/S6_synchronized_traces/data/traces.parquet/
+results/S6_synchronized_traces/data/traces.parquet
 
 # Traces brutes volumineuses S8 (régénérables, même motif que S6)
 results/S8_ab_initio/data/traces.parquet/
 results/S8_rotation_generator/data/*/traces.parquet/
+
+# Traces brutes volumineuses S9 (rejeu hors ligne, regenerables depuis le corpus S6)
+results/S9_detector_coverage/data/traces.parquet
+results/S9_detector_coverage/smoke/traces.parquet
+results/S9_detector_coverage/rotation_eta*/traces.parquet
