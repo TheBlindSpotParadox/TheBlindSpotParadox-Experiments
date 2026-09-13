@@ -80,7 +80,7 @@ def load_variant(variant):
     """INSECTS CSVs carry no header row, so `pd.read_csv` consumes record #1 and n_total is
     lines - 1. Reproduced exactly as `exp_R5_compute_insects.simulate:34-37` reads it; any other
     loader shifts every drift index."""
-    df = pd.read_csv(cfg.INSECTS_DIR / f"{variant}.csv")
+    df = pd.read_csv(cfg.INSECTS_DIR / f"{variant}.csv", float_precision="round_trip")
     return df, df.columns[-1]
 
 
