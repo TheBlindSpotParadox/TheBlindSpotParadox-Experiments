@@ -188,3 +188,153 @@ The manuscript copy is **not deposited**. Inserting a figure changes the paginat
 `\begin{figure}` block, ready to insert, is in `transfer_S8.md`;
 `tests/test_manuscript_integrity.py::test_manuscript_assets_match_the_pipeline` globs
 `results/*/figures/<name>`, so the pipeline twin is already in place for the day the copy lands.
+
+---
+
+## 3. T8.2 and T8.5 — the rotation generator and the high-magnitude domain
+
+### 3.1 The defect, and the correction
+
+The canonical family labels `y = 1[x0 + x1 > b]` with `b = sqrt(2) Phi^-1(0.5 + Delta_e)`, so the
+post-drift class prior is `P(y = 1) = 0.5 - Delta_e`. Over the last seven points of the grid it falls
+under 2.5 %, and at `Delta_e = 0.498` the majority-class predictor reaches an error of `0.002` —
+**under** the measured `e_pre = 0.024`. That is mechanically the `A / A_rect = -14.12` of
+`S6_causal_evidence.md` §3: at those magnitudes the drift makes the problem *easier*.
+
+The pre-drift stream already **is** the rotation at `phi = pi/4`, so only the post-drift half-plane
+turns:
+
+```
+phi     = pi/4 + pi Delta_e / (1 - 2 eta)
+y_pre   = 1[x0 + x1 > 0]                                   canonical, bit-identical
+y_post  = 1[cos(phi) x0 + sin(phi) x1 > 0]
+```
+
+Two half-planes through the origin whose normals are separated by `theta` disagree, under an
+isotropic Gaussian, on exactly `theta / pi` of the mass. The class balance stays 50/50 at every
+magnitude. Declared label noise `eta`, applied to both phases, makes the Bayes error `eta` rather
+than `0` and leaves `Delta_e = (1 - 2 eta) theta / pi` exact.
+
+**CONSTRAINT 1, verbatim.** `rng.normal(size=(N_STEPS, 2))` is untouched: two normal draws per step,
+same order, same consumption. The label-noise draws come from a **separate** `Generator` spawned off
+`SeedSequence(safe_seed)`. `tests/test_S8_generality.py` asserts both, plus that the pre-drift labels
+at `eta = 0` are byte-identical to the canonical family's.
+
+| item | value |
+|---|---|
+| grid | 2 `eta` arms x 100 seeds x 20 magnitudes x 1 arm (`full`) = 4 000 run records |
+| wall clock | 736.1 s (`eta = 0`) + 1 015.1 s (`eta = 0.05`) = 1 751.2 s (29 min 11 s) |
+| traces | 2 x 10 000 000 rows; `data/*/traces.parquet/` gitignored, same regime as S6 |
+| artifacts | `results/S8_rotation_generator/data/` (215 MB), `tables/` |
+
+### 3.2 D4 — generator identity: HELD
+
+`|Delta_e_measured - (1 - 2 eta) theta / pi| <= 3 SE` at **40 of 40** grid points, worst deviation
+`2.50 SE` (`eta = 0`, `Delta_e = 0.141`). Measured on the labels with the pre-drift Bayes rule as the
+oracle, never off a trained classifier: `Delta_e` is a property of the generator, and reading it
+through a learner would confound the two. Measured Bayes error `0.000000` at `eta = 0` and `0.050055`
+at `eta = 0.05`.
+
+Artifact: `results/S8_rotation_generator/tables/s8_rotation_identity.csv`.
+
+### 3.3 D5 — the null is not degenerate on either arm
+
+| arm | `e_pre` median | range over the grid | sd across seeds | pre-drift FA rate by `lambda` (50 / 25 / 8 / 4 / 2 / 1) |
+|---|---:|---|---:|---|
+| `eta = 0` | 0.0240 | [0.0120, 0.0400] | 0.0046 | 0.00 / 0.00 / 0.00 / **0.37** / 0.96 / 1.00 |
+| `eta = 0.05` | 0.0690 | [0.0480, 0.0850] | 0.0080 | 0.00 / 0.00 / **0.18** / 0.96 / 1.00 / 1.00 |
+
+**NON-DEGENERATE on both.** Two readings beyond the verdict:
+
+- `e_pre = 0.0240` at `eta = 0` is the canonical family's own value, to four decimals. That is the
+  cross-check that the pre-drift phase really is bit-identical, obtained from the campaign rather
+  than from the construction.
+- At `eta = 0.05` the Bayes floor is `0.05` and the measured `e_pre` is `0.069`: the ARF pays `0.019`
+  above Bayes. That arm is the only one of the two carrying a binding false-alarm budget, which is
+  why T8.3 runs on it.
+
+### 3.4 D6 — the high-magnitude switch point
+
+`A / A_rect`, median over 100 seeds, arm `full`:
+
+| `Delta_e` | canonical | rotation `eta = 0` | rotation `eta = 0.05` |
+|---:|---:|---:|---:|
+| 0.085 | 0.74 | 0.61 | 0.59 |
+| 0.194 | 1.79 | 0.60 | 1.23 |
+| **0.243** | 2.18 | **−0.69** | 1.22 |
+| 0.327 | 2.70 | 1.99 | 3.84 |
+| **0.452** | **−0.15** | 6.91 | 7.12 |
+| 0.498 | **−14.12** | **+7.96** | **+8.03** |
+
+| dataset | D6 switch point | verdict |
+|---|---|---|
+| canonical family | 0.452271 | **PRESENT** (reproduces the published value) |
+| rotation `eta = 0` | 0.242568 | **PRESENT** |
+| rotation `eta = 0.05` | — | **ABSENT** |
+
+**The prediction written before reading was that the switch must disappear. It disappears at
+`eta = 0.05` and the rule fires at `eta = 0`, so the verdict is reported as the rule renders it and
+the rule is not retro-edited.** What it fires on is not the phenomenon the rule was written to
+detect, and the fraction of negative runs is what shows it:
+
+| dataset | `Delta_e` | median `A / A_rect` | IQR | fraction of runs negative |
+|---|---:|---:|---|---:|
+| canonical | 0.452 | −0.15 | [−2.52, 1.81] | 0.51 |
+| canonical | 0.498 | −14.12 | [−18.37, −9.37] | **1.00** |
+| rotation `eta = 0` | 0.243 | −0.69 | [−1.53, 0.04] | 0.74 |
+| rotation `eta = 0` | 0.287 | +0.40 | [−0.42, 1.25] | 0.35 |
+| rotation `eta = 0` | 0.498 | +7.96 | [6.28, 10.89] | **0.01** |
+| rotation `eta = 0.05` | 0.498 | +8.03 | [6.25, 11.61] | **0.00** |
+
+The canonical family's ratio descends monotonically past `Delta_e = 0.33` into a regime where
+**every** run is negative. Neither rotation arm has any analogue: both climb monotonically to `+8`
+at the top magnitude. What `eta = 0` has instead is an **isolated mid-band dip** at
+`Delta_e = 0.2426`, 74 % of runs negative, with positive medians on both sides.
+
+Mechanism, and it is not the prior. At `eta = 0` the Bayes error is exactly `0` while
+`e_pre = 0.024` is the learner's own imperfection, so after adapting the ARF keeps improving past
+its pre-drift level on a noiseless problem and `A = sum(err - e_pre)` turns negative. At
+`eta = 0.05` the Bayes floor is above `e_pre - 0.019` and the post-drift error cannot fall that far.
+That is exactly the degeneracy CONSTRAINT 1-bis names and the reason the `eta = 0.05` arm exists.
+
+**Verdicts.** The high-magnitude collapse of the canonical family **is** a generator artefact: it has
+no analogue on a generator with a stable 50/50 prior. The `eta = 0` dip is a **second** degeneracy,
+of the zero-Bayes-error kind, not a survival of the first.
+
+**Declared gap, not repaired.** D6's `inf{Delta_e : median(A/A_rect) < 0}` does not discriminate an
+isolated band from a regime; one negative grid point anywhere fixes the infimum. The rule is left as
+written and the discrimination is made by the fraction-negative column above. Same treatment
+`s2bis_proteus_calibration` gave its undeclared `NOT BINDING` case: the rules file is not
+retro-edited, the gap is declared here.
+
+### 3.5 Confrontation with the canonical family — read-only
+
+No R2, R6 or R7 artifact is regenerated. `results/S8_rotation_generator/tables/s8_rotation_vs_canonical.csv`
+joins on `delta_e` with `float_precision='round_trip'`.
+
+| source | status |
+|---|---|
+| R2 (`R2_instrumented_A_PHT_ARF.parquet`) | **JOINED**, 20 of 20 magnitudes |
+| canonical, same pipeline (`s8_detection_counts.csv`, arm `full`) | **JOINED** — the same ladder code applied to the canonical family, so old-vs-new is a difference of generator and of nothing else |
+| R7 (`exp_R7_regime1_miss_curve.csv`) | **JOINED** for `A_mismatched`; the rotation campaign runs the `c_int = 1` configuration only, so the other two configurations have no arm-comparable counterpart |
+| R6 (`tau_HAT`) | **NOT PRODUCED** — the missing measurement is an `M = 1` rotation arm. T8.2 runs `M = 10` only; T8.3 and T8.3-bis produce the `M = 1` quantities, not this campaign |
+
+Two numbers carry the section:
+
+| `Delta_e` | canonical miss at `lambda = 50` (same pipeline) | rotation `eta = 0.05` | `median tau_arf` → `tau_swap` |
+|---:|---:|---:|---|
+| 0.085 | 1.00 | 0.72 | 410 → 1052 |
+| 0.141 | 1.00 | 0.37 | 270 → 443 |
+| 0.327 | 1.00 | 0.60 | 53 → 62 |
+| 0.416 | 1.00 | 0.33 | 37 → 42 |
+| 0.498 | 1.00 | 0.42 | 28 → 34 |
+
+**The blind spot survives the generator change and is markedly less extreme than the published
+family implies.** On the canonical family the external CUSUM at `lambda = 50` misses 99–100 % of
+drifts at every magnitude. On a generator with a stable 50/50 prior and a Bayes error of `0.05` it
+misses **33 % to 77 %** — one drift in three to three in four, still a blind spot at the threshold
+the starvation certificate is stated at, but not the near-total starvation the abstract reports.
+
+The rotation family is also **slower to adapt**: `tau_swap^(1/M)` exceeds the canonical `tau_arf` at
+every magnitude, by a factor of 2.6 at `Delta_e = 0.085` and by 4–7 steps at the top of the grid.
+Part of the miss-rate reduction is therefore a longer transient, not a weaker mechanism.
