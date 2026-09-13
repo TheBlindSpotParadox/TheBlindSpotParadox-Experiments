@@ -1,0 +1,749 @@
+{
+  "aft": {
+    "beta": [
+      4.660858784921695,
+      0.6592775018711559,
+      0.20621011253562926
+    ],
+    "censoring_rate": 0.08206686930091185,
+    "converged": true,
+    "horizon": 2500.0,
+    "n": 1974,
+    "n_censored": 162,
+    "names": [
+      "intercept",
+      "log tau_swap^(1/M)",
+      "log Delta_e_emp"
+    ],
+    "se": [
+      0.11451564593383998,
+      0.022915378898151376,
+      0.035315294366135806
+    ],
+    "sigma": 0.8505665184001205,
+    "z": [
+      40.70062869500338,
+      28.770089501960666,
+      5.8391163442592235
+    ]
+  },
+  "censoring": {
+    "complete_case": {
+      "arm": "full",
+      "censoring_fraction": 0.08206686930091185,
+      "horizon": 2500.0,
+      "n": 1974,
+      "n_censored": 162,
+      "note": "censoring is encoded as a missing w_fw, not as w_fw == T_h; no run reaches the horizon with a finite value"
+    },
+    "per_magnitude": [
+      {
+        "censoring_fraction": 0.2703,
+        "delta_e": 0.028186,
+        "n": 74,
+        "n_censored": 20,
+        "tau_erase_median": 462.0,
+        "w_fw_median_uncensored": 2271.0
+      },
+      {
+        "censoring_fraction": 0.24,
+        "delta_e": 0.085449,
+        "n": 100,
+        "n_censored": 24,
+        "tau_erase_median": 960.5,
+        "w_fw_median_uncensored": 2180.0
+      },
+      {
+        "censoring_fraction": 0.24,
+        "delta_e": 0.140949,
+        "n": 100,
+        "n_censored": 24,
+        "tau_erase_median": 851.5,
+        "w_fw_median_uncensored": 2211.0
+      },
+      {
+        "censoring_fraction": 0.35,
+        "delta_e": 0.193621,
+        "n": 100,
+        "n_censored": 35,
+        "tau_erase_median": 803.5,
+        "w_fw_median_uncensored": 2264.0
+      },
+      {
+        "censoring_fraction": 0.23,
+        "delta_e": 0.242568,
+        "n": 100,
+        "n_censored": 23,
+        "tau_erase_median": 569.0,
+        "w_fw_median_uncensored": 2202.0
+      },
+      {
+        "censoring_fraction": 0.16,
+        "delta_e": 0.287108,
+        "n": 100,
+        "n_censored": 16,
+        "tau_erase_median": 613.0,
+        "w_fw_median_uncensored": 1908.5
+      },
+      {
+        "censoring_fraction": 0.06,
+        "delta_e": 0.326793,
+        "n": 100,
+        "n_censored": 6,
+        "tau_erase_median": 469.0,
+        "w_fw_median_uncensored": 1995.5
+      },
+      {
+        "censoring_fraction": 0.05,
+        "delta_e": 0.361418,
+        "n": 100,
+        "n_censored": 5,
+        "tau_erase_median": 455.5,
+        "w_fw_median_uncensored": 1698.0
+      },
+      {
+        "censoring_fraction": 0.02,
+        "delta_e": 0.390998,
+        "n": 100,
+        "n_censored": 2,
+        "tau_erase_median": 386.5,
+        "w_fw_median_uncensored": 1268.5
+      },
+      {
+        "censoring_fraction": 0.01,
+        "delta_e": 0.415743,
+        "n": 100,
+        "n_censored": 1,
+        "tau_erase_median": 375.5,
+        "w_fw_median_uncensored": 1159.0
+      },
+      {
+        "censoring_fraction": 0.01,
+        "delta_e": 0.436013,
+        "n": 100,
+        "n_censored": 1,
+        "tau_erase_median": 346.5,
+        "w_fw_median_uncensored": 1030.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.452271,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 218.0,
+        "w_fw_median_uncensored": 864.5
+      },
+      {
+        "censoring_fraction": 0.02,
+        "delta_e": 0.46504,
+        "n": 100,
+        "n_censored": 2,
+        "tau_erase_median": 173.5,
+        "w_fw_median_uncensored": 622.0
+      },
+      {
+        "censoring_fraction": 0.02,
+        "delta_e": 0.47486,
+        "n": 100,
+        "n_censored": 2,
+        "tau_erase_median": 113.5,
+        "w_fw_median_uncensored": 593.0
+      },
+      {
+        "censoring_fraction": 0.01,
+        "delta_e": 0.482255,
+        "n": 100,
+        "n_censored": 1,
+        "tau_erase_median": 77.5,
+        "w_fw_median_uncensored": 266.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.487707,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 55.5,
+        "w_fw_median_uncensored": 241.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.491644,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 50.0,
+        "w_fw_median_uncensored": 237.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.494428,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 47.0,
+        "w_fw_median_uncensored": 233.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.496355,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 43.0,
+        "w_fw_median_uncensored": 230.0
+      },
+      {
+        "censoring_fraction": 0.0,
+        "delta_e": 0.497661,
+        "n": 100,
+        "n_censored": 0,
+        "tau_erase_median": 42.5,
+        "w_fw_median_uncensored": 230.0
+      }
+    ],
+    "whole_arm": {
+      "arm": "full",
+      "censoring_fraction": 0.082,
+      "horizon": 2500.0,
+      "n": 2000,
+      "n_censored": 164,
+      "note": "censoring is encoded as a missing w_fw, not as w_fw == T_h; no run reaches the horizon with a finite value"
+    }
+  },
+  "reproduction": {
+    "artifact": "results/S6_synchronized_traces/data/runs.parquet",
+    "command": "PYTHONHASHSEED=0 python experiments/S2_theory/s2_w_random.py",
+    "python": "3.12.9",
+    "quadrature": "Gauss-Hermite, 64 nodes, deterministic"
+  },
+  "rule_R3_domain": {
+    "criterion": "vacant when mu W >= lambda - s_0, s_0 = 0",
+    "criterion_is_necessary_not_sufficient": true,
+    "n_pairs": 240,
+    "n_pairs_bound_below_one": 32,
+    "n_pairs_vacant_at_mean_W": 188,
+    "non_vacant_at_mean_W": [
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 184.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0405,
+        "lambda": 8.0,
+        "mu_W_mean": 3.36
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 184.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0,
+        "lambda": 15.0,
+        "mu_W_mean": 3.36
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 184.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0,
+        "lambda": 25.0,
+        "mu_W_mean": 3.36
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 184.5,
+        "bound_at_mean_W": 1.0611635483133376e-08,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 3.36
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 793.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.3378,
+        "lambda": 15.0,
+        "mu_W_mean": 14.43
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 793.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.2027,
+        "lambda": 25.0,
+        "mu_W_mean": 14.43
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 793.5,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 14.43
+      },
+      {
+        "W_estimator": "tau_err(0.10)",
+        "W_mean": 733.3,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.3108,
+        "lambda": 15.0,
+        "mu_W_mean": 13.34
+      },
+      {
+        "W_estimator": "tau_err(0.10)",
+        "W_mean": 733.3,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0405,
+        "lambda": 25.0,
+        "mu_W_mean": 13.34
+      },
+      {
+        "W_estimator": "tau_err(0.10)",
+        "W_mean": 733.3,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.028186,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 13.34
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 464.7,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.085449,
+        "frac_runs_vacant": 0.24,
+        "lambda": 50.0,
+        "mu_W_mean": 35.06
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 361.8,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.140949,
+        "frac_runs_vacant": 0.42,
+        "lambda": 50.0,
+        "mu_W_mean": 47.38
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 183.7,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.193621,
+        "frac_runs_vacant": 0.1,
+        "lambda": 50.0,
+        "mu_W_mean": 33.73
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 107.6,
+        "bound_at_mean_W": 0.0009916984702307697,
+        "delta_e": 0.242568,
+        "frac_runs_vacant": 0.03,
+        "lambda": 50.0,
+        "mu_W_mean": 25.02
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 72.0,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.287108,
+        "frac_runs_vacant": 0.19,
+        "lambda": 25.0,
+        "mu_W_mean": 19.94
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 72.0,
+        "bound_at_mean_W": 9.00088087441381e-10,
+        "delta_e": 0.287108,
+        "frac_runs_vacant": 0.02,
+        "lambda": 50.0,
+        "mu_W_mean": 19.94
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 57.4,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.326793,
+        "frac_runs_vacant": 0.12,
+        "lambda": 25.0,
+        "mu_W_mean": 18.18
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 57.4,
+        "bound_at_mean_W": 2.6886781729461173e-14,
+        "delta_e": 0.326793,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 18.18
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 49.4,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.361418,
+        "frac_runs_vacant": 0.09,
+        "lambda": 25.0,
+        "mu_W_mean": 17.35
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 49.4,
+        "bound_at_mean_W": 8.667134017874662e-18,
+        "delta_e": 0.361418,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 17.35
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 43.9,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.390998,
+        "frac_runs_vacant": 0.07,
+        "lambda": 25.0,
+        "mu_W_mean": 16.73
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 43.9,
+        "bound_at_mean_W": 5.5780864417920745e-21,
+        "delta_e": 0.390998,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 16.73
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 41.1,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.415743,
+        "frac_runs_vacant": 0.05,
+        "lambda": 25.0,
+        "mu_W_mean": 16.69
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 41.1,
+        "bound_at_mean_W": 1.513151104748685e-22,
+        "delta_e": 0.415743,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 16.69
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 37.5,
+        "bound_at_mean_W": 0.49799845174771556,
+        "delta_e": 0.436013,
+        "frac_runs_vacant": 0.06,
+        "lambda": 25.0,
+        "mu_W_mean": 15.99
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 37.5,
+        "bound_at_mean_W": 6.539803486389996e-26,
+        "delta_e": 0.436013,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.99
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 35.3,
+        "bound_at_mean_W": 0.2348912952364723,
+        "delta_e": 0.452271,
+        "frac_runs_vacant": 0.05,
+        "lambda": 25.0,
+        "mu_W_mean": 15.6
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 35.3,
+        "bound_at_mean_W": 2.5299419177736387e-28,
+        "delta_e": 0.452271,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.6
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 34.3,
+        "bound_at_mean_W": 0.19885213582319683,
+        "delta_e": 0.46504,
+        "frac_runs_vacant": 0.05,
+        "lambda": 25.0,
+        "mu_W_mean": 15.6
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 34.3,
+        "bound_at_mean_W": 3.678275751336427e-29,
+        "delta_e": 0.46504,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.6
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 33.7,
+        "bound_at_mean_W": 0.1900884460780882,
+        "delta_e": 0.47486,
+        "frac_runs_vacant": 0.05,
+        "lambda": 25.0,
+        "mu_W_mean": 15.66
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 33.7,
+        "bound_at_mean_W": 1.338712218182691e-29,
+        "delta_e": 0.47486,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.66
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 33.1,
+        "bound_at_mean_W": 0.16352126737187098,
+        "delta_e": 0.482255,
+        "frac_runs_vacant": 0.05,
+        "lambda": 25.0,
+        "mu_W_mean": 15.63
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 33.1,
+        "bound_at_mean_W": 3.2057669417513965e-30,
+        "delta_e": 0.482255,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.63
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 98.4,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.482255,
+        "frac_runs_vacant": 0.32,
+        "lambda": 50.0,
+        "mu_W_mean": 46.48
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 32.2,
+        "bound_at_mean_W": 0.10538103720433893,
+        "delta_e": 0.487707,
+        "frac_runs_vacant": 0.04,
+        "lambda": 25.0,
+        "mu_W_mean": 15.4
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 32.2,
+        "bound_at_mean_W": 1.7322822258904466e-31,
+        "delta_e": 0.487707,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.4
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 72.5,
+        "bound_at_mean_W": 0.10916875891907951,
+        "delta_e": 0.487707,
+        "frac_runs_vacant": 0.15,
+        "lambda": 50.0,
+        "mu_W_mean": 34.65
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.8,
+        "bound_at_mean_W": 0.08730934572811747,
+        "delta_e": 0.491644,
+        "frac_runs_vacant": 0.04,
+        "lambda": 25.0,
+        "mu_W_mean": 15.32
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.8,
+        "bound_at_mean_W": 4.4118623639786236e-32,
+        "delta_e": 0.491644,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.32
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 61.0,
+        "bound_at_mean_W": 5.43397303283185e-05,
+        "delta_e": 0.491644,
+        "frac_runs_vacant": 0.07,
+        "lambda": 50.0,
+        "mu_W_mean": 29.39
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.4,
+        "bound_at_mean_W": 0.07077022440547724,
+        "delta_e": 0.494428,
+        "frac_runs_vacant": 0.04,
+        "lambda": 25.0,
+        "mu_W_mean": 15.22
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.4,
+        "bound_at_mean_W": 1.092508410008798e-32,
+        "delta_e": 0.494428,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.22
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 55.6,
+        "bound_at_mean_W": 2.8435651055109746e-07,
+        "delta_e": 0.494428,
+        "frac_runs_vacant": 0.05,
+        "lambda": 50.0,
+        "mu_W_mean": 26.95
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.3,
+        "bound_at_mean_W": 0.06905760165935246,
+        "delta_e": 0.496355,
+        "frac_runs_vacant": 0.04,
+        "lambda": 25.0,
+        "mu_W_mean": 15.22
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.3,
+        "bound_at_mean_W": 8.177589263826453e-33,
+        "delta_e": 0.496355,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.22
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 49.1,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.496355,
+        "frac_runs_vacant": 0.31,
+        "lambda": 25.0,
+        "mu_W_mean": 23.89
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 49.1,
+        "bound_at_mean_W": 4.395392350726238e-11,
+        "delta_e": 0.496355,
+        "frac_runs_vacant": 0.01,
+        "lambda": 50.0,
+        "mu_W_mean": 23.89
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.2,
+        "bound_at_mean_W": 0.06683417005255338,
+        "delta_e": 0.497661,
+        "frac_runs_vacant": 0.04,
+        "lambda": 25.0,
+        "mu_W_mean": 15.21
+      },
+      {
+        "W_estimator": "tau_swap^(1/M)",
+        "W_mean": 31.2,
+        "bound_at_mean_W": 6.141223861851243e-33,
+        "delta_e": 0.497661,
+        "frac_runs_vacant": 0.0,
+        "lambda": 50.0,
+        "mu_W_mean": 15.21
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 47.6,
+        "bound_at_mean_W": 1.0,
+        "delta_e": 0.497661,
+        "frac_runs_vacant": 0.26,
+        "lambda": 25.0,
+        "mu_W_mean": 23.22
+      },
+      {
+        "W_estimator": "tau_erase (argmax A_unrefl)",
+        "W_mean": 47.6,
+        "bound_at_mean_W": 3.902948898427917e-12,
+        "delta_e": 0.497661,
+        "frac_runs_vacant": 0.02,
+        "lambda": 50.0,
+        "mu_W_mean": 23.22
+      }
+    ],
+    "recommendation": "RETAIN with the explicit domain {(W, lambda) : mu W < lambda}"
+  },
+  "rule_R4": {
+    "cap_rationale": "Eq. (4) bounds a probability; uncapped, a censored run contributes T_h = 2500 and the bound is information-free rather than loose",
+    "integrand": "min(1, W exp(-2/W (lambda - s_0 - mu W)_+^2)), s_0 = 0",
+    "lower_bound_by_censoring": 0.08206686930091185,
+    "per_lambda": [
+      {
+        "lambda": 8.0,
+        "n_magnitudes": 20,
+        "n_magnitudes_vacant_deterministic": 20,
+        "n_magnitudes_vacant_parametric": 0,
+        "n_magnitudes_vacant_plugin": 20,
+        "parametric_max": 0.9999998550052608,
+        "parametric_min": 0.9994047259166539,
+        "plugin_max": 1.0,
+        "plugin_min": 1.0,
+        "verdict": "VACANT"
+      },
+      {
+        "lambda": 15.0,
+        "n_magnitudes": 20,
+        "n_magnitudes_vacant_deterministic": 20,
+        "n_magnitudes_vacant_parametric": 0,
+        "n_magnitudes_vacant_plugin": 20,
+        "parametric_max": 0.9999889534017838,
+        "parametric_min": 0.9901936191450802,
+        "plugin_max": 1.0,
+        "plugin_min": 1.0,
+        "verdict": "VACANT"
+      },
+      {
+        "lambda": 25.0,
+        "n_magnitudes": 20,
+        "n_magnitudes_vacant_deterministic": 20,
+        "n_magnitudes_vacant_parametric": 0,
+        "n_magnitudes_vacant_plugin": 20,
+        "parametric_max": 0.9998085358506078,
+        "parametric_min": 0.9487236731273878,
+        "plugin_max": 1.0,
+        "plugin_min": 1.0,
+        "verdict": "VACANT"
+      },
+      {
+        "lambda": 50.0,
+        "n_magnitudes": 20,
+        "n_magnitudes_vacant_deterministic": 20,
+        "n_magnitudes_vacant_parametric": 0,
+        "n_magnitudes_vacant_plugin": 20,
+        "parametric_max": 0.9951181224980629,
+        "parametric_min": 0.7525704690571821,
+        "plugin_max": 1.0,
+        "plugin_min": 1.0,
+        "verdict": "VACANT"
+      }
+    ]
+  }
+}

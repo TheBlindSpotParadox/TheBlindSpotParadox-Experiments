@@ -1,0 +1,652 @@
+{
+  "cor_split_crossings": {
+    "R_CUSUM_slope_per_unit_log_1_over_alpha": 1.467802109348584,
+    "at": {
+      "W": 57.4,
+      "delta_P": 0.01,
+      "eps": 0.05,
+      "n_stat": 30,
+      "p_true": 0.024
+    },
+    "crossings": {
+      "R_ADWIN": {
+        "R_at_crossing": 35.73873070043592,
+        "alpha": 5.772539062382305e-09,
+        "lambda": 26.466324526685792,
+        "log_1_over_alpha": 18.97015380774448,
+        "reading": "below ln(1/alpha) = 18.97 the CUSUM asks LESS evidence than ADWIN; above it, more"
+      },
+      "R_KSWIN": {
+        "R_at_crossing": 31.87709822200869,
+        "alpha": 8.015879442535181e-08,
+        "lambda": 22.60469204825856,
+        "log_1_over_alpha": 16.339256239326847,
+        "reading": "below ln(1/alpha) = 16.34 the CUSUM asks LESS evidence than KSWIN; above it, more"
+      }
+    },
+    "epsilon_margin": 9.27240617375013,
+    "plan_quoted_crossing_log_1_over_alpha": 13.0,
+    "scaling": {
+      "R_ADWIN": "square root of ln(1/alpha), vanishes with W",
+      "R_CUSUM": "linear in ln(1/alpha), free of W",
+      "R_KSWIN": "square root of ln(1/alpha), free of W"
+    },
+    "theta_star": 0.6812907500479092
+  },
+  "design": {
+    "lambda_ref": 15.0,
+    "lambda_ref_provenance": "ssot.R4_PHT_LAMBDA, common to all fifteen R4 pipelines, armed at t = 0 with no warm-up (exp_R4_main_table.py:165, :130-131)",
+    "ordering": "R4 learns before cloning (run_concept_drift:136-140); R5 clones before learning. R4's ordering is reproduced here.",
+    "prng_lock": "exp_R4_main_table.process_transition_seed:189-199 verbatim -- safe_seed = seed % (2**31 - 1); np.random.seed(safe_seed); random.seed(safe_seed); then simulate_stream re-seeds np.random.seed(seed)",
+    "scoring": "r4.evaluate's matching, closed window [d, d + tau], tau = max(R4_TAU_TOL_FLOOR, w)",
+    "target": "at most PHT_TARGET_FA = 1 false alarm over [0, R4_T_DRIFT), detector re-armed after each alarm",
+    "warmup_convention": "external detector disabled during the calibration pass, so no reset perturbs the pre-drift error stream",
+    "warmup_span": [
+      0,
+      4000
+    ]
+  },
+  "eddm_arming_T_D": {
+    "per_couple": [
+      {
+        "arming_lag_after_change_median": null,
+        "couple": "EDDM + ARF (c=1)",
+        "detection_rate": 0.0,
+        "n_detections_mean": 0.0,
+        "n_pre_drift_errors_max": 0,
+        "n_pre_drift_errors_median": 0.0,
+        "n_runs": 1080,
+        "share_armed_at_change_point": 0.0,
+        "share_never_armed": 1.0,
+        "warm_start_required": 30
+      },
+      {
+        "arming_lag_after_change_median": 30.0,
+        "couple": "EDDM + HT (c=1)",
+        "detection_rate": 0.8194444444444444,
+        "n_detections_mean": 0.8194444444444444,
+        "n_pre_drift_errors_max": 0,
+        "n_pre_drift_errors_median": 0.0,
+        "n_runs": 1080,
+        "share_armed_at_change_point": 0.0,
+        "share_never_armed": 0.17685185185185184,
+        "warm_start_required": 30
+      }
+    ],
+    "reading": "River's EDDM takes warm_start MONITORED ERRORS before it can signal. The share armed at the change point is measured here on the stream that produces the 0/1080, not transferred from the S6 traces.",
+    "s2_artifact_assumption": "results/S2_theory/tables/s2_eddm.json carries n_0_errors = 96.0 for the 'R4 ProteuS' history, obtained as p_0(S6) = 0.024 x 4000 pre-drift steps. That is the S6 Bernoulli base rate applied to the ProteuS span length, not a ProteuS measurement; the column measured here replaces it."
+  },
+  "family_requirements_at_lambda_eq": {
+    "EDDM": {
+      "reason": "EDDM's level is a ratio against a running maximum of the between-error distance; it carries no false-alarm parameter of the same kind as lambda, delta or alpha, so there is no knob to set to a common alpha. Its empirical result stands on its own measurement and is read in docs/theory/S2bis_narrative_payload.md (T-D).",
+      "status": "OUT OF SCOPE for the knob equalisation"
+    },
+    "R_KSWIN_at_deployed_alpha": 22.67926771600675,
+    "at": {
+      "W": 57.4,
+      "band_provenance": "S6 Bernoulli arm, s2_gate_T20.json p_true_sensitivity.band_used -- rule B8",
+      "delta_e": 0.326793,
+      "eps": 0.05,
+      "measured_ceiling_median_A_unrefl": 33.5115,
+      "n_stat": 30,
+      "p_true_band": [
+        0.015,
+        0.032
+      ]
+    },
+    "epsilon_margin": 9.27240617375013,
+    "per_couple": [
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "PHT + ARF (c=1)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "PHT + ARF (c=32)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "PHT + HT (c=1)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "PHT + RF (Static) (c=1)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 24.27240617375013,
+        "couple": "R4 deployed lambda_ref (c=0)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 0.09041161006480715,
+        "equalising_alpha_KSWIN": 0.0011061687402956673,
+        "equalising_delta_ADWIN": 0.09041161006480715,
+        "lambda_eq": 15.0,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            false,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 33.55736331064335,
+            "R_KSWIN_at_common_alpha": 31.048017012657855,
+            "alpha": 2.7328233017402186e-07,
+            "log_1_over_alpha": 15.112760399691904,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 29.836426682714723,
+            "R_KSWIN_at_common_alpha": 26.585349024266048,
+            "alpha": 9.159634785896156e-05,
+            "log_1_over_alpha": 9.298119157614394,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 31.20070617375013,
+        "couple": "S6 measured lambda_op (c=0)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 1.215185634864239e-05,
+        "equalising_alpha_KSWIN": 2.1878036371797877e-07,
+        "equalising_delta_ADWIN": 1.215185634864239e-05,
+        "lambda_eq": 21.9283,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            false,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            false,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 37.24223807913141,
+            "R_KSWIN_at_common_alpha": 35.26185527714628,
+            "alpha": 3.3332549439456104e-10,
+            "log_1_over_alpha": 21.82190164270736,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 32.31094153849883,
+            "R_KSWIN_at_common_alpha": 29.583004396666894,
+            "alpha": 2.1339564239223636e-06,
+            "log_1_over_alpha": 13.057532825198372,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "SRP + PHT (c=1)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      },
+      {
+        "R_CUSUM": 10.272421045109002,
+        "couple": "SRP + PHT (c=32)",
+        "deployed_alpha_ADWIN": 0.002,
+        "deployed_alpha_KSWIN": 0.005,
+        "equalising_alpha_ADWIN": 221.73753829764087,
+        "equalising_alpha_KSWIN": 1.9344302831083373,
+        "equalising_delta_ADWIN": 221.73753829764087,
+        "lambda_eq": 1.0000148713588715,
+        "met_by_measured_ceiling": {
+          "R_ADWIN_at_common_alpha": [
+            true,
+            true
+          ],
+          "R_CUSUM": true,
+          "R_KSWIN_at_common_alpha": [
+            true,
+            true
+          ]
+        },
+        "over_p_true_band": [
+          {
+            "R_ADWIN_at_common_alpha": 21.968140257879558,
+            "R_KSWIN_at_common_alpha": 14.389713182829237,
+            "alpha": 0.8354814053197268,
+            "log_1_over_alpha": 0.17974718694572575,
+            "p_true": 0.015,
+            "theta_star": 0.9683665001803464
+          },
+          {
+            "R_ADWIN_at_common_alpha": 21.101367625035145,
+            "R_KSWIN_at_common_alpha": 11.264043768421768,
+            "alpha": 1.7522952563154797,
+            "log_1_over_alpha": -0.5609265036096311,
+            "p_true": 0.032,
+            "theta_star": 0.5422423578035611
+          }
+        ]
+      }
+    ]
+  },
+  "per_couple": [
+    {
+      "Clock": 1,
+      "Detector": "PHT + ARF",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 2.0,
+          "F1_mean": 0.01481481481481481,
+          "alarms_mean": 134.0,
+          "n_runs": 1080,
+          "precision_mean": 0.00746268656716418,
+          "recall_mean": 1.0,
+          "runs_with_a_detection": 1080
+        },
+        "lambda_ref": {
+          "ADD_mean": null,
+          "F1_mean": 0.0,
+          "alarms_mean": 0.0,
+          "n_runs": 1080,
+          "precision_mean": 0.0,
+          "recall_mean": 0.0,
+          "runs_with_a_detection": 0
+        }
+      },
+      "couple": "PHT + ARF (c=1)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    },
+    {
+      "Clock": 32,
+      "Detector": "PHT + ARF",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 2.0,
+          "F1_mean": 0.01481481481481481,
+          "alarms_mean": 134.0,
+          "n_runs": 1080,
+          "precision_mean": 0.00746268656716418,
+          "recall_mean": 1.0,
+          "runs_with_a_detection": 1080
+        },
+        "lambda_ref": {
+          "ADD_mean": 19.554896142433236,
+          "F1_mean": 0.6240740740740741,
+          "alarms_mean": 0.6240740740740741,
+          "n_runs": 1080,
+          "precision_mean": 0.6240740740740741,
+          "recall_mean": 0.6240740740740741,
+          "runs_with_a_detection": 674
+        }
+      },
+      "couple": "PHT + ARF (c=32)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    },
+    {
+      "Clock": 1,
+      "Detector": "PHT + HT",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 2.0,
+          "F1_mean": 0.01481481481481481,
+          "alarms_mean": 134.0,
+          "n_runs": 1080,
+          "precision_mean": 0.00746268656716418,
+          "recall_mean": 1.0,
+          "runs_with_a_detection": 1080
+        },
+        "lambda_ref": {
+          "ADD_mean": 22.413090128755364,
+          "F1_mean": 0.8629629629629629,
+          "alarms_mean": 0.8629629629629629,
+          "n_runs": 1080,
+          "precision_mean": 0.8629629629629629,
+          "recall_mean": 0.8629629629629629,
+          "runs_with_a_detection": 932
+        }
+      },
+      "couple": "PHT + HT (c=1)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    },
+    {
+      "Clock": 1,
+      "Detector": "PHT + RF (Static)",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 3.4642525533890436,
+          "F1_mean": 0.014780114280388825,
+          "alarms_mean": 133.57407407407408,
+          "n_runs": 1080,
+          "precision_mean": 0.007445233447605903,
+          "recall_mean": 0.9972222222222222,
+          "runs_with_a_detection": 1077
+        },
+        "lambda_ref": {
+          "ADD_mean": 19.814895947426066,
+          "F1_mean": 0.8453703703703703,
+          "alarms_mean": 0.8453703703703703,
+          "n_runs": 1080,
+          "precision_mean": 0.8453703703703703,
+          "recall_mean": 0.8453703703703703,
+          "runs_with_a_detection": 913
+        }
+      },
+      "couple": "PHT + RF (Static) (c=1)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    },
+    {
+      "Clock": 1,
+      "Detector": "SRP + PHT",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 3.3330232558139534,
+          "F1_mean": 0.014752484521912234,
+          "alarms_mean": 133.32314814814814,
+          "n_runs": 1080,
+          "precision_mean": 0.007431312589731023,
+          "recall_mean": 0.9953703703703703,
+          "runs_with_a_detection": 1075
+        },
+        "lambda_ref": {
+          "ADD_mean": null,
+          "F1_mean": 0.0,
+          "alarms_mean": 0.0,
+          "n_runs": 1080,
+          "precision_mean": 0.0,
+          "recall_mean": 0.0,
+          "runs_with_a_detection": 0
+        }
+      },
+      "couple": "SRP + PHT (c=1)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    },
+    {
+      "Clock": 32,
+      "Detector": "SRP + PHT",
+      "at": {
+        "lambda_eq": {
+          "ADD_mean": 3.3330232558139534,
+          "F1_mean": 0.014752484521912234,
+          "alarms_mean": 133.32314814814814,
+          "n_runs": 1080,
+          "precision_mean": 0.007431312589731023,
+          "recall_mean": 0.9953703703703703,
+          "runs_with_a_detection": 1075
+        },
+        "lambda_ref": {
+          "ADD_mean": 18.46808510638298,
+          "F1_mean": 0.08703703703703704,
+          "alarms_mean": 0.08703703703703704,
+          "n_runs": 1080,
+          "precision_mean": 0.08703703703703704,
+          "recall_mean": 0.08703703703703704,
+          "runs_with_a_detection": 94
+        }
+      },
+      "couple": "SRP + PHT (c=32)",
+      "deviation_from_15_mean": -13.999985128641129,
+      "lambda_eq_mean": 1.0000148713588715,
+      "lambda_eq_median": 1.0000148713588715,
+      "lambda_eq_range": [
+        1.0000148713588715,
+        1.0000148713588715
+      ],
+      "lambda_eq_std": 0.0,
+      "lambda_ref": 15.0,
+      "n_cells": 1080,
+      "p_true_pre_drift_mean": 0.0,
+      "ratio_to_15_mean": 0.06666765809059143
+    }
+  ],
+  "r4_non_regression_at_lambda_ref": {
+    "ADD_nan_agreement": true,
+    "identical": true,
+    "max_abs_ADD_delta": 0.0,
+    "max_abs_F1_delta": 0.0,
+    "n_joined": 6480,
+    "status": "CHECKED"
+  },
+  "reproduction": {
+    "artifacts_read": [
+      "results/R4_proteus_evaluation/data/exp_R4_results_aligned_fusion.csv"
+    ],
+    "command": "PYTHONHASHSEED=0 python experiments/S2bis_calibration/s2bis_proteus_calibration.py",
+    "python": "3.12.9"
+  }
+}

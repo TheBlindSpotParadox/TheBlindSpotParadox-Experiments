@@ -1,0 +1,59 @@
+{
+  "model_A_ARL0": {
+    "ARL_0": 4024408.254515883,
+    "definition": "E[alarms] = armed pre-change span / ARL_0",
+    "delta_P": 0.01,
+    "expected_alarms": 0.0028856664795299204,
+    "lambda": 15.0,
+    "p_true": 0.024
+  },
+  "pipelines": [
+    {
+      "e_post": 0.4979287489643745,
+      "e_pre": 0.0579950289975145,
+      "lambda_calibrated_max": 34.7945681810379,
+      "lambda_calibrated_mean": 20.973088084657988,
+      "lambda_calibrated_min": 14.435335844755173,
+      "measured_alarms_mean": 85.66666666666667,
+      "measured_false_alarms_mean": 84.7,
+      "measured_precision_median": 0.011805555555555555,
+      "model_B_accumulation_rate_per_step": 0.43493371996686,
+      "model_B_expected_alarms": 209.88631535880822,
+      "model_B_steps_per_alarm": 48.22134298130769,
+      "pipeline": "pht_arf_c1"
+    },
+    {
+      "e_post": 0.44324772162386084,
+      "e_pre": 0.07539353769676885,
+      "lambda_calibrated_max": 132.5039466023445,
+      "lambda_calibrated_mean": 132.5039466023445,
+      "lambda_calibrated_min": 132.5039466023445,
+      "measured_alarms_mean": 7.0,
+      "measured_false_alarms_mean": 6.0,
+      "measured_precision_median": 0.14285714285714285,
+      "model_B_accumulation_rate_per_step": 0.362854183927092,
+      "model_B_expected_alarms": 27.715757075126383,
+      "model_B_steps_per_alarm": 365.17133457931527,
+      "pipeline": "pht_ht"
+    }
+  ],
+  "stream": {
+    "armed_pre_change_span": 11613.1,
+    "delta_e": 0.450341,
+    "drift_pos": 14028.0,
+    "n_total": 24149.0,
+    "post_change_span": 10121.0,
+    "tau_tol": 1207.0,
+    "variant": "gradual_balanced",
+    "warmup_steps": 2414.9
+  },
+  "verdict": {
+    "measured_alarm_ratio_arf_over_ht": 12.238095238095239,
+    "model_A_ratio_predicted_over_measured": 3.368482271824809e-05,
+    "model_B_predicted_alarm_ratio": 7.5728155211452455,
+    "model_B_ratio_predicted_over_measured_arf": 2.4500348096358935,
+    "model_B_ratio_predicted_over_measured_ht": 3.9593938678751974,
+    "reading": "the ARL_0 model is out by four orders of magnitude because 84.7 of the 85.7 alarms are not null-regime false alarms: they occur after a genuine change, in a regime whose error rate is 0.50 against a reference of 0.058. The re-arm model recovers both counts to a factor of 2-4 and their ratio to a factor of 1.7, using no fitted constant. The threshold is not shared: the one-false-alarm-per-warm-up calibration hands the ARF 20.97 and the HT 132.50, a factor of 6.3 that the pipelines' pre-change volatility fixes, not their post-change behaviour.",
+    "threshold_ratio_ht_over_arf": 6.3178081390538
+  }
+}

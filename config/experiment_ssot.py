@@ -305,3 +305,56 @@ def require_drift_tracker(model, warning=False):
             f"{type(model).__name__} missing {', '.join(missing)}: incompatible River version. "
             "Ensure River 0.23.0 is installed for proper internal tree swap tracking.")
     return model
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S2 — stopping-time theory at the MEASURED base rate (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# transfer_S1 computes theta*, ARL_0 and lambda_starve at p_0 = 0.05, a value the repository
+# contradicts: the S6 campaign measures the pre-drift error rate of the nominal arm at a median of
+# 0.024, flat across all twenty magnitudes. Action A1 corrected the CUSUM tolerance and left the
+# base rate untouched, so every theoretical numeral currently in transfer_S1 sits on an assumed
+# rate. These two names are the inputs of experiments/S2_theory/, declared here so no S2 script
+# carries either as a local literal.
+P0_MEASURED = 0.024                            # p_true, the classifier's pre-drift error rate.
+                                               # median of e_pre over the 2000 runs of arm 'full'
+                                               # (results/S6_synchronized_traces/data/runs.parquet);
+                                               # identical to p0_hat_median at all 20 magnitudes of
+                                               # tables/cusum_delta001_quantiles.csv. NOT the CUSUM
+                                               # reference rate p_pre, which is a detector parameter
+                                               # and is passed per call site.
+EPS_MISS = 0.05                                # eps, the miss level of def:requirement and of the
+                                               # sqrt(W/2 ln(W/eps)) margin in eq:starve_boundary.
+                                               # ASSUMED, never measured: it is a design target, not
+                                               # a property of the stream. S2 reports the
+                                               # sensitivity of every eps-dependent quantity rather
+                                               # than leaving the assumption silent.
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S2-bis — equal-false-alarm-budget calibration (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# R4 compares fifteen pipelines at one common PageHinkley threshold (R4_PHT_LAMBDA = 15) with no
+# warm-up at all: exp_R4_main_table.py arms the detector at t = 0. R5 does the opposite -- it
+# calibrates per (variant, seed, pipeline) to one false alarm over the warm-up -- but the warm-up is
+# 10 % of the stream while the span the detector actually runs armed before the change is four to
+# five times longer. S2-bis measures lambda_eq under both targets and re-runs the flooding
+# comparison there. These names are the inputs of experiments/S2bis_calibration/, declared here so
+# no S2-bis script carries one as a local literal.
+S2BIS_LAMBDA_BRACKET = (1.0, 500.0)            # calibrate_lambda's bisection bracket
+                                               # (exp_R5_common.py:62). A lambda_eq returned at the
+                                               # upper end is SATURATED, never a value (rule B7).
+S2BIS_PHT_MIN_INSTANCES = 30                   # River PageHinkley arming time; a span shorter than
+                                               # this is NOT ARMED (rule B7). River default, pinned
+                                               # here so the guard-rail cites a name, not a literal.
+S2BIS_EDDM_WARM_START = 30                     # idem, river.drift.binary.EDDM(warm_start=30)
+S2BIS_INSECTS_LAMBDA_GRID = [8.0, 15.0, 21.0, 30.0, 45.0, 65.0, 95.0, 135.0, 200.0]
+                                               # common ladder for the INSECTS sweep. Brackets both
+                                               # calibrated thresholds (20.97 ARF, 132.50 HT) and
+                                               # R4_PHT_LAMBDA; each cell additionally runs at its
+                                               # own lambda_ref and lambda_eq.
+S2BIS_PROTEUS_LAMBDA_GRID = [5.0, 8.0, 15.0, 25.0, 40.0, 60.0, 90.0, 130.0]
+                                               # ProteuS ladder, centred on R4_PHT_LAMBDA = 15
+S2BIS_BOOTSTRAP_SEED = 12345                   # same generator seed as the S6 envelope bootstrap
+                                               # and R4's bootstrap CI; paired over seeds, never
+                                               # over runs
+S2BIS_N_BOOTSTRAP = 10_000                     # seed-paired resamples of the F1 ratio (rule B3)

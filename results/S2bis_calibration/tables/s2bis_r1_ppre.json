@@ -1,0 +1,367 @@
+{
+  "T_B_a_source_facts": {
+    "R1_StrictCUSUM_sites": [
+      {
+        "line": 56,
+        "p_pre_expr": "0.05",
+        "p_pre_is_bare_literal": true,
+        "p_pre_value": 0.05,
+        "source": "StrictCUSUM(0.05, DELTA_P, lambda_val)"
+      },
+      {
+        "line": 81,
+        "p_pre_expr": "p_pre_emp",
+        "p_pre_is_bare_literal": false,
+        "p_pre_value": null,
+        "source": "StrictCUSUM(p_pre_emp, DELTA_P, lambda_val)"
+      }
+    ],
+    "R2_fallback": {
+      "T_DRIFT": 4000,
+      "append_site": [
+        [
+          88,
+          "errors_pre.append(error)"
+        ]
+      ],
+      "buffer_fill_range": [
+        3000,
+        3999
+      ],
+      "buffer_len_at_t_drift": 1000,
+      "fallback_reachable": false,
+      "fallback_site": [
+        [
+          90,
+          "p_pre_empirical = np.mean(errors_pre) if errors_pre else 0.05"
+        ]
+      ],
+      "verdict": "UNREACHABLE for any T_DRIFT > 0: the buffer is filled over [T_DRIFT - 1000, T_DRIFT) and holds min(1000, T_DRIFT) entries, so `if errors_pre` is true whenever the drift is not at t = 0. R2's reference rate is the warm-up mean, as R1's empirical arm is. The literal is dead code, not a second instance of the R1 defect.",
+      "warmup_window": 1000
+    }
+  },
+  "T_B_b_counterfactual": [
+    {
+      "Detection_Rate_fixed_arm": 1.0,
+      "Detection_Rate_published": 1.0,
+      "Share_Blind_Spot_fixed_arm": 0.035,
+      "Share_Blind_Spot_published": 0.035,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": 0.0,
+      "delta_Detection_Rate": 0.0,
+      "delta_Share_Blind_Spot": 0.0,
+      "delta_Share_ci_hi": 0.0,
+      "delta_Share_ci_lo": 0.0,
+      "lambda_val": 2.5,
+      "median_tau_det_emp": 11.0,
+      "median_tau_det_fixed": 12.0,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 200
+    },
+    {
+      "Detection_Rate_fixed_arm": 1.0,
+      "Detection_Rate_published": 1.0,
+      "Share_Blind_Spot_fixed_arm": 0.035,
+      "Share_Blind_Spot_published": 0.035,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": 0.0,
+      "delta_Detection_Rate": 0.0,
+      "delta_Share_Blind_Spot": 0.0,
+      "delta_Share_ci_hi": 0.0,
+      "delta_Share_ci_lo": 0.0,
+      "lambda_val": 5.0,
+      "median_tau_det_emp": 24.5,
+      "median_tau_det_fixed": 27.5,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 200
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.995,
+      "Detection_Rate_published": 1.0,
+      "Share_Blind_Spot_fixed_arm": 0.045,
+      "Share_Blind_Spot_published": 0.035,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": -0.015,
+      "delta_Detection_Rate": -0.005,
+      "delta_Share_Blind_Spot": 0.01,
+      "delta_Share_ci_hi": 0.025,
+      "delta_Share_ci_lo": 0.0,
+      "lambda_val": 10.0,
+      "median_tau_det_emp": 49.0,
+      "median_tau_det_fixed": 54.0,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 199
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.99,
+      "Detection_Rate_published": 1.0,
+      "Share_Blind_Spot_fixed_arm": 0.44,
+      "Share_Blind_Spot_published": 0.195,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": -0.025,
+      "delta_Detection_Rate": -0.01,
+      "delta_Share_Blind_Spot": 0.245,
+      "delta_Share_ci_hi": 0.305,
+      "delta_Share_ci_lo": 0.185,
+      "lambda_val": 15.0,
+      "median_tau_det_emp": 75.0,
+      "median_tau_det_fixed": 86.0,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 198
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.8,
+      "Detection_Rate_published": 0.99,
+      "Share_Blind_Spot_fixed_arm": 0.855,
+      "Share_Blind_Spot_published": 0.685,
+      "delta_DR_ci_hi": -0.135,
+      "delta_DR_ci_lo": -0.245,
+      "delta_Detection_Rate": -0.19,
+      "delta_Share_Blind_Spot": 0.17,
+      "delta_Share_ci_hi": 0.225,
+      "delta_Share_ci_lo": 0.12,
+      "lambda_val": 20.0,
+      "median_tau_det_emp": 104.0,
+      "median_tau_det_fixed": 125.5,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 160
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.39,
+      "Detection_Rate_published": 0.92,
+      "Share_Blind_Spot_fixed_arm": 0.965,
+      "Share_Blind_Spot_published": 0.895,
+      "delta_DR_ci_hi": -0.46,
+      "delta_DR_ci_lo": -0.6,
+      "delta_Detection_Rate": -0.53,
+      "delta_Share_Blind_Spot": 0.07,
+      "delta_Share_ci_hi": 0.105,
+      "delta_Share_ci_lo": 0.035,
+      "lambda_val": 25.0,
+      "median_tau_det_emp": 155.0,
+      "median_tau_det_fixed": 173.5,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 78
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.0,
+      "Detection_Rate_published": 0.015,
+      "Share_Blind_Spot_fixed_arm": 1.0,
+      "Share_Blind_Spot_published": 1.0,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": -0.035,
+      "delta_Detection_Rate": -0.015,
+      "delta_Share_Blind_Spot": 0.0,
+      "delta_Share_ci_hi": 0.0,
+      "delta_Share_ci_lo": 0.0,
+      "lambda_val": 50.0,
+      "median_tau_det_emp": 762.0,
+      "median_tau_det_fixed": null,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 0
+    },
+    {
+      "Detection_Rate_fixed_arm": 0.0,
+      "Detection_Rate_published": 0.0,
+      "Share_Blind_Spot_fixed_arm": 1.0,
+      "Share_Blind_Spot_published": 1.0,
+      "delta_DR_ci_hi": 0.0,
+      "delta_DR_ci_lo": 0.0,
+      "delta_Detection_Rate": 0.0,
+      "delta_Share_Blind_Spot": 0.0,
+      "delta_Share_ci_hi": 0.0,
+      "delta_Share_ci_lo": 0.0,
+      "lambda_val": 100.0,
+      "median_tau_det_emp": null,
+      "median_tau_det_fixed": null,
+      "n_seeds": 200,
+      "n_seeds_both_finite": 0
+    }
+  ],
+  "T_B_b_published_numeral_route": {
+    "aggregations": {
+      "Detection_Rate": "('tau_det_emp_finite', 'mean')",
+      "Share_Blind_Spot": "('blind_spot_observed', 'mean')"
+    },
+    "any_published_numeral_routes_through_the_fixed_arm": false,
+    "recorded_columns": [
+      "blind_spot_observed",
+      "lambda_val",
+      "seed",
+      "tau_arf",
+      "tau_arf_finite",
+      "tau_det_emp",
+      "tau_det_emp_finite",
+      "tau_det_fixed"
+    ],
+    "routes_through_tau_det_fixed": {
+      "Detection_Rate": false,
+      "Share_Blind_Spot": false
+    },
+    "sourced_from_a_detection_column": {
+      "Detection_Rate": true,
+      "Share_Blind_Spot": true
+    }
+  },
+  "T_B_b_tolerance": {
+    "ARL0_lambda15_calibrated": 4024408.2545158826,
+    "ARL0_lambda15_factor": 482944.9748281736,
+    "ARL0_lambda15_fixed_arm": 1943567743175.4668,
+    "delta_P": 0.01,
+    "direction": "the bias INFLATES the blind spot: a larger effective tolerance both lengthens the null-regime false-alarm time and slows post-drift accumulation, and the slow-down is largest exactly in the weak-signal regime the paper claims",
+    "effective_tolerance": 0.036000000000000004,
+    "nominal_tolerance": 0.01,
+    "p_pre_literal": 0.05,
+    "p_true_measured": 0.024,
+    "post_drift_accumulation": {
+      "0.10": {
+        "accumulation_rate_change_pct": -28.888888888888896,
+        "mu_at_effective_tolerance": 0.064,
+        "mu_calibrated": 0.09000000000000001,
+        "tau_det_star_ratio": 1.4062500000000002
+      },
+      "0.15": {
+        "accumulation_rate_change_pct": -18.57142857142857,
+        "mu_at_effective_tolerance": 0.11399999999999999,
+        "mu_calibrated": 0.13999999999999999,
+        "tau_det_star_ratio": 1.2280701754385965
+      },
+      "0.20": {
+        "accumulation_rate_change_pct": -13.684210526315788,
+        "mu_at_effective_tolerance": 0.164,
+        "mu_calibrated": 0.19,
+        "tau_det_star_ratio": 1.1585365853658536
+      },
+      "0.25": {
+        "accumulation_rate_change_pct": -10.833333333333332,
+        "mu_at_effective_tolerance": 0.214,
+        "mu_calibrated": 0.24,
+        "tau_det_star_ratio": 1.1214953271028036
+      },
+      "0.33": {
+        "accumulation_rate_change_pct": -8.124999999999991,
+        "mu_at_effective_tolerance": 0.29400000000000004,
+        "mu_calibrated": 0.32,
+        "tau_det_star_ratio": 1.0884353741496597
+      },
+      "0.40": {
+        "accumulation_rate_change_pct": -6.666666666666672,
+        "mu_at_effective_tolerance": 0.364,
+        "mu_calibrated": 0.39,
+        "tau_det_star_ratio": 1.0714285714285714
+      },
+      "0.50": {
+        "accumulation_rate_change_pct": -5.306122448979597,
+        "mu_at_effective_tolerance": 0.46399999999999997,
+        "mu_calibrated": 0.49,
+        "tau_det_star_ratio": 1.0560344827586208
+      }
+    },
+    "source": "results/S2_theory/tables/s2_arl0_columns.csv",
+    "theta_star_calibrated": 0.681291,
+    "theta_star_fixed_arm": 1.700134,
+    "tolerance_factor": 3.6000000000000005
+  },
+  "T_B_d_ssot_route_audit": {
+    "GUARDED_NAMES": [
+      "BAF_TAU_TOL",
+      "BOUNDARY_SHIFTS",
+      "C_EXT",
+      "C_INT",
+      "DELTA_E_GRID",
+      "DELTA_E_VALUES",
+      "DELTA_E_WINDOW",
+      "DELTA_P",
+      "DRIFT_TIME",
+      "EXT_DELTA",
+      "INSECTS_TAU_CAP",
+      "LAMBDAS",
+      "LAMBDAS_TO_TEST",
+      "N_MODELS",
+      "N_SEEDS",
+      "N_STEPS",
+      "SEEDS",
+      "TOLERANCE",
+      "T_DRIFT",
+      "WARMUP"
+    ],
+    "GUARDED_PARAMS": [
+      "n_models",
+      "n_steps",
+      "t_drift",
+      "threshold",
+      "tp"
+    ],
+    "p_pre_in_GUARDED_NAMES": false,
+    "p_pre_in_GUARDED_PARAMS": false,
+    "recommendation": "route the CUSUM reference rate through config/experiment_ssot.py and extend cusum_delta_sites to resolve the p_pre slot the same way it resolves delta. Both files are outside the S2-bis perimeter; no change is applied here.",
+    "strict_cusum_guard_scope": "the `delta` argument only (CUSUM_CLASS / cusum_delta_sites), resolved through StrictCUSUM's own __init__ signature; the first positional slot is p_pre and is not inspected",
+    "unguarded_sites": [
+      "experiments/R1_race_condition/exp_R1_generate_data.py:56",
+      "experiments/R2_instrumented_blind_spot/exp_R2_instrumented_blind_spot.py:90"
+    ]
+  },
+  "T_B_d_verdict": {
+    "evidence": {
+      "Detection_Rate": false,
+      "Share_Blind_Spot": false
+    },
+    "reading": "Share_Blind_Spot and Detection_Rate are aggregated at exp_R1_generate_data.py:136-139 from blind_spot_observed and tau_det_emp_finite, both functions of the EMPIRICAL arm built at :81 from the warm-up mean. tau_det_fixed is recorded at :117 and read by no aggregation, so the effect of the 0.05 literal on the two published numerals is exactly zero. The choice is deliberate -- R1 is a two-arm design -- and undocumented: the manuscript names neither arm, and the control arm has never been published.",
+    "rerun_required": false,
+    "rule": "B5",
+    "sentence_owed_to_the_manuscript": true,
+    "verdict": "UNDOCUMENTED DELIBERATE CHOICE"
+  },
+  "T_E_verdict": {
+    "chronology_test": {
+      "CUSUM_DELTA_P_date": "2026-09-12",
+      "CUSUM_DELTA_P_introduced_by": "8fb0875ac2e264599c90ed4f20e60280d76133be 2026-09-12",
+      "P0_MEASURED_date": "2026-09-12",
+      "P0_MEASURED_introduced_by": "a0009d41acaff53bc1d49923492a42e544d98ba6 2026-09-12",
+      "R1_DELTA_P_at_that_commit": "0.005",
+      "declared_header_at_that_commit": "p_0 = 0.05, delta_P = 0.005, eps = 0.05",
+      "effective_tolerance_computable_then": 0.031,
+      "line_date": "2026-09-06",
+      "line_introduced_by": "a3a481a2a494893eb2a58d4f386dc046ebd11d0c 2026-09-06",
+      "passes": false,
+      "reading": "0.036 needs CUSUM_DELTA_P = 0.01 and P0_MEASURED = 0.024. Both postdate the commit that introduced the line; at that commit R1 carried DELTA_P = 0.005, so its effective tolerance was 0.031, not 0.036."
+    },
+    "consequence": "REFUTED leaves S2's R1(b) verdict standing as recorded -- UNREPRODUCED, 6.277 against 4.56 -- and the numeric coincidence is arithmetic only: the floor is a smooth decreasing function of p_0 on this range, so SOME p_0 near 0.036 recovers any value near 4.56, and Delta_max = 0.137 recovers it just as well.",
+    "numeric_test": {
+      "alpha_at_L73_inputs": 6.385882976103939e-07,
+      "carried_by": "alpha_held -- the substitution s2_arl0.floor_restitution identified",
+      "competing_explanation_delta_max_0.137": 4.564443743639513,
+      "competing_explanation_rounded": 4.56,
+      "floor_at_L73_inputs": 6.2773379287861335,
+      "floor_at_L73_inputs_rounded": 6.28,
+      "inputs_identified_at_L73": {
+        "W": 13.0,
+        "delta_P": 0.005,
+        "delta_max": 0.1,
+        "eps": 0.05,
+        "lam": 50.0,
+        "p_0": 0.05
+      },
+      "passes": false,
+      "substitution_p0_0.0360_alpha_held": 4.568778852223031,
+      "substitution_p0_0.0360_alpha_held_rounded": 4.57,
+      "substitution_p0_0.0360_alpha_recomputed": 5.575469932026159,
+      "substitution_p0_0.0360_alpha_recomputed_rounded": 5.58,
+      "transfer_S1_claim": 4.56
+    },
+    "rule": "B6",
+    "verdict": "REFUTED",
+    "verdict_basis": "CONFIRMED requires BOTH tests; either failing is REFUTED"
+  },
+  "reproduction": {
+    "artifacts_read": [
+      "results/R1_race_condition/data/R1_race_condition.parquet",
+      "results/S2_theory/tables/s2_arl0_columns.csv",
+      "experiments/R1_race_condition/exp_R1_generate_data.py",
+      "experiments/R2_instrumented_blind_spot/exp_R2_instrumented_blind_spot.py"
+    ],
+    "command": "PYTHONHASHSEED=0 python experiments/S2bis_calibration/s2bis_r1_ppre.py",
+    "nothing_re_executed": "R1_race_condition.parquet is read, never written",
+    "python": "3.12.9"
+  }
+}
