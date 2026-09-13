@@ -43,15 +43,40 @@ to reproduce the submitted streams bit-for-bit.
 
 | Exp | ARF `drift_detector` | ARF `warning_detector` | external monitor | ADWIN `delta` | CUSUM / PHT threshold | `DELTA_P` |
 |-----|----------------------|------------------------|------------------|---------------|-----------------------|-----------|
-| R1 | `ADWIN(clock=1)` (`:50`) | **`ADWIN(clock=1)` pinned** (`:50`) | `StrictCUSUM(p_pre, DELTA_P, λ)` (`:51`, `:76`) | river default 0.002 | λ ∈ {2.5, 5, 10, 15, 20, 25, 50, 100} (S7/G2) | **0.01** ← `CUSUM_DELTA_P` (A1) |
-| R2 | `ADWIN(clock=c_int)` (`:67`) | **pinned** `ADWIN(clock=c_int)` (`:67`) | `StrictCUSUM(p_pre_emp, δ=`ssot.R2_CUSUM_DELTA`, λ)` (`:91`) | river default 0.002 | λ ∈ {50, 25, 8} (`:55-57`) | 0.01 ← `CUSUM_DELTA_P` (A1 de-literalised `:91`) |
-| R3 | `ADWIN(clock=1)` (`:74`) | **river default** `ADWIN(clock=32)` | `PageHinkley(threshold=25.0, delta=0.005)` (`:81`, `:107`) | river default 0.002 | 25.0 | 0.005 |
-| R4 | `adwin(c)` = `ADWIN(delta=0.002, clock=c)` (`:163`, `:174`) | **river default** for `make_arf` (`:173-174`); **both pinned** for `make_srp` (`:178`) | `pht()` = `PageHinkley(threshold=15.0)`, `adwin(c)`, `EDDM()`, `kswin(seed)` = `KSWIN(alpha=0.005, window_size=100, stat_size=30)` (`:162-170`) | 0.002 (explicit) | PHT 15.0; KSWIN α=0.005 | PHT river default 0.005 (`:162` comment) |
+| R1 | `ADWIN(clock=1)` (`:55`) | **`ADWIN(clock=1)` pinned** (`:55`) | **two arms**: nominal `StrictCUSUM(0.05, DELTA_P, λ)` (`:56`) → `tau_det_fixed`; empirical `StrictCUSUM(p_pre_emp, DELTA_P, λ)` (`:81`) → `tau_det_emp`. **Every published aggregate is the empirical arm** | river default 0.002 | λ ∈ {2.5, 5, 10, 15, 20, 25, 50, 100} (S7/G2) | **0.01** ← `CUSUM_DELTA_P` (A1) |
+| R2 | `ADWIN(clock=c_int)` (`:71`) | **pinned** `ADWIN(clock=c_int)` (`:71`) | **one arm**: `StrictCUSUM(p_pre_empirical, δ=`ssot.R2_CUSUM_DELTA`, λ)` (`:91`), `p_pre_empirical = np.mean(errors_pre)` (`:90`) over the 1000-step warm-up | river default 0.002 | λ ∈ {50, 25, 8} (`:58-60`) | 0.01 ← `CUSUM_DELTA_P` (A1 de-literalised `:91`) |
+| R3 | `ADWIN(clock=1)` (`:78`) | **pinned since S7-ter** `ADWIN(delta=R3_WARN_DELTA, clock=R3_C_WARN)` = `(0.002, 1)`; was **river ARF default** `ADWIN(delta=0.01, clock=32)` | `PageHinkley(threshold=25.0, delta=0.005)` (`:85`, `:111`) | drift 0.002 (bare-ADWIN default); warning 0.002 since S7-ter, 0.01 before | 25.0 | 0.005 |
+| R4 | `adwin(c)` = `ADWIN(delta=0.002, clock=c)` (`:166`, `:177`) | **pinned since S7-ter** `ADWIN(delta=R4_WARN_DELTA, clock=c)` = `(0.002, c)` for `make_arf`; `make_srp` (`:178-181`) already pinned both and is the pattern copied | `pht()` = `PageHinkley(threshold=15.0)`, `adwin(c)`, `EDDM()`, `kswin(seed)` = `KSWIN(alpha=0.005, window_size=100, stat_size=30)` (`:165-173`) | drift 0.002 (explicit); warning 0.002 since S7-ter, 0.01 before | PHT 15.0; KSWIN α=0.005 | PHT river default 0.005 (`:165` comment) |
 | R5 | `ADWIN(clock=clock)` (`exp_R5_common.py:52-55`) | **pinned** `ADWIN(clock=clock)` (`:52-55`) | PHT with **bisection-calibrated** λ on the warm-up error stream, budget `PHT_TARGET_FA = 1` fallback 3 (`:59-85`), or `ADWIN(clock=clock)` (`:126`) | river default 0.002 | λ calibrated per (variant, seed), recorded in `lambda_calibrated` | `PHT_DELTA = 0.005` (`exp_R5_config.py:85`) |
 | R6 | `ADWIN(clock=C_INT=1)` (`:41`) | **pinned** `ADWIN(clock=1)` (`:42`) | none (τ_HAT only) | river default 0.002 | — | — |
 | R7 | `ADWIN(clock=c_int)` (`:49`) | **pinned** `ADWIN(clock=c_int)` (`:50`) | `ADWIN(delta=EXT_DELTA, clock=c_ext)` (`:51`) | internal river default 0.002 / **external `EXT_DELTA = 0.002`** (`:32`) | — | — |
 | R8 | `ADWIN(clock=C_INT=1)` (`:56`) | **pinned** `ADWIN(clock=1)` (`:57`) | none simulated; nothing accumulates | river default 0.002 | — (λ_limit **purged** by A2) | **none** — `R8_DELTA_P` removed by A2 |
 | R9 | `ADWIN(clock=C_INT=1)` (`:38`) | **pinned** `ADWIN(clock=1)` (`:39`) | `ADWIN(delta=0.002, clock=C_EXT=32)` (`:40`) | 0.002 explicit external | downstream `LAMBDAS = [8, 25, 50]` | **0.01** ← `CUSUM_DELTA_P` (A1) |
+
+**Action S7-ter/D-3 — R1 carries two external CUSUM arms; R2 carries one.** Escalated during the
+stream and verified in source and against the frozen artifact, read-only — R1 was neither touched nor
+re-run.
+
+| | R1 nominal | R1 empirical | R2 |
+|---|---|---|---|
+| construction | `StrictCUSUM(0.05, DELTA_P, λ)`, `exp_R1_generate_data.py:56` | `StrictCUSUM(p_pre_emp, DELTA_P, λ)`, `:81` | `StrictCUSUM(p_pre_empirical, R2_CUSUM_DELTA, λ)`, `exp_R2:91` |
+| `p_0` | literal **0.05**, fixed before the stream starts | mean error over the 1000-step pre-drift warm-up (`:79`) | idem (`exp_R2:90`); the literal 0.05 is a fallback reachable only on an empty warm-up buffer |
+| column | `tau_det_fixed` | `tau_det_emp` | — |
+| read by | **nothing** | `blind_spot_observed` (`:106-111`), `tau_det_emp_finite` (`:120`), Figure 1 (`exp_R1_plot_figure.py:37-40`) | everything |
+| at λ = 25 | detection 0.390, blind-spot share 0.965 | detection **0.920**, blind-spot share **0.895** | — |
+
+**Every published R1 numeral is the empirical arm.** Proof, obtained by recomputing the generator's
+own blind-spot rule (`:106-111`) column by column on the frozen parquet: the stored
+`blind_spot_observed` reproduces the empirical-arm recomputation exactly on all eight λ, and the
+nominal-arm recomputation on none. The nominal arm's `p_0 = 0.05` sits far above the measured
+pre-drift error rate, so that arm accumulates only on a much larger excess and starves earlier —
+which is why its detection rate at λ = 25 is less than half the empirical arm's. The escalation
+records this extra slack as an effective tolerance of 0.036; that figure is **not derivable from the
+committed artifact**, which stores no `p_pre_emp` column, and verifying it would require re-running
+R1, which is out of scope by instruction. It is recorded as stated, not as measured.
+
+R2 has no such ambiguity: one arm, warm-up-calibrated, and the later campaigns (R5, R8, S6) inherit
+the same convention.
 
 **Action A1 — δ_P is two quantities, not one contested value.** The manuscript states both, each for
 its own detector: the fixed-`p_0` StrictCUSUM of `eq:cusum` at `\DeltaPtext = 0.01` (`.tex` L277),
@@ -74,20 +99,39 @@ The column and `R8_DELTA_P` are purged, the two aggregation artifacts regenerate
 repointed onto what the sweep actually establishes — including the `_tdrift4000` arm, which was
 cited by the manuscript and guarded by nothing.
 
-### README §5 verdict — verified in source, not copied
+**Action S7-ter/B-1 — the delta column conflated two River defaults.** The column above read
+"river default 0.002" for every ARF-internal cell, which is the default of a **bare** `drift.ADWIN()`.
+It is not what an unset `ARFClassifier` detector resolves to. Measured on the pinned build:
 
-`README.md:291` claims: *"in R1, R2 and R5 the ARF pins both its internal `drift_detector` and
+| construction | delta | clock |
+|---|---|---|
+| `ARFClassifier(...)` unset `drift_detector` | **0.001** | 32 |
+| `ARFClassifier(...)` unset `warning_detector` | **0.01** | 32 |
+| `drift.ADWIN()` | **0.002** | 32 |
+
+So R3 and R4 ran their warning detector at `delta = 0.01`, not at 0.002, and the unification onto the
+drift configuration moves **two** parameters — `0.01 → 0.002` and `32 → c` — not the clock alone.
+Every cell whose `drift_detector` is explicitly constructed (all of them) was unaffected by the
+conflation; only the warning column was, and only for R3 and R4, the two experiments that left it
+unset.
+
+### README §5 verdict — verified in source, then superseded by the unification
+
+`README.md:291` claimed: *"in R1, R2 and R5 the ARF pins both its internal `drift_detector` and
 `warning_detector`… In R3 and R4 only the `drift_detector` is pinned."*
 
-**The claim is accurate.** Verified line by line: R1 `:50`, R2 `:67`, R5 `exp_R5_common.py:52-55` pin
-both; R3 `:74` and R4 `exp_R4_main_table.py:174` (comment `:173`; likewise
-`exp_R4_kswin_sweep.py:136`) pin only `drift_detector`.
+**The claim was accurate when written**, and is verified line by line: R1 `:50`, R2 `:67`,
+R5 `exp_R5_common.py:52-55` pin both; R3 and R4's `make_arf` pinned only `drift_detector`.
 
-Two additions the README omits, recorded here:
+Two additions the README omitted, recorded here:
 
-1. `exp_R4_main_table.py:178` — `make_srp` pins **both** detectors for the SRP model. R4 is therefore
-   not uniformly "drift_detector only": it is drift-only for ARF, both for SRP.
-2. R6, R7, R8 and R9 all pin **both** detectors and are outside README §5's enumeration entirely.
+1. `exp_R4_main_table.py:178` — `make_srp` pins **both** detectors for the SRP model. R4 was therefore
+   not uniformly "drift_detector only": it was drift-only for ARF, both for SRP, in the same file.
+2. R6, R7, R8 and R9 all pin **both** detectors and were outside README §5's enumeration entirely.
+
+Since S7-ter/B-1 the heterogeneity is gone: the three sites that left the warning unset
+(`exp_R3_regime_crossover.py`, `exp_R4_main_table.make_arf`, `exp_R4_kswin_sweep.make_arf`) now pin it
+onto the drift configuration, and `README.md` §5 is rewritten accordingly.
 
 ## 4. Non-regression test coverage (amendment G3)
 
@@ -183,6 +227,8 @@ enough that guarding them would fire on River's own API surface:
 | site | literal | SSOT reference that declares it |
 |------|---------|---------------------------------|
 | `exp_R3_regime_crossover.py:78` | `drift.ADWIN(clock=1)` | `R3_C_INT` |
+| `exp_R3_regime_crossover.py:78` | `drift.ADWIN(clock=R3_C_WARN, delta=R3_WARN_DELTA)` — **routed**, no literal | `R3_C_WARN`, `R3_WARN_DELTA` (S7-ter) |
+| `exp_R4_main_table.py`, `exp_R4_kswin_sweep.py` | `drift.ADWIN(delta=R4_WARN_DELTA, clock=c)` — **routed**, no literal | `R4_WARN_DELTA` (S7-ter) |
 | `exp_R3_regime_crossover.py:85, :111` | `PageHinkley(delta=0.005)` | `R3_DELTA_P` |
 | `exp_R4_main_table.py`, `exp_R4_kswin_sweep.py` | `drift.ADWIN(delta=0.002)` | `R4_ADWIN_DELTA` |
 | `exp_R4_main_table.py` | `drift.KSWIN(alpha=0.005)` | `R4_KSWIN_ALPHA` |

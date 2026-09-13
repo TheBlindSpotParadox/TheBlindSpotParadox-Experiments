@@ -1,0 +1,414 @@
+% docs/manuscript/sections/protocol_v2.tex
+% Experimental Protocol -- stream S7-ter, LOT A. Answers reviewer #3's nominative demand for the
+% resampling unit of every confidence interval, the inter-seed aggregation rule, the treatment of
+% the 12 ProteuS transitions, the complete hyper-parameter set, the multiplicity policy, the
+% complete separations, the legitimacy of the seed-paired bootstrap and the per-worker PRNG lock.
+% Every value below is quoted from a committed artifact or from a source line, never from a report.
+
+\section{Experimental Protocol}\label{sec:protocol}
+
+This section states, for every interval and every test reported in
+Section~\ref{sec:experiments}, what was resampled, what was pooled and what was held fixed. The
+answer is not uniform across the paper, and it is not presented as if it were.
+
+\subsection{Resampling Unit of Each Confidence Interval}\label{sec:protocol_ci}
+
+Five distinct resampling units appear in the paper. Table~\ref{tab:protocol_ci} names each one
+with its replicate count, its seed and its generator.
+
+\begin{table*}[t]
+  \centering
+  \caption{Resampling unit of every confidence interval reported in this paper. The unit is not
+  uniform: it is the seed wherever arms are seed-paired, the per-drift jump where the estimand is
+  itself a per-drift quantity, and parametric where the null is a fitted family. Every generator is
+  a locally injected \texttt{numpy.random.Generator}; no bootstrap draws from the global NumPy
+  state.}
+  \label{tab:protocol_ci}
+  \begin{tabular}{@{}llrll@{}}
+    \toprule
+    \textbf{Statistic} & \textbf{Resampling unit} & \textbf{$n_{\mathrm{boot}}$} & \textbf{Seed} & \textbf{Generator} \\
+    \midrule
+    Table~\ref{tab:results_concept} F1 and ADD; $\alpha$-sweep & seed index, paired across arms & 1000 & 12345 & local \texttt{default\_rng} \\
+    Hydra RMST ratio $\tau_{\mathrm{HAT}}/\tau_{\mathrm{ARF}}$ & seed index, paired across arms & 10000 & 20260906 & local \texttt{default\_rng} \\
+    Evidence ceiling, $\lambda_{\mathrm{op}}$, $\Delta e_c$ & seed, paired and unpaired variants & 10000 & 12345 & local \texttt{default\_rng} \\
+    $\Delta e$ on real streams (Table~\ref{tab:real_data_summary}) & the per-drift jump, $K$ per variant & 1000 & 42 & local \texttt{default\_rng} \\
+    Exponential-fit KS $p$-value for $\tau_{\mathrm{HAT}}$ & parametric, under the fitted exponential & 2000 & $\lfloor 1000\,\Delta e \rfloor$ & local \texttt{default\_rng} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\begin{remark}[Correction to the submitted resampling unit of Table~\ref{tab:results_concept}]\label{rem:boot_unit}
+  The submitted version resampled the 360 \emph{runs} of a cell with replacement, off the global
+  NumPy state seeded once before aggregation, while the caption asserted the seed as the unit of
+  statistical independence. The two statements are incompatible: the 36 streams a seed produces
+  share that seed's forest initialisation and are not independent of one another, so a run-level
+  resample understates the width of the interval. The bootstrap now resamples the 30 seed indices,
+  paired across arms, on a locally injected generator, which is the scheme the Hydra ratio already
+  used. The caption's independence claim and the computation now agree.
+\end{remark}
+
+Two degeneracies are reported as such rather than as tight intervals. The $\Delta e$ estimate for
+\emph{gradual\_balanced} rests on a single canonical drift ($K = 1$), so every bootstrap replicate
+returns the same value and the interval collapses to the point estimate $0.450341$; it carries no
+information about sampling variability. The detection-rate contrast between KSWIN$+$ARF and
+PHT$+$ARF at $c_{\mathrm{int}} = 1$ separates at every one of the 30 seeds with no seed-level
+dispersion at all ($1080/1080$ against $0/1080$, per-seed rates $1.00$ against $0.00$), so its
+seed-level interval is likewise of zero width.
+
+\paragraph{A non-adapting control for the error-jump estimate.}
+The effective error jump on the real streams is read from the error trace of a reference tree that
+learns at every step, which is the same adaptation the quantity is supposed to expose: the estimator
+is measured on a model already absorbing the change. Every reported value is therefore paired with
+an oracle computed in the same pass, from a copy of that tree forked once at the end of the warm-up
+and never trained again --- predictions only, no updates. Oracle and estimate share the drift
+positions, the adaptive windows and the bootstrap seed, so they differ in exactly one input.
+
+Reading the oracle requires reading the frozen model's own error level beside it, and the artifact
+carries it for that reason. A frozen model at chance cannot exhibit an error jump, so an oracle near
+zero means ``no jump in the stream'' only while the frozen model still discriminates; otherwise it
+means ``nothing left to lose'', and the two are indistinguishable from the jump alone.
+
+\subsection{Aggregation Across Seeds}\label{sec:protocol_aggregation}
+
+A run is one $(\text{transition}, \text{GARCH regime}, \text{seed})$ triple evaluated by one
+pipeline. A run counts as a \emph{detection} when its $\mathrm{F1}$ is strictly positive, which on
+the tolerance-window protocol of Section~\ref{sec:proteus} is equivalent to at least one alarm
+falling inside $[\tau^*, \tau^* + \tau]$. Detections are summed \emph{within} a seed over the 36
+streams that seed produces ($12$ transitions $\times$ $3$ GARCH regimes), giving one count per seed
+per pipeline. Two pipelines are compared by pairing those counts on the seed and applying a
+two-sided sign test to the 30 paired differences; ties contribute to neither side and reduce
+$n_{\mathrm{eff}}$. Seeds are never pooled across transitions, and no test is ever computed on the
+1080 runs treated as independent units, which is the pseudo-replication the comparison literature
+warns against~\cite{demsar_statistical_2006} --- the run-level Fisher figure recorded alongside each pair
+in the artifact is retained for documentation only and is not reported as evidence.
+
+Cell means in Table~\ref{tab:results_concept} are plain means over the 360 runs of a
+$(\text{detector}, \text{clock}, \text{regime})$ cell; only the interval around them is computed at
+the seed level. $\mathrm{ADD}$ is averaged over detected runs alone and is undefined --- printed
+$\infty$ --- when a cell detects nothing, which is the reading of the three blind-spot rows.
+
+\subsection{The Twelve ProteuS Transitions}\label{sec:protocol_transitions}
+
+The 12 transitions are the ordered pairs of the four reference ETFs, and the drift width is a
+function of the pair rather than a crossed factor: $w = 100$ for the three transitions \emph{into}
+VNQ, $w = 1000$ for the three \emph{out of} it, and $w = 500$ for the remaining six. The evaluation
+grid is the Cartesian product of the 12 transitions with the 30 seeds; the three GARCH regimes are
+evaluated inside each grid point on streams regenerated from the same seed. Hence $360$ runs per
+table cell ($12 \times 30$) and $1080$ per pipeline across the three regimes
+($30 \times 36$). Each transition keeps its own tolerance $\tau = \max(1000, w)$, so the scoring
+window follows the drift width and is never averaged across widths.
+
+Transitions are a within-seed factor: they are pooled inside a seed to form that seed's detection
+count, and the seed remains the unit carried into every test. Pooling in the other order --- across
+seeds within a transition --- would treat 30 draws of the same stream family as replicates of the
+transition and is not done anywhere in this paper.
+
+\subsection{Detector and Ensemble Hyper-Parameters}\label{sec:protocol_hyper}
+
+Table~\ref{tab:protocol_hyper} gives the complete parameterisation. Every value is pinned in the
+single source of truth \texttt{config/experiment\_ssot.py} or in the factory functions of the
+experiment under test; none is a local literal, and a constant re-bound to a literal fails the
+repository's consistency test without importing any experiment.
+
+\begin{table*}[t]
+  \centering
+  \caption{Complete detector and ensemble parameterisation. River 0.23.0 throughout. Parameters not
+  listed are River defaults. $c$ denotes the internal ADWIN clock of the adaptive forest, swept over
+  $\{1, 32\}$; $c_{\mathrm{ext}}$ the clock of an external ADWIN monitor.}
+  \label{tab:protocol_hyper}
+  \begin{tabular}{@{}lll@{}}
+    \toprule
+    \textbf{Component} & \textbf{Parameterisation} & \textbf{Where used} \\
+    \midrule
+    Adaptive Random Forest & $M = 10$; \texttt{drift\_detector} $=$ ADWIN($\delta = 0.002$, clock $= c$); & all adaptive arms \\
+                           & \texttt{warning\_detector} $=$ ADWIN($\delta = 0.002$, clock $= c$) & \\
+    Hoeffding Tree (non-adaptive baseline) & River defaults, no reset & baseline arms \\
+    Static Random Forest & bagging of $M = 10$ Hoeffding Trees, no internal detector & Section~\ref{sec:solution_rf} \\
+    Streaming Random Patches & $M = 10$, subspace $0.6$, patches, $\lambda = 6.0$; both detectors ADWIN($0.002$, $c$) & Section~\ref{sec:proteus} \\
+    \midrule
+    Page--Hinkley (external) & $\lambda = 15$, $\delta_P = 0.005$ (ProteuS); $\lambda = 25$, $\delta_P = 0.005$ (crossover) & Sections~\ref{sec:proteus},~\ref{sec:crossover} \\
+    Strict CUSUM (external) & $\delta_P = 0.01$, $\lambda \in \{2.5, 5, 8, 10, 15, 20, 25, 50, 100\}$; & Section~\ref{sec:bernoulli_validation} \\
+                            & $p_0$ from the 1000-step pre-drift warm-up (see below) & \\
+    ADWIN (external) & $\delta = 0.002$, clock $= c_{\mathrm{ext}}$ & Sections~\ref{sec:proteus},~\ref{sec:hardware} \\
+    KSWIN (external) & $\alpha \in \{0.001, 0.005, 0.01, 0.05\}$, window $100$, statistic $30$, & Section~\ref{sec:proteus} \\
+                     & applied to the error mean over a 30-step buffer & \\
+    EDDM (external) & River defaults & Section~\ref{sec:proteus} \\
+    \midrule
+    ProteuS streams & $n = 8000$, $\tau^* = 4000$, $w \in \{100, 500, 1000\}$, Student-$t_7$ innovations & Section~\ref{sec:proteus} \\
+    Bernoulli crossover streams & $n = 8000$, $\tau^* = 4000$, tolerance $1000$, $\Delta e$ on a 15-point grid & Section~\ref{sec:crossover} \\
+    Real streams & warm-up $\min(10^5, 0.10\,n)$, tolerance $\min(5000, 0.05\,n)$ & Table~\ref{tab:real_data_summary} \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+\paragraph{The reference level $p_0$ of the external CUSUM.}
+The cumulative monitor of Section~\ref{sec:bernoulli_validation} tests the error stream against a
+pre-change level $p_0$, and how that level is obtained is part of the protocol rather than an
+implementation detail: it sets the drift term of the accumulation, so a $p_0$ above the true
+pre-change error rate adds slack and starves the monitor earlier, while one below it accumulates on
+noise. Two constructions coexist in the race-condition experiment, on the same error stream, at the
+same tolerance and the same threshold, differing only in $p_0$:
+
+\begin{itemize}
+  \item a \emph{nominal} arm with $p_0 = 0.05$ fixed before the stream starts --- the historical
+        value, retained so the original configuration stays reproducible;
+  \item an \emph{empirical} arm with $p_0$ set at the change point to the mean error over the
+        preceding 1000 steps.
+\end{itemize}
+
+\textbf{Every metric this paper reports for that experiment is the empirical arm.} The blind-spot
+indicator and the detection rate are both defined on the empirical stopping time, and Figure~1 plots
+it; the nominal arm is a secondary control column, recorded in the artifact and published nowhere.
+
+The distinction is not cosmetic, and it is worth decomposing rather than asserting. At
+$\lambda = 25$ the reported blind-spot share of $0.895$ is $0.815$ of runs in which adaptation
+pre-empts the monitor --- both stopping times finite, the internal swap first --- plus $0.080$ in
+which the monitor never fires at all within the horizon; the reported detection rate is the
+complement of that second term, $0.920$. Under the nominal arm the same decomposition reads $0.355$
+pre-empted plus $0.610$ censored for a share of $0.965$, at a detection rate of $0.390$. The two
+arms therefore agree that the pipeline is blind and disagree completely about \emph{why}: with
+$p_0 = 0.05$ fixed well above the measured pre-drift error rate, the nominal monitor carries so much
+slack that it is starved outright in six runs out of ten, and the pre-emption the experiment is
+built to measure all but disappears behind that. Quoting a figure from one arm as the other's would
+misstate not only its value but its mechanism.
+
+Every later campaign --- the instrumented starvation experiments, the real-world streams, the
+$\lambda_{\mathrm{op}}$ sweep and the synchronised traces --- calibrates $p_0$ on the warm-up and
+carries one arm only. The fixed literal survives in those as an unreachable fallback for an empty
+warm-up buffer, which a 1000-step window never produces.
+
+\paragraph{The warning detector is two parameters, not one.}
+River~0.23.0~\cite{montiel_river_2021} resolves an unset \texttt{warning\_detector} on its adaptive forest to
+ADWIN($\delta = 0.01$, clock $= 32$) and an unset \texttt{drift\_detector} to
+ADWIN($\delta = 0.001$, clock $= 32$); a bare \texttt{ADWIN()} is neither, at
+$\delta = 0.002$, clock $= 32$. The submitted version pinned only the drift detector on the ProteuS
+and crossover arms, so their warning detector ran at $\delta = 0.01$ and clock $32$ while the
+instrumented arms pinned both at $\delta = 0.002$ and clock $c$. Unifying the two therefore moves
+\emph{two} parameters, $0.01 \to 0.002$ and $32 \to c$, not the clock alone.
+
+Both consequences of that unification are stated, because they coexist and neither cancels the
+other. The warning configuration is mechanically \emph{determining}: it gates when a background
+tree starts training, hence how much a replacement has learned when it is installed, hence the
+duration of the post-drift transient the external monitor sees. And wherever the two detectors are
+pinned identically it is simultaneously \emph{inert}: they become identically parameterised clones
+fed the same error sequence, so they fire at the same step, the background tree is created and
+promoted within the same update, and nothing ever trains in between. Instrumentation on the pinned
+build measures this directly, at both clocks: warning and drift fire element-wise together, the
+maximum number of simultaneously live background trees is zero, and \emph{every} replacement
+installs a tree created in the same step and warmed by nothing --- 47 of 47 at $c = 1$ and 36 of 36
+at $c = 32$, with 0 warmed background trees in both. A mechanism that determines the transient and
+never runs is not a contradiction; it is why the effect is insensitive to the warning threshold in
+the tested configuration, and why it would not be under a warning detector that genuinely leads the
+drift detector --- which is what River's own defaults provide, and what the control arm of
+Section~\ref{sec:protocol_arms} measures.
+
+\subsection{Control Arm: River's Own Defaults}\label{sec:protocol_arms}
+
+Unifying the warning detector onto the drift detector buys comparability across experiments at the
+cost of disabling the one mechanism that would otherwise give a replacement tree something to learn
+before it is installed. Publishing the phenomenon only under that configuration would leave it
+measured on a forest whose background-tree mechanism is structurally inert, and a reader who knows
+the library would be right to ask whether the blind spot is a property of adaptation or of a
+crippled instance of it.
+
+Both arms are therefore measured and both are reported:
+
+\begin{itemize}
+  \item \textbf{Unified} --- \texttt{warning\_detector} $=$ \texttt{drift\_detector} $=$
+        ADWIN($\delta = 0.002$, clock $= c$). Comparable across every experiment in the paper; the
+        warning fires with the drift and no background tree ever trains.
+  \item \textbf{Library defaults} --- \texttt{warning\_detector} $=$ ADWIN($\delta = 0.01$,
+        clock $= 32$), the drift detector unchanged. This is what a practitioner who instantiates
+        the forest without naming a warning detector actually deploys, and the only configuration in
+        which the warning genuinely leads the drift.
+\end{itemize}
+
+Both arms were run in full and are reported below. The measurement did not go the way the question
+was posed: the phenomenon is \emph{stronger} under the library defaults, not weaker.
+
+\paragraph{Heteroscedastic streams: invariant where the claims live.}
+On the ProteuS evaluation the unification changes nothing the paper asserts. The three blind-spot
+collapses stay at $\mathrm{F1} = 0.00$ exactly with $\mathrm{ADD}$ undefined in all three GARCH
+regimes; the KSWIN resolution stays at $\mathrm{F1} = 1.00$, $\mathrm{ADD} = 14\,[0]$ with zero
+variance at both clocks; the $\alpha$-sweep is invariant down to the raw per-run records. Rows
+whose classifier carries no warning detector --- the Hoeffding Tree, the static forest, and the
+patches ensemble, which already pinned both --- are bit-identical. What moves is confined to the
+safe-zone rows of the adaptive forest at $c = 32$ (F1 $0.63 \to 0.67$ and $0.56 \to 0.61$) and to a
+single seed-level count, the windowed monitor's $1063/1080 \to 1070/1080$.
+
+\paragraph{Controlled Bernoulli streams: not invariant, and the direction matters.}
+On the regime crossover the two arms separate, and only on the adaptive arm --- the fifteen rows of
+each non-adaptive pipeline are identical under both, as they must be.
+
+\begin{table}[t]
+  \centering
+  \caption{Regime crossover, adaptive arm: library defaults against the unified configuration.
+  Missed-detection rate in percent over 100 streams per point. The non-adaptive pipelines are
+  identical under both arms and are omitted.}
+  \label{tab:protocol_arm_r3}
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    \textbf{Quantity} & \textbf{Library defaults} & \textbf{Unified} \\
+    \midrule
+    Missed detections at $\Delta e = 0.50$ & 100 & 80 \\
+    Missed detections at $\Delta e = 0.47$ & 98  & 65 \\
+    Missed detections at $\Delta e = 0.26$ & 1   & 4  \\
+    Missed detections at $\Delta e = 0.16$ & 1   & 13 \\
+    Missed detections at $\Delta e = 0.09$ & 1   & 69 \\
+    \midrule
+    Post-drift accuracy at $\Delta e = 0.50$ & 0.984 & 0.980 \\
+    Accuracy gap against the static forest (pp) & 23.41 & 22.99 \\
+    Pre-drift false-alarm ratio, non-adaptive over adaptive & 1.98 & 2.00 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+Two readings follow, and both are consequences of the same mechanism. At the top of the band the
+library defaults starve the monitor completely while the unified configuration leaves one run in
+five detectable: a warning detector that genuinely leads the drift detector installs a background
+tree that has trained, the post-drift transient is shorter, and the cumulative monitor accumulates
+less. In the safe zone the ordering reverses --- at $\Delta e = 0.09$ the unified arm misses $69\%$
+against $1\%$ --- because an inert warning mechanism also removes the noise-triggered replacements
+that were producing early alarms there.
+
+The consequence is stated rather than absorbed. The claim that missed detections reach $100\%$ at
+$\Delta e = 0.50$ holds on the library-defaults arm and \emph{does not survive} the unification,
+where the figure is $80\%$. What survives on both arms is the qualitative claim --- the adaptive
+pipeline starves across the band while both non-adaptive pipelines detect every drift --- together
+with the accuracy gap, which reads $23.4$ against $23.0$ percentage points, and the false-alarm
+halving, which reads $1.98$ against $2.00$.
+
+The arm a figure comes from is therefore part of its statement, and this section names it rather
+than leaving it to be inferred. \textbf{Every regime-crossover figure in this paper is the unified
+arm}, chosen so that a single warning configuration holds across every experiment reported here; the
+library-defaults arm is retained as the comparability control and is reproducible byte for byte from
+the artifact repository.
+
+The cost of that choice is stated, not absorbed: the phenomenon is published under the weaker of the
+two configurations measured. Under the library defaults the cumulative monitor is starved outright
+at the top of the band, and the figure the submitted version quoted --- $100\%$ --- is that arm's.
+Reporting the unified arm is therefore conservative with respect to the paper's own claim, which is
+the only direction in which a methodological choice may err.
+
+\subsection{Multiplicity}\label{sec:protocol_multiplicity}
+
+The family of hypothesis tests reported in this paper is stated in full: six seed-level pipeline
+contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep, and three seed-level contrasts on
+the INSECTS variants of Table~\ref{tab:real_data_summary} --- ten tests. The three BAF rows carry
+no test, their $\Delta e$ being indistinguishable from zero (Section~\ref{sec:protocol_ci}).
+
+Eight of the ten $p$-values sit exactly at the resolution floor of the two-sided sign test at
+$n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}. No correction over a
+family of this size can lift them: Holm--Bonferroni at $\alpha = 0.05$ compares the smallest
+against $\alpha/10 = 5 \times 10^{-3}$, and $2^{-29} \approx 1.86 \times 10^{-9}$ clears that by six
+orders of magnitude, as it clears every subsequent step. Bonferroni over the whole family gives
+$10 \cdot 2^{-29} \approx 1.86 \times 10^{-8}$, still far below any conventional level. For these
+eight the correction is not applied because it is arithmetically incapable of changing a decision,
+which is a justification and not an omission.
+
+The two remaining tests are reported with the opposite verdict, and it is the honest one. The
+KSWIN $\alpha$-sweep contrast is degenerate ($p = 1$: both arms detect 1080 of 1080 runs), and the
+INSECTS \emph{abrupt\_balanced} contrast has $p = 0.043$, which under Holm is compared against
+$\alpha/2 = 0.025$ and \textbf{does not survive}. We therefore do not claim a seed-level effect on
+\emph{abrupt\_balanced}. That is consistent with how Section~\ref{sec:proteus} already treats that
+variant --- a weak witness whose five canonical jumps are heterogeneous and partly negative, and
+whose marginal advantage is explicitly not attributed to the mechanism. The multiplicity correction
+removes a claim the paper had already declined to make.
+
+\subsection{Complete Separations and Effect Sizes}\label{sec:protocol_separation}
+
+Several contrasts separate completely: one arm detects in every seed, the other in none. The
+$p$-value reported for these is not an estimate and must not be read as one. With all 30 seeds
+favouring the same arm, the two-sided sign test returns
+$2 \cdot 2^{-30} = 2^{-29} = 1.8626451 \times 10^{-9}$ exactly --- the smallest value the test can
+produce at $n_{\mathrm{eff}} = 30$, attained whenever separation is complete and independent of how
+large the separation is. We therefore report it as $p \le 2^{-29}$ and pair every such contrast
+with an effect size, since the $p$-value carries no magnitude information whatsoever.
+
+The effect size is the difference in detection rate between the two arms, computed per seed over
+that seed's 36 streams and then averaged over the 30 seeds, so that it is commensurable with the
+test that accompanies it. Table~\ref{tab:protocol_effects} reports it with a 95\% interval taken
+across seeds.
+
+\begin{table*}[t]
+  \centering
+  \caption{Effect sizes for the seed-level contrasts of Section~\ref{sec:experiments}. $\Delta$ is
+  the mean over 30 seeds of the within-seed detection-rate difference (36 streams per seed), in
+  percentage points, with its 95\% seed-level interval. Every contrast listed separates completely
+  and reports $p \le 2^{-29}$; the $p$-value is identical across rows by construction, the effect
+  size is not.}
+  \label{tab:protocol_effects}
+  \begin{tabular}{@{}llrrr@{}}
+    \toprule
+    \textbf{Arm A} & \textbf{Arm B} & \textbf{A} & \textbf{B} & \textbf{$\Delta$ (pp, 95\% CI)} \\
+    \midrule
+    PHT $+$ ARF ($c{=}1$)   & PHT $+$ HT              & 0/1080    & 932/1080  & $-86.30\ [-87.48, -85.11]$ \\
+    EDDM $+$ ARF ($c{=}1$)  & EDDM $+$ HT             & 0/1080    & 882/1080  & $-81.67\ [-82.90, -80.43]$ \\
+    SRP $+$ PHT ($c{=}1$)   & PHT $+$ HT              & 0/1080    & 932/1080  & $-86.30\ [-87.48, -85.11]$ \\
+    KSWIN $+$ ARF ($c{=}1$) & PHT $+$ ARF ($c{=}1$)   & 1080/1080 & 0/1080    & $+100.00$ (degenerate) \\
+    PHT $+$ RF (static)     & PHT $+$ ARF ($c{=}1$)   & 913/1080  & 0/1080    & $+84.54\ [83.33, 85.75]$ \\
+    ADWIN $+$ RF (static)   & ADWIN $+$ ARF ($c{=}1$) & 959/1080  & 1070/1080 & $-10.28\ [-11.87, -8.69]$ \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
+
+The last row is the one that would be misread from its $p$-value alone. It carries the same
+$p \le 2^{-29}$ as the blind-spot collapses, because all 30 seeds favour the same arm, yet its
+effect is an order of magnitude smaller: the static forest detects $10.3$ percentage points
+\emph{less} than the adaptive one under a windowed monitor. Reported as a $p$-value it looks like
+the collapses; reported as an effect size it is what it is, a small and consistent disadvantage,
+and it is the measurement behind the statement that the static ensemble resolves the starvation
+regime rather than replacing adaptation in general.
+
+\subsection{Legitimacy of the Seed-Paired Bootstrap}\label{sec:protocol_paired}
+
+Pairing on the seed is legitimate only if the arms see the same stream at the same seed. On the
+instrumented Bernoulli family this holds by construction and is verifiable in one line of each
+experiment: the covariate stream is produced by exactly two scalar draws per step,
+\texttt{x0, x1 = rng.normal(), rng.normal()}, from a generator seeded by the run's own seed, inside
+the step loop and before any model call. Since neither \texttt{predict\_one} nor \texttt{learn\_one}
+consumes from that generator, the sequence $(x_{0,t}, x_{1,t})_{t<n}$ is bit-identical across arms
+for a given (boundary shift, seed) pair, and the label rule $y_t = \mathbf{1}[x_{0,t} + x_{1,t} > b]$
+is a deterministic function of it. Arms at equal seed therefore differ only in the classifier and
+the monitor, which is exactly the contrast the paired resampling estimates.
+
+Two deviations from that invariant exist in the repository and are declared rather than smoothed
+over. The regime-crossover experiment draws its covariates from the legacy
+\texttt{RandomState} (MT19937) generator rather than the modern one, deliberately, to reproduce the
+streams of the submitted version bit-for-bit; pairing is unaffected, since both arms read the same
+legacy stream, but its draws are not comparable with those of the other experiments. And the
+$\lambda_{\mathrm{op}}$ sweep seeds only its local generator, without the global lock described
+next; it reports no paired interval, so nothing in the paper depends on that omission.
+
+\subsection{Per-Worker Pseudo-Random Number Generation}\label{sec:protocol_prng}
+
+Every parallel worker of the instrumented experiments opens with the same three statements, in this
+order:
+
+\begin{center}
+  \begin{tabular}{@{}l@{}}
+    \texttt{safe\_seed = int(seed \% (2**31 - 1))} \\
+    \texttt{random.seed(safe\_seed)} \\
+    \texttt{np.random.seed(safe\_seed)} \\
+    \texttt{rng = np.random.default\_rng(safe\_seed)} \\
+  \end{tabular}
+\end{center}
+
+The local generator \texttt{rng} produces the covariate stream. The two global seedings are not
+redundant and must not be removed as cleanup: River's Cython tree-spawn path draws the Poisson
+bagging weights and the split randomisation from the global NumPy singleton and from the standard
+library's global generator, neither of which accepts an injected generator through the public API.
+Without the global lock the forest's internal stochasticity varies with worker scheduling and the
+artifacts cease to be bit-reproducible. The modulo is not cosmetic either: the Cython extensions
+accept a 32-bit signed seed, and an unreduced 64-bit value overflows silently.
+
+The ProteuS experiments carry a variant of the same lock --- \texttt{random.seed} and
+\texttt{np.random.seed} on the reduced seed, with no local generator at all --- because their
+covariate stream is generated by NumPy's global state inside the stream simulator rather than by an
+injected generator. The lock is therefore load-bearing there for the streams themselves, not only
+for River's internals.
+
+All experiments run under \texttt{PYTHONHASHSEED=0}, set by the execution wrappers, so that
+dictionary iteration order inside River's feature maps is fixed. The host specification, the pinned
+package versions and the measured per-stage wall-clock times are recorded in the artifact
+repository.

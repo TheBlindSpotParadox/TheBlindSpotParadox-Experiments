@@ -515,3 +515,13 @@ asserting a freeze state that no longer holds; `regeneration_spec.md` line ancho
 3. BAF status ruled **on the oracle measurement**, not before it.
 4. Five missing tests implemented; freeze coverage stated truthfully, including what it does not
    cover.
+
+
+---
+
+## Execution record
+
+Pinned base commit for both wave-1 worktrees: `638ce543edd58c14cc17bc2bf4c91aa32c7e9c07`
+(`chore(editorial): confirm MLJ target journal (M8) and purge untracked local PDF (M5)`), the
+same `HEAD = 638ce54` recorded at `docs/plans/PLAN_S2.md:87`. Worktree `../worktree-S7ter`,
+branch `stream-s7-ter`.

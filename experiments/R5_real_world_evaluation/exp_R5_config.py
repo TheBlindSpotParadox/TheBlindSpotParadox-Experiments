@@ -99,6 +99,9 @@ OUT_BAF        = RESULTS_DIR / "baf_results.parquet"
 OUT_INSECTS    = RESULTS_DIR / "insects_results.parquet"
 OUT_EPISODE    = RESULTS_DIR / "insects_per_episode.parquet"
 OUT_DELTA_E    = RESULTS_DIR / "delta_e.parquet"
+OUT_DELTA_E_ORACLE = RESULTS_DIR / "delta_e_oracle.parquet"   # S7-ter/LOT C: frozen-classifier
+                                                              # control, a SEPARATE artifact so
+                                                              # delta_e.parquet keeps its frozen hash
 OUT_FLOODING   = RESULTS_DIR / "flooding_decomposition.parquet"
 OUT_TABLE2_TEX = TABLES_DIR / "table2_real_data_summary.tex"
 OUT_TABLE2_CSV = TABLES_DIR / "table2_values.csv"

@@ -40,7 +40,7 @@ LOG_FILE="logs/${EXP_NAME}/execution_$(date +%Y%m%d_%H%M%S).log"
     echo -e "\n[STEP 4/6] INSECTS evaluation (aggregate + per-episode)..."
     python ${EXP_DIR}/exp_R5_compute_insects.py
 
-    echo -e "\n[STEP 5/6] Adaptive Delta_e estimation..."
+    echo -e "\n[STEP 5/6] Delta_e estimation: adaptive estimator + frozen-classifier oracle..."
     python ${EXP_DIR}/exp_R5_compute_delta_e.py
 
     echo -e "\n[STEP 6/6] Assembling Table II + flooding decomposition..."
