@@ -259,6 +259,23 @@ def confrontation(new_runs, new_agg):
     out["R7"] = {"status": "JOINED", "configs": sorted(r7.config.unique()),
                  "note": "R7 varies the internal/external CLOCK pairing; the rotation campaign runs "
                          "the c_int = 1 configuration only, so only A_mismatched is arm-comparable"}
+    # Same-pipeline canonical reference. R2's miss rate comes from R2's own detector loop; this
+    # column is the SAME ladder code applied to the canonical family, so old-vs-new is a difference
+    # of generator and of nothing else. The two agree closely, which is what makes the R2 column
+    # readable at all.
+    counts = ssot.RESULTS_DIR / "S8_ab_initio" / "tables" / "s8_detection_counts.csv"
+    if counts.exists():
+        c = pd.read_csv(counts, float_precision="round_trip")
+        c = c[c.arm == "full"].assign(delta_e=lambda d: np.round(d.delta_e, 6))
+        c["canonical_miss_rate_lambda50_same_pipeline"] = 1.0 - c.n_cross / c.n
+        joined = joined.join(
+            c.set_index("delta_e")[["canonical_miss_rate_lambda50_same_pipeline"]], how="outer")
+        joined["delta_miss_rate_same_pipeline"] = (
+            joined.new_miss_rate_lambda50 - joined.canonical_miss_rate_lambda50_same_pipeline)
+        out["canonical_same_pipeline"] = {
+            "status": "JOINED", "source": str(counts.relative_to(ssot.ROOT_DIR)),
+            "note": "arm 'full' of the S8 ab initio campaign, which D3-bis shows identical to the "
+                    "committed S6 rows; the ladder code is the one applied to the rotation arms"}
     out["R6"] = {"status": "NOT PRODUCED",
                  "missing_measurement": "an M = 1 rotation arm. R6's tau_HAT is measured on "
                                         "ARF(M = 1); T8.2 runs M = 10 only, so no paired quantity "
