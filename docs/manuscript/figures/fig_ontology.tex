@@ -1,63 +1,83 @@
-% Ontologie des effets conservés — Stream S5
-% Requiert dans le préambule :
+% Ontology of the retained effects -- stream S11-a, thesis v4.
+% Supersedes the S5 version on three points: the terminal node is the comparison of the evidence
+% budget A against the monitor's own requirement R(D, eps, alpha); the blind spot splits at the
+% universal detection floor into an information-theoretic regime and a calibration regime; the
+% requirement is shown as a function of the false-alarm level. Retained unchanged: the negative
+% feedback loop, the single lambda axis carrying starvation and flooding, the P(X) monitor outside
+% the loop. Nodes are placed on an explicit millimetre grid so the picture stays inside the 252 pt
+% IEEEtran column; no \ref crosses out of this file, so it compiles against the preamble alone.
+% Requires in the preamble:
 %   \usepackage{tikz}
 %   \usetikzlibrary{arrows.meta,positioning,fit,backgrounds}
 \begin{figure}[t]
 \centering
 \begin{tikzpicture}[
+  x=1mm, y=1mm,
   font=\scriptsize,
-  node distance=3.2mm and 2.6mm,
   box/.style   ={draw, rounded corners=1pt, align=center, inner sep=2pt,
-                 text width=30mm, minimum height=6mm},
+                 text width=34mm, minimum height=6mm},
   loop/.style  ={box, fill=black!5},
-  outcome/.style={box, text width=25mm},   % not `out`: /tikz/out is reserved by to[out=..]
-  bad/.style   ={box, very thick, text width=25mm},
+  outcome/.style={box, text width=24mm},   % not `out`: /tikz/out is reserved by to[out=..]
+  bad/.style   ={box, very thick, text width=24mm},
   ar/.style    ={-{Latex[length=1.4mm]}, thin},
   fb/.style    ={-{Latex[length=1.4mm]}, thin, dashed}
 ]
 
-\node[box] (chg) {Environment change at $\tau^{*}$};
-\node[box, below=of chg] (res)
+\node[box] (chg) at (0,0) {Environment change at $\tau^{*}$};
+\node[box] (res) at (-6,-12)
   {Error excess $\Delta e$ on the stream $e_t$\\[1pt]\emph{endogenous residual}};
-
-\node[loop, below left=6mm and -13mm of res] (adapt)
-  {Internal correction\\replaces trees};
-\node[box,  below right=6mm and -13mm of res] (mon)
-  {External monitor\\accumulates toward $\lambda$};
-
-\node[box, below=13mm of res, text width=44mm] (cmp)
-  {Window $\tau_{\mathrm{erase}}$ \emph{vs.} required accumulation
-   $T(\lambda,\Delta e)$};
-
-\node[bad,  below left=6mm and -6mm of cmp] (blind)
-  {$\tau_{\mathrm{erase}} < T$\\\textbf{starvation}\\missed detection
-   $\Rightarrow$ \textbf{blind spot}};
-\node[outcome, below right=6mm and -6mm of cmp] (late)
-  {$\tau_{\mathrm{erase}} \geq T$\\alarm fires; if delayed,\\after recovery};
-
-\node[outcome, below=6mm of blind, text width=34mm, xshift=6mm] (flood)
-  {Lower $\lambda$ to fit the window\\$\Rightarrow$ alarm flooding under
-   volatility};
-
-\node[outcome, right=3mm of res, text width=21mm, xshift=6mm] (px)
+\node[outcome, text width=20mm] (px) at (28,-12)
   {Monitor on $P(X)$:\\outside the loop};
+
+\node[loop, text width=30mm] (adapt) at (-23,-27)
+  {Internal correction:\\one replacement, then learning\\[1pt]
+   leaves a budget $A$ over $\tau_{\mathrm{erase}}$};
+\node[box, text width=30mm] (mon) at (15,-27)
+  {External monitor held at\\false-alarm level $\alpha$\\[1pt]
+   requires $R(D,\varepsilon,\alpha)$};
+
+\node[box, text width=44mm] (cmp) at (-4,-43)
+  {Evidence available $A$ \emph{vs.} evidence required
+   $R(D,\varepsilon,\alpha)$};
+
+\node[bad] (blind) at (-26,-57) {$A < R$\\\textbf{blind spot}};
+\node[outcome] (late) at (8,-57) {$A \geq R$\\alarm inside the window};
+
+\node[outcome, text width=32mm] (info) at (-22,-74)
+  {$A < A_{\min}(\alpha,\varepsilon)$\\\emph{no} monitor held at this
+   level detects};
+\node[outcome, text width=32mm] (cal) at (18,-74)
+  {$A_{\min} \leq A < R$\\\emph{this} calibration does not;\\another one does};
+
+\node[outcome, text width=40mm] (lam) at (10,-91)
+  {One threshold $\lambda$: raising it grows $R$ $\Rightarrow$
+   \textbf{starvation}; lowering it to fit $A$ $\Rightarrow$ flooding
+   under volatility};
 
 \draw[ar] (chg) -- (res);
 \draw[ar] (res.south west) -- (adapt.north);
 \draw[ar] (res.south east) -- (mon.north);
-\draw[fb]  (adapt.west) -- ++(-4mm,0) |- (res.west)
-  node[pos=0.25, rotate=90, anchor=south, font=\tiny] {negative feedback};
+\draw[ar] (res.east) -- (px.west);
+\draw[fb] (adapt.west) -- ++(-3,0) |- (res.west);
+\node[font=\tiny, anchor=south] at (-33,-11.2) {negative feedback};
 \draw[ar] (adapt.south) -- (cmp.north west);
 \draw[ar] (mon.south)   -- (cmp.north east);
 \draw[ar] (cmp.south west) -- (blind.north);
 \draw[ar] (cmp.south east) -- (late.north);
-\draw[ar] (blind.south) -- (flood.north);
-\draw[ar] (res.east) -- (px.west);
+\draw[ar] (blind.south west) -- (info.north);
+\draw[ar] (blind.south east) -- (cal.north west);
+\draw[ar] (cal.south) -- (lam.north);
 
 \end{tikzpicture}
 \caption{Relations between the retained effects. The classifier acts by negative
-feedback on the very stream the monitor reads, bounding the observation window at
-$\tau_{\mathrm{erase}}$. Recall collapse (left) and precision collapse (bottom)
+feedback on the very stream the monitor reads, so the evidence reaching the
+monitor is a budget $A$ bounded by adaptation rather than by the horizon. The
+terminal comparison is $A$ against the evidence $R(D,\varepsilon,\alpha)$ the
+monitor's own false-alarm level requires: a blind spot is a deficit between two
+quantities in one unit, and it splits at the universal detection floor
+$A_{\min}(\alpha,\varepsilon)$. Below the floor no monitor held at that level
+detects; above it the deficit belongs to this calibration, and another threshold
+or another family meets the same budget. Recall collapse and precision collapse
 are two settings of one threshold $\lambda$, not two phenomena. A monitor on the
 input distribution is not exposed to the loop, at the cost of blindness to a
 change in $P(Y\mid X)$ at fixed $P(X)$.}
