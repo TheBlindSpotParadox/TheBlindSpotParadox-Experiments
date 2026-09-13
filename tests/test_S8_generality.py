@@ -78,7 +78,8 @@ def test_measured_delta_e_matches_the_identity_on_the_labels():
 
     Measured with the PRE-DRIFT Bayes rule as the oracle: Delta_e is a property of the generator, so
     reading it off a trained classifier would confound the generator with the learner."""
-    _, agg = rot.identity(common.seed_pool(24), [GRID[2], GRID[6], GRID[11]], n_jobs=4)
+    # n_jobs=1: in-process evaluation avoids Python 3.12 os.fork() DeprecationWarning in multi-threaded pytest
+    _, agg = rot.identity(common.seed_pool(24), [GRID[2], GRID[6], GRID[11]], n_jobs=1)
     bad = agg[~agg.within_tolerance]
     assert bad.empty, ("Delta_e departs from (1 - 2 eta) theta / pi:\n"
                        + bad.to_string(index=False))
