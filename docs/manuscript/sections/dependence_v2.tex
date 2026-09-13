@@ -1,0 +1,265 @@
+% docs/manuscript/sections/dependence_v2.tex
+% Stream S3, deliverable 1. Replaces the v63 material of sec:starvation_boundary: the equality of
+% Eq. (eq:pmiss), the independence assumption behind it, the Correlation disclaimer, cor:mcrit and
+% the numerical example. Also carries the resolution of the F22 contradiction, which belongs to
+% sec:hydra and is referenced from there rather than patched into it.
+% Every numeral is read from results/S3/. Produced by
+% experiments/S3_dependence/{s3_gate_rng_factorization.py, s3_bounds.py, s3_competing_risks.py}.
+
+\section{Inter-Tree Dependence and the Starvation Boundary}\label{sec:dependence}
+
+Proposition~\ref{prop:starvation_boundary} asserted an \emph{equality} for $P_{\mathrm{miss}}$
+under a conditional independence of the per-tree delays that was never demonstrated, against a
+\emph{deterministic} accumulation time $\tau_{\mathrm{det}}^*$. This section replaces all three
+components: the equality by a two-sided distribution-free envelope, the independence assumption by
+a named and measured hypothesis, and $\tau_{\mathrm{det}}^*$ by the competing-risks formulation of
+Section~\ref{sec:dep_race}.
+
+\subsection{What the bound needs, and what positive correlation gives}\label{sec:dep_correlation}
+
+The \emph{Correlation disclaimer} argued that because the $M$ trees are trained on the same stream
+through Poisson-weighted bagging~\cite{gomes_arf_2017}, the delays $\tau_i$ are positively
+correlated, and that the independence formula therefore \emph{overestimates} $P_{\mathrm{miss}}$.
+The conclusion is right; the stated reason is not sufficient for it.
+
+\begin{remark}[Positive correlation does not imply the bound]\label{rem:corr_insufficient}
+  Writing $A_i := \{\tau_i \le s\}$, the inequality
+  $\mathbb{P}(\min_i \tau_i \le s) \le 1 - [1 - F(s)]^M$ requires positive \emph{association of the
+  indicators at the level $s$}, i.e.\ $\mathbb{P}(A_i \cap A_j) \ge F(s)^2$. Pearson correlation of
+  the delays does not deliver that at every level. Take $M = 2$ and the exchangeable law placing
+  mass $0.3$ on each of $(1, 100)$ and $(100, 1)$, $0.2$ on $(2,2)$ and $0.2$ on $(200,200)$. At
+  $s = 2$: $F(2) = 0.5$, $\mathbb{P}(A_1 \cap A_2) = 0.20 < 0.25 = F(2)^2$, hence
+  $\mathbb{P}(\min \le 2) = 0.80 > 0.75 = 1 - [1 - F(2)]^2$ --- the bound is violated --- while
+  $\mathrm{Corr}(\tau_1, \tau_2) = +0.51$.
+\end{remark}
+
+What rescues the inequality here is not correlation but the \emph{common-factor} structure: the $M$
+trees see one data stream, and conditioning on it is exactly the hypothesis of
+Proposition~\ref{prop:min_jensen}. The disclaimer is restated on that mechanism below and is no
+longer an assertion about a sign.
+
+\subsection{Two bounds on the minimum}\label{sec:dep_bounds}
+
+Throughout, $\tau_{\mathrm{ARF}} = \min_{1\le i\le M} \tau_i$ by Eq.~\eqref{eq:hydra}, $F$ is the
+marginal CDF of one tree \emph{inside} the ARF, $s$ is a deterministic level, and $\mathcal{S}$
+denotes the $\sigma$-field of the common data stream.
+
+\begin{proposition}[Exchangeability bound]\label{prop:min_jensen}
+  If $(\tau_1, \ldots, \tau_M)$ are exchangeable and conditionally independent given
+  $\mathcal{S}$, then for every $s$
+  \begin{equation}\label{eq:jensen_bound}
+    \mathbb{P}\!\left(\min_i \tau_i \le s\right) \;\le\; 1 - \bigl[1 - F(s)\bigr]^M .
+  \end{equation}
+\end{proposition}
+
+\begin{proof}
+  Let $G_{\mathcal{S}}(s) := \mathbb{P}(\tau_i > s \mid \mathcal{S})$, which does not depend on $i$
+  by exchangeability. Conditional independence gives
+  $\mathbb{P}(\min_i \tau_i > s \mid \mathcal{S}) = G_{\mathcal{S}}(s)^M$. The map $x \mapsto x^M$
+  is convex on $[0,1]$, so by Jensen's inequality and the tower property,
+  \[
+    \mathbb{P}\!\left(\min_i \tau_i > s\right) = \mathbb{E}\bigl[G_{\mathcal{S}}(s)^M\bigr]
+      \;\ge\; \bigl(\mathbb{E}[G_{\mathcal{S}}(s)]\bigr)^M = \bigl[1 - F(s)\bigr]^M ,
+  \]
+  and Eq.~\eqref{eq:jensen_bound} follows by complementation.
+\end{proof}
+
+\begin{corollary}[Direction of the disclaimer]\label{cor:disclaimer}
+  Under the hypothesis of Proposition~\ref{prop:min_jensen}, the independence formula is an
+  \emph{upper} bound on $P_{\mathrm{miss}}$, not an approximation of unknown sign. This is the
+  content the \emph{Correlation disclaimer} asserted, now derived; by
+  Remark~\ref{rem:corr_insufficient} it does not follow from positive correlation alone.
+\end{corollary}
+
+\begin{proposition}[Distribution-free envelope]\label{prop:min_boole}
+  For every $s$ and \emph{any} dependence structure whatever,
+  \begin{equation}\label{eq:boole_bound}
+    F(s) \;\le\; \mathbb{P}\!\left(\min_i \tau_i \le s\right) \;\le\; \min\bigl(1,\, M F(s)\bigr).
+  \end{equation}
+  Both ends are attained, so the envelope cannot be tightened without a dependence hypothesis.
+\end{proposition}
+
+\begin{proof}
+  $\{\min_i \tau_i \le s\} = \bigcup_i A_i$ with $A_i := \{\tau_i \le s\}$. Sub-additivity gives
+  $\mathbb{P}(\bigcup_i A_i) \le \sum_i \mathbb{P}(A_i) = M F(s)$, and a probability is at most
+  $1$; monotonicity gives $\mathbb{P}(\bigcup_i A_i) \ge \mathbb{P}(A_1) = F(s)$. Attainment is the
+  Fr\'echet--Hoeffding pair for a union of $M$ equiprobable events.
+\end{proof}
+
+\subsection{The shared generator does not factorise}\label{sec:dep_gate}
+
+Whether Eq.~\eqref{eq:jensen_bound} may be used is a question about River's implementation, not
+about the model. Instrumenting the forest generator on one trajectory
+($M = 10$, $c_{\mathrm{int}} = 1$, $300$ warm-up and $200$ probe steps) gives a verdict.
+
+\begin{remark}[Draw-stream factorisation, measured]\label{rem:rng_gate}
+  River threads a single \texttt{random.Random} through the whole forest~\cite{montiel_river_2021}:
+  \texttt{model.data[i].rng is model.\_rng} holds on all ten trees. Sharing the object is not
+  decisive; the factorisation of the draw stream is. Two channels consume it. The Oza weight is a
+  rejection loop costing $k+1$ uniforms for a returned weight $k$, so its cost is itself random;
+  and with two features and \texttt{max\_features}$\,=\,$\texttt{'sqrt'} the feature subsample draws
+  at every leaf creation, an event fixed by the drawing tree's own state. Measured: the draws
+  consumed per (step, tree) range over $1$--$16$ with mean $7.07$, so no tree owns the deterministic
+  residue class $\{i, M{+}i, 2M{+}i, \ldots\}$; and perturbing the state of one tree displaces
+  $9839$ of the positions consumed by the others, the first at position $34$. The ensemble vote does
+  not enter per-tree learning (\texttt{ARFClassifier.\_drift\_detector\_input} is
+  $\mathbf{1}[\hat{y}_i \ne y]$ on the member's own prediction), so the trees are coupled through
+  the generator or not at all.
+\end{remark}
+
+We therefore do \emph{not} use Eq.~\eqref{eq:jensen_bound} for any published quantity. It is stated
+with its hypothesis named, and the claim is carried by the distribution-free
+Eq.~\eqref{eq:boole_bound}. The criterion is conservative rather than sharp: a displacement of
+positions proves state-dependence of the allocation, whereas a sequential allocation by adapted
+stopping times would preserve independence on an idealised i.i.d.\ source. We record that gap
+explicitly, and note that conditional independence given $\mathcal{S}$ is not a measurable property
+of a deterministic generator at all --- conditioned on stream and seed, every delay is a constant.
+
+\subsection{The single-tree plug-in is refuted by the measurement}\label{sec:dep_plugin}
+
+Both bounds are statements about $F$, the marginal of a tree \emph{inside} the ARF. No artifact in
+this work records it: Proposition~\ref{prop:starvation_boundary} substituted $\widehat{F}$, the
+empirical CDF of the standalone HAT delays $\tau_{\mathrm{HAT}}$ at $M = 1$. That substitution is
+testable at $M = 10$, because the instrumented ARF campaign measures
+$\mathbb{P}(\tau_{\mathrm{ARF}} \le s)$ directly on the same seeds and magnitudes.
+
+\begin{empresult}[The HAT marginal is not the member marginal]\label{res:plugin_refuted}
+  Over the $80$ testable cells ($20$ magnitudes $\times$ $\lambda \in \{8, 15, 25, 50\}$, $M = 10$,
+  $n = 100$ runs each), the plug-in bound $\min(1, M\widehat{F}(s))$ falls strictly below the Wilson
+  $95\%$ lower end of the measured proportion in \textbf{$10$ cells} ($11$ for
+  Eq.~\eqref{eq:jensen_bound}), all at $\lambda \le 25$. The mechanism is the left tail: at
+  $\Delta e = \SixCanonDeltaE$ the fastest of $100$ HAT runs adapts at step $33$, so
+  $\widehat{F}(25.25) = 0$ exactly, while $4$ of $100$ ARF runs have already adapted by that step.
+  Symmetrically, the slowest member is up to twice as slow as $\widehat{F}$ predicts:
+  $\mathbb{E}[\tau_{(10)}]$ measured against $\mathbb{E}[\max$ of $10$ draws from $\widehat{F}]$
+  gives a ratio falling from $1.09$ at $\Delta e = 0.028$ to $0.49$ at $\Delta e = 0.498$.
+\end{empresult}
+
+The refutation is of the \emph{substitution}, not of either inequality:
+Eq.~\eqref{eq:boole_bound} holds unconditionally for the true $F$. What the measurement establishes
+is that the ARF member's delay law is \emph{more dispersed} than the HAT's at both tails, which is
+what Poisson weighting and a one-feature split rule would produce. No numeral of
+Eq.~\eqref{eq:pmiss} is therefore published through $\widehat{F}$, and the numerical example of the
+v63 section is retracted rather than recomputed.
+
+\subsection{Critical ensemble size, withdrawn}\label{sec:dep_mcrit}
+
+\begin{remark}[Why $M_{\mathrm{crit}}$ does not survive]\label{rem:mcrit_withdrawn}
+  Corollary~\ref{cor:mcrit} inverts Eq.~\eqref{eq:pmiss} in $M$. That inversion exists only for the
+  exchangeability form: the distribution-free envelope \emph{saturates} as soon as $M F(s) \ge 1$,
+  and in the saturated region $\min(1, M F(s))$ does not depend on $M$ at all. At $M = 10$
+  saturation begins at $F \ge 0.10$, which is everywhere this work operates
+  ($\widehat{F} = 0.28$ at $\lambda = 25$ and $0.49$ at $\lambda = 50$, both at
+  $\Delta e = \SixCanonDeltaE$, saturating from $M = 4$ and $M = 3$ respectively). With
+  Eq.~\eqref{eq:jensen_bound} unavailable by Remark~\ref{rem:rng_gate} and $\widehat{F}$ refuted by
+  Empirical Result~\ref{res:plugin_refuted}, $M_{\mathrm{crit}}$ has neither a bound to invert nor a
+  CDF to invert it on. It is withdrawn, and replaced by the measured incidence of
+  Section~\ref{sec:dep_race}.
+\end{remark}
+
+What the proposition retains is the envelope of Eq.~\eqref{eq:boole_bound} stated on $F$, with the
+equality of Eq.~\eqref{eq:pmiss} replaced by an inequality. That is strictly weaker than the v63
+statement and is published as such. We note for completeness that the alternative --- withdrawing
+the proposition entirely --- was considered: $\mathrm{Prop.}$~\ref{prop:certificate} is
+deterministic, carries no distributional hypothesis, and already routes the published result
+through $A_{\mathrm{swap}}$ (Definition~\ref{def:decoupling}, Empirical
+Result~\ref{res:tension}). The envelope is retained because it remains informative
+($\le 0.5$) at $132$ of the $384$ operating points of the grid $\Delta e \ge 0.24$,
+$\lambda \in \{8, 15, 25, 50\}$, $M \ge 2$, and because it is the only statement that ties ensemble
+size to miss probability without a distributional assumption.
+
+\subsection{The race is a competing risk, not a threshold comparison}\label{sec:dep_race}
+
+$\tau_{\mathrm{det}}$ is a stopping time. Replacing it by the scalar
+$\tau_{\mathrm{det}}^* = \lambda/(\Delta e - \delta_P)$ discards its dispersion and its censoring,
+and makes the race monotone in $\Delta e$ by construction. We estimate instead the cumulative
+incidence of the two causes under a single administrative censoring at the common horizon
+$t_c = 4000$ post-drift steps.
+
+\begin{empresult}[Measured incidence of the race]\label{res:cif}
+  On the instrumented campaign ($20$ magnitudes $\times$ $\SixSeeds$ seeds, paired-on-seed
+  percentile bootstrap, $10{,}000$ replicates), the race carries \emph{no censored unit}:
+  $\tau_{\mathrm{ARF}}$ is observed on every run at every magnitude, so a monitor that never crosses
+  $\lambda$ has \emph{lost} the race rather than gone unobserved. At $\lambda = 50$ the monitor
+  wins $0.0000$ of the $2{,}000$ runs --- $\mathbb{P}(\tau_{\mathrm{ARF}} < \tau_{\mathrm{det}}) = 1$
+  with bootstrap band $[1.00, 1.00]$ at every magnitude --- and the five alarms it does raise
+  ($0.25\%$) all fire after the ensemble has adapted. At $\lambda = 25$ the monitor wins $0.042$ on
+  average, and \emph{non-monotonically}: $0.00$ at $\Delta e = 0.028$, a maximum of $0.32$ at
+  $\Delta e = 0.141$, then $0.00$ from $\Delta e = 0.361$ upward. At $\lambda = \LambdaFA$ the
+  measured miss probability at $M = 10$ rises from $0.26$ to $0.62$ across the grid.
+\end{empresult}
+
+The hump at $\lambda = 25$ is the starvation effect stated as a probability: a weak drift does not
+move the error stream enough to cross $\lambda$ inside the window, and a strong one is erased before
+the accumulation completes. It is invisible through $\tau_{\mathrm{det}}^*$, which is monotone in
+$\Delta e$ by construction --- which is the substantive reason for removing the scalar, beyond its
+being the wrong object.
+
+\subsection{Effective ensemble size}\label{sec:dep_meff}
+
+No artifact records the per-tree $\tau_i$; the instrumented campaign records four order statistics
+per run, $\tau_{\mathrm{swap}}^{(q)}$ for $q \in \{0.10, 0.25, 0.50, 1.00\}$, i.e.\ $\tau_{(1)}$,
+$\tau_{(3)}$, $\tau_{(5)}$, $\tau_{(10)}$ at $M = 10$. The residual dependence is therefore
+bracketed, never point-estimated.
+
+\begin{empresult}[Two bracketing estimates, reported as an interval]\label{res:meff}
+  Method of moments under exchangeability, using the four order statistics through a trapezoidal
+  quantile $L$-estimator of the run mean (calibrated at $+4.8\%$ on independent synthetic draws),
+  returns $\widehat{\rho} \in [-0.021, 0.053]$ and $M_{\mathrm{eff}} \in [6.79, 12.28]$ across the grid.
+  Direct order-statistic matching against $\widehat{F}$, which never passes through $\rho$, returns
+  $M_{\mathrm{eff}}$ falling monotonically from $11.3$ to $5.1$. The two agree within a declared
+  factor of $1.5$ at $13$ of $20$ magnitudes and \emph{disagree} at the remaining seven; both are
+  reported and neither is averaged into the other. At $\Delta e = \SixCanonDeltaE$ the interval is
+  $M_{\mathrm{eff}} \in [6.99, 9.16]$ against a nominal $M = 10$.
+\end{empresult}
+
+The disagreement is structured rather than noisy, and Empirical
+Result~\ref{res:plugin_refuted} explains it: the direct route absorbs the marginal mismatch into
+$M_{\mathrm{eff}}$, the moment route does not. \textbf{The measured within-run correlation of the
+swap times is not distinguishable from zero.}
+
+\subsection{The exponential reference, and what the shortfall is made of}\label{sec:dep_exponential}
+
+\begin{remark}[Reading the multichart null]\label{rem:exponential_reference}
+  The identity $\mathbb{E}[\tau_{(1:M)}] = \mathbb{E}[\tau_1]/M$ is a property of the exponential
+  family, invoked in Section~\ref{sec:hydra} as a calibration reference. It is not a claim that the
+  measured $\tau_{\mathrm{HAT}}$ is exponential, and it is not: a Lilliefors-style bootstrap
+  Kolmogorov--Smirnov test ($N = 2000$ replicates, rate refitted on each) rejects exponentiality at
+  \emph{all twenty} magnitudes, largest $p = 0.0030$. The two statements are consistent; they were
+  written so that the first could be read as a property of the ARF, which it is not.
+\end{remark}
+
+Read as a quantitative null, the parallel-chart analogy~\cite{tartakovsky_2005_multichart} predicts
+$10\times$ at $M = 10$, and Section~\ref{sec:hydra} attributes the measured shortfall to positive
+inter-tree correlation. That attribution does not survive measurement. Evaluating the order
+statistics of $\widehat{F}$ alone --- which would return exactly $M$ were $\widehat{F}$ exponential
+--- gives an acceleration of $9.22\times$ at $\Delta e = \SixCanonDeltaE$ and $4.83\times$ at
+$\Delta e = 0.141$, against measured factors of $7.99\times$ and $4.12\times$. The residual left for
+dependence \emph{and} for the marginal mismatch of Empirical Result~\ref{res:plugin_refuted}
+together is a factor of $0.87$ and $0.85$ respectively. \textbf{Non-exponentiality of the delay law,
+not inter-tree correlation, accounts for most of the departure from $M$-fold}, and at
+$\Delta e = 0.141$ for nearly all of it --- consistently with the near-zero $\widehat{\rho}$ of
+Empirical Result~\ref{res:meff}. The decomposition is itself conditional on the refuted plug-in and
+is reported as a bracket, never as a point attribution.
+
+\subsection{Status of the v63 statements}\label{sec:dep_status}
+
+\begin{center}\begin{tabular}{lll}
+  \toprule
+  object & v63 form & disposition \\
+  \midrule
+  \emph{Correlation disclaimer} & asserted sign & Cor.~\ref{cor:disclaimer}, proved; reason corrected \\
+  Eq.~\eqref{eq:pmiss} & equality & Eq.~\eqref{eq:boole_bound}, two-sided envelope \\
+  independence assumption & tacit & Prop.~\ref{prop:min_jensen}, named and \emph{measured to fail} \\
+  $\tau_{\mathrm{det}}^*$ & deterministic scalar & removed; Emp.~Res.~\ref{res:cif} \\
+  $\widehat{F}$ as member marginal & tacit & Emp.~Res.~\ref{res:plugin_refuted}, \emph{refuted} \\
+  Cor.~\ref{cor:mcrit} & live corollary & \textbf{withdrawn} (Rem.~\ref{rem:mcrit_withdrawn}) \\
+  numerical example & $M_{\mathrm{crit}} = 0$ at $r = 0.95$ & retracted with the plug-in \\
+  $M$-fold exactness & read as a result & Rem.~\ref{rem:exponential_reference}, a reference \\
+  \bottomrule
+\end{tabular}\end{center}
+
+Two quantities remain unmeasured and are named rather than estimated: the member marginal $F$
+itself, and the false-alarm-budget-equalised form of the Hydra factor, which would require
+recording the per-step pre-drift error stream of a single tree standalone and inside the ensemble.
+Neither is approximated here.

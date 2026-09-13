@@ -1,0 +1,8 @@
+M,delta_e,lambda,tau_det_star,F_hat,bound_boole,bound_jensen,measured_pmiss,measured_source,measured_n,measured_wilson_lo,measured_wilson_hi,carrying_bound,model_v63_equality
+1,0.3268,50.0,157.83,0.49,0.49,0.49,0.49,R6 tau_hat (identity),100,,,boole,0.49
+2,0.3268,50.0,157.83,0.49,0.98,0.7399,,,0,,,boole,0.7399
+3,0.3268,50.0,157.83,0.49,1.0,0.867349,,,0,,,boole,0.867349
+5,0.3268,50.0,157.83,0.49,1.0,0.965497,,,0,,,boole,0.965497
+10,0.3268,50.0,157.83,0.49,1.0,0.99881,1.0,R2_A tau_arf,100,0.963,1.0,boole,0.99881
+20,0.3268,50.0,157.83,0.49,1.0,0.999999,,,0,,,boole,0.999999
+50,0.3268,50.0,157.83,0.49,1.0,1.0,,,0,,,boole,1.0

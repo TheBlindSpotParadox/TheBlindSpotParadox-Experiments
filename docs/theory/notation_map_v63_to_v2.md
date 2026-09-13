@@ -30,8 +30,8 @@
 | Starvation                   | `prop:starvation` (Prop. 3)          | modified | stream S2; fluctuation restored, `S_0` in statement, finite horizon         |
 | Sufficiency remark           | `rem:sufficient`                     | void     | absorbed into the corrected statement                                       |
 | Detector-agnosticity         | `rem:agnostic`                       | modified | becomes `cor:split`, derived rather than asserted                           |
-| Starvation boundary          | `prop:starvation_boundary` (Prop. 9) | modified | stream S3; random stopping time required                                    |
-| Critical ensemble size       | `cor:mcrit`                          | void     | rests on the independence bound rejected by reviewer #3                     |
+| Starvation boundary          | `prop:starvation_boundary` (Prop. 9) | modified | stream S3; the `=` of `eq:pmiss` becomes the two-sided distribution-free envelope `F <= P_miss <= min(1, M F)`, the independence form is kept as the conditional case with its hypothesis measured to fail (D1), and `tau_det*` is replaced by the competing-risks race |
+| Critical ensemble size       | `cor:mcrit`                          | withdrawn | stream S3, rule D5(b). The quantity `M_crit` is withdrawn: the surviving envelope saturates at `M F >= 1` and is constant in `M` there, so it cannot be inverted; the `F = F_HAT` plug-in is refuted on 10 of 80 measured cells. The LABEL is retained, carrying the negative statement, because `.tex` L463 references it from outside the S3 write perimeter |
 | Decoupling Principle         | `def:decoupling` (Def. 11)           | void     | replaced by `A < R`; the `c_ext < c_int` clause has no cross-family meaning |
 | Operational calibration (ii) | `def:decoupling` (ii)                | kept     | survives as the measurement procedure for `A`, restated on `tau_erase`      |
 | Exponent revision            | `rem:exponent`                       | kept     | now supports `prop:invariance`                                              |
