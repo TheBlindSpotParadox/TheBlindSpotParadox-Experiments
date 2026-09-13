@@ -358,6 +358,33 @@ def closed_loop_check(df, reference="ARF_ADWIN", tau_factor=1.5, lam_col="tau_de
             "refuting_cells": refuted, "rows": rows}
 
 
+def equalising_alphas(cal, n_stat=30):
+    """`s2bis_proteus_calibration.family_requirements`'s closed form, re-used, not re-derived.
+
+    Cancelling the shared epsilon margin between R_CUSUM(lambda) and the ADWIN / KSWIN requirements
+    gives the confidence that would place those families at the CUSUM's level:
+        alpha_ADWIN = 4 W exp(-2 lambda^2 / W),   alpha_KSWIN = 2 exp(-lambda^2 / n_stat).
+    Applied here to each pipeline's OWN measured (lambda_eq, W), it says how tight an internal
+    detector would have to be to match the external monitor this stream calibrates -- which is the
+    S2-bis threshold reading transposed from the external axis to the internal one. The comparison
+    to the DEPLOYED knobs is reported; EDDM carries no knob of that kind and is declared out of
+    scope, as S2-bis declared it."""
+    rows = []
+    for r in cal.itertuples():
+        w, lam = float(r.median_tau_erase), float(r.median_lambda_eq)
+        rows.append({
+            "pipeline": r.pipeline, "delta_e": float(r.delta_e), "W": w, "lambda_eq": lam,
+            "R_cusum_at_lambda_eq": requirement(lam, w),
+            "equalising_alpha_ADWIN": float(4.0 * w * np.exp(-2.0 * lam ** 2 / w)) if w > 0 else np.nan,
+            "equalising_alpha_KSWIN": float(2.0 * np.exp(-lam ** 2 / n_stat)),
+            "deployed_alpha_ADWIN": float(ssot.EXT_DELTA),
+            "deployed_alpha_KSWIN": float(INTERNAL_KSWIN_ALPHA)})
+    df = pd.DataFrame(rows)
+    df["ADWIN_deployed_over_equalising"] = df.deployed_alpha_ADWIN / df.equalising_alpha_ADWIN
+    df["KSWIN_deployed_over_equalising"] = df.deployed_alpha_KSWIN / df.equalising_alpha_KSWIN
+    return df
+
+
 def read(path=None):
     path = Path(path).resolve() if path else RESULTS_DIR / "data" / "s8_mechanisms_runs.parquet"
     df = pd.read_parquet(path)
@@ -387,7 +414,14 @@ def read(path=None):
                "n_cells": int(len(df)), "pipelines": sorted(df.pipeline.unique()),
                "control_lambdas": CONTROL_LAMBDAS,
                "verdict_counts": df.lambda_eq_verdict.value_counts().to_dict(),
-               "D7_collapse": collapse(df), "D7_closed_loop": closed_loop_check(df)}
+               "D7_collapse": {"lambda_eq": collapse(df),
+                               **{f"lambda{lam:g}": collapse(df, lam_col=f"tau_det_lambda{lam:g}")
+                                  for lam in CONTROL_LAMBDAS}},
+               "D7_closed_loop": {"lambda_eq": closed_loop_check(df),
+                                  **{f"lambda{lam:g}": closed_loop_check(
+                                      df, lam_col=f"tau_det_lambda{lam:g}")
+                                     for lam in CONTROL_LAMBDAS}},
+               "equalising_alphas": equalising_alphas(cal).to_dict(orient="records")}
     (tables / "s8_mechanisms_collapse.json").write_text(
         json.dumps(payload, indent=2, sort_keys=True, default=float) + "\n", encoding="utf-8")
 
@@ -395,10 +429,10 @@ def read(path=None):
     print("  calibration verdicts:", payload["verdict_counts"])
     print(cal[["pipeline", "delta_e", "median_lambda_eq", "median_a", "median_tau_erase",
                "miss_rate_lambda_eq", "miss_rate_lambda50"]].to_string(index=False))
-    print(f"\n  D7 collapse    : {payload['D7_collapse']['verdict']} "
-          f"({payload['D7_collapse']['n_bins_evaluated']} A-bins)")
-    print(f"  D7 closed loop : {payload['D7_closed_loop']['verdict']} "
-          f"{payload['D7_closed_loop']['refuting_cells'][:6]}")
+    for key, res in payload["D7_collapse"].items():
+        cl = payload["D7_closed_loop"][key]
+        print(f"\n  D7 at {key:9s} collapse = {res['verdict']} ({res['n_bins_evaluated']} A-bins)"
+              f"   closed loop = {cl['verdict']} {cl['refuting_cells'][:4]}")
     print(f"[INFO] wrote {(tables / 's8_mechanisms_collapse.json').relative_to(ssot.ROOT_DIR)}")
     return payload
 

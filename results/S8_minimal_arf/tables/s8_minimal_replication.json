@@ -1,0 +1,80 @@
+{
+  "D9_criterion": "def:blindspot, applied identically to both implementations at the PUBLISHED operating point lambda = 50: the measured ceiling A must fall under the requirement R = lambda + sqrt(W/2 ln(1/eps)) on BOTH, the NumPy arm must adapt before it erases (finite median tau_swap < median tau_erase), and its miss rate at that threshold must not fall more than 0.25 below River's on the same magnitude.",
+  "D9_criterion_history": "The first operationalisation written into this script scored the miss rate at the per-pipeline calibrated lambda_eq and returned NOT REPRODUCED on the smoke. It was replaced, and the replacement is recorded rather than silently substituted: on this stream lambda_eq lands near 5, where the T8.3 campaign measures a miss rate of 0.0 for eight of its nine pipelines INCLUDING river's own ARF. A criterion under which the reference implementation exhibits no blind spot cannot test whether a replication exhibits one. The lambda_eq reading is retained in `per_anchor` as a second column, not dropped.",
+  "D9_verdict": "PARTIAL",
+  "eta": 0.05,
+  "implementation": "pure NumPy; no river import in this module (AST-checked in demo())",
+  "moa_status": {
+    "evidence": [
+      "java: command not found",
+      "no MOA jar under /home/m53",
+      "skmultiflow absent, incompatible with py3.12/numpy 1.26"
+    ],
+    "verdict": "INFEASIBLE"
+  },
+  "n_cells": 200,
+  "per_anchor": [
+    {
+      "blind_spot_at_control": true,
+      "censored_tau_swap": 0.0,
+      "delta_e": 0.140949,
+      "median_a_unrefl_peak": 19.061500000000017,
+      "median_delta_e_emp": 0.059,
+      "median_e_pre": 0.1015,
+      "median_lambda_eq": 5.431010603904724,
+      "median_swaps_total": 32.0,
+      "median_tau_erase": 481.0,
+      "median_tau_swap": 307.0,
+      "median_trees_swapped": 9.0,
+      "median_w": 481.0,
+      "miss_rate_control": 0.96,
+      "miss_rate_lambda_eq": 0.02,
+      "n": 100,
+      "reproduces": true,
+      "requirement_at_control": 76.84163951381761,
+      "river_reference": {
+        "median_a": 54.94300000000021,
+        "median_lambda_eq": 4.035006403923035,
+        "median_tau_erase": 1113.0,
+        "median_tau_swap": 555.0,
+        "median_w": 1113.0,
+        "miss_rate_control": 0.4,
+        "miss_rate_lambda_eq": 0.0,
+        "n": 30,
+        "requirement_at_control": 90.83044219981943
+      }
+    },
+    {
+      "blind_spot_at_control": true,
+      "censored_tau_swap": 0.0,
+      "delta_e": 0.326793,
+      "median_a_unrefl_peak": 72.15700000000072,
+      "median_delta_e_emp": 0.22500000000000003,
+      "median_e_pre": 0.1015,
+      "median_lambda_eq": 5.431010603904724,
+      "median_swaps_total": 36.0,
+      "median_tau_erase": 1068.5,
+      "median_tau_swap": 142.5,
+      "median_trees_swapped": 10.0,
+      "median_w": 1068.5,
+      "miss_rate_control": 0.06,
+      "miss_rate_lambda_eq": 0.0,
+      "n": 100,
+      "reproduces": false,
+      "requirement_at_control": 90.0058741580061,
+      "river_reference": {
+        "median_a": 43.90950000000015,
+        "median_lambda_eq": 4.035006403923035,
+        "median_tau_erase": 808.5,
+        "median_tau_swap": 60.0,
+        "median_w": 808.5,
+        "miss_rate_control": 0.7666666666666667,
+        "miss_rate_lambda_eq": 0.0,
+        "n": 30,
+        "requirement_at_control": 84.79978120023459
+      }
+    }
+  ],
+  "reference_pipeline": "ARF_ADWIN (river), same stream and eta",
+  "reference_source": "results/S8_mechanisms/data/s8_mechanisms_runs.parquet"
+}

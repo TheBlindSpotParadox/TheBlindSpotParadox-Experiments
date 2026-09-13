@@ -124,7 +124,6 @@ def run_cell(seed, delta_e, n_models, per_tree=True):
     rec = {"seed": int(seed), "delta_e": float(delta_e), "n_models": int(n_models),
            "e_pre": e_pre, "delta_e_emp": float(post[:ERR_WINDOW].mean()) - e_pre,
            "tau_swap": tau_swap, "tau_erase": tau_erase,
-           "w_transient": tau_erase - tau_swap if np.isfinite(tau_swap) else np.nan,
            "a_unrefl_peak": float(a_unrefl.max()),
            "lambda_eq": float(lam_eq), "lambda_eq_target_fa": int(target),
            "lambda_eq_verdict": mech.calibration_verdict(pre.size, lam_eq, attained, target),
@@ -172,7 +171,9 @@ def hydra_decomposition(df, control=CONTROL_LAMBDA):
             stat[m] = {
                 "n": int(len(gm)), "n_censored_tau_swap": int(np.sum(~np.isfinite(tau))),
                 "mean_tau_swap": float(np.nanmean(tau)), "median_tau_swap": float(np.nanmedian(tau)),
-                "median_w": float(gm.w_transient.median()),
+                # def:times fixes W := tau_erase - tau*, and tau_erase is measured from tau*.
+                # W is NOT tau_erase - tau_swap: the first swap is a lower BOUND on W, not its origin.
+                "median_w": float(gm.tau_erase.median()),
                 "median_a": float(gm.a_unrefl_peak.median()),
                 "median_lambda_eq": float(gm.lambda_eq.median()),
                 "median_e_pre": float(gm.e_pre.median()),

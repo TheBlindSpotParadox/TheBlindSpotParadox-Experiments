@@ -395,7 +395,7 @@ def river_reference(eta, pipeline="ARF_ADWIN"):
         return None, str(src.relative_to(ssot.ROOT_DIR))
     out = {}
     for de, g in df.groupby("delta_e"):
-        w = float((g.tau_erase - g.tau_swap).median())
+        w = float(g.tau_erase.median())          # def:times: W := tau_erase - tau*
         out[round(float(de), 6)] = {
             "n": int(len(g)), "median_a": float(g.a_unrefl_peak.median()),
             "median_tau_swap": float(g.tau_swap.median()),
@@ -418,7 +418,7 @@ def read(path=None):
 
     rows = []
     for de, g in df.groupby("delta_e"):
-        w = float((g.tau_erase - g.tau_swap).median())
+        w = float(g.tau_erase.median())          # def:times: W := tau_erase - tau*
         a = float(g.a_unrefl_peak.median())
         r = mech.requirement(CONTROL_LAMBDA, w)
         ours = {"delta_e": float(de), "n": int(len(g)),
