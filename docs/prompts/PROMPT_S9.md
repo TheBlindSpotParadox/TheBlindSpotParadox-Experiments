@@ -59,6 +59,24 @@ n_stat * ln(2/alpha) devient grand devant le budget A disponible, donc pour
 n_stat élevé et transitoire court. Écris la prédiction quantitative AVANT
 d'exécuter, et commite-la.
 
+**DEUX CORRECTIONS MESURÉES DEPUIS LA RÉDACTION DE CE PROMPT.**
+1. Le croisement n'est PAS à `ln(1/alpha) ~ 13`. S2-bis l'a résolu sur les courbes
+   exactes : **16.34** contre KSWIN et **18.97** contre ADWIN. L'échelle de l'artefact
+   l'encadre — à lambda = 25, `ln(1/alpha) = 17.97`, `R_CUSUM = 34.27` a dépassé
+   `R_KSWIN = 32.94` mais pas `R_ADWIN = 35.19`. Utilise les valeurs mesurées.
+2. **La comparaison des familles au seuil publié est une comparaison de calibrations.**
+   S2-bis a mesuré les alpha d'égalisation au point d'opération de la Table I : à
+   `lambda = 15`, ADWIN est déployé **45x plus serré** que le CUSUM et KSWIN **4.5x plus
+   lâche**. La « résolution parfaite » de KSWIN à F1 = 1.00 est donc lue à un alpha
+   effectif quatre fois et demie plus permissif que celui du moniteur qu'elle surpasse.
+   Toute prédiction et toute mesure de ce stream se font à **alpha égalisé**, jamais aux
+   réglages publiés. Rapporte les deux bras — égalisé et publié — pour rendre l'écart
+   visible, comme S2-bis l'a fait pour le flooding.
+3. Corollaire à mesurer, pas à supposer : à alpha égalisé, KSWIN garde-t-il son avantage ?
+   S2-bis a déjà produit le contre-exemple sur ProteuS — à `lambda = 5` le PHT+ARF(c=1)
+   rend 1080/1080 avec F1 = 1.0000 et ADD = 6.05 contre 14 pour KSWIN. Le plafond
+   d'évidence ProteuS est dans **(8, 15]**. Ta grille doit couvrir cet intervalle.
+
 ## T9.2 — Prédire PUIS démontrer la région d'échec de KSWIN
 Ordre imposé, non négociable. À partir de R(KSWIN, eps, alpha) fourni par S1 :
   a) DÉRIVER la région d'échec prédite : durée de transitoire, taille de fenêtre,
@@ -88,16 +106,57 @@ plus fort ; sa présence invalide la thèse de l'article et doit remonter
 immédiatement.
 Coût à déclarer : les détecteurs input-space ne détectent que le drift covariable.
 Un drift de P(Y|X) à P(X) constant leur est invisible. Le générateur Bernoulli du
-papier déplace la FRONTIÈRE, donc P(Y|X), à P(X) fixe. Ce bras peut donc être
+papier déplace la FRONTIÈRE, donc P(Y|X), à P(X) fixe. Ce bras est donc
 structurellement aveugle au drift étudié. VÉRIFIE-LE AVANT D'IMPLÉMENTER, et si
 c'est le cas, dis-le : c'est un résultat, pas un échec — il délimite l'espace de
 conception au lieu de le peupler.
+
+**Évidence déjà acquise, à intégrer plutôt qu'à redécouvrir.** S7-ter a prouvé par
+mesure que BAF est un contrôle négatif : l'erreur du modèle gelé vaut 0.0110, le taux de
+fraude BAF vaut 0.0110, l'arbre gelé est un prédicteur de classe majoritaire pur et
+l'adaptatif est à 0.0111. Aucun pipeline à base de Hoeffding Tree n'acquiert de signal sur
+ces flux — il n'y a pas de transitoire à masquer. Et l'oracle Delta_e est INUTILISABLE sur
+INSECTS au préchauffage prescrit : l'arbre gelé y est au hasard sur six classes, donc
+`Delta_e_oracle ~ 0` signifie « plus rien à perdre », pas « pas de dérive ».
+Conséquence pour ce bras : ne le mesure ni sur BAF ni sur INSECTS au préchauffage actuel.
+Le seul terrain où il produit une information interprétable est le générateur synthétique,
+où P(X) est explicitement fixe — et c'est là que sa cécité devient un résultat propre et
+opposable sur l'espace de conception.
 
 ## T9.4 — Ordonnancement des familles
 Produire la table qui porte (C4) : famille de moniteur x exposition à la boucle
 x coût payé. Trois familles ordonnées par exposition : cumulatif sur le flux
 d'erreur, fenêtré sur le flux d'erreur, distributionnel sur l'espace d'entrée.
-Chaque ligne doit porter un chiffre mesuré, pas un argument.
+Chaque ligne doit porter un chiffre mesuré, pas un argument. Chaque ligne est
+mesurée à alpha égalisé ET aux réglages publiés, les deux colonnes affichées.
+
+**EDDM sort de la comparaison, ou entre avec sa condition d'armement.**
+S2 a retiré `R_EDDM` des exigences (règle R5, verdict WITHDRAWN). S2-bis a mesuré
+pourquoi l'effondrement `0/1080` se produit : sur ProteuS il y a **0 erreur pré-dérive**
+et l'ARF ne produit que **9 erreurs sur tout le flux de 8 000 pas** — le warm-start de 30
+n'est jamais atteint. Ce n'est pas un échec d'accumulation, c'est un détecteur jamais armé.
+Soit tu retires EDDM de la table, soit tu l'y laisses avec une colonne « armé / non armé »
+et un flux où il peut s'armer. Ne le laisse pas figurer comme une famille vaincue.
+
+## T9.5 — LE NUL DÉGÉNÉRÉ DE ProteuS, tâche nouvelle et prioritaire
+S2-bis a établi que le flux pré-dérive de ProteuS porte une erreur identiquement nulle :
+le label est constant avant `T_DRIFT` par construction de `simulate_stream`. Conséquences
+mesurées : `lambda_eq` retombe au plancher du bracket pour les six couples, aucun budget
+de fausses alarmes ne contraint lambda, la mention « calibrated on ProteuS pre-drift
+volatility » (.tex L362) n'est pas reproductible.
+Conséquence non encore tirée, et c'est la tienne : **la Table I entière est mesurée sur un
+flux où il n'existe aucun arbitrage détection / fausses alarmes.** C'est pourquoi lambda = 5
+rend une précision de 1.000 — rien ne peut produire une fausse alarme.
+Tâches :
+  a) Établir formellement, sur le générateur, que le nul est dégénéré. Ce n'est pas une
+     conjecture : `simulate_stream` est lisible.
+  b) Mesurer la même grille de détecteurs sur au moins un flux à nul NON dégénéré —
+     INSECTS, où S2-bis a déjà mesuré qu'à seuil réellement commun l'ARF n'est jamais moins
+     bon que le HT, et le générateur de S8 s'il livre son régime pré-dérive à erreur
+     strictement positive. Coordonne-toi avec S8 sur ce point, ne redéveloppe rien.
+  c) Statuer : la règle de calibration de l'article tient-elle quand le budget de fausses
+     alarmes est contraignant ? C'est la question que posera le premier relecteur, et
+     l'article n'y répond aujourd'hui sur aucun flux.
 
 ## Environnement
 Identique au prompt S8. river 0.23.0 épinglée. Verrou PRNG triple verbatim.

@@ -28,12 +28,28 @@ tau_swap^(1/M) et le partagent avec `full`, donc leur contraste identifie
 l'apprentissage post-bifurcation, pas le swap.
 Implémente le bras manquant : `no_swap_ab_initio`, remplacement supprimé dès
 tau*, pas à la première bifurcation.
-ARBRE DE DÉCISION, révisé après l'action A8 :
+ARBRE DE DÉCISION, révisé après A8 puis après les mesures S3 et S7-ter :
   - A_full ~ A_no_swap_ab_initio -> le remplacement d'arbres est causalement
     INERTE pour la famine. Le titre a déjà migré vers « When Adaptation Erases
     the Evidence », qui ne présuppose plus le mécanisme ; ce qui tombe alors est
     la clause Hydra du résumé, la contribution (C1) de intro_v2.tex et la
     revendication de cause racine unique. Remonte immédiatement.
+
+**Ce que les autres streams ont déjà retiré à l'effet Hydra, et qu'il faut lire avant
+de concevoir le bras.** Le budget que ce bras doit trancher s'est réduit :
+  - S6 : 99.3 % de l'effacement est l'apprentissage incrémental des M-1 arbres
+    survivants. Les remplacements n'en portent que 0.7 %.
+  - S3 : l'écart au 10x de Tartakovsky vient MAJORITAIREMENT de la non-exponentialité
+    de F — les statistiques d'ordre de F_HAT seules rendent 9.22x contre 7.99x mesuré,
+    résidu 0.87 — et non de la corrélation inter-arbres, dont `rho_hat` tombe dans
+    [-0.021, 0.053]. L'attribution de `sec:hydra` L196 ne survit pas.
+  - S7-ter : sous U1 aucun arbre de fond n'apprend, et la famine s'ATTÉNUE au haut de
+    la bande (80 % de manqués contre 100 % sous U0). Le remplacement d'arbres n'est
+    donc pas monotone dans le sens attendu.
+Il ne reste au bras V4 qu'une question, et c'est celle qu'il doit isoler proprement :
+le premier remplacement porte-t-il une contribution propre à l'AMORCE de l'effacement,
+distincte de l'apprentissage ? Conçois-le pour répondre à cela, pas à la question
+volumétrique, déjà tranchée.
   - A_full << A_no_swap_ab_initio -> le premier swap porte une contribution
     propre, quantifiée pour la première fois.
 Tant que ce bras n'a pas tourné, rem:cf_scope doit rester dans le manuscrit et
@@ -55,6 +71,18 @@ résultats, statuer sur ce qui change dans le manuscrit.
 CONTRAINTE 1 — l'invariant de flux « deux rng.normal() par pas » doit être
 préservé, ou toutes les figures publiées deviennent non reproductibles. Si le
 générateur le viole, dis-le et propose une variante conforme.
+CONTRAINTE 1-bis — NUL NON DÉGÉNÉRÉ, EXIGENCE NOUVELLE. S2-bis a mesuré que le flux
+pré-dérive de ProteuS porte une erreur IDENTIQUEMENT NULLE : le label est constant
+avant `T_DRIFT` par construction de `simulate_stream`. Conséquence : sur ProteuS il
+n'existe aucun budget de fausses alarmes, aucun arbitrage détection/fausses alarmes,
+et `lambda = 5` rend 1080/1080 à précision 1.000 parce que rien ne peut produire une
+fausse alarme. La Table I, expérience phare de l'article, est donc mesurée sur un flux
+dont la phase pré-dérive ne porte aucune information.
+Le générateur par rotation DOIT produire un régime pré-dérive à erreur strictement
+positive et mesurable — c'est-à-dire une erreur de Bayes non nulle ou un bruit de
+label déclaré — de sorte que le budget de fausses alarmes soit contraignant. Mesure
+et rapporte `e_pre` et sa dispersion sur la grille. Un générateur à nul dégénéré
+reproduirait le défaut au lieu de le corriger.
 CONTRAINTE 2 — ISOLATION D'ARTEFACTS, DURE. N'écris JAMAIS dans
 results/R2_*, results/R6_*, results/R7_*. Le stream S7-ter étend en parallèle le
 gel bit-à-bit à ces trois expériences ; les régénérer détruirait la lignée que
@@ -76,15 +104,49 @@ est à PRODUIRE, pas à récupérer. Sa seule trace dans le manuscrit est un
 commentaire d'une ligne, ancré par son texte et non par son numéro. Produis la
 figure depuis l'artefact existant, sans ré-exécuter R7.
 
-## T8.3 — Mécanismes internes autres qu'ADWIN
+## T8.3 — Mécanismes internes autres qu'ADWIN, À BUDGET D'ÉVIDENCE ÉGAL
 ARF paramétré avec DDM, EDDM, Page-Hinkley, KSWIN internes. Puis autres
 ensembles adaptatifs : SRP, Leveraging Bagging, OzaBagADWIN, HAT seul.
-Test de la prédiction de S5 : la sévérité est gouvernée par le rapport entre
-vitesse d'effacement et constante d'intégration du détecteur, à ARL_0 fixé, et
-NON par l'identité du mécanisme interne. Trace le taux de manqué contre A sur un
-axe commun. Le recadrage boucle fermée est FAUX si un classifieur adaptatif à
-mécanisme interne différent d'ADWIN, à tau_erase comparable, ne produit pas de
+
+**PROTOCOLE DE COMPARAISON IMPOSÉ — lis ceci avant de concevoir la grille.**
+Comparer des familles à seuil nominal commun est le défaut que trois streams viennent
+d'exposer, chacun sur un objet différent :
+  - S2-bis : le flooding INSECTS à 10.57x tombe à 1.270 au budget de portée ; 89.9 %
+    du log-ratio est le seuil, et à seuil réellement commun l'ARF n'est JAMAIS moins
+    bon que le HT (lambda=95 : 0.4025 contre 0.0000).
+  - S2-bis : à lambda = 15, point d'opération de la Table I, ADWIN est déployé 45x plus
+    serré et KSWIN 4.5x plus lâche que le CUSUM. Les trois colonnes comparent des
+    calibrations, pas des familles.
+  - S2 : au point canonique, plancher [13.9, 18.3] < plafond mesuré 33.5 < R_CUSUM 59.3,
+    et R_KSWIN = 22.7 passe. L'angle mort est un fait de calibration.
+Reproduire ce défaut rendrait S8 inutilisable.
+Chaque mécanisme et chaque ensemble est donc évalué à `lambda_eq` — le seuil qui égalise
+le budget de fausses alarmes sur le flux pré-dérive du pipeline considéré — et non à un
+seuil commun. Réutilise le module de calibration de S2-bis (`experiments/S2bis_calibration/`),
+son identité `lambda_calibrated == lambda_eq(T_warm)` vérifiée au bit près, et ses deux
+cas terminaux `SATURATED` et `NOT BINDING`. Rapporte aussi le bras à seuil commun, en
+contrôle, pour rendre l'écart visible.
+
+Test de la prédiction de S5 : la sévérité est gouvernée par le rapport entre vitesse
+d'effacement et constante d'intégration du détecteur, à budget de fausses alarmes égal,
+et NON par l'identité du mécanisme interne. Trace le taux de manqué contre A sur un axe
+commun. Le recadrage boucle fermée est FAUX si un classifieur adaptatif à mécanisme
+interne différent d'ADWIN, à tau_erase comparable et à `lambda_eq`, ne produit pas de
 point aveugle comparable.
+
+## T8.3-bis — La marginale d'un arbre DANS l'ARF
+S3 a mesuré que la substitution `F = F_HAT` est RÉFUTÉE sur 10 cellules testables sur 80
+(11 pour la forme indépendante), toujours à lambda <= 25, toujours anti-conservatrice.
+Mécanisme mesuré aux deux queues : à Delta_e = 0.3268 le plus rapide des 100 runs HAT
+adapte au pas 33 alors que 4 des 100 runs ARF ont déjà adapté ; et le membre le plus lent
+est jusqu'à deux fois plus lent que F_HAT ne le prédit.
+S3 a déclaré `NOT PRODUCED` sur le facteur Hydra à budget égal, faute d'artefact portant
+les `tau_i` par arbre. Ton harnais les produit.
+Tâches : enregistrer le flux d'erreur pré-dérive pas à pas de (i) un HAT isolé et
+(ii) un arbre DANS l'ARF, graines et magnitudes appariées ; calibrer les deux à une
+fausse alarme par warm-up ; re-dériver le facteur Hydra à budget égal ; publier la
+décomposition part-seuil / part-taille-d'ensemble. C'est la seule voie restante pour
+fermer cette dette, et elle coûte une campagne sur un harnais déjà écrit.
 
 ## T8.4 — Réplication inter-bibliothèque
 Reproduire le phénomène sous MOA. Réponse unique et décisive à « artefact de
