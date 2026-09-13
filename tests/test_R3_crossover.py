@@ -5,25 +5,28 @@ Specified by `results/audit_S7/regeneration_spec.md` G3 and implemented in strea
 committed artifact only -- no re-run -- and skips with an explicit motive when it is absent.
 
 This file was the measuring instrument of stream S7-ter LOT B, and it has taken its measurement.
-Written against the pre-unification artifact, it reported exactly two failures after the re-run and
-passed on everything else. The two are RESTATED below onto the unified arm, with the superseded
+Written against the pre-unification artifact, it reported exactly two failures on the unified re-run
+and passed on everything else. Both are RESTATED below onto the published arm, with the superseded
 value kept beside each one.
 
-WHICH ARM. The unification pins the ARF's warning_detector onto its drift_detector, moving two River
-parameters (delta 0.01 -> 0.002, clock 32 -> c). The committed artifact is the UNIFIED arm; the
-control arm under River's own defaults is archived at results/audit_S7/s7ter_arms/r3_u0/ and
-reproduces the pre-S7-ter artifact byte for byte. The 15 HT rows and the 15 RF_Static rows are
-identical under both arms -- neither model carries a warning detector -- so only the ARF assertions
-below are arm-dependent, and they are marked as such.
+WHICH ARM. U0 -- River's own ARF defaults for the warning detector (ADWIN delta=0.01, clock=32),
+explicitly pinned in the registry as R3_WARN_DELTA_U0 / R3_C_WARN_U0 -- is the PUBLISHED arm, per
+the arbitration of 2026-09-13 and carried by ssot.R3_DEFAULT_ARM. The committed artifact is that U0
+arm and reproduces the pre-S7-ter artifact byte for byte. U1, the unified clone pinning the
+warning_detector onto the drift_detector (delta 0.01 -> 0.002, clock 32 -> c), is retained as a
+parameterised ablation (`--arm U1`) and archived at results/audit_S7/s7ter_arms/r3_u1/. The 15 HT
+rows and the 15 RF_Static rows are identical under both arms -- neither model carries a warning
+detector -- so only the ARF assertions below are arm-dependent, and they are marked as such.
 
-The measurement is not a detail: starvation is STRONGER under River's defaults. Making the two
-ADWINs identical clones means the warning never leads the drift and no background tree ever trains,
-which attenuates the very effect the experiment measures. Which arm the manuscript publishes is
-escalated, not decided here; see authorized_deviations.txt.
+The measurement is not a detail: starvation is STRONGER under River's defaults, that is, in the
+configuration actually deployed. Making the two ADWINs identical clones means the warning never
+leads the drift and no background tree ever trains, which attenuates the very effect the experiment
+measures: missed detections at Delta_e = 0.50 are 100 % under U0 against 80 % under U1.
 
 The specification's note that the accuracy gap assertion "will fail against the prose value ~24 pp"
-is stale: the manuscript of record already reads 23.4 pp. The artifact gives 22.99 pp on the unified
-arm and 23.41 pp on the control arm, so the prose value survives on both within half a point.
+is stale: the manuscript of record already reads 23.4 pp. The artifact gives 23.41 pp on the
+published U0 arm and 22.99 pp on the U1 ablation, so the prose value survives on both within half a
+point.
 
 Usage:  PYTHONHASHSEED=0 python -m pytest tests/test_R3_crossover.py -v
 """

@@ -105,7 +105,9 @@ R3_DELTA_E_GRID = np.linspace(0.02, 0.50, 15)
 R3_N_MODELS = N_MODELS
 R3_PHT_LAMBDA = 25.0
 R3_DELTA_P = DELTA_P
-R3_C_INT = C_INT                               # warning_detector left at river default (see README §5)
+R3_C_INT = C_INT                               # warning_detector pinned to the river defaults, explicitly,
+                                               # as arm U0 (R3_WARN_DELTA_U0 / R3_C_WARN_U0 below);
+                                               # arm U1 is the unified-clone ablation (see README §5)
 
 # ══════════════════════════════════════════════════════════════════════════════
 # R4 — ProteuS / Table I (declared reference; literals live in function defaults)
@@ -334,10 +336,10 @@ R4_WARN_DELTA    = R4_ADWIN_DELTA  # 0.002: the warning detector is made an exac
 # it to a literal is the defect this registry exists to prevent. The coupling is expressed at the
 # call site by reusing the drift detector's own factory, which is make_srp's existing pattern.
 
-# ESCALATED, NOT REWRITTEN: the trailing comment on R3_C_INT above ("warning_detector left at river
-# default (see README §5)") is false once the three call sites change. It is a MID-FILE line and is
-# left untouched for the reason stated in this banner; the one-line correction belongs to the
-# orchestrator's serialised pass, together with README §5 itself.
+# ESCALATION CLOSED by the serialised pass S-SYNC (2026-09-13): the trailing comment on R3_C_INT
+# above now states the U0 pinning explicitly, and README §5 is aligned in the same pass. Charge
+# S7-ter §1b, which rewrote that comment for the unified arm, is VOID: U0 is the published default
+# and U1 the parameterised ablation, so the river defaults are pinned, not inherited.
 
 # ══════════════════════════════════════════════════════════════════════════════
 # S2 — stopping-time theory at the MEASURED base rate (append-only block)
