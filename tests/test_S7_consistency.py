@@ -21,6 +21,9 @@ Stream S7 consistency suite.
    CUSUM threshold lambda does not feed back into the ARF.
 4. The R6 <-> R2 Delta_e join retains its 20 magnitude points.
 5. No compiled bytecode is tracked by git (S7-bis/section 7).
+6. No cross-project artifact directory under `results/` (S8). The `results/R0[0-9]_*` and
+   `results/R1[0-8]_*` ranges belong to The-Whitening-Advantage-Experiments; the rule lived only in
+   stream prompts until S8 made it executable.
 
 Assertions 2-4 read committed artifacts; each skips with an explicit motive when the artifact is
 absent, so the suite is green on a fresh clone and enforcing after a full reproduction.
@@ -30,6 +33,7 @@ Usage:  PYTHONHASHSEED=0 python -m pytest tests/test_S7_consistency.py -v
 import ast
 import builtins
 import json
+import re
 import subprocess
 import sys
 from pathlib import Path
@@ -266,6 +270,17 @@ def test_strict_cusum_runs_at_the_cusum_tolerance():
         f"guard that verifies nothing.")
     assert not bad, ("StrictCUSUM constructed at a tolerance other than the registry's "
                      "CUSUM_DELTA_P:\n  " + "\n  ".join(bad))
+
+
+def test_no_foreign_experiment_directory_under_results():
+    """results/R0[0-9]_* and results/R1[0-8]_* belong to The-Whitening-Advantage-Experiments.
+
+    The rule existed only inside stream prompts until stream S8; a grep over `*.py`, `*.sh` and
+    `*.md` found no implementation of it anywhere, and a cross-project overwrite has already
+    happened once (`8debd1c`). A convention nothing executes is not a guard."""
+    foreign = sorted(p.name for p in ssot.RESULTS_DIR.glob("R*")
+                     if p.is_dir() and re.fullmatch(r"R(0\d|1[0-8])_.*", p.name))
+    assert not foreign, f"cross-project directories under results/: {foreign}"
 
 
 def test_no_compiled_bytecode_tracked():

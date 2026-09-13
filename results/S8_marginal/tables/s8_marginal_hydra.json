@@ -1,0 +1,130 @@
+{
+  "D8_decomposition": {
+    "control_lambda": 50.0,
+    "eps": 0.05,
+    "missing_measurement": null,
+    "per_anchor": [
+      {
+        "delta_e": 0.140949,
+        "ensemble_size_part": -0.5046000036212185,
+        "hydra_time_factor": 4.585406301824212,
+        "hydra_time_factor_median": 5.027113237639553,
+        "log_margin_ratio_at_control": -0.47129085269143384,
+        "log_margin_ratio_at_lambda_eq": -0.5575082968976478,
+        "per_arm": {
+          "1": {
+            "ensemble_step_var": 0.08157107107107109,
+            "mean_tau_swap": 1659.0,
+            "median_a": 17.369499999999974,
+            "median_e_pre": 0.0895,
+            "median_lambda_eq": 6.843001514673233,
+            "median_tau_swap": 1576.0,
+            "median_w": 505.0,
+            "member_step_var_mean": 0.08157107107107109,
+            "miss_rate_control": 0.79,
+            "miss_rate_lambda_eq": 0.08,
+            "n": 100,
+            "n_censored_tau_swap": 1,
+            "per_tree_e_pre_mean": 0.0895,
+            "per_tree_e_pre_sd": NaN
+          },
+          "10": {
+            "ensemble_step_var": 0.023447447447447447,
+            "mean_tau_swap": 361.8,
+            "median_a": 28.76950000000012,
+            "median_e_pre": 0.024,
+            "median_lambda_eq": 2.448001906275749,
+            "median_tau_swap": 313.5,
+            "median_w": 606.0,
+            "member_step_var_mean": 0.08223713713713712,
+            "miss_rate_control": 1.0,
+            "miss_rate_lambda_eq": 0.0,
+            "n": 100,
+            "n_censored_tau_swap": 0,
+            "per_tree_e_pre_mean": 0.09119999999999999,
+            "per_tree_e_pre_sd": 0.02878732126589858
+          }
+        },
+        "requirement_lambda_control": {
+          "1": 77.50313434996787,
+          "10": 80.12817417114518
+        },
+        "requirement_lambda_eq": {
+          "1": 34.346135864641106,
+          "10": 32.576176077420925
+        },
+        "threshold_part_at_control": -0.033309150929784634,
+        "threshold_part_at_lambda_eq": 0.052908293276429305,
+        "threshold_share_at_lambda_eq": 0.09490135585577243,
+        "variance_reduction_measured": 3.507295935792349
+      },
+      {
+        "delta_e": 0.326793,
+        "ensemble_size_part": 0.0541616534798278,
+        "hydra_time_factor": 7.306901359358661,
+        "hydra_time_factor_median": 2.5283018867924527,
+        "log_margin_ratio_at_control": 0.04807221013889149,
+        "log_margin_ratio_at_lambda_eq": -0.12255137696279922,
+        "per_arm": {
+          "1": {
+            "ensemble_step_var": 0.08157107107107109,
+            "mean_tau_swap": 419.27,
+            "median_a": 32.94699999999979,
+            "median_e_pre": 0.0895,
+            "median_lambda_eq": 6.843001514673233,
+            "median_tau_swap": 134.0,
+            "median_w": 354.0,
+            "member_step_var_mean": 0.08157107107107109,
+            "miss_rate_control": 0.87,
+            "miss_rate_lambda_eq": 0.06,
+            "n": 100,
+            "n_censored_tau_swap": 0,
+            "per_tree_e_pre_mean": 0.0895,
+            "per_tree_e_pre_sd": NaN
+          },
+          "10": {
+            "ensemble_step_var": 0.023447447447447447,
+            "mean_tau_swap": 57.38,
+            "median_a": 31.20999999999967,
+            "median_e_pre": 0.024,
+            "median_lambda_eq": 2.448001906275749,
+            "median_tau_swap": 53.0,
+            "median_w": 340.5,
+            "member_step_var_mean": 0.08223713713713712,
+            "miss_rate_control": 1.0,
+            "miss_rate_lambda_eq": 0.0,
+            "n": 100,
+            "n_censored_tau_swap": 0,
+            "per_tree_e_pre_mean": 0.09119999999999999,
+            "per_tree_e_pre_sd": 0.02878732126589858
+          }
+        },
+        "requirement_lambda_control": {
+          "1": 73.027040895848,
+          "10": 72.58369809337184
+        },
+        "requirement_lambda_eq": {
+          "1": 29.870042410521236,
+          "10": 25.03169999964759
+        },
+        "threshold_part_at_control": 0.006089443340936305,
+        "threshold_part_at_lambda_eq": 0.176713030442627,
+        "threshold_share_at_lambda_eq": 0.7654067022003185,
+        "variance_reduction_measured": 3.507295935792349
+      }
+    ],
+    "status": "PRODUCED"
+  },
+  "anchors": [
+    0.140949,
+    0.326793
+  ],
+  "arms_n_models": [
+    1,
+    10
+  ],
+  "n_cells": 400,
+  "verdict_counts": {
+    "OK": 400
+  }
+}

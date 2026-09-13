@@ -27,7 +27,14 @@ Three measurements on the campaign artifacts.
    Shares are computed per (Delta_e, seed) and aggregated as medians: the ratio is unstable wherever
    E_total is near zero, so a mean over runs would be dominated by those runs alone.
 
-Output: results/S6_synchronized_traces/data/s6_causal.json
+4. Exact decomposition on the tau*-anchored reference. Measurement 3 cannot attribute anything to
+   the first replacement, because all three of its arms carry it. Stream S8 adds two arms forked at
+   tau* itself -- 'no_swap_ab_initio' and 'frozen_ab_initio' -- and the four-term identity closes
+   with no residue. `decomposition_ab_initio` evaluates it and renders decision rules D1 and D2 of
+   `docs/prompts/s8-decision-rules.md`. On a corpus without those arms it returns NOT PRODUCED,
+   which is why this module reads the S6 and the S8 campaigns with the same code.
+
+Output: <base>/s6_causal.json, `base` defaulting to results/S6_synchronized_traces/data/
 """
 import json
 import sys
@@ -182,6 +189,102 @@ def erasure_share(runs, col="a_fw"):
             "per_delta_e": per}
 
 
+def bootstrap_median_ci(values, seeds, seed=ssot.S8_BOOTSTRAP_SEED, n_boot=ssot.S8_N_BOOTSTRAP,
+                        level=ssot.S8_CI_LEVEL):
+    """Seed-PAIRED bootstrap CI of the median of `values`.
+
+    Every magnitude reuses the same seed pool, so two cells sharing a seed share their whole
+    pre-drift trajectory and their e_pre. Resampling the (delta_e, seed) cells independently would
+    treat those as 20 independent observations. The seed INDEX is resampled once per replicate and
+    every magnitude is read at those seeds, which is the scheme `s6_envelope_stats` already uses for
+    lambda_op."""
+    v = np.asarray(values, dtype=np.float64)
+    s = np.asarray(seeds)
+    ok = np.isfinite(v)
+    v, s = v[ok], s[ok]
+    if v.size == 0:
+        return {"n": 0, "median": np.nan, "lo": np.nan, "hi": np.nan, "n_boot": 0}
+    pool = np.unique(s)
+    by_seed = [np.flatnonzero(s == u) for u in pool]
+    rng = np.random.default_rng(np.random.SeedSequence(seed))
+    reps = np.empty(n_boot, dtype=np.float64)
+    for b in range(n_boot):
+        pick = rng.integers(0, pool.size, pool.size)
+        reps[b] = np.median(v[np.concatenate([by_seed[i] for i in pick])])
+    alpha = (1.0 - level) / 2.0
+    return {"n": int(v.size), "n_seeds": int(pool.size), "median": float(np.median(v)),
+            "lo": float(np.quantile(reps, alpha)), "hi": float(np.quantile(reps, 1 - alpha)),
+            "n_boot": int(n_boot), "level": float(level)}
+
+
+def decomposition_ab_initio(runs, col="a_pos_common"):
+    """Exact four-term erasure decomposition anchored on the tau*-forked reference (stream S8).
+
+    `erasure_share` above is anchored on tau_swap^(1/M), which every S6 arm shares, so its E_learn
+    CONTAINS the first replacement and `\\LearnShare` cannot be read as learning alone. With the two
+    ab initio arms the reference becomes tau*, an exogenous instant, and the decomposition closes:
+
+        E_total      = A_frozen_abinit - A_full          all post-tau* adaptation
+        E_learn_pure = A_frozen_abinit - A_abinit        learning alone, no tree ever replaced
+        E_swap_first = A_abinit        - A_no_swap       the FIRST replacement, isolated
+        E_swap_rest  = A_no_swap       - A_full          every later replacement
+        E_total = E_learn_pure + E_swap_first + E_swap_rest      identically, by telescoping
+
+    Decision rules D1 and D2 of `docs/prompts/s8-decision-rules.md` are evaluated here and their
+    verdicts are written into the payload, not left to the reader."""
+    wide = runs.pivot_table(index=["delta_e", "seed"], columns="arm", values=col)
+    need = {"full", "no_swap", "frozen_ab_initio", "no_swap_ab_initio"}
+    if not need <= set(wide.columns):
+        return {"status": "NOT PRODUCED", "missing_arms": sorted(need - set(wide.columns)),
+                "column": col}
+
+    terms = pd.DataFrame({
+        "e_total": wide["frozen_ab_initio"] - wide["full"],
+        "e_learn_pure": wide["frozen_ab_initio"] - wide["no_swap_ab_initio"],
+        "e_swap_first": wide["no_swap_ab_initio"] - wide["no_swap"],
+        "e_swap_rest": wide["no_swap"] - wide["full"],
+        "d_swap_all": wide["no_swap_ab_initio"] - wide["full"],
+    })
+    residual = (terms.e_total
+                - (terms.e_learn_pure + terms.e_swap_first + terms.e_swap_rest)).abs().max()
+
+    ok = np.isfinite(terms.e_total) & (terms.e_total > 0)
+    for c in ("e_learn_pure", "e_swap_first", "e_swap_rest", "d_swap_all"):
+        ok &= np.isfinite(terms[c])
+    sub = terms[ok]
+    shares = pd.DataFrame({c.replace("e_", "share_").replace("d_", "share_"):
+                           sub[c] / sub.e_total
+                           for c in ("e_learn_pure", "e_swap_first", "e_swap_rest", "d_swap_all")})
+
+    seeds = sub.index.get_level_values("seed").to_numpy()
+    ci = {name: bootstrap_median_ci(shares[name].to_numpy(), seeds) for name in shares.columns}
+    sign_all = sign_test(sub.d_swap_all.to_numpy())
+    band_lo, band_hi = ssot.S8_INERT_BAND
+    inert = (band_lo <= ci["share_swap_all"]["lo"] and ci["share_swap_all"]["hi"] <= band_hi
+             and not (sign_all["p_value"] < ssot.S8_SIGN_TEST_ALPHA))
+
+    per = [{"delta_e": float(de), "n": int(len(g)),
+            **{f"median_{c}": float(np.median(g[c])) for c in sub.columns},
+            **{f"median_{c}": float(np.median(shares.loc[g.index, c])) for c in shares.columns}}
+           for de, g in sub.groupby(level="delta_e")]
+
+    return {
+        "status": "PRODUCED", "column": col,
+        "n_cells": int(len(sub)), "n_dropped_non_positive_e_total": int((~ok).sum()),
+        "additivity_residual_max": float(residual),
+        "median_terms": {c: float(np.median(sub[c])) for c in sub.columns},
+        "share_ci": ci,
+        "sign_test_a_abinit_minus_a_full": sign_all,
+        "D1_inert_band": [float(band_lo), float(band_hi)],
+        "D1_sign_test_alpha": float(ssot.S8_SIGN_TEST_ALPHA),
+        "D1_verdict": "INERT" if inert else "NOT INERT",
+        "D2_verdict": ("MEASURED" if ci["share_swap_first"]["lo"] > 0.0
+                       else "NOT SEPARABLE"),
+        "learn_share_restated": ci["share_learn_pure"],
+        "per_delta_e": per,
+    }
+
+
 def erasure_estimability(traces_root, runs, de, window=ssot.S6_ERR_WINDOW, delta=ssot.DELTA_P):
     """Is tau_err(delta_P) estimable at all on this stream?
 
@@ -279,8 +382,10 @@ def kappa_gate(runs, target=ssot.S6_KAPPA_DELTA_E_TARGET):
     }
 
 
-def main(which="data"):
-    base = RESULTS_DIR / which
+def main(which="data", base=None, out_name="s6_causal.json"):
+    """`base` overrides the S6 corpus directory so a foreign campaign carrying the same schema --
+    stream S8's ab initio campaign -- is read by this module rather than by a fork of it."""
+    base = Path(base) if base is not None else RESULTS_DIR / which
     runs = pq.read_table(base / "runs.parquet").to_pandas()
     knots, budgets = partition_stats(base / "traces.parquet", runs)
     runs = runs.merge(budgets, on=["delta_e", "arm", "seed"], how="left")
@@ -319,18 +424,20 @@ def main(which="data"):
             for c in ("a_pos_common", "a_signed_common", "a_fw", "a", "tau_erase_fw", "tau_erase")},
         "erasure_share_post_fork": {c: erasure_share(runs, c)
                                      for c in ("a_pos_common", "a_signed_common", "a")},
+        "decomposition_ab_initio": {c: decomposition_ab_initio(runs, c)
+                                    for c in ("a_pos_common", "a_signed_common", "a")},
         "kappa_gate_transfer_S1": {
             **kappa_gate(runs),
             "estimability": erasure_estimability(
                 base / "traces.parquet", runs,
                 min(runs.delta_e.unique(), key=lambda d: abs(d - ssot.S6_KAPPA_DELTA_E_TARGET)))},
     }
-    out = base / "s6_causal.json"
+    out = base / out_name
     out.write_text(json.dumps(payload, indent=2, sort_keys=True, default=float) + "\n",
                    encoding="utf-8")
 
     k = knot_summary
-    print(f"=== S6 causal ({which}) === {payload['n_runs']} run records")
+    print(f"=== S6 causal ({payload['source']}) === {payload['n_runs']} run records")
     print(f"\n[1] Segmented regression of A_unrefl(t), arm 'full', n={k['n']}")
     print(f"    median knot            = {k['median_knot']:.1f}")
     print(f"    median tau_swap^(1/M)  = {k['median_tau_swap']:.1f}")
@@ -356,6 +463,24 @@ def main(which="data"):
               f"[{p['q25']:.3f}, {p['q75']:.3f}]  n={p['n']}  "
               f"(median E_total={p['median_e_total']:.2f}, E_learn={p['median_e_learn']:.2f}, "
               f"dropped={p['n_dropped_non_positive_e_total']})")
+    print("\n[3-bis] Exact decomposition on the tau*-anchored reference (S8 ab initio arms)")
+    for col, res in payload["decomposition_ab_initio"].items():
+        if res["status"] != "PRODUCED":
+            print(f"    {col:16s} {res['status']} -- missing arms: {res['missing_arms']}")
+            continue
+        m, ci = res["median_terms"], res["share_ci"]
+        print(f"    {col:16s} n={res['n_cells']} cells, additivity residual "
+              f"{res['additivity_residual_max']:.2e}, dropped={res['n_dropped_non_positive_e_total']}")
+        print(f"      median E_total={m['e_total']:.3f}  E_learn_pure={m['e_learn_pure']:.3f}  "
+              f"E_swap_first={m['e_swap_first']:.3f}  E_swap_rest={m['e_swap_rest']:.3f}")
+        for name in ("share_learn_pure", "share_swap_first", "share_swap_rest", "share_swap_all"):
+            c = ci[name]
+            print(f"      {name:17s} = {c['median']:+.4f}  95% CI [{c['lo']:+.4f}, {c['hi']:+.4f}]")
+        st = res["sign_test_a_abinit_minus_a_full"]
+        print(f"      sign test (A_abinit - A_full): {st['n_positive']}/{st['n']} positive, "
+              f"p = {st['p_value']:.3e}, median {st['median_diff']:+.3f}")
+        print(f"      D1 = {res['D1_verdict']}   D2 = {res['D2_verdict']}")
+
     kg = payload["kappa_gate_transfer_S1"]
     print(f"\n[4] transfer_S1 blocking gate at Delta_e = {kg['delta_e_used']:.4f} "
           f"(target {kg['delta_e_target']}), n={kg['n']}")

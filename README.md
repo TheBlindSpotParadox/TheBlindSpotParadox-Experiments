@@ -93,10 +93,17 @@ gunzip -k data/baf/*.gz
 │   │   ├── s2bis_lambda_eq.py
 │   │   ├── s2bis_proteus_calibration.py
 │   │   └── s2bis_r1_ppre.py
-│   └── S6_synchronized_traces/              # causal arms, envelope statistics, gates
-│       ├── gates/
-│       ├── s6_runner.py
-│       └── ...
+│   ├── S6_synchronized_traces/              # causal arms, envelope statistics, gates
+│   │   ├── gates/
+│   │   ├── s6_runner.py
+│   │   └── ...
+│   └── S8_generality/                       # mechanistic generality, rotation generator, ab initio arms
+│       ├── s8_arms.py                       # T8.1, pilot over s6_runner.campaign
+│       ├── s8_rotation.py                   # T8.2 / T8.5, rotation family and the old/new confrontation
+│       ├── s8_mechanisms.py                 # T8.3, mechanisms x ensembles at equal evidence budget
+│       ├── s8_marginal.py                   # T8.3-bis, the marginal of a tree INSIDE the ARF
+│       ├── s8_minimal_arf.py                # T8.4, replication in NumPy with no River import
+│       └── s8_figure_r7.py                  # T8.6, standalone Figure 4 from the committed R7 curve
 ├── tests/
 │   ├── test_R6_hydra.py
 │   ├── test_R7_regime1.py
@@ -104,8 +111,10 @@ gunzip -k data/baf/*.gz
 │   ├── test_R9_mcrit.py
 │   ├── test_S2_theory.py
 │   ├── test_S2bis_calibration.py
+│   ├── test_S3_dependence.py
 │   ├── test_S6_traces.py
 │   ├── test_S7_consistency.py
+│   ├── test_S8_generality.py
 │   └── test_manuscript_integrity.py
 ├── results/
 │   ├── R1_race_condition/
@@ -141,6 +150,17 @@ gunzip -k data/baf/*.gz
 │   ├── S6_synchronized_traces/
 │   │   ├── data/
 │   │   └── tables/
+│   ├── S8_ab_initio/                        # T8.1; data/traces.parquet/ is gitignored
+│   │   ├── data/
+│   │   └── tables/
+│   ├── S8_rotation_generator/               # T8.2 / T8.5, one subtree per eta arm
+│   │   ├── data/eta0.00/ , data/eta0.05/
+│   │   └── tables/
+│   ├── S8_mechanisms/                       # T8.3
+│   ├── S8_marginal/                         # T8.3-bis
+│   ├── S8_minimal_arf/                      # T8.4
+│   ├── S8_r7_figure/                        # T8.6
+│   │   └── figures/
 │   └── audit_S7/
 │       └── _baseline/
 └── logs/

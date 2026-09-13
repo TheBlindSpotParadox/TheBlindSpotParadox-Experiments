@@ -1,0 +1,66 @@
+{
+  "items": [
+    {
+      "measured": -14.116109595920202,
+      "numeral": "a_over_a_rect_min",
+      "quoted": -14.12,
+      "source": "docs/theory/S6_causal_evidence.md section 3",
+      "tolerance": 0.005,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "measured": 0.452271,
+      "numeral": "switch_point_canonical",
+      "quoted": 0.452271,
+      "source": "docs/theory/S6_causal_evidence.md section 3",
+      "tolerance": 1e-06,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "arm": "ARF(M=1) against ARF(M=10) -- the object .tex:224 calls a HAT",
+      "ci": [
+        3.4486,
+        4.9588
+      ],
+      "measured": 4.1175,
+      "numeral": "hydra_rmst_ratio_de0141",
+      "quoted": 4.1175,
+      "source": "docs/theory/transfer_S3.md, hydra_survival.csv",
+      "tolerance": 0.0001,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "arm": "ARF(M=1) against ARF(M=10) -- the object .tex:224 calls a HAT",
+      "ci": [
+        6.3996,
+        9.719
+      ],
+      "measured": 7.9909,
+      "numeral": "hydra_rmst_ratio_de0327",
+      "quoted": 7.99,
+      "source": "docs/theory/transfer_S3.md, .tex sec:hydra",
+      "tolerance": 0.005,
+      "verdict": "REPRODUCED"
+    },
+    {
+      "iqr": [
+        0.9874255907189744,
+        0.9983390993700288
+      ],
+      "measured": 0.9933711972285068,
+      "note": "recomputed on the S8 campaign's tau_swap-anchored arms; valid because D3-bis shows those rows identical to the committed S6 rows",
+      "numeral": "learn_share_a_pos_common",
+      "quoted": 0.993371,
+      "source": "docs/theory/S6_causal_evidence.md:157",
+      "tolerance": 1e-06,
+      "verdict": "REPRODUCED"
+    }
+  ],
+  "not_checkable": [],
+  "sources": {
+    "a_over_a_rect": "results/S6_synchronized_traces/data/runs.parquet",
+    "hydra": "results/audit_S7/hydra_survival.csv",
+    "learn_share": "results/S8_ab_initio/data/s8_causal.json"
+  },
+  "verdict": "REPRODUCED"
+}

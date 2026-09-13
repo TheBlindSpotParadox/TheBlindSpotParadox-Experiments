@@ -27,3 +27,7 @@ graphify-out/
 
 # Traces brutes volumineuses S6 (régénérables en 20 min)
 results/S6_synchronized_traces/data/traces.parquet/
+
+# Traces brutes volumineuses S8 (régénérables, même motif que S6)
+results/S8_ab_initio/data/traces.parquet/
+results/S8_rotation_generator/data/*/traces.parquet/
