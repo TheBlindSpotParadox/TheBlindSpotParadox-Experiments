@@ -1,4 +1,5 @@
 import json
+import re
 import sys
 from fractions import Fraction
 from pathlib import Path
@@ -25,6 +26,11 @@ GATE_JSON = ssot.RESULTS_DIR / "S2bis_calibration" / "tables" / "s2bis_proteus_g
 S2_GATE_JSON = ssot.RESULTS_DIR / "S2_theory" / "tables" / "s2_gate_T20.json"
 S6_CAUSAL_JSON = ssot.RESULTS_DIR / "S6_synchronized_traces" / "data" / "s6_causal.json"
 N_STAT = ssot.S9_KSWIN_STAT
+TRANSFER_S2TER = ROOT_DIR / "docs" / "theory" / "transfer_S2ter.md"
+PENDING_TRANSFERS = [ROOT_DIR / "docs" / "theory" / n for n in ("transfer_S8.md", "transfer_S9.md")]
+PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
+                        r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
+EXCLUDED_SUBSECTIONS = {"sec:race", "sec:hydra", "sec:starvation", "sec:decoupling"}
 REGIMES = ("W<=n", "n<W<Wx", "W>=Wx")
 EXPECTED_ERROR = {"W<=n": "false_miss", "n<W<Wx": "false_miss", "W>=Wx": "false_detection"}
 
@@ -306,6 +312,45 @@ def e4():
             else "UNREPRODUCED"}
 
 
+FAMILY_ROWS = [("StrictCUSUM", "published", 15.0), ("StrictCUSUM", "published", 50.0),
+               ("PHT", "published", 15.0), ("PHT", "published", 50.0),
+               ("ADWIN", "published", None), ("ADWIN", "equalised", None),
+               ("KSWIN", "published", None), ("KSWIN", "equalised", None),
+               ("EDDM", "published", None)]
+
+
+def _num(x, fmt):
+    return "---" if x is None else f"${x:{fmt}}$"
+
+
+def family_table_latex():
+    v = e4()
+    pe = v["proteus_eddm"]
+    lines = [f"    EDDM & published & {_num(pe['p0'], '.3f')} & never, $0/{pe['n_runs']}$ & --- & "
+             f"{_num(pe['detection_rate'], '.3f')} & --- \\\\", "    \\midrule"]
+    for stream in ("s6", "rotation"):
+        t = v["tables"][stream]
+        for fam, setting, thr in FAMILY_ROWS:
+            r = t["rows"][(fam, setting, thr)]
+            label = fam if thr is None else f"{fam}, $\\lambda = {thr:g}$"
+            armed = (f"${r['armed']:.3f}$ at $t_{{\\mathrm{{rel}}}} = {t['armed_t_rel_median']:+.0f}$"
+                     if fam == "EDDM" else "---")
+            lines.append(f"    {label} & {setting} & {_num(t['p0'], '.3f')} & {armed} & "
+                         f"{_num(r['fa'], '.3f')} & {_num(r['det'], '.3f')} & {_num(r['add'], '.1f')} \\\\")
+        lines.append("    \\midrule")
+    return "\n".join(lines[:-1])
+
+
+def equalising_alpha_adwin(w, lam):
+    return float(4.0 * w * np.exp(-2.0 * lam ** 2 / w))
+
+
+def detection_at_operating_point(family, threshold):
+    return next(c["detect_within_W_rate"] for c in _json(S9_TABLES / "s9_family_ordering.json")["cells"]
+                if c["family"] == family and c["threshold"] == threshold and c["input_arm"] == "raw"
+                and c["setting"] == "published" and c["delta_e"] == ssot.S9_DELTA_E_REF)
+
+
 def test_readable_budget_reduces_to_A_and_to_the_rectangle():
     p0, delta = 0.024, 0.005
     for w in (5, 29, 30, 31, 200):
@@ -377,6 +422,71 @@ def test_part_C_closed_forms():
         assert all(amplitude_gap(w, a, n, k) > 0 for w in range(1, n + 1)), c
 
 
+def _payloads(path):
+    return PAYLOAD_RE.findall(path.read_text(encoding="utf-8"))
+
+
+def test_transfer_S2ter_payloads_resolve_once_and_avoid_pending_anchors():
+    payloads = _payloads(TRANSFER_S2TER)
+    assert len(payloads) == 7, len(payloads)
+    pending = [(f, s) for p in PENDING_TRANSFERS for f, s, _ in _payloads(p)]
+    assert pending
+    for f, search, replace in payloads:
+        text = (ROOT_DIR / f).read_text(encoding="utf-8")
+        state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
+        assert state in [(1, 0), (0, 1)], (f, search.splitlines()[0][:80], state)
+        if state == (0, 1):
+            continue
+        lo = text.find(search)
+        hi = lo + len(search)
+        for g, other in pending:
+            o = text.find(other) if g == f else -1
+            assert o < 0 or o + len(other) <= lo or o >= hi, (f, search[:60], other[:60])
+
+
+def test_transfer_S2ter_payloads_avoid_the_excluded_subsections():
+    live = ROOT_DIR / "docs" / "manuscript" / (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(
+        encoding="utf-8").strip()
+    text = live.read_text(encoding="utf-8")
+    subs = [(m.start(), m.group(1)) for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(sec:[^}]+)\}", text)]
+    zones = [(lab, pos, subs[i + 1][0] if i + 1 < len(subs) else len(text))
+             for i, (pos, lab) in enumerate(subs) if lab in EXCLUDED_SUBSECTIONS]
+    assert len(zones) == len(EXCLUDED_SUBSECTIONS), zones
+    targets = [search for f, search, _ in _payloads(TRANSFER_S2TER) if (ROOT_DIR / f).resolve() == live.resolve()]
+    assert targets
+    for search in targets:
+        offset = text.find(search)
+        assert not [lab for lab, a, b in zones if a <= offset < b], search[:60]
+
+
+def test_the_ordering_table_payload_is_the_recomputation():
+    transfer = TRANSFER_S2TER.read_text(encoding="utf-8")
+    assert family_table_latex() in transfer
+    assert "family & setting & $p_0$ & armed &" in transfer
+
+
+def test_published_verdicts():
+    assert [r["verdict"] for r in e0()] == ["REPRODUCED"] * 7
+    v1 = e1()
+    assert v1["verdict"] == "NOT RETAINED" and v1["relative_holds"]
+    assert {g: v["acc_a"] for g, v in v1["grids"].items()} == {
+        "G_ctrl": Fraction(715, 768), "G_can": Fraction(31, 40), "G_rot": Fraction(9, 10)}
+    assert (v1["pooled_acc_a"], v1["threshold"]) == (Fraction(3673, 3960), Fraction(715, 768))
+    v2 = e2()
+    assert [(v2["regimes"][r]["false_miss"], v2["regimes"][r]["false_detection"], v2["regimes"][r]["verdict"])
+            for r in REGIMES] == [(91, 0, "CONFIRMED"), (1, 7, "REFUTED"), (0, 478, "CONFIRMED")]
+    assert v2["sign_defects"] == []
+    v3 = e3()
+    assert v3["verdict"] == "VERDICT-BEARING" and v3["reproduced_at_published_W"]
+    assert not any(v3["flags"]["W_argmax"].values()) and not any(v3["flags"]["W_fw"].values())
+    assert np.allclose(v3["floor_chord_interval"]["W_argmax"], [7.1125, 11.8284], rtol=0, atol=1e-4)
+    assert np.allclose(v3["floor_chord_interval"]["W_fw"], [-7.3323, -2.4648], rtol=0, atol=1e-4)
+    assert [equalising_alpha_adwin(w, ssot.R4_PHT_LAMBDA) for w in v3["readings"].values()] == pytest.approx(
+        [0.0904116, 1173.05, 6370.52], rel=1e-5)
+    assert [detection_at_operating_point(f, ssot.R4_PHT_LAMBDA) for f in ("StrictCUSUM", "PHT")] == [1.0, 1.0]
+    assert e4()["verdict"] == "REPRODUCED"
+
+
 if __name__ == "__main__":
     for r in e0():
         print(f"E0  {r['numeral']:30s} {float(r['recomputed']):.4f} ({r['recomputed']})  "
@@ -416,3 +526,10 @@ if __name__ == "__main__":
         for key in sorted(t["rows"], key=str):
             print(f"      {str(key):40s} {t['rows'][key]}")
     print(f"E4  {v4['verdict']}")
+    for k, w in v3["readings"].items():
+        print(f"T4  equalising ADWIN level at lambda = {ssot.R4_PHT_LAMBDA:g}, {k} = {w}: "
+              f"{equalising_alpha_adwin(w, ssot.R4_PHT_LAMBDA):.6g}")
+    for fam in ("StrictCUSUM", "PHT"):
+        print(f"T3  {fam} lambda = {ssot.R4_PHT_LAMBDA:g} at Delta_e = {ssot.S9_DELTA_E_REF}: detection within W "
+              f"{detection_at_operating_point(fam, ssot.R4_PHT_LAMBDA)}")
+    print(family_table_latex())
