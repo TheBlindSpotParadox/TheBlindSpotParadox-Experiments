@@ -254,3 +254,54 @@ as retracted: a claim withdrawn by a declared correction outranks a claim kept w
 | HALT T10.3 | P0-2 BREACH | no INSECTS `p0` is reported from the S10 pass |
 | declared | P0-3 DIVERGENT | BAF `p0` reported with its parse flag |
 | measured | every other rule | verdict as measured, never re-tuned; a refutation of the prompt's prediction is a result |
+
+---
+
+## Erratum E1 — the erasure estimator of Part B (2026-09-24, before any S10 measurement)
+
+Committed after `22252da` and before any S10 campaign, smoke run or analysis. No S10 quantity had
+been computed when it was written.
+
+**What was read to write it.** The committed S6 trunk, `results/S6_synchronized_traces/data/runs.parquet`,
+arm `full` — the `l = 0` stream S10 reproduces under L0 and does not measure. Per magnitude, the
+distributions of `w_fw` (`def:times` W at horizon 2500), `tau_erase` (argmax of `A_unrefl`) and
+`tau_err_rho050/025/010`. These bear on whether an estimator **can** move with a lag; they say
+nothing about the size of any lag effect.
+
+**The defect.** `def:times` reads W as the **last** crossing of `p0 + delta_P` by a 200-step trailing
+mean. At `p0 = 0.024` the noise of that mean (`sqrt(p0 (1 - p0) / 200) ~ 0.011`) exceeds
+`delta_P = 0.005`, so the last crossing is set by the latest noise excursion before the horizon, not
+by the end of the transient. Measured on the trunk, at the 11 magnitudes with `Delta_e <= 0.327`:
+median `w_fw` between 1 908 and 2 264 against a horizon of 2 500, 38 % to 60 % of runs beyond 2 000,
+and 6 to 35 runs in 100 censored. An estimator pinned to the horizon cannot carry a shift of `l`.
+Worse, under M2 the deadline `W(l) - l` would then shrink by `l` exactly as under M1, so Part B as
+written would **manufacture** P-b and P-c rather than test them.
+
+**What the manuscript calls `tau_erase`.** `\SixTauErase = 612` is "mean argmax A_unrefl"
+(`articleA_blindspot_v64_camera_ready.tex:37`, `s6_causal.json`): the `s6_defs.tau_erase` estimator,
+not `def:times`. The prompt's P-b is therefore a statement about the argmax estimator.
+
+**Amendment to Part B**, applied to every rule that reads `W`, `A` or `A_avail`:
+
+- `T(l) := s6_defs.tau_erase(A_unrefl(l), tau_swap(0) + l, horizon = S6_T_HORIZON)`, with
+  `A_unrefl(l)` = `s6_defs.accumulations(e(l)[tau*:], p0(l))[0]` (`delta = DELTA_P`) and
+  `tau_swap(0)` the trunk's `tau_swap_q010`. Under M2 the learning sequence is the trunk's, so the
+  first replacement reaches the predictions at `tau_swap(0) + l`. The search window moves with it,
+  so the estimator is shift-invariant and no horizon is asymmetric across lags. At `l = 0`, `T(0)`
+  is the record's `tau_erase` and is asserted equal to it (part of L0).
+- Budgets are read on the unreflected accumulation, floored at 0 (no positive evidence read):
+  `A(l) := max(0, max_{0 <= t <= T(l)} A_unrefl(l)[t])`;
+  `A_avail^M1(l) := max(0, max_{0 <= t <= T(0) - l} A_unrefl(0)[t])`;
+  `A_avail^M2(l) := max(0, max_{0 <= t <= T(l) - l} A_unrefl(l)[t])`;
+  0 when the bound is negative, NaN when `T` is NaN.
+- Detection deadlines: M1 `0 <= d(0) and d(0) + l <= T(0)`; M2 `0 <= d(l) and d(l) + l <= T(l)`.
+- L2 reads `T(500) - T(0)` in place of `W(500) - W(0)`, with thresholds, tolerance and ratio rule
+  unchanged; L3 reads the amended budgets; L4 the amended deadlines. L1 is unchanged: it never read
+  `W`.
+- `def:times` W at `S10_T_HORIZON` stays in the tables as a **descriptive** secondary reading, so the
+  horizon pinning above is shown rather than asserted. It is never tested. `S10_T_HORIZON` still
+  bounds the monitor feed and the detection-at-all reading.
+
+Rejected alternative: `tau_err(rho)`. It is a recovery time relative to the empirical jump. It is
+not the instant at which the evidence stops accumulating, and not what the manuscript names
+`tau_erase`.

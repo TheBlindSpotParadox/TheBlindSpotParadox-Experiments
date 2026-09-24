@@ -655,10 +655,10 @@ S10_N_SEEDS = len(S6_CAMPAIGN_SEEDS)            # 100; the VALUES come from _gat
 S10_WARMUP_WINDOW = S6_WARMUP_WINDOW            # 1000: the p0 window AND the monitor feed start,
                                                 # S9's replay convention
 S10_TRACE_POST = S6_TRACE_POST                  # 4000: the traced post-drift span, S6's frame
-S10_T_HORIZON = S6_T_HORIZON + max(S10_LAGS)    # 3000. Under shared latency W(l) is predicted near
-                                                # W(0) + l; at S6's 2500 every run with W(0) > 2000
-                                                # would be censored at l = 500 by the horizon alone.
-                                                # One horizon for every lag keeps the lags comparable
+S10_T_HORIZON = S6_T_HORIZON + max(S10_LAGS)    # 3000: the monitor feed, the detection-at-all reading
+                                                # and the descriptive def:times W. Erasure itself is
+                                                # read by argmax from the lag-shifted first swap
+                                                # (erratum E1), a window that moves with the lag
 S10_LAMBDAS = S9_OFFLINE_LAMBDAS                # [5, 8, 15, 25, 50], the S9 replay ladder
 S10_TEST_LAMBDA = R4_PHT_LAMBDA                 # 15.0: the one threshold whose contrasts enter T10.4
 S10_TEST_LAG = max(S10_LAGS)                    # 500: the one lag contrasted against 0 in T10.4
