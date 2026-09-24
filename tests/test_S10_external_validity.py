@@ -194,3 +194,58 @@ def test_the_declared_ten_reproduce_the_protocol_verdict():
     assert not kept["R5-abrupt_balanced"] and not kept["R4-alpha"]
     abrupt = next(r for r in fam["members"] if r["member"] == "R5-abrupt_balanced")
     assert abrupt["threshold"] == pytest.approx(0.05 / 2)
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 8. the perimeter, and the transfer payloads
+# ══════════════════════════════════════════════════════════════════════════════
+import re  # noqa: E402
+
+TRANSFER = ROOT_DIR / "docs" / "theory" / "S10_transfer.md"
+EXCLUDED = {"sec:race", "sec:hydra", "sec:starvation", "sec:decoupling"}
+PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
+                        r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
+
+
+def test_s10_writes_only_inside_its_perimeter():
+    """PROMPT_S10: no write under results/S6_*, S8_*, S9_*, R*_*, and no new authorized deviation."""
+    tables = ssot.RESULTS_DIR / "S10_external_validity" / "tables"
+    if tables.exists():
+        unprefixed = [p.name for p in tables.iterdir() if p.is_file() and not p.name.startswith("s10_")]
+        assert not unprefixed, unprefixed
+    foreign = [str(p.relative_to(ssot.RESULTS_DIR)) for pattern in ("S6_*", "S8_*", "S9_*", "R*_*")
+               for p in ssot.RESULTS_DIR.glob(f"{pattern}/**/*s10_*")]
+    assert not foreign, foreign
+    ledger = ssot.RESULTS_DIR / "audit_S7" / "_baseline" / "authorized_deviations.txt"
+    assert "S10" not in ledger.read_text(encoding="utf-8")
+
+
+def _payloads():
+    if not TRANSFER.exists():
+        pytest.skip("S10_transfer.md absent")
+    return PAYLOAD_RE.findall(TRANSFER.read_text(encoding="utf-8"))
+
+
+def test_transfer_S10_anchors_resolve_exactly_once():
+    payloads = _payloads()
+    assert len(payloads) == 3, f"{len(payloads)} payloads parsed -- the fence shape changed"
+    for f, search, _ in payloads:
+        target = ROOT_DIR / f
+        assert target.exists(), f
+        assert target.read_text(encoding="utf-8").count(search) == 1, (f, search.splitlines()[0][:80])
+
+
+def test_transfer_S10_payloads_avoid_the_excluded_subsections():
+    live = ROOT_DIR / "docs" / "manuscript" / "articleA_blindspot_v64_camera_ready.tex"
+    text = live.read_text(encoding="utf-8")
+    subs = [(m.start(), m.group(1))
+            for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(sec:[^}]+)\}", text)]
+    zones = [(lab, pos, subs[i + 1][0] if i + 1 < len(subs) else len(text))
+             for i, (pos, lab) in enumerate(subs) if lab in EXCLUDED]
+    assert len(zones) == len(EXCLUDED), [z[0] for z in zones]
+    for f, search, _ in _payloads():
+        if not f.endswith("articleA_blindspot_v64_camera_ready.tex"):
+            continue
+        off = text.find(search)
+        inside = [lab for lab, a, b in zones if a <= off < b]
+        assert not inside, (f, off, inside, search.splitlines()[0][:80])
