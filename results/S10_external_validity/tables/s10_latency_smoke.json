@@ -1,0 +1,5369 @@
+{
+  "L0": {
+    "a_or_b": {
+      "canonical": {
+        "err_divergent": 0,
+        "oracle": "results/S6_synchronized_traces/smoke/traces.parquet",
+        "rows_joined": 75000,
+        "rows_new": 75000,
+        "rows_ref": 75000,
+        "verdict": "PRESERVED"
+      },
+      "rotation": {
+        "reason": "no committed rotation smoke corpus",
+        "verdict": "SKIPPED"
+      }
+    },
+    "c": {
+      "reason": "S9 cells exist for the full grid only",
+      "verdict": "SKIPPED"
+    }
+  },
+  "bootstrap_seed": 12345,
+  "delta_p": 0.005,
+  "env": {
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "lags": [
+    0,
+    10,
+    50,
+    100,
+    500
+  ],
+  "lambdas": [
+    5.0,
+    8.0,
+    15.0,
+    25.0,
+    50.0
+  ],
+  "n_bootstrap": 10000,
+  "streams": {
+    "canonical": {
+      "budgets": {
+        "M1": {
+          "0": {
+            "ci": [
+              27.240000000000034,
+              35.12000000000134
+            ],
+            "median": 30.362000000000084,
+            "over_A0_ci": [
+              1.0,
+              1.0
+            ],
+            "over_A0_median": 1.0
+          },
+          "10": {
+            "ci": [
+              25.965000000000032,
+              35.104000000000454
+            ],
+            "median": 30.097000000000406,
+            "over_A0_ci": [
+              0.9773022470450646,
+              0.9946815278520497
+            ],
+            "over_A0_median": 0.9861891608724638
+          },
+          "100": {
+            "ci": [
+              25.475000000000016,
+              34.86000000000059
+            ],
+            "median": 29.513000000000158,
+            "over_A0_ci": [
+              0.9445770804911359,
+              0.9944338317633875
+            ],
+            "over_A0_median": 0.9773022470450646
+          },
+          "50": {
+            "ci": [
+              25.74800000000003,
+              35.104000000000454
+            ],
+            "median": 30.097000000000406,
+            "over_A0_ci": [
+              0.9525766378536732,
+              0.9946815278520497
+            ],
+            "over_A0_median": 0.9847604533765086
+          },
+          "500": {
+            "ci": [
+              0.0,
+              28.10800000000011
+            ],
+            "median": 19.18300000000012,
+            "over_A0_ci": [
+              0.0,
+              0.9753902476229055
+            ],
+            "over_A0_median": 0.6693018382703019
+          }
+        },
+        "M2": {
+          "0": {
+            "ci": [
+              27.240000000000034,
+              35.12000000000134
+            ],
+            "median": 30.362000000000084,
+            "over_A0_ci": [
+              1.0,
+              1.0
+            ],
+            "over_A0_median": 1.0
+          },
+          "10": {
+            "ci": [
+              29.934000000000413,
+              38.878000000000256
+            ],
+            "median": 30.74800000000003,
+            "over_A0_ci": [
+              1.0166971358927428,
+              1.1287812041116003
+            ],
+            "over_A0_median": 1.0973804100227758
+          },
+          "100": {
+            "ci": [
+              49.37500000000088,
+              63.30999999999948
+            ],
+            "median": 52.95200000000399,
+            "over_A0_ci": [
+              1.2628190447108254,
+              1.8471115209801425
+            ],
+            "over_A0_median": 1.6461913467398017
+          },
+          "50": {
+            "ci": [
+              42.779999999999625,
+              51.432000000002546
+            ],
+            "median": 44.059999999999846,
+            "over_A0_ci": [
+              1.1837901026107094,
+              1.5377172549721791
+            ],
+            "over_A0_median": 1.3784646156776292
+          },
+          "500": {
+            "ci": [
+              83.64000000000046,
+              159.89200000000005
+            ],
+            "median": 95.82500000000087,
+            "over_A0_ci": [
+              2.820339897491269,
+              4.882876294941444
+            ],
+            "over_A0_median": 3.1273542018443203
+          }
+        }
+      },
+      "n_runs": 15,
+      "p0": {
+        "max": 0.03,
+        "median": 0.024,
+        "min": 0.022
+      },
+      "rates": [
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5333,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5333,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5333,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5333,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.4667,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.2667,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5333,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9333,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7333,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.1333,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0667,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.7333,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4667,
+          "detect_within_W_rate": 0.3333,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.2,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.7333,
+          "detect_within_W_rate": 0.6667,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 15,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        }
+      ],
+      "shifts": {
+        "10": {
+          "T_shift_ci": [
+            0.0,
+            0.0
+          ],
+          "T_shift_median": 0.0,
+          "T_shift_over_lag_ci": [
+            0.0,
+            0.0
+          ],
+          "T_shift_over_lag_median": 0.0,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -1.0,
+                1.0
+              ],
+              "median": 0.0,
+              "n_pairs": 15,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -1178.0,
+                -24.5
+              ],
+              "median": -27.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "median": 0.0,
+              "n_pairs": 3,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -0.5,
+                3.5
+              ],
+              "median": 0.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2262.0,
+            "W0_share_beyond_2000": 0.4666666666666667,
+            "n_finite_both": 13,
+            "shift_ci": [
+              -41.0,
+              0.0
+            ],
+            "shift_median": 0.0
+          },
+          "n_T_finite_both": 15
+        },
+        "100": {
+          "T_shift_ci": [
+            -326.0,
+            566.0
+          ],
+          "T_shift_median": 30.0,
+          "T_shift_over_lag_ci": [
+            -3.26,
+            5.66
+          ],
+          "T_shift_over_lag_median": 0.3,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -11.0,
+                0.0
+              ],
+              "median": -3.0,
+              "n_pairs": 15,
+              "verdict_L1": "UNDECIDED"
+            },
+            "25": {
+              "ci": [
+                -2016.0,
+                -15.0
+              ],
+              "median": -53.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                -3.0,
+                -3.0
+              ],
+              "median": -3.0,
+              "n_pairs": 3,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -1.5,
+                17.0
+              ],
+              "median": 0.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2262.0,
+            "W0_share_beyond_2000": 0.4666666666666667,
+            "n_finite_both": 12,
+            "shift_ci": [
+              0.0,
+              666.0
+            ],
+            "shift_median": 102.0
+          },
+          "n_T_finite_both": 15
+        },
+        "50": {
+          "T_shift_ci": [
+            -167.0,
+            37.0
+          ],
+          "T_shift_median": 0.0,
+          "T_shift_over_lag_ci": [
+            -3.34,
+            0.74
+          ],
+          "T_shift_over_lag_median": 0.0,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -4.0,
+                0.0
+              ],
+              "median": -2.0,
+              "n_pairs": 15,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -2033.0,
+                -12.0
+              ],
+              "median": -50.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                -1.0,
+                -1.0
+              ],
+              "median": -1.0,
+              "n_pairs": 3,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -0.5,
+                3.0
+              ],
+              "median": 0.0,
+              "n_pairs": 12,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2262.0,
+            "W0_share_beyond_2000": 0.4666666666666667,
+            "n_finite_both": 12,
+            "shift_ci": [
+              -10.0,
+              334.0
+            ],
+            "shift_median": 6.5
+          },
+          "n_T_finite_both": 15
+        },
+        "500": {
+          "T_shift_ci": [
+            240.0,
+            1359.0
+          ],
+          "T_shift_median": 458.0,
+          "T_shift_over_lag_ci": [
+            0.48,
+            2.718
+          ],
+          "T_shift_over_lag_median": 0.916,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -3.0,
+                2.0
+              ],
+              "median": 0.0,
+              "n_pairs": 15,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -2003.0,
+                -10.0
+              ],
+              "median": -48.5,
+              "n_pairs": 12,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "median": 0.0,
+              "n_pairs": 3,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                0.5,
+                20.5
+              ],
+              "median": 5.5,
+              "n_pairs": 12,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2262.0,
+            "W0_share_beyond_2000": 0.4666666666666667,
+            "n_finite_both": 11,
+            "shift_ci": [
+              -29.0,
+              684.0
+            ],
+            "shift_median": 349.0
+          },
+          "n_T_finite_both": 15
+        }
+      }
+    },
+    "rotation": {
+      "budgets": {
+        "M1": {
+          "0": {
+            "ci": [
+              40.531999999999876,
+              80.67200000000594
+            ],
+            "median": 53.34899999999923,
+            "over_A0_ci": [
+              1.0,
+              1.0
+            ],
+            "over_A0_median": 1.0
+          },
+          "10": {
+            "ci": [
+              39.00000000000001,
+              80.19600000000582
+            ],
+            "median": 53.17449999999934,
+            "over_A0_ci": [
+              0.9720397737639097,
+              0.9968292055874535
+            ],
+            "over_A0_median": 0.9895027329906847
+          },
+          "100": {
+            "ci": [
+              36.888999999999754,
+              78.28400000000482
+            ],
+            "median": 51.332999999999544,
+            "over_A0_ci": [
+              0.9416506962999093,
+              0.9801508825898597
+            ],
+            "over_A0_median": 0.9653086236787227
+          },
+          "50": {
+            "ci": [
+              37.445999999999756,
+              78.93200000000485
+            ],
+            "median": 52.90649999999934,
+            "over_A0_ci": [
+              0.9700292472563682,
+              0.9857639987345777
+            ],
+            "over_A0_median": 0.9747088339590163
+          },
+          "500": {
+            "ci": [
+              26.043999999999492,
+              73.7000000000036
+            ],
+            "median": 46.30449999999986,
+            "over_A0_ci": [
+              0.6708567307196871,
+              0.9721876297218772
+            ],
+            "over_A0_median": 0.9014165209290776
+          }
+        },
+        "M2": {
+          "0": {
+            "ci": [
+              40.531999999999876,
+              80.67200000000594
+            ],
+            "median": 53.34899999999923,
+            "over_A0_ci": [
+              1.0,
+              1.0
+            ],
+            "over_A0_median": 1.0
+          },
+          "10": {
+            "ci": [
+              46.24800000000036,
+              82.76400000000439
+            ],
+            "median": 56.078000000001715,
+            "over_A0_ci": [
+              1.025049439683579,
+              1.127491300221543
+            ],
+            "over_A0_median": 1.056831977461873
+          },
+          "100": {
+            "ci": [
+              57.724000000000174,
+              106.69400000000606
+            ],
+            "median": 77.58300000000081,
+            "over_A0_ci": [
+              1.2439101550142646,
+              1.5962257192100315
+            ],
+            "over_A0_median": 1.312621794784296
+          },
+          "50": {
+            "ci": [
+              49.27700000000016,
+              92.20000000000289
+            ],
+            "median": 70.87150000000327,
+            "over_A0_ci": [
+              1.0872602659136512,
+              1.2501775484115303
+            ],
+            "over_A0_median": 1.1908318806241907
+          },
+          "500": {
+            "ci": [
+              88.18300000000215,
+              163.34099999998412
+            ],
+            "median": 122.28500000000183,
+            "over_A0_ci": [
+              1.5525650076479618,
+              2.5607024927720623
+            ],
+            "over_A0_median": 2.317771908210278
+          }
+        }
+      },
+      "n_runs": 15,
+      "p0": {
+        "max": 0.07,
+        "median": 0.059,
+        "min": 0.053
+      },
+      "rates": [
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5714,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.8571,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5714,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.8571,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5714,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.8571,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5714,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.8571,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.3571,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.4,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.5714,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.4,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.6429,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.6,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M1",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5714,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.6,
+          "lag": 0,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.4
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 0,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.8571,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 0,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.0714,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.0,
+          "lag": 0,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.3571,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 10,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7857,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.8,
+          "lag": 10,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.2
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.9333,
+          "detect_within_W_rate": 0.9286,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 10,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.3333,
+          "detect_within_W_rate": 0.0714,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 10,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 50,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.3571,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 50,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.9333,
+          "detect_within_W_rate": 0.9286,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.75,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 50,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.7333,
+          "detect_within_W_rate": 0.4286,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.2,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 50,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.0,
+          "detect_within_W_rate": 0.0,
+          "lag": 100,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 1.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.3571,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.4,
+          "lag": 100,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.6
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.9286,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.75,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8,
+          "detect_within_W_rate": 0.7143,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.4,
+          "detect_within_W_rate": 0.25,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 100,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2143,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.25,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 5.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2143,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.25,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 0.2,
+          "detect_within_W_rate": 0.2,
+          "lag": 500,
+          "lambda": 8.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.8
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 15.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 25.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": null,
+          "detect_at_all_rate": 0.8667,
+          "detect_within_W_rate": 0.7857,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 15,
+          "n_deadline_finite": 14,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.1,
+          "detect_at_all_rate": 0.6,
+          "detect_within_W_rate": 0.5,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 4,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.25,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 0.8,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        },
+        {
+          "arm": "M2",
+          "delta_e": 0.4,
+          "detect_at_all_rate": 1.0,
+          "detect_within_W_rate": 1.0,
+          "lag": 500,
+          "lambda": 50.0,
+          "n": 5,
+          "n_deadline_finite": 5,
+          "pre_drift_alarm_rate": 0.0
+        }
+      ],
+      "shifts": {
+        "10": {
+          "T_shift_ci": [
+            0.0,
+            123.0
+          ],
+          "T_shift_median": 0.0,
+          "T_shift_over_lag_ci": [
+            0.0,
+            12.3
+          ],
+          "T_shift_over_lag_median": 0.0,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -2.5,
+                2.0
+              ],
+              "median": 0.0,
+              "n_pairs": 12,
+              "verdict_L1": "UNDECIDED"
+            },
+            "25": {
+              "ci": [
+                -3.0,
+                0.0
+              ],
+              "median": 0.0,
+              "n_pairs": 13,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                -72.0,
+                72.0
+              ],
+              "median": -9.0,
+              "n_pairs": 5,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                0.0,
+                0.0
+              ],
+              "median": 0.0,
+              "n_pairs": 6,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2681.0,
+            "W0_share_beyond_2000": 0.6,
+            "n_finite_both": 9,
+            "shift_ci": [
+              0.0,
+              65.0
+            ],
+            "shift_median": 0.0
+          },
+          "n_T_finite_both": 14
+        },
+        "100": {
+          "T_shift_ci": [
+            0.0,
+            123.0
+          ],
+          "T_shift_median": 3.5,
+          "T_shift_over_lag_ci": [
+            0.0,
+            1.23
+          ],
+          "T_shift_over_lag_median": 0.035,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -6.5,
+                4.0
+              ],
+              "median": 0.0,
+              "n_pairs": 12,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -8.0,
+                0.0
+              ],
+              "median": 0.0,
+              "n_pairs": 13,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                -2578.0,
+                -1139.5
+              ],
+              "median": -2153.0,
+              "n_pairs": 6,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -16.0,
+                1.0
+              ],
+              "median": -1.0,
+              "n_pairs": 6,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2681.0,
+            "W0_share_beyond_2000": 0.6,
+            "n_finite_both": 9,
+            "shift_ci": [
+              -25.0,
+              428.0
+            ],
+            "shift_median": 0.0
+          },
+          "n_T_finite_both": 14
+        },
+        "50": {
+          "T_shift_ci": [
+            0.0,
+            88.0
+          ],
+          "T_shift_median": 0.0,
+          "T_shift_over_lag_ci": [
+            0.0,
+            1.76
+          ],
+          "T_shift_over_lag_median": 0.0,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -4.0,
+                2.0
+              ],
+              "median": -1.5,
+              "n_pairs": 12,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -10.0,
+                2.0
+              ],
+              "median": -3.0,
+              "n_pairs": 13,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                -1137.0,
+                -354.0
+              ],
+              "median": -396.5,
+              "n_pairs": 6,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -5.0,
+                0.0
+              ],
+              "median": -0.5,
+              "n_pairs": 6,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2681.0,
+            "W0_share_beyond_2000": 0.6,
+            "n_finite_both": 9,
+            "shift_ci": [
+              -32.0,
+              428.0
+            ],
+            "shift_median": 0.0
+          },
+          "n_T_finite_both": 14
+        },
+        "500": {
+          "T_shift_ci": [
+            -31.0,
+            655.0
+          ],
+          "T_shift_median": 415.5,
+          "T_shift_over_lag_ci": [
+            -0.062,
+            1.31
+          ],
+          "T_shift_over_lag_median": 0.831,
+          "d_shift": {
+            "15": {
+              "ci": [
+                -4.0,
+                0.0
+              ],
+              "median": -3.0,
+              "n_pairs": 12,
+              "verdict_L1": "P-a HOLDS"
+            },
+            "25": {
+              "ci": [
+                -5.0,
+                -1.0
+              ],
+              "median": -4.0,
+              "n_pairs": 13,
+              "verdict_L1": null
+            },
+            "5": {
+              "ci": [
+                null,
+                null
+              ],
+              "median": null,
+              "n_pairs": 0,
+              "verdict_L1": null
+            },
+            "50": {
+              "ci": [
+                -2578.0,
+                -1159.5
+              ],
+              "median": -2160.5,
+              "n_pairs": 6,
+              "verdict_L1": null
+            },
+            "8": {
+              "ci": [
+                -2.0,
+                -2.0
+              ],
+              "median": -2.0,
+              "n_pairs": 3,
+              "verdict_L1": null
+            }
+          },
+          "descriptive_def_times_W": {
+            "W0_median": 2681.0,
+            "W0_share_beyond_2000": 0.6,
+            "n_finite_both": 8,
+            "shift_ci": [
+              -25.0,
+              135.0
+            ],
+            "shift_median": 6.5
+          },
+          "n_T_finite_both": 14
+        }
+      }
+    }
+  },
+  "t_horizon": 3000,
+  "test_lag": 500,
+  "test_lambda": 15.0,
+  "tests": {
+    "S10-L2-canonical": {
+      "arm": "M2",
+      "n_eff": 4,
+      "n_minus": 0,
+      "n_plus": 4,
+      "n_seeds": 5,
+      "p": 0.125,
+      "rule": "L2",
+      "stream": "canonical"
+    },
+    "S10-L2-rotation": {
+      "arm": "M2",
+      "n_eff": 5,
+      "n_minus": 2,
+      "n_plus": 3,
+      "n_seeds": 5,
+      "p": 1.0,
+      "rule": "L2",
+      "stream": "rotation"
+    },
+    "S10-L3-canonical": {
+      "arm": "M2",
+      "n_eff": 5,
+      "n_minus": 0,
+      "n_plus": 5,
+      "n_seeds": 5,
+      "p": 0.0625,
+      "rule": "L3",
+      "stream": "canonical"
+    },
+    "S10-L3-rotation": {
+      "arm": "M2",
+      "n_eff": 5,
+      "n_minus": 0,
+      "n_plus": 5,
+      "n_seeds": 5,
+      "p": 0.0625,
+      "rule": "L3",
+      "stream": "rotation"
+    },
+    "S10-L4-M1-canonical": {
+      "arm": "M1",
+      "n_eff": 4,
+      "n_minus": 4,
+      "n_plus": 0,
+      "n_seeds": 5,
+      "p": 0.125,
+      "rule": "L4",
+      "stream": "canonical"
+    },
+    "S10-L4-M1-rotation": {
+      "arm": "M1",
+      "n_eff": 2,
+      "n_minus": 2,
+      "n_plus": 0,
+      "n_seeds": 5,
+      "p": 0.5,
+      "rule": "L4",
+      "stream": "rotation"
+    },
+    "S10-L4-M2-canonical": {
+      "arm": "M2",
+      "n_eff": 1,
+      "n_minus": 0,
+      "n_plus": 1,
+      "n_seeds": 5,
+      "p": 1.0,
+      "rule": "L4",
+      "stream": "canonical"
+    },
+    "S10-L4-M2-rotation": {
+      "arm": "M2",
+      "n_eff": 1,
+      "n_minus": 0,
+      "n_plus": 1,
+      "n_seeds": 5,
+      "p": 1.0,
+      "rule": "L4",
+      "stream": "rotation"
+    }
+  },
+  "which": "smoke"
+}
