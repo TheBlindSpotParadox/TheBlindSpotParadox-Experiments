@@ -126,3 +126,68 @@ def test_cluster_bootstrap_does_not_understate_the_interval():
     lo_c, hi_c = lat.cluster_median_ci(values, clusters, n_boot=2000)
     lo_r, hi_r = lat.cluster_median_ci(values, np.arange(values.size), n_boot=2000)
     assert (hi_c - lo_c) > 3.0 * (hi_r - lo_r), ((lo_c, hi_c), (lo_r, hi_r))
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 5. T10.2 -- the admissible window and the placement of a published failure
+# ══════════════════════════════════════════════════════════════════════════════
+import s10_dual_mode as dual  # noqa: E402
+
+
+def test_admissible_window_handles_contiguous_empty_and_silent_cases():
+    lams = [1.0, 2.0, 5.0, 10.0, 50.0]
+    # flooding at low lambda, starvation at high lambda, admissible in between
+    assert dual.admissible(lams, [1.0, 1.0, 0.97, 0.96, 0.10], [0.01, 0.2, 0.6, 0.9, None]) == \
+        {"lo": 5.0, "hi": 10.0, "contiguous": True}
+    # no alarm at all: precision undefined, counted as satisfied -- silence is not flooding
+    assert dual.admissible([5.0], [0.99], [None]) == {"lo": 5.0, "hi": 5.0, "contiguous": True}
+    # the two cliffs overlap: no threshold is admissible
+    assert dual.admissible(lams, [1.0, 1.0, 0.9, 0.5, 0.0], [0.1, 0.2, 0.4, 0.9, None]) is None
+    # a dip inside the window is reported, not smoothed over
+    assert dual.admissible(lams, [1.0, 0.99, 0.90, 0.97, 0.0],
+                           [0.9, 0.9, 0.9, 0.9, None])["contiguous"] is False
+
+
+def test_a_published_failure_must_fail_by_its_own_criterion_only():
+    assert dual.failure_verdict("starvation", 0.0, None) == "HOLDS"
+    assert dual.failure_verdict("flooding", 1.0, 0.01) == "HOLDS"
+    assert dual.failure_verdict("flooding", 0.5, 0.01) == "DOUBLE"
+    assert dual.failure_verdict("starvation", 0.99, 0.9) == "FAILS"
+    assert dual.failure_verdict("flooding", 0.99, 0.9) == "FAILS"
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 6. T10.3 -- the identity rule P0-1 declares rather than measures
+# ══════════════════════════════════════════════════════════════════════════════
+def test_adwin_and_pht_arf_pipelines_monitor_the_same_classifier():
+    """p0 is measured for pht_arf_c1 and declared identical for adwin_arf_c1: build_model reads only
+    the '_ht' suffix and 'c32', so both build the same ARF(c = 1). Pinned here, including the nested
+    drift and warning detectors, so a future pipeline name cannot silently break the declaration."""
+    sys.path.insert(0, str(ROOT_DIR / "experiments" / "R5_real_world_evaluation"))
+    import exp_R5_common as r5
+    for seed in (7, 8):
+        assert (r5.build_model("adwin_arf_c1", seed)._get_params()
+                == r5.build_model("pht_arf_c1", seed)._get_params())
+
+
+# ══════════════════════════════════════════════════════════════════════════════
+# 7. T10.4 -- Holm, by hand and against the verdict protocol_v2 already states
+# ══════════════════════════════════════════════════════════════════════════════
+import s10_holm as holm_mod  # noqa: E402
+
+
+def test_holm_step_down_matches_a_hand_computed_case():
+    retained, adjusted = holm_mod.holm([0.01, 0.04, 0.03, 0.005], alpha=0.05)
+    assert list(retained) == [True, False, False, True]
+    assert np.allclose(adjusted, [0.03, 0.06, 0.06, 0.02])
+
+
+def test_the_declared_ten_reproduce_the_protocol_verdict():
+    """protocol_v2.tex section Multiplicity: eight at the 2^-29 floor retained, abrupt_balanced
+    compared against alpha / 2 and not retained, the degenerate alpha-sweep contrast not retained."""
+    fam = holm_mod.apply(holm_mod.declared_members())
+    kept = {r["member"]: r["retained"] for r in fam["members"]}
+    assert fam["m"] == 10 and sum(kept.values()) == 8
+    assert not kept["R5-abrupt_balanced"] and not kept["R4-alpha"]
+    abrupt = next(r for r in fam["members"] if r["member"] == "R5-abrupt_balanced")
+    assert abrupt["threshold"] == pytest.approx(0.05 / 2)
