@@ -117,7 +117,7 @@ question of a per-magnitude `p_0` is moot here because the per-magnitude medians
 `eps = 0.05` (`ssot.EPS_MISS`) is a design target, never a measurement. **`ARL_0` carries no `eps`
 dependence at all** — reporting a sensitivity of `ARL_0` to `eps` would be inventing a move that
 the formula does not contain. `eps` enters exactly two quantities, and both are reported here. At
-`Delta_e = 0.3268`, `W = 57.4`, `lambda = 50`:
+`Delta_e = 0.3268`, `tau_swap^(1/M) = 57.4` in place of `W`, `lambda = 50`:
 
 | `eps` | `thm:floor` RHS | `lambda_starve` |
 |---|---|---|
@@ -261,7 +261,8 @@ so `alpha = W/ARL_0` collapses from `2.70e-6` to `6.02e-16`, and `d(1-eps || alp
 more than compensate: +24 % at `Delta_e = 0.33`, +27 % at 0.10.
 
 **The floor is not the binding constraint at the canonical operating point.** At
-`Delta_e = 0.3268` the measured budget ceiling is 33.5 and the floor is 1.80, a factor of 19
+`Delta_e = 0.3268`, with `tau_swap^(1/M) = 57.4` in place of `W` in the floor and in the margin
+below, the measured budget ceiling is 33.5 and the floor is 1.80, a factor of 19
 above it; yet the `lambda = 50` monitor detects on 0 of 100 runs. What binds is the requirement,
 not the floor: `R_CUSUM = lambda + sqrt(W/2 ln(1/eps)) = 50 + 9.3 = 59.3 > 33.5`. By the
 two-regime reading that follows `thm:floor` in `framework_v2.tex`, the blind spot at that operating

@@ -283,6 +283,10 @@ TRANSFER = ROOT_DIR / "docs" / "theory" / "transfer_S9.md"
 EXCLUDED = {"sec:race", "sec:hydra", "sec:starvation", "sec:decoupling"}
 PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
                         r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
+S9_ANCHORS_RELABELLED_BY_S2TER = {
+    "  At $\\Delta e = 0.3268$, $W = 57.4$, $\\varepsilon = 0.05$,":
+        "  At $\\Delta e = 0.3268$, $\\tau_{\\mathrm{swap}}^{(1/M)} = 57.4$ in place of $W$,"
+        " $\\varepsilon = 0.05$,"}
 
 
 def _payloads():
@@ -299,8 +303,12 @@ def test_transfer_S9_anchors_resolve_exactly_once():
     for f, search, _ in payloads:
         target = ROOT_DIR / f
         assert target.exists(), f
-        assert target.read_text(encoding="utf-8").count(search) == 1, (
-            f, search.splitlines()[0][:80])
+        text = target.read_text(encoding="utf-8")
+        relabelled = [new for old, new in S9_ANCHORS_RELABELLED_BY_S2TER.items() if old in search]
+        if relabelled and text.count(search) == 0:
+            assert text.count(relabelled[0]) == 1, (f, relabelled[0][:80])
+            continue
+        assert text.count(search) == 1, (f, search.splitlines()[0][:80])
 
 
 def test_transfer_S9_payloads_avoid_the_excluded_subsections():

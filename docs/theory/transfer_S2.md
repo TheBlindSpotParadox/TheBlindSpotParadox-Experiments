@@ -90,7 +90,8 @@ evaluated at a scalar.
 
 The floor is the one quantity that survives this, because `ARL_0` enters it only through
 `alpha = W/ARL_0` inside `d(1-eps || alpha)`, hence only through `ln(1/alpha)`. Over the same band
-the tightened floor `eq:floor_chord` at `Delta_e = 0.3268`, `W = 57.4`, `lambda = 50` evaluates to
+the tightened floor `eq:floor_chord` at `Delta_e = 0.3268`, `tau_swap^(1/M) = 57.4` in place of `W`,
+`lambda = 50` evaluates to
 **[13.9, 18.3]**, a ±14 % interval. Every floor in the manuscript is stated as that interval.
 `rem:floor_band` in `framework_v2.tex` carries the rule; `prop3_v2.tex` §proofs carries the
 derivation.
