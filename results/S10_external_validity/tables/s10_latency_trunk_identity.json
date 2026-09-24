@@ -1,0 +1,38 @@
+{
+  "env": {
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "lags": [
+    0,
+    10,
+    50,
+    100,
+    500
+  ],
+  "magnitudes": 20,
+  "mode": "full",
+  "seeds": 100,
+  "streams": {
+    "canonical": {
+      "columns_compared": 30,
+      "columns_divergent": {},
+      "oracle": "results/S6_synchronized_traces/data/runs.parquet",
+      "rows_joined": 2000,
+      "rows_new": 2000,
+      "rows_ref_full": 2000,
+      "verdict": "PRESERVED"
+    },
+    "rotation": {
+      "columns_compared": 30,
+      "columns_divergent": {},
+      "oracle": "results/S8_rotation_generator/data/eta0.05/runs.parquet",
+      "rows_joined": 2000,
+      "rows_new": 2000,
+      "rows_ref_full": 2000,
+      "verdict": "PRESERVED"
+    }
+  }
+}
