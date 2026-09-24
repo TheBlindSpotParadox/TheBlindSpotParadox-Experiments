@@ -146,6 +146,9 @@ def test_admissible_window_handles_contiguous_empty_and_silent_cases():
     # a dip inside the window is reported, not smoothed over
     assert dual.admissible(lams, [1.0, 0.99, 0.90, 0.97, 0.0],
                            [0.9, 0.9, 0.9, 0.9, None])["contiguous"] is False
+    # drawn at grid resolution: a one-point window spans the geometric midpoints with its neighbours
+    assert dual.grid_extent([1.0, 4.0, 16.0], {"lo": 4.0, "hi": 4.0}) == pytest.approx((2.0, 8.0))
+    assert dual.grid_extent([1.0, 4.0, 16.0], {"lo": 1.0, "hi": 16.0}) == pytest.approx((1.0, 16.0))
 
 
 def test_a_published_failure_must_fail_by_its_own_criterion_only():

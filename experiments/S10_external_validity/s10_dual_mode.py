@@ -200,7 +200,16 @@ def rule_readings(panel):
 # Figure
 # ══════════════════════════════════════════════════════════════════════════════
 PROTOCOL = {"passive": "passive monitor", "reset": "reset on alarm"}
-LEGEND_ORDER = ["recall", "precision", "admissible window",
+
+
+def grid_extent(lambdas, window):
+    """The window at the grid's resolution: out to the geometric midpoints with the neighbouring grid
+    points, so a window of one grid point stays visible. The rule reads grid points only."""
+    i, j = lambdas.index(window["lo"]), lambdas.index(window["hi"])
+    lo = np.sqrt(lambdas[i - 1] * lambdas[i]) if i > 0 else lambdas[i]
+    hi = np.sqrt(lambdas[j] * lambdas[j + 1]) if j + 1 < len(lambdas) else lambdas[j]
+    return lo, hi
+LEGEND_ORDER = ["recall", "precision", "admissible window (at grid resolution)",
                 r"$\lambda_{\mathrm{FA}}$: one false alarm over the armed span",
                 r"$\lambda_{\mathrm{op}} = q_{0.05}$ of the post-drift PHT peak", "published operating point"]
 
@@ -212,7 +221,7 @@ def draw(panels, path):
         rec = np.asarray(panel["recall"], dtype=float)
         prec = np.asarray([np.nan if p is None else p for p in panel["precision"]], dtype=float)
         if panel["window"]:
-            ax.axvspan(panel["window"]["lo"], panel["window"]["hi"], color=INK2, alpha=0.12, lw=0,
+            ax.axvspan(*grid_extent(panel["lambdas"], panel["window"]), color=INK2, alpha=0.12, lw=0,
                        label=LEGEND_ORDER[2])
         ax.axvline(panel["lambda_FA"], color=INK2, ls=":", lw=1.0, label=LEGEND_ORDER[3])
         if panel["lambda_op"] is not None:
