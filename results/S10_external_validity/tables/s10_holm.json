@@ -1,0 +1,763 @@
+{
+  "H0_primary": {
+    "m": 18,
+    "members": [
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "PHT+ARF c=1 vs PHT+HT",
+        "member": "R4-1",
+        "p": 1.862645149230957e-09,
+        "rank": 8,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.004545454545454546
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "SRP+PHT c=1 vs PHT+HT",
+        "member": "R4-2",
+        "p": 1.862645149230957e-09,
+        "rank": 9,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.005
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "KSWIN+ARF c=1 vs PHT+ARF c=1",
+        "member": "R4-3",
+        "p": 1.862645149230957e-09,
+        "rank": 10,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.005555555555555556
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "PHT+RF vs PHT+ARF c=1",
+        "member": "R4-4",
+        "p": 1.862645149230957e-09,
+        "rank": 11,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.00625
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "ADWIN+RF vs ADWIN+ARF c=1",
+        "member": "R4-5",
+        "p": 1.862645149230957e-09,
+        "rank": 12,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0071428571428571435
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "EDDM+ARF c=1 vs EDDM+HT",
+        "member": "R4-6",
+        "p": 1.862645149230957e-09,
+        "rank": 13,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.008333333333333333
+      },
+      {
+        "adjusted_p": 1.0,
+        "claim": "KSWIN a=0.005 vs KSWIN a=0.05",
+        "member": "R4-alpha",
+        "p": 1.0,
+        "rank": 18,
+        "retained": false,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.05
+      },
+      {
+        "adjusted_p": 0.1283218357712031,
+        "claim": "Table II F1 ratio HT/ARF, abrupt_balanced",
+        "member": "R5-abrupt_balanced",
+        "p": 0.042773945257067694,
+        "rank": 16,
+        "retained": false,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.016666666666666666
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "Table II F1 ratio HT/ARF, gradual_balanced",
+        "member": "R5-gradual_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 14,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.01
+      },
+      {
+        "adjusted_p": 2.0489096641540527e-08,
+        "claim": "Table II F1 ratio HT/ARF, incremental_reoccurring_balanced",
+        "member": "R5-incremental_reoccurring_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 15,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0125
+      },
+      {
+        "adjusted_p": 2.3902485428196658e-27,
+        "claim": "rule L2, M2, canonical: n+ = 99, n- = 1",
+        "member": "S10-L2-canonical",
+        "p": 1.5934990285464438e-28,
+        "rank": 4,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0033333333333333335
+      },
+      {
+        "adjusted_p": 9.251509435797317e-17,
+        "claim": "rule L2, M2, rotation: n+ = 84, n- = 7",
+        "member": "S10-L2-rotation",
+        "p": 7.11654571984409e-18,
+        "rank": 6,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0038461538461538464
+      },
+      {
+        "adjusted_p": 2.8398992587956425e-29,
+        "claim": "rule L3, M2, canonical: n+ = 100, n- = 0",
+        "member": "S10-L3-canonical",
+        "p": 1.5777218104420236e-30,
+        "rank": 1,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.002777777777777778
+      },
+      {
+        "adjusted_p": 2.8398992587956425e-29,
+        "claim": "rule L3, M2, rotation: n+ = 100, n- = 0",
+        "member": "S10-L3-rotation",
+        "p": 1.5777218104420236e-30,
+        "rank": 2,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0029411764705882353
+      },
+      {
+        "adjusted_p": 2.8398992587956425e-29,
+        "claim": "rule L4, M1, canonical: n+ = 0, n- = 100",
+        "member": "S10-L4-M1-canonical",
+        "p": 1.5777218104420236e-30,
+        "rank": 3,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.003125
+      },
+      {
+        "adjusted_p": 1.1858461261560205e-20,
+        "claim": "rule L4, M1, rotation: n+ = 0, n- = 71",
+        "member": "S10-L4-M1-rotation",
+        "p": 8.470329472543003e-22,
+        "rank": 5,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0035714285714285718
+      },
+      {
+        "adjusted_p": 2.8995685852351016e-09,
+        "claim": "rule L4, M2, canonical: n+ = 47, n- = 4",
+        "member": "S10-L4-M2-canonical",
+        "p": 2.4163071543625847e-10,
+        "rank": 7,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.004166666666666667
+      },
+      {
+        "adjusted_p": 0.3255113149061799,
+        "claim": "rule L4, M2, rotation: n+ = 21, n- = 12",
+        "member": "S10-L4-M2-rotation",
+        "p": 0.16275565745308995,
+        "rank": 17,
+        "retained": false,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.025
+      }
+    ],
+    "not_retained": [
+      "R5-abrupt_balanced",
+      "S10-L4-M2-rotation",
+      "R4-alpha"
+    ]
+  },
+  "H1_census": {
+    "m": 39,
+    "members": [
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "PHT+ARF c=1 vs PHT+HT",
+        "member": "R4-1",
+        "p": 1.862645149230957e-09,
+        "rank": 8,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0015625
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "SRP+PHT c=1 vs PHT+HT",
+        "member": "R4-2",
+        "p": 1.862645149230957e-09,
+        "rank": 9,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0016129032258064516
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "KSWIN+ARF c=1 vs PHT+ARF c=1",
+        "member": "R4-3",
+        "p": 1.862645149230957e-09,
+        "rank": 10,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0016666666666666668
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "PHT+RF vs PHT+ARF c=1",
+        "member": "R4-4",
+        "p": 1.862645149230957e-09,
+        "rank": 11,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.001724137931034483
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "ADWIN+RF vs ADWIN+ARF c=1",
+        "member": "R4-5",
+        "p": 1.862645149230957e-09,
+        "rank": 12,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0017857142857142859
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "EDDM+ARF c=1 vs EDDM+HT",
+        "member": "R4-6",
+        "p": 1.862645149230957e-09,
+        "rank": 13,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.001851851851851852
+      },
+      {
+        "adjusted_p": 1.0,
+        "claim": "KSWIN a=0.005 vs KSWIN a=0.05",
+        "member": "R4-alpha",
+        "p": 1.0,
+        "rank": 38,
+        "retained": false,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.025
+      },
+      {
+        "adjusted_p": 0.17109578102827078,
+        "claim": "Table II F1 ratio HT/ARF, abrupt_balanced",
+        "member": "R5-abrupt_balanced",
+        "p": 0.042773945257067694,
+        "rank": 36,
+        "retained": false,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0125
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "Table II F1 ratio HT/ARF, gradual_balanced",
+        "member": "R5-gradual_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 14,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0019230769230769232
+      },
+      {
+        "adjusted_p": 5.960464477539063e-08,
+        "claim": "Table II F1 ratio HT/ARF, incremental_reoccurring_balanced",
+        "member": "R5-incremental_reoccurring_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 15,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.002
+      },
+      {
+        "adjusted_p": 5.736596502767198e-27,
+        "claim": "rule L2, M2, canonical: n+ = 99, n- = 1",
+        "member": "S10-L2-canonical",
+        "p": 1.5934990285464438e-28,
+        "rank": 4,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.001388888888888889
+      },
+      {
+        "adjusted_p": 2.419625544746991e-16,
+        "claim": "rule L2, M2, rotation: n+ = 84, n- = 7",
+        "member": "S10-L2-rotation",
+        "p": 7.11654571984409e-18,
+        "rank": 6,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0014705882352941176
+      },
+      {
+        "adjusted_p": 6.153115060723892e-29,
+        "claim": "rule L3, M2, canonical: n+ = 100, n- = 0",
+        "member": "S10-L3-canonical",
+        "p": 1.5777218104420236e-30,
+        "rank": 1,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.001282051282051282
+      },
+      {
+        "adjusted_p": 6.153115060723892e-29,
+        "claim": "rule L3, M2, rotation: n+ = 100, n- = 0",
+        "member": "S10-L3-rotation",
+        "p": 1.5777218104420236e-30,
+        "rank": 2,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0013157894736842105
+      },
+      {
+        "adjusted_p": 6.153115060723892e-29,
+        "claim": "rule L4, M1, canonical: n+ = 0, n- = 100",
+        "member": "S10-L4-M1-canonical",
+        "p": 1.5777218104420236e-30,
+        "rank": 3,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0013513513513513514
+      },
+      {
+        "adjusted_p": 2.964615315390051e-20,
+        "claim": "rule L4, M1, rotation: n+ = 0, n- = 71",
+        "member": "S10-L4-M1-rotation",
+        "p": 8.470329472543003e-22,
+        "rank": 5,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0014285714285714286
+      },
+      {
+        "adjusted_p": 7.97381360939653e-09,
+        "claim": "rule L4, M2, canonical: n+ = 47, n- = 4",
+        "member": "S10-L4-M2-canonical",
+        "p": 2.4163071543625847e-10,
+        "rank": 7,
+        "retained": true,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.0015151515151515152
+      },
+      {
+        "adjusted_p": 0.48826697235926986,
+        "claim": "rule L4, M2, rotation: n+ = 21, n- = 12",
+        "member": "S10-L4-M2-rotation",
+        "p": 0.16275565745308995,
+        "rank": 37,
+        "retained": false,
+        "site": "none yet: new claims, carried by charge S10-C",
+        "threshold": 0.016666666666666666
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.0282",
+        "member": "S3-KS-1",
+        "p": 0.0015,
+        "p_as_committed": 0.0015,
+        "rank": 34,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.008333333333333333
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.0854",
+        "member": "S3-KS-2",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 16,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0020833333333333333
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.1409",
+        "member": "S3-KS-3",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 17,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.002173913043478261
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.1936",
+        "member": "S3-KS-4",
+        "p": 0.001,
+        "p_as_committed": 0.001,
+        "rank": 33,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0071428571428571435
+      },
+      {
+        "adjusted_p": 0.015,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.2426",
+        "member": "S3-KS-5",
+        "p": 0.003,
+        "p_as_committed": 0.003,
+        "rank": 35,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.01
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.2871",
+        "member": "S3-KS-6",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 18,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.002272727272727273
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.3268",
+        "member": "S3-KS-7",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 19,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.002380952380952381
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.3614",
+        "member": "S3-KS-8",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 20,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0025
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.391",
+        "member": "S3-KS-9",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 21,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.002631578947368421
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4157",
+        "member": "S3-KS-10",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 22,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.002777777777777778
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.436",
+        "member": "S3-KS-11",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 23,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0029411764705882353
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4523",
+        "member": "S3-KS-12",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 24,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.003125
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.465",
+        "member": "S3-KS-13",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 25,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0033333333333333335
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4749",
+        "member": "S3-KS-14",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 26,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0035714285714285718
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4823",
+        "member": "S3-KS-15",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 27,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.0038461538461538464
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4877",
+        "member": "S3-KS-16",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 28,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.004166666666666667
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4916",
+        "member": "S3-KS-17",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 29,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.004545454545454546
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4944",
+        "member": "S3-KS-18",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 30,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.005
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4964",
+        "member": "S3-KS-19",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 31,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.005555555555555556
+      },
+      {
+        "adjusted_p": 0.01199400299850075,
+        "claim": "exponential fit of tau_HAT rejected, Delta_e = 0.4977",
+        "member": "S3-KS-20",
+        "p": 0.0004997501249375312,
+        "p_as_committed": 0.0,
+        "rank": 32,
+        "retained": true,
+        "site": ".tex:408 (sec:starvation_boundary); dependence_v2.tex:228",
+        "threshold": 0.00625
+      },
+      {
+        "adjusted_p": 1.0,
+        "claim": "crossing rate homogeneous across the envelope (a non-rejection: Holm cannot change it)",
+        "member": "S6-homogeneity",
+        "p": 1.0,
+        "rank": 39,
+        "retained": false,
+        "site": ".tex:298 (inside sec:starvation, excluded zone: a charge routes to framework_v2.tex)",
+        "threshold": 0.05
+      }
+    ],
+    "not_retained": [
+      "R5-abrupt_balanced",
+      "S10-L4-M2-rotation",
+      "R4-alpha",
+      "S6-homogeneity"
+    ]
+  },
+  "T10_1_verdicts": {
+    "canonical": {
+      "L1_P-a_under_M2": {
+        "10": "P-a HOLDS",
+        "100": "P-a HOLDS",
+        "50": "P-a HOLDS",
+        "500": "P-a HOLDS"
+      },
+      "L2_P-b_under_M2": "P-b REFUTED",
+      "L3_P-c_under_M2": "P-c REFUTED",
+      "L4_detection_within_deadline": {
+        "M1": "REDUCED",
+        "M2": "INCREASED"
+      },
+      "M1": "P-a and P-b hold by construction (tautological, not evidence)"
+    },
+    "rotation": {
+      "L1_P-a_under_M2": {
+        "10": "P-a HOLDS",
+        "100": "P-a HOLDS",
+        "50": "P-a HOLDS",
+        "500": "P-a HOLDS"
+      },
+      "L2_P-b_under_M2": "P-b REFUTED",
+      "L3_P-c_under_M2": "P-c REFUTED",
+      "L4_detection_within_deadline": {
+        "M1": "REDUCED",
+        "M2": "NOT SHOWN"
+      },
+      "M1": "P-a and P-b hold by construction (tautological, not evidence)"
+    }
+  },
+  "alpha": 0.05,
+  "declared_ten_alone": {
+    "m": 10,
+    "members": [
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "PHT+ARF c=1 vs PHT+HT",
+        "member": "R4-1",
+        "p": 1.862645149230957e-09,
+        "rank": 1,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.005
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "SRP+PHT c=1 vs PHT+HT",
+        "member": "R4-2",
+        "p": 1.862645149230957e-09,
+        "rank": 2,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.005555555555555556
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "KSWIN+ARF c=1 vs PHT+ARF c=1",
+        "member": "R4-3",
+        "p": 1.862645149230957e-09,
+        "rank": 3,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.00625
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "PHT+RF vs PHT+ARF c=1",
+        "member": "R4-4",
+        "p": 1.862645149230957e-09,
+        "rank": 4,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0071428571428571435
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "ADWIN+RF vs ADWIN+ARF c=1",
+        "member": "R4-5",
+        "p": 1.862645149230957e-09,
+        "rank": 5,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.008333333333333333
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "EDDM+ARF c=1 vs EDDM+HT",
+        "member": "R4-6",
+        "p": 1.862645149230957e-09,
+        "rank": 6,
+        "retained": true,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.01
+      },
+      {
+        "adjusted_p": 1.0,
+        "claim": "KSWIN a=0.005 vs KSWIN a=0.05",
+        "member": "R4-alpha",
+        "p": 1.0,
+        "rank": 10,
+        "retained": false,
+        "site": "Table I (.tex sec:proteus, seed-level contrasts); protocol_v2.tex section Multiplicity",
+        "threshold": 0.05
+      },
+      {
+        "adjusted_p": 0.08554789051413539,
+        "claim": "Table II F1 ratio HT/ARF, abrupt_balanced",
+        "member": "R5-abrupt_balanced",
+        "p": 0.042773945257067694,
+        "rank": 9,
+        "retained": false,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.025
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "Table II F1 ratio HT/ARF, gradual_balanced",
+        "member": "R5-gradual_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 7,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.0125
+      },
+      {
+        "adjusted_p": 1.862645149230957e-08,
+        "claim": "Table II F1 ratio HT/ARF, incremental_reoccurring_balanced",
+        "member": "R5-incremental_reoccurring_balanced",
+        "p": 1.862645149230957e-09,
+        "rank": 8,
+        "retained": true,
+        "site": "Table II (.tex sec:crossover, real-world validation); protocol_v2.tex section Multiplicity",
+        "threshold": 0.016666666666666666
+      }
+    ],
+    "not_retained": [
+      "R5-abrupt_balanced",
+      "R4-alpha"
+    ]
+  },
+  "env": {
+    "numpy": "1.26.4",
+    "python": "3.12.9",
+    "river": "0.23.0",
+    "scipy": "1.16.2"
+  },
+  "ks_zero_replaced_by": 0.0004997501249375312,
+  "retained_in_H0_not_in_H1": []
+}
