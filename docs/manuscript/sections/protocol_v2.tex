@@ -30,7 +30,7 @@ with its replicate count, its seed and its generator.
     \textbf{Statistic} & \textbf{Resampling unit} & \textbf{$n_{\mathrm{boot}}$} & \textbf{Seed} & \textbf{Generator} \\
     \midrule
     Table~\ref{tab:results_concept} F1 and ADD; $\alpha$-sweep & seed index, paired across arms & 1000 & 12345 & local \texttt{default\_rng} \\
-    Hydra RMST ratio $\tau_{\mathrm{HAT}}/\tau_{\mathrm{ARF}}$ & seed index, paired across arms & 10000 & 20260906 & local \texttt{default\_rng} \\
+    Onset acceleration $\gamma_M$ (RMST ratio $\tau_{\mathrm{HAT}}/\tau_{\mathrm{ARF}}$) & seed index, paired across arms & 10000 & 20260906 & local \texttt{default\_rng} \\
     Evidence ceiling, $\lambda_{\mathrm{op}}$, $\Delta e_c$ & seed, paired and unpaired variants & 10000 & 12345 & local \texttt{default\_rng} \\
     $\Delta e$ on real streams (Table~\ref{tab:real_data_summary}) & the per-drift jump, $K$ per variant & 1000 & 42 & local \texttt{default\_rng} \\
     Exponential-fit KS $p$-value for $\tau_{\mathrm{HAT}}$ & parametric, under the fitted exponential & 2000 & $\lfloor 1000\,\Delta e \rfloor$ & local \texttt{default\_rng} \\
@@ -44,7 +44,7 @@ with its replicate count, its seed and its generator.
   statistical independence. The two statements are incompatible: the 36 streams a seed produces
   share that seed's forest initialisation and are not independent of one another, so a run-level
   resample understates the width of the interval. The bootstrap now resamples the 30 seed indices,
-  paired across arms, on a locally injected generator, which is the scheme the Hydra ratio already
+  paired across arms, on a locally injected generator, which is the scheme the onset-acceleration ratio already
   used. The caption's independence claim and the computation now agree.
 \end{remark}
 

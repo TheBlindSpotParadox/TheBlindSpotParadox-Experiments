@@ -94,9 +94,12 @@ to a change in $P(Y \mid X)$ at fixed $P(X)$---the case where the labelling rule
 moves and the features do not---which is the case error-stream monitors are
 built for. Neither family dominates. The design consequence is that the two
 occupy different positions with respect to the loop and are therefore
-complementary rather than substitutable, which is why we evaluate an
-input-space arm alongside the error-stream arms
-(Section~\ref{sec:experiments}).
+complementary rather than substitutable. On the generators of this paper the
+price is measured: a Hellinger-distance monitor~\cite{ditzler_hdddm_2011} that
+detects a mean shift of the features ($0.35$, $0.55$ and $1.00$ of runs at
+$0.25$, $0.5$ and $1$ standard deviation) returns the same output on every seed
+at every drift magnitude, because both generators move the decision boundary at
+fixed $P(X)$. It does not see the drift this paper studies.
 
 \subsection{Detectors instantiated in this work}
 \textbf{ADWIN}~\cite{bifet_adwin_2007} maintains a window split into two
@@ -104,9 +107,15 @@ sub-windows and declares a change when their means diverge beyond a Hoeffding
 bound~\cite{hoeffding_1963}, testing every $c$ steps.
 \textbf{PHT}~\cite{page_1954, basseville_1993} accumulates a running statistic
 net of a tolerance $\delta_P>0$ and fires when it exceeds a threshold $\lambda>0$
-governing $\mathrm{ARL}_0$. \textbf{DDM}~\cite{gama_ddm_2004},
-\textbf{EDDM}~\cite{baena_eddm_2006} and \textbf{ECDD}~\cite{ross_ecdd_2012}
-share the accumulation structure and inherit its window sensitivity.
-\textbf{KSWIN}~\cite{raab_kswin_2020} applies a two-sample test between a
-reference reservoir and a recent window, so its evidence requirement is set by
-the window rather than by an accumulated sum.
+governing $\mathrm{ARL}_0$. \textbf{DDM}~\cite{gama_ddm_2004} and \textbf{ECDD}~\cite{ross_ecdd_2012}
+accumulate evidence on the error rate and are exposed to the same window
+truncation. \textbf{EDDM}~\cite{baena_eddm_2006} is not: it compares the
+cumulative mean and standard deviation of the distance between errors with their
+running maximum, so the post-change evidence it needs grows with the stationary
+history, and Section~\ref{sec:requirement} assigns it no requirement.
+\textbf{KSWIN}~\cite{raab_kswin_2020} runs a two-sample test between a
+reference reservoir and a recent window at a stated level $\alpha$ ($0.005$ as
+deployed here), so its evidence requirement is set by the window and by
+$\alpha$ rather than by an accumulated sum; at the false-alarm level of a
+$\lambda = 50$ CUSUM it exceeds the measured evidence ceiling
+(Remark~\ref{rem:split_measured}).
