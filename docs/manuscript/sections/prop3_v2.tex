@@ -4,7 +4,7 @@
 % Every numeral is read from results/S2_theory/tables/ or results/S6_synchronized_traces/tables/.
 % Produced by experiments/S2_theory/{s2_arl0.py, s2_w_random.py, s2_eddm.py}.
 
-\section{Proposition 3: Domain, Randomness of \texorpdfstring{$W$}{W}, and Proofs}\label{sec:prop3}
+\section{The Starvation Bound: Domain, Randomness of \texorpdfstring{$W$}{W}, and Proofs}\label{sec:prop3}
 
 \subsection{Where Eq.~\eqref{eq:markov_bound} says anything}\label{sec:prop3_domain}
 
@@ -39,7 +39,7 @@ strictly below $1$. At the canonical magnitude $\Delta e = 0.3268$:
   $W$ estimator & mean $W$ & $\mu W$ & $\lambda = 15$ & $\lambda = 25$ & $\lambda = 50$ \\
   \midrule
   $\tau_{\mathrm{swap}}^{(1/M)}$ & 57.4  & 18.2  & vacant & $1.0$ & $2.7\!\times\!10^{-14}$ \\
-  $\tau_{\mathrm{erase}}$        & 611.9 & 193.8 & vacant & vacant & vacant \\
+  $W_{\mathrm{argmax}}$          & 611.9 & 193.8 & vacant & vacant & vacant \\
   $\tau_{\mathrm{err}}(0.10)$    & 557.0 & 176.4 & vacant & vacant & vacant \\
   \bottomrule
 \end{tabular}}
@@ -63,7 +63,7 @@ else, and the submitted version said neither.
 
 \subsection{\texorpdfstring{$W$}{W} is a random variable}\label{sec:prop3_random}
 
-Reviewer~\#1 faults Proposition~9 for treating a random window as a constant.
+A reviewer of the submitted version faulted it for treating a random window as a constant.
 Proposition~\ref{prop:starvation} is stated at a single $W$, and the campaign
 measures a distribution whose spread straddles $\partial\mathcal{D}$. The
 statement that bounds the ensemble of runs is therefore

@@ -24,7 +24,8 @@ with its replicate count, its seed and its generator.
   a locally injected \texttt{numpy.random.Generator}; no bootstrap draws from the global NumPy
   state.}
   \label{tab:protocol_ci}
-  \begin{tabular}{@{}llrll@{}}
+  \small
+  \begin{tabular}{@{}p{0.27\textwidth}p{0.24\textwidth}rlp{0.14\textwidth}@{}}
     \toprule
     \textbf{Statistic} & \textbf{Resampling unit} & \textbf{$n_{\mathrm{boot}}$} & \textbf{Seed} & \textbf{Generator} \\
     \midrule
@@ -116,7 +117,8 @@ repository's consistency test without importing any experiment.
   listed are River defaults. $c$ denotes the internal ADWIN clock of the adaptive forest, swept over
   $\{1, 32\}$; $c_{\mathrm{ext}}$ the clock of an external ADWIN monitor.}
   \label{tab:protocol_hyper}
-  \begin{tabular}{@{}lll@{}}
+  \small
+  \begin{tabular}{@{}p{0.23\textwidth}p{0.50\textwidth}p{0.19\textwidth}@{}}
     \toprule
     \textbf{Component} & \textbf{Parameterisation} & \textbf{Where used} \\
     \midrule
@@ -157,7 +159,7 @@ same tolerance and the same threshold, differing only in $p_0$:
 \end{itemize}
 
 \textbf{Every metric this paper reports for that experiment is the empirical arm.} The blind-spot
-indicator and the detection rate are both defined on the empirical stopping time, and Figure~1 plots
+indicator and the detection rate are both defined on the empirical stopping time, and Figure~\ref{fig:race_condition} plots
 it; the nominal arm is a secondary control column, recorded in the artifact and published nowhere.
 
 The distinction is not cosmetic, and it is worth decomposing rather than asserting. At
@@ -340,6 +342,7 @@ across seeds.
   and reports $p \le 2^{-29}$; the $p$-value is identical across rows by construction, the effect
   size is not.}
   \label{tab:protocol_effects}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{@{}llrrr@{}}
     \toprule
     \textbf{Arm A} & \textbf{Arm B} & \textbf{A} & \textbf{B} & \textbf{$\Delta$ (pp, 95\% CI)} \\
@@ -351,7 +354,7 @@ across seeds.
     PHT $+$ RF (static)     & PHT $+$ ARF ($c{=}1$)   & 913/1080  & 0/1080    & $+84.54\ [83.33, 85.75]$ \\
     ADWIN $+$ RF (static)   & ADWIN $+$ ARF ($c{=}1$) & 959/1080  & 1070/1080 & $-10.28\ [-11.87, -8.69]$ \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}}
 \end{table*}
 
 The last row is the one that would be misread from its $p$-value alone. It carries the same
