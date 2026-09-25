@@ -287,6 +287,17 @@ S9_ANCHORS_RELABELLED_BY_S2TER = {
     "  At $\\Delta e = 0.3268$, $W = 57.4$, $\\varepsilon = 0.05$,":
         "  At $\\Delta e = 0.3268$, $\\tau_{\\mathrm{swap}}^{(1/M)} = 57.4$ in place of $W$,"
         " $\\varepsilon = 0.05$,"}
+S9_SUPERSEDED = {
+    "A distribution-based KSWIN monitor avoids the constraint on the settings we test---a "
+    "regime-restricted observation rather than an immunity---recovering reliable detection at no "
+    "predictive cost.": "S9-E, by the v4 abstract of docs/editorial/thesis_v4.md T11a.3",
+    "  \\item \\textbf{An architectural consequence.} We order monitor families by their":
+        "S9-G, by S2ter-F in the contributions of docs/editorial/thesis_v4.md T11a.4",
+}
+S9F_SENTENCE_AMENDED_BY_S2TER_B = ("is the condition that governs detection. Two consequences separate it\n"
+                "from~\\eqref{eq:Rkswin}.")
+MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
+ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
 
 
 def _payloads():
@@ -295,20 +306,38 @@ def _payloads():
     return PAYLOAD_RE.findall(TRANSFER.read_text(encoding="utf-8"))
 
 
+def _target(f):
+    if Path(f).name == ARCHIVED_V64:
+        return MANUSCRIPT_DIR / (MANUSCRIPT_DIR / "CURRENT").read_text(encoding="utf-8").strip()
+    return ROOT_DIR / f
+
+
+def _s2ter_b():
+    doc = (ROOT_DIR / "docs" / "theory" / "transfer_S2ter.md").read_text(encoding="utf-8")
+    return re.search(r"## B\. S2ter-B.*?```latex\n(.*?)\n```", doc, re.S).group(1)
+
+
 def test_transfer_S9_anchors_resolve_exactly_once():
     """An anchor that matches twice patches the wrong site; one that matches zero times is lost at
-    assembly. Both are silent failures at apply time, so they fail here instead."""
+    assembly. Both are silent failures at apply time, so they fail here instead. A payload is valid
+    pending (1, 0) or applied (0, 1), the first component netted against an append-style replacement;
+    a payload naming the archived v64 resolves in the manuscript of record."""
     payloads = _payloads()
     assert len(payloads) >= 8, f"only {len(payloads)} payloads parsed -- the fence shape changed"
-    for f, search, _ in payloads:
-        target = ROOT_DIR / f
+    for f, search, replace in payloads:
+        target = _target(f)
         assert target.exists(), f
         text = target.read_text(encoding="utf-8")
         relabelled = [new for old, new in S9_ANCHORS_RELABELLED_BY_S2TER.items() if old in search]
         if relabelled and text.count(search) == 0:
             assert text.count(relabelled[0]) == 1, (f, relabelled[0][:80])
             continue
-        assert text.count(search) == 1, (f, search.splitlines()[0][:80])
+        if S9F_SENTENCE_AMENDED_BY_S2TER_B in replace:
+            replace = replace.replace(S9F_SENTENCE_AMENDED_BY_S2TER_B, _s2ter_b())
+        state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
+        if state == (0, 0) and search.splitlines()[0] in S9_SUPERSEDED:
+            continue
+        assert state in [(1, 0), (0, 1)], (f, state, search.splitlines()[0][:80])
 
 
 def test_transfer_S9_payloads_avoid_the_excluded_subsections():
