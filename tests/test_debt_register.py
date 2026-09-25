@@ -51,6 +51,11 @@ def test_every_row_carries_a_v65_state():
     assert not bad, f"v65 column outside {sorted(EXPECTED_COUNT)}:\n" + "\n".join(bad)
 
 
+def test_no_row_is_pending():
+    pending = [f"{f}: '{a[:70]}'" for f, a, s in parse_anchors() if s == "PENDING"]
+    assert not pending, "register rows the v65 assembly has not treated:\n" + "\n".join(pending)
+
+
 def test_archived_v64_still_carries_every_anchor_once():
     v64 = (MANUSCRIPT_DIR / ARCHIVED_V64).read_text(encoding="utf-8")
     bad = [f"count={v64.count(a)} for '{a}'" for f, a, _ in parse_anchors()
