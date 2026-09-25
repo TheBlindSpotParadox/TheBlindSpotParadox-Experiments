@@ -57,9 +57,6 @@
 \newcommand{\EnvLo}{0.20}\newcommand{\EnvHi}{0.40}
 \newcommand{\DeFloorLo}{0.085}\newcommand{\DeFloorHi}{0.141}
 \newcommand{\QlowFloorLo}{9.38}\newcommand{\QlowFloorHi}{18.32}
-\newcommand{\LearnShare}{99.3}               % s6\_causal.json, erasure\_share\_post\_fork
-                                             % .a\_pos\_common.pooled.median\_share\_learn = 0.99337
-                                             % (E\_learn 819.2 / E\_total 826.7, n = 1979)
 \newcommand{\DeCrit}{0.120}                  % measured Action 4: 0.1197, n=300
 \newcommand{\DeCritCI}{[0.114, 0.127]}       % 95% bootstrap CI (10,000 draws)
 
@@ -76,6 +73,15 @@
 \newcommand{\AbInitDetect}{49}               % detections out of 100 at lambda = 50, Delta\_e = 0.3268,
                                              % replacement suppressed from tau* onward (18 when
                                              % suppressed only after the first, 0 nominal)
+
+% ── v4 abstract, stream S11-b. Source: results/S2\_theory/tables/s2\_gate\_T20.json and
+% results/S2bis\_calibration/tables/s2bis\_proteus\_gate.json. Every value is read from a committed
+% artifact; none is typed by hand.
+\newcommand{\CeilingCanon}{33.5}             % budget\_restitution.measured.per\_magnitude at Delta e = 0.326793: 33.5115
+\newcommand{\CeilingGridMin}{19.2}           % idem .min = 19.243
+\newcommand{\CeilingGridMax}{36.6}           % idem .max = 36.6025, argmax at Delta e = 0.193621
+\newcommand{\RcusumFifty}{59.3}              % floor\_and\_family.family\_requirements.common\_alpha\_ladder[3].R\_CUSUM = 59.2724
+\newcommand{\RcusumOp}{31.2}                 % family\_requirements\_at\_lambda\_eq, couple S6 measured lambda\_op (c=0): 31.2007
 
 % ── Stream S2 recomputation at the MEASURED base rate. Source: results/S2_theory/tables/.
 % Every value is read from a committed artifact; none is typed by hand.
@@ -111,7 +117,9 @@
 
 % ─────────────────────────────────────────────────────────────────
 \journalname{Machine Learning}
-\title{When Adaptation Erases the Evidence: Detectability Limits of Drift Monitors Coupled with Adaptive Classifiers}
+\title{The Calibration Blind Spot: Sizing Cumulative Drift Monitors Against Adaptive Classifiers}
+\titlerunning{The Calibration Blind Spot}
+\authorrunning{Anonymous Author(s)}
 \author{Anonymous Author(s)}
 \institute{Anonymous Affiliation(s)}
 \date{Received: date / Accepted: date}
@@ -124,7 +132,31 @@
 % ABSTRACT
 % ══════════════════════════════════════════════════════════════════
 \begin{abstract}
-  Concept drift monitoring on data streams typically pairs an adaptive classifier with an external drift detector. We show that this standard architecture harbors a fundamental race condition: adaptive classifiers such as Adaptive Random Forests (ARF) absorb distributional changes before CUSUM-family monitors accumulate sufficient evidence, erasing the drift signal over the exploitable transient. Through direct instrumentation of the ARF's internal tree-swap dynamics we separate the roles rather than reduce the phenomenon to one cause: internal ADWIN hyper-reactivity fixes the \emph{onset} of adaptation, ordinary incremental learning of the surviving trees performs $\LearnShare\%$ of the \emph{erasure}, and the replacements after the first act as a terminal \emph{lock} on the thresholded decision. The phenomenon has two regime-dependent faces: starvation (recall collapse) on stationary streams and false-alarm flooding (precision collapse) on non-stationary streams. A Starvation Effect renders the transient signal too brief for CUSUM accumulation, producing missed detections or alarms that fire only after adaptation; an ensemble-level Hydra Effect accelerates this adaptation by at least 4.1 to 8.0 times over a single tree. We recast decoupling as a reliability condition on stopping times and give a deterministic detection certificate calibrated on the evidence ceiling the monitor can actually reach. The certificate exposes a detectability floor on drift magnitude: below it, bounding false alarms under heteroscedastic volatility requires a threshold above the ceiling and the admissible calibration set is empty; above it the set is non-empty and a calibration exists. Synchronised instrumentation of $8{,}000$ runs measures the ceiling directly and locates the floor at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n = 300$), with operational threshold $\lambda_{\mathrm{op}} = \LambdaOpNarrow$ $\LambdaOpNarrowCI$ over the envelope $[\EnvLo, \EnvHi]$. The result is a measured bound, not an impossibility. A distribution-based KSWIN monitor avoids the constraint on the settings we test---a regime-restricted observation rather than an immunity---recovering reliable detection at no predictive cost. Validation spans instrumented Bernoulli race experiments across a wide range of drift magnitudes, heteroscedastic ARMA--GARCH streams (ProteuS), and six real-world streams (BAF, INSECTS); standard benchmarks (SEA, Hyperplane) operate below the floor and mask the phenomenon.
+  Concept-drift monitoring composes an adaptive classifier with an external detector that reads
+  the classifier's error stream. The composition closes a loop: the classifier reacts to the very
+  residual the detector measures, so a persistent change leaves a transient signature and the
+  evidence available to the monitor is bounded by adaptation rather than by the horizon. We treat
+  the pipeline as fault detection on an endogenous residual and size it with two quantities in one
+  unit---the evidence an adaptation leaves inside the window, and the evidence a monitor requires
+  at a stated false-alarm level---so that a missed detection is attributed to a calibration rather
+  than to a detector family. Synchronised instrumentation of $8{,}000$ runs measures the first
+  directly: at the canonical operating point the median evidence ceiling is $\CeilingCanon$ (grid range
+  $\CeilingGridMin$--$\CeilingGridMax$), which clears the information-theoretic floor $\FloorBand$ that binds every
+  monitor of that false-alarm level. A cumulative monitor nonetheless reports no detection there,
+  and the arithmetic states why: at $\lambda = 50$ its requirement is $\RcusumFifty$, while at the
+  threshold the same certificate returns, $\lambda_{\mathrm{op}} = \LambdaOpNarrow$
+  $\LambdaOpNarrowCI$, the requirement is $\RcusumOp$ and the ceiling clears it. The published collapses
+  are threshold facts. On heteroscedastic ARMA--GARCH streams the same Page--Hinkley monitor that
+  detects $0$ of $1{,}080$ drifts at the deployed threshold detects $1{,}080$ of $1{,}080$ at
+  $\lambda = 5$ with precision $1.000$; the three detector families the evaluation compares are
+  read at false-alarm levels thirteen orders of magnitude apart; and counterfactual arms sharing
+  one stream and one fork assign $\LearnSharePure\%$ of the erasure to ordinary incremental learning by
+  the surviving trees rather than to any internal detector. The rule these measurements support is
+  operational: set the threshold from the false-alarm budget of the span the monitor will run armed
+  over, on the error stream of the classifier it will be paired with, and check that the resulting
+  requirement lies below the measured evidence ceiling. Validation spans instrumented Bernoulli
+  streams, ProteuS, and six real-world streams (BAF, INSECTS), on which the two regime-dependent
+  faces of the calibration---recall collapse and precision collapse---are reported separately.
 \keywords{Concept drift \and Adaptive blind spot \and ADWIN \and Page-Hinkley \and Adaptive Random Forest}
 \end{abstract}
 
