@@ -445,14 +445,14 @@ def test_transfer_S2ter_payloads_resolve_once_and_avoid_pending_anchors():
 
 
 def test_transfer_S2ter_payloads_avoid_the_excluded_subsections():
-    live = ROOT_DIR / "docs" / "manuscript" / (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(
-        encoding="utf-8").strip()
-    text = live.read_text(encoding="utf-8")
+    archived = ROOT_DIR / "docs" / "manuscript" / "articleA_blindspot_v64_camera_ready.tex"
+    text = archived.read_text(encoding="utf-8")
     subs = [(m.start(), m.group(1)) for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(sec:[^}]+)\}", text)]
     zones = [(lab, pos, subs[i + 1][0] if i + 1 < len(subs) else len(text))
              for i, (pos, lab) in enumerate(subs) if lab in EXCLUDED_SUBSECTIONS]
     assert len(zones) == len(EXCLUDED_SUBSECTIONS), zones
-    targets = [search for f, search, _ in _payloads(TRANSFER_S2TER) if (ROOT_DIR / f).resolve() == live.resolve()]
+    targets = [search for f, search, _ in _payloads(TRANSFER_S2TER)
+               if (ROOT_DIR / f).resolve() == archived.resolve()]
     assert targets
     for search in targets:
         offset = text.find(search)
