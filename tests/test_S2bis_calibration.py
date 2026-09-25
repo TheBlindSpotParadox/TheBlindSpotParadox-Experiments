@@ -279,27 +279,15 @@ def _search_blocks(path):
 
 
 def _manuscript_of_record():
-    """The manuscript as it stands on `main`, which is where the writing stream applies.
+    """The manuscript named by `docs/manuscript/CURRENT`, read from the working tree.
 
-    S2's patches A and B landed on `main` at `688bcf5`; this branch forked before them, so the
-    worktree copy is the PRE-patch text and an anchor written against the live document does not
-    resolve in it. The name is read from `docs/manuscript/CURRENT` on the same ref, never
-    hard-coded. Falls back to the worktree copy when `main` is unreachable (a clone with no such
-    ref), so the check still runs, and skips when neither is readable."""
-    import subprocess
-    for ref in ("main", "origin/main"):
-        try:
-            name = subprocess.run(["git", "-C", str(ROOT_DIR), "show", f"{ref}:docs/manuscript/CURRENT"],
-                                  capture_output=True, text=True, check=True, timeout=30).stdout.strip()
-            tex = subprocess.run(["git", "-C", str(ROOT_DIR), "show", f"{ref}:docs/manuscript/{name}"],
-                                 capture_output=True, text=True, check=True, timeout=30).stdout
-            return f"{ref}:docs/manuscript/{name}", tex
-        except Exception:                                        # noqa: BLE001, PERF203
-            continue
+    Stream S2-bis read it from `main`, because its branch forked before S2's patches A and B landed
+    there (`688bcf5`). The v65 assembly applies the deferred payloads T-A(ii) and T-B on its own
+    branch, and reading `main` would hide exactly the state this check exists to verify."""
     current = (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(encoding="utf-8").strip()
     path = ROOT_DIR / "docs" / "manuscript" / current
     if not path.exists():
-        pytest.skip(f"neither main nor {path.relative_to(ROOT_DIR)} is readable")
+        pytest.skip(f"{path.relative_to(ROOT_DIR)} is not readable")
     return str(path.relative_to(ROOT_DIR)), path.read_text(encoding="utf-8")
 
 

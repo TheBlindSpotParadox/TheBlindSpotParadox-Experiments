@@ -74,6 +74,17 @@ results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
     in artifacts_sha256_pre_ssot.txt, so it consumes no deviation and is named here rather than left
     to be noticed in a diff.
 
+    Stream S11-b (v65 assembly), caption and layout only. exp_R4_main_table.build_caption now
+    states the sign-test p-value as p <= 2^-29, the resolution floor of the two-sided test at
+    n = 30, instead of p ~ 2e-9; records that the seed drives the forest initialisation of the
+    ARF, SRP and RF arms and not of the unseeded HT; and names the KSWIN lag W_buf/2. build_table
+    scales the tabular to the single-column text width. The full R4 main-table run was repeated
+    (46 min on a shared host): exp_R4_results_aligned_fusion.csv and exp_R4_seed_level_tests.csv
+    are byte-identical to their committed state, the rendered table1_proteus_summary.tex differs
+    in three lines (the caption and the two \resizebox lines), and its docs/manuscript/tables/
+    copy is re-copied from it. Neither .tex is in artifacts_sha256_pre_ssot.txt: this consumes
+    no deviation, and sha256sum -c stays at 27 OK, 7 FAILED.
+
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt
     -> expected since U0 restoration: 27 OK, 7 FAILED (the seven files above).

@@ -83,23 +83,33 @@ mark the distinction wherever results are reported.
 
 \noindent\textbf{Contributions.}
 \begin{enumerate}[nosep, label=\textbf{(C\arabic*)}]
-  \item \textbf{Monitoring under closed-loop adaptation.} We state the
-  concept-drift monitoring problem as fault detection on an endogenous residual,
-  give the mapping to the fault-detection-under-feedback setting, and derive the
-  prediction that severity is governed by the ratio of erasure time to detector
-  integration time---not by River, by ARF, or by ADWIN
+  \item \textbf{Monitoring under closed-loop adaptation.} We state the concept-drift monitoring
+  problem as fault detection on an endogenous residual, give the mapping to the
+  fault-detection-under-feedback setting, and derive the prediction that severity is governed by
+  the comparison of the evidence the loop leaves against the evidence the monitor's calibration
+  requires---not by River, by ARF, or by ADWIN, and not by any one internal detector
   (Section~\ref{sec:blindspot}).
-  \item \textbf{A transient-detection analysis of starvation.} We characterise
-  the observability window $\tau_{\mathrm{erase}}$ induced by adaptation and give
-  a finite-horizon sizing condition relating evidence required to evidence
-  available, together with a detection floor that no threshold choice escapes
-  (Section~\ref{sec:starvation}).
-  \item \textbf{Synchronised measurement.} We instrument tree replacement,
-  ensemble error and the external monitor's statistic on a shared clock, and
-  report how strongly replacement counts predict error recovery, so that erasure
-  is measured rather than assumed (Section~\ref{sec:experiments}).
-  \item \textbf{An architectural consequence.} We order monitor families by their
-  exposure to the loop---cumulative on the error stream, windowed on the error
-  stream, distributional on the input space---and state the cost each pays
+  \item \textbf{A transient-detection analysis of the sizing problem.} We characterise the
+  observability window adaptation induces, define the blind spot as a deficit of budget against
+  requirement in a single unit, and derive a detection floor that binds every monitor at a given
+  false-alarm level. The floor separates two regimes: below it no monitor detects, above it the
+  deficit is a property of the calibration and a different setting escapes it
+  (Section~\ref{sec:framework}).
+  \item \textbf{Synchronised measurement of the budget.} We instrument tree replacement, ensemble
+  error and the monitor's statistic on a shared clock across counterfactual arms that share one
+  stream, one history and one fork; we measure the evidence ceiling directly rather than through a
+  rectangular surrogate, and we report the dilation between the first replacement and erasure as a
+  measurement rather than as a definitional assumption (Section~\ref{sec:experiments}).
+  \item \textbf{An ordering of monitor families, indexed by the stream.} We compare cumulative,
+  adaptive-window and fixed-window two-sample monitors on the error stream at their deployed
+  levels and at a common false-alarm level, on two streams whose pre-change error rate $p_0$ is
+  not zero. Equalising the level lowers the fixed-window two-sample monitor (KSWIN, $0.458 \to
+  0.337$ of runs detected) and raises the adaptive-window one (ADWIN, $0.885 \to 0.926$, median
+  delay $28 \to 15$ steps), both at zero pre-change alarms: the deployed comparison orders
+  calibrations, not families. EDDM has no rank of its own---it never arms at $p_0 = 0$, is first
+  at $p_0 = 0.024$ ($0.974$ detected, $0.020$ pre-change alarms) and last at $p_0 = 0.069$
+  ($0.022$ detected, $0.930$)---so the ordering is a table with $p_0$ as a column
+  (Table~\ref{tab:family_order}), not a ranking. A monitor on the input distribution does not
+  enter it: on a change of $P(Y \mid X)$ at fixed $P(X)$ it does not see the drift
   (Section~\ref{sec:related} and Section~\ref{sec:discussion}).
 \end{enumerate}

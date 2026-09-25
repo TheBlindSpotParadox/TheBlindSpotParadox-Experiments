@@ -85,3 +85,10 @@ avant de dimensionner le desserrage.
 Cet audit n'applique aucun desserrage. Il n'existe que pour que l'assemblage v65 n'ait pas à
 redécouvrir ces points — en particulier §2.1, dont la seule trace est un commentaire d'une ligne
 qu'une relecture rapide ne voit pas.
+
+## 5. Suivi — assemblage v65 (S11-b)
+
+§2.1 levé : la figure R7 est rétablie en figure autonome (charge S8-C), avec sa table
+`tab:r7_regime1`. §2.4 levé : `cite` retiré à la conversion de classe. §2.2 non traité : les notes
+méthodologiques restent en bas de page. §3 mesuré : 59 pages, lues dans le log XeTeX de la
+compilation Tectonic.

@@ -27,6 +27,8 @@ S2_GATE_JSON = ssot.RESULTS_DIR / "S2_theory" / "tables" / "s2_gate_T20.json"
 S6_CAUSAL_JSON = ssot.RESULTS_DIR / "S6_synchronized_traces" / "data" / "s6_causal.json"
 N_STAT = ssot.S9_KSWIN_STAT
 TRANSFER_S2TER = ROOT_DIR / "docs" / "theory" / "transfer_S2ter.md"
+MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
+ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
 PENDING_TRANSFERS = [ROOT_DIR / "docs" / "theory" / n for n in ("transfer_S8.md", "transfer_S9.md")]
 PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
                         r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
@@ -426,13 +428,26 @@ def _payloads(path):
     return PAYLOAD_RE.findall(path.read_text(encoding="utf-8"))
 
 
+def _target(f):
+    if Path(f).name == ARCHIVED_V64:
+        return MANUSCRIPT_DIR / (MANUSCRIPT_DIR / "CURRENT").read_text(encoding="utf-8").strip()
+    return ROOT_DIR / f
+
+
+S2TER_I_SINGLE_COLUMN = (("  \\begin{tabular}{llrlrrr}\n", "  \\resizebox{\\textwidth}{!}{%\n  \\begin{tabular}{llrlrrr}\n"),
+                         ("  \\end{tabular}\n\\end{table*}", "  \\end{tabular}}\n\\end{table*}"))
+
+
 def test_transfer_S2ter_payloads_resolve_once_and_avoid_pending_anchors():
     payloads = _payloads(TRANSFER_S2TER)
     assert len(payloads) == 7, len(payloads)
     pending = [(f, s) for p in PENDING_TRANSFERS for f, s, _ in _payloads(p)]
     assert pending
     for f, search, replace in payloads:
-        text = (ROOT_DIR / f).read_text(encoding="utf-8")
+        if "\\label{tab:family_order}" in replace:
+            for old, new in S2TER_I_SINGLE_COLUMN:
+                replace = replace.replace(old, new)
+        text = _target(f).read_text(encoding="utf-8")
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         assert state in [(1, 0), (0, 1)], (f, search.splitlines()[0][:80], state)
         if state == (0, 1):
@@ -440,19 +455,19 @@ def test_transfer_S2ter_payloads_resolve_once_and_avoid_pending_anchors():
         lo = text.find(search)
         hi = lo + len(search)
         for g, other in pending:
-            o = text.find(other) if g == f else -1
+            o = text.find(other) if _target(g) == _target(f) else -1
             assert o < 0 or o + len(other) <= lo or o >= hi, (f, search[:60], other[:60])
 
 
 def test_transfer_S2ter_payloads_avoid_the_excluded_subsections():
-    live = ROOT_DIR / "docs" / "manuscript" / (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(
-        encoding="utf-8").strip()
-    text = live.read_text(encoding="utf-8")
+    archived = MANUSCRIPT_DIR / ARCHIVED_V64
+    text = archived.read_text(encoding="utf-8")
     subs = [(m.start(), m.group(1)) for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(sec:[^}]+)\}", text)]
     zones = [(lab, pos, subs[i + 1][0] if i + 1 < len(subs) else len(text))
              for i, (pos, lab) in enumerate(subs) if lab in EXCLUDED_SUBSECTIONS]
     assert len(zones) == len(EXCLUDED_SUBSECTIONS), zones
-    targets = [search for f, search, _ in _payloads(TRANSFER_S2TER) if (ROOT_DIR / f).resolve() == live.resolve()]
+    targets = [search for f, search, _ in _payloads(TRANSFER_S2TER)
+               if (ROOT_DIR / f).resolve() == archived.resolve()]
     assert targets
     for search in targets:
         offset = text.find(search)

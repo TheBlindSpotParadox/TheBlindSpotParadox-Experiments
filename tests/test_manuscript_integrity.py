@@ -46,10 +46,11 @@ MIRRORED = ("figures", "tables")
 AUTHORED = {"fig_ontology.tex"}
 
 # Main documents (a .tex carrying \documentclass) retained for lineage and deliberately NOT the
-# manuscript of record. Empty today: v63 is referenced by CLAUDE.md but is not in the repository.
-# Adding a file here is the declaration the check demands -- it is never a way to silence a
-# surprise, only to record an archive the operator intends to keep.
-ARCHIVED_MAIN_TEX = set()
+# manuscript of record. v64 is archived by stream S11-b, which assembled v65 from it; v63 is
+# referenced by CLAUDE.md but is not in the repository. Adding a file here is the declaration the
+# check demands -- it is never a way to silence a surprise, only to record an archive the operator
+# intends to keep.
+ARCHIVED_MAIN_TEX = {"articleA_blindspot_v64_camera_ready.tex"}
 
 
 def sha256(path):
@@ -186,30 +187,38 @@ def test_every_cited_key_resolves_in_the_bibliography():
         "citations with no bibliography entry:\n  " + "\n  ".join(dangling))
 
 
-# Environments the document class or a package in the preamble supplies (IEEEtran, amsmath, amsthm,
-# graphicx, tikz, enumitem). Anything a section uses outside this set must carry its own \newtheorem
-# in the main document, or the assembly halts -- which is how framework_v2.tex's \begin{lemma}
-# survived three streams unnoticed. Declared by name, not by silence: adding to this set asserts the
-# preamble provides it, so it is a claim to check, not a way to quiet a surprise.
+# Environments the document class or a package in the preamble supplies (svjour3, amsmath, graphicx,
+# tikz, enumitem). svjour3 predefines the theorem-like environments below through \spnewtheorem,
+# so the preamble declares only the ones it adds. Anything a section uses outside this set must
+# carry its own \newtheorem or \spnewtheorem in the main document, or the assembly halts -- which is
+# how framework_v2.tex's \begin{lemma} survived three streams unnoticed. Declared by name, not by
+# silence: adding to this set asserts the preamble provides it, so it is a claim to check, not a way
+# to quiet a surprise.
 STANDARD_ENVIRONMENTS = {
-    "document", "abstract", "IEEEkeywords", "thebibliography",
+    "document", "abstract", "thebibliography",
     "figure", "figure*", "table", "table*", "tabular", "tabularx", "center",
     "align", "align*", "equation", "equation*", "gather", "gather*", "split",
-    "cases", "array", "subequations", "proof",
+    "cases", "array", "subequations",
+    "theorem", "proposition", "lemma", "corollary", "definition", "remark", "proof",
     "itemize", "enumerate", "description", "tikzpicture",
 }
 
 BEGIN_RE = re.compile(r"\\begin\{([A-Za-z][A-Za-z0-9*]*)\}")
-NEWTHEOREM_RE = re.compile(r"\\newtheorem\*?\{([^}]*)\}")
+NEWTHEOREM_RE = re.compile(r"\\(?:sp)?newtheorem\*?\{([^}]*)\}")
 LABEL_RE = re.compile(r"\\label\{([^}]*)\}")
 REF_RE = re.compile(r"\\(?:eq)?ref\{([^}]*)\}|\\hyperref\[([^}]*)\]")
 
 
 def _tex_sources():
-    """(main document, [every other .tex under docs/manuscript/])."""
-    mains = main_tex_documents()
-    main = mains[0] if mains else None
-    return main, [p for p in sorted(MANUSCRIPT_DIR.rglob("*.tex")) if p != main]
+    """(manuscript of record named by CURRENT, [every fragment .tex under docs/manuscript/]).
+
+    Archived main documents are neither the main document nor fragments: their preamble must not
+    vouch for an environment, and their labels must not resolve a fragment's \\ref."""
+    main = MANUSCRIPT_DIR / CURRENT.read_text(encoding="utf-8").strip()
+    if not main.is_file():
+        return None, []
+    return main, [p for p in sorted(MANUSCRIPT_DIR.rglob("*.tex"))
+                  if p != main and p.name not in ARCHIVED_MAIN_TEX]
 
 
 def test_sections_assemble_into_the_main_document():

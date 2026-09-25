@@ -24,12 +24,13 @@ with its replicate count, its seed and its generator.
   a locally injected \texttt{numpy.random.Generator}; no bootstrap draws from the global NumPy
   state.}
   \label{tab:protocol_ci}
-  \begin{tabular}{@{}llrll@{}}
+  \small
+  \begin{tabular}{@{}p{0.27\textwidth}p{0.24\textwidth}rlp{0.14\textwidth}@{}}
     \toprule
     \textbf{Statistic} & \textbf{Resampling unit} & \textbf{$n_{\mathrm{boot}}$} & \textbf{Seed} & \textbf{Generator} \\
     \midrule
     Table~\ref{tab:results_concept} F1 and ADD; $\alpha$-sweep & seed index, paired across arms & 1000 & 12345 & local \texttt{default\_rng} \\
-    Hydra RMST ratio $\tau_{\mathrm{HAT}}/\tau_{\mathrm{ARF}}$ & seed index, paired across arms & 10000 & 20260906 & local \texttt{default\_rng} \\
+    Onset acceleration $\gamma_M$ (RMST ratio $\tau_{\mathrm{HAT}}/\tau_{\mathrm{ARF}}$) & seed index, paired across arms & 10000 & 20260906 & local \texttt{default\_rng} \\
     Evidence ceiling, $\lambda_{\mathrm{op}}$, $\Delta e_c$ & seed, paired and unpaired variants & 10000 & 12345 & local \texttt{default\_rng} \\
     $\Delta e$ on real streams (Table~\ref{tab:real_data_summary}) & the per-drift jump, $K$ per variant & 1000 & 42 & local \texttt{default\_rng} \\
     Exponential-fit KS $p$-value for $\tau_{\mathrm{HAT}}$ & parametric, under the fitted exponential & 2000 & $\lfloor 1000\,\Delta e \rfloor$ & local \texttt{default\_rng} \\
@@ -43,7 +44,7 @@ with its replicate count, its seed and its generator.
   statistical independence. The two statements are incompatible: the 36 streams a seed produces
   share that seed's forest initialisation and are not independent of one another, so a run-level
   resample understates the width of the interval. The bootstrap now resamples the 30 seed indices,
-  paired across arms, on a locally injected generator, which is the scheme the Hydra ratio already
+  paired across arms, on a locally injected generator, which is the scheme the onset-acceleration ratio already
   used. The caption's independence claim and the computation now agree.
 \end{remark}
 
@@ -116,7 +117,8 @@ repository's consistency test without importing any experiment.
   listed are River defaults. $c$ denotes the internal ADWIN clock of the adaptive forest, swept over
   $\{1, 32\}$; $c_{\mathrm{ext}}$ the clock of an external ADWIN monitor.}
   \label{tab:protocol_hyper}
-  \begin{tabular}{@{}lll@{}}
+  \small
+  \begin{tabular}{@{}p{0.23\textwidth}p{0.50\textwidth}p{0.19\textwidth}@{}}
     \toprule
     \textbf{Component} & \textbf{Parameterisation} & \textbf{Where used} \\
     \midrule
@@ -157,7 +159,7 @@ same tolerance and the same threshold, differing only in $p_0$:
 \end{itemize}
 
 \textbf{Every metric this paper reports for that experiment is the empirical arm.} The blind-spot
-indicator and the detection rate are both defined on the empirical stopping time, and Figure~1 plots
+indicator and the detection rate are both defined on the empirical stopping time, and Figure~\ref{fig:race_condition} plots
 it; the nominal arm is a secondary control column, recorded in the artifact and published nowhere.
 
 The distinction is not cosmetic, and it is worth decomposing rather than asserting. At
@@ -294,28 +296,33 @@ the library's background learning mechanism operates as designed.
 
 \subsection{Multiplicity}\label{sec:protocol_multiplicity}
 
-The family of hypothesis tests reported in this paper is stated in full: six seed-level pipeline
-contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep, and three seed-level contrasts on
-the INSECTS variants of Table~\ref{tab:real_data_summary} --- ten tests. The three BAF rows carry
-no test, their $\Delta e$ being indistinguishable from zero (Section~\ref{sec:protocol_ci}).
+The family of hypothesis tests reported in this paper is stated in full. Eighteen tests carry its
+claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep,
+three seed-level contrasts on the INSECTS variants of Table~\ref{tab:real_data_summary}, and eight
+seed-level contrasts of the label-latency analysis (Section~\ref{sec:limitations}). The three BAF
+rows carry no test, their $\Delta e$ being indistinguishable from zero
+(Section~\ref{sec:protocol_ci}). The paper reports twenty-one further $p$-values---twenty
+Kolmogorov--Smirnov tests of exponentiality and one Fisher test of homogeneity---and the
+correction is also run over all thirty-nine; no verdict differs between the two families.
 
-Eight of the ten $p$-values sit exactly at the resolution floor of the two-sided sign test at
-$n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}. No correction over a
-family of this size can lift them: Holm--Bonferroni at $\alpha = 0.05$ compares the smallest
-against $\alpha/10 = 5 \times 10^{-3}$, and $2^{-29} \approx 1.86 \times 10^{-9}$ clears that by six
-orders of magnitude, as it clears every subsequent step. Bonferroni over the whole family gives
-$10 \cdot 2^{-29} \approx 1.86 \times 10^{-8}$, still far below any conventional level. For these
-eight the correction is not applied because it is arithmetically incapable of changing a decision,
-which is a justification and not an omission.
+Holm--Bonferroni at $\alpha = 0.05$ over the eighteen retains fifteen. Eight of the ten tests
+declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test
+at $n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}; $2^{-29} \approx 1.86
+\times 10^{-9}$ clears the first Holm threshold, $\alpha/18 \approx 2.8 \times 10^{-3}$, by six
+orders of magnitude, as it clears every subsequent step. Seven of the eight latency contrasts are
+retained, at $p \le 2.4 \times 10^{-10}$ over one hundred seeds.
 
-The two remaining tests are reported with the opposite verdict, and it is the honest one. The
-KSWIN $\alpha$-sweep contrast is degenerate ($p = 1$: both arms detect 1080 of 1080 runs), and the
-INSECTS \emph{abrupt\_balanced} contrast has $p = 0.043$, which under Holm is compared against
-$\alpha/2 = 0.025$ and \textbf{does not survive}. We therefore do not claim a seed-level effect on
-\emph{abrupt\_balanced}. That is consistent with how Section~\ref{sec:proteus} already treats that
-variant --- a weak witness whose five canonical jumps are heterogeneous and partly negative, and
-whose marginal advantage is explicitly not attributed to the mechanism. The multiplicity correction
-removes a claim the paper had already declined to make.
+Three tests are not retained, and the paper claims none of them. The KSWIN $\alpha$-sweep contrast
+is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The INSECTS \emph{abrupt\_balanced}
+contrast has $p = 0.043$, which under Holm is compared against $\alpha/3 \approx 0.017$ and
+\textbf{does not survive}. We therefore do not claim a seed-level effect on
+\emph{abrupt\_balanced}, consistently with how Section~\ref{sec:proteus} already treats that
+variant---a weak witness whose five canonical jumps are heterogeneous and partly negative, and whose
+marginal advantage is explicitly not attributed to the mechanism. The rise of detection under a
+shared label latency on the rotation family ($p = 0.16$) is withdrawn; its canonical counterpart is
+retained. Over the thirty-nine, the Fisher homogeneity test ($p = 1$) joins the non-retained set; it
+licenses pooling as a non-rejection, which no correction alters. Every Kolmogorov--Smirnov test is
+retained, the largest ($p = 0.003$) against $\alpha/5$.
 
 \subsection{Complete Separations and Effect Sizes}\label{sec:protocol_separation}
 
@@ -340,6 +347,7 @@ across seeds.
   and reports $p \le 2^{-29}$; the $p$-value is identical across rows by construction, the effect
   size is not.}
   \label{tab:protocol_effects}
+  \resizebox{\textwidth}{!}{%
   \begin{tabular}{@{}llrrr@{}}
     \toprule
     \textbf{Arm A} & \textbf{Arm B} & \textbf{A} & \textbf{B} & \textbf{$\Delta$ (pp, 95\% CI)} \\
@@ -351,7 +359,7 @@ across seeds.
     PHT $+$ RF (static)     & PHT $+$ ARF ($c{=}1$)   & 913/1080  & 0/1080    & $+84.54\ [83.33, 85.75]$ \\
     ADWIN $+$ RF (static)   & ADWIN $+$ ARF ($c{=}1$) & 959/1080  & 1070/1080 & $-10.28\ [-11.87, -8.69]$ \\
     \bottomrule
-  \end{tabular}
+  \end{tabular}}
 \end{table*}
 
 The last row is the one that would be misread from its $p$-value alone. It carries the same
@@ -373,6 +381,30 @@ consumes from that generator, the sequence $(x_{0,t}, x_{1,t})_{t<n}$ is bit-ide
 for a given (boundary shift, seed) pair, and the label rule $y_t = \mathbf{1}[x_{0,t} + x_{1,t} > b]$
 is a deterministic function of it. Arms at equal seed therefore differ only in the classifier and
 the monitor, which is exactly the contrast the paired resampling estimates.
+
+\paragraph{A second label rule on the same covariates.} The boundary-shift rule
+$y_t = \mathbf{1}[x_{0,t} + x_{1,t} > b]$ moves the class prior as it moves the
+magnitude: $P(y{=}1) = 0.5 - \Delta e$ post-drift, under $2.5\%$ over the last
+seven magnitudes of the grid. A rotation rule
+$y_t = \mathbf{1}[\cos\phi\, x_{0,t} + \sin\phi\, x_{1,t} > 0]$, with
+$\phi = \pi/4 + \pi \Delta e / (1 - 2\eta)$ and declared label noise $\eta$
+applied to both phases, holds the balance at $50/50$ at every magnitude and
+keeps $\Delta e = (1-2\eta)\,|\phi - \pi/4| / \pi$ exact --- verified at all
+twenty magnitudes and both $\eta$ arms within $3$ standard errors. The
+pre-drift phase is the canonical one written differently
+($x_0 + x_1 > 0$ \emph{is} the rotation at $\phi = \pi/4$), so at $\eta = 0$ the
+covariates, the pre-drift labels, the warm-up and the ensemble state at $\tau^*$
+are bit-identical and the two families are paired by seed rather than only in
+distribution. The noise draws come from a generator spawned separately from the
+covariate one, so the two-draws-per-step invariant above is untouched.
+
+Two published readings depend on which family is used, and both are reported
+with the family named. The high-magnitude sign change of $A/A_{\mathrm{rect}}$
+exists only on the boundary-shift family. The miss rate of an external CUSUM at
+$\lambda = 50$ is $0.99$--$1.00$ at every boundary-shift magnitude and
+$0.33$--$0.77$ under rotation at $\eta = 0.05$: the blind spot persists on a
+balanced generator with a non-zero Bayes error, and is markedly less extreme
+there than on the family the published figures use.
 
 Two deviations from that invariant exist in the repository and are declared rather than smoothed
 over. The regime-crossover experiment draws its covariates from the legacy

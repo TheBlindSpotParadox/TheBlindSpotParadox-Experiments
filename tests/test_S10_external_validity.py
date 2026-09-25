@@ -203,6 +203,8 @@ import re  # noqa: E402
 
 TRANSFER = ROOT_DIR / "docs" / "theory" / "S10_transfer.md"
 EXCLUDED = {"sec:race", "sec:hydra", "sec:starvation", "sec:decoupling"}
+MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
+ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
 PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
                         r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
 
@@ -226,13 +228,21 @@ def _payloads():
     return PAYLOAD_RE.findall(TRANSFER.read_text(encoding="utf-8"))
 
 
+def _target(f):
+    if Path(f).name == ARCHIVED_V64:
+        return MANUSCRIPT_DIR / (MANUSCRIPT_DIR / "CURRENT").read_text(encoding="utf-8").strip()
+    return ROOT_DIR / f
+
+
 def test_transfer_S10_anchors_resolve_exactly_once():
     payloads = _payloads()
     assert len(payloads) == 3, f"{len(payloads)} payloads parsed -- the fence shape changed"
-    for f, search, _ in payloads:
-        target = ROOT_DIR / f
+    for f, search, replace in payloads:
+        target = _target(f)
         assert target.exists(), f
-        assert target.read_text(encoding="utf-8").count(search) == 1, (f, search.splitlines()[0][:80])
+        text = target.read_text(encoding="utf-8")
+        state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
+        assert state in [(1, 0), (0, 1)], (f, state, search.splitlines()[0][:80])
 
 
 def test_transfer_S10_payloads_avoid_the_excluded_subsections():

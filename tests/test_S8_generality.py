@@ -213,6 +213,14 @@ def test_s8_writes_nothing_under_the_frozen_trees():
 # resolves against that file rather than against a single hard-coded document.
 TRANSFER = ROOT_DIR / "docs" / "theory" / "transfer_S8.md"
 EXCLUDED_LABELS = ("sec:race", "sec:hydra", "sec:starvation", "sec:decoupling")
+MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
+ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
+
+
+def _target(target):
+    if Path(target).name == ARCHIVED_V64:
+        return MANUSCRIPT_DIR / (MANUSCRIPT_DIR / "CURRENT").read_text(encoding="utf-8").strip()
+    return ROOT_DIR / target
 
 
 def _payload_blocks(path):
@@ -247,7 +255,7 @@ def test_transfer_S8_payload_anchors_resolve_uniquely():
     assert blocks, "no SEARCH/REPLACE block found in transfer_S8.md"
     bad = []
     for i, (target, search, replace) in enumerate(blocks, 1):
-        path = ROOT_DIR / target
+        path = _target(target)
         if not path.exists():
             bad.append(f"block {i}: target {target} does not exist")
             continue
@@ -265,14 +273,12 @@ def test_transfer_S8_payloads_avoid_the_excluded_subsections():
     exactly the failure that had v63 edited while v64 was live, transposed one level down."""
     if not TRANSFER.exists():
         pytest.skip("transfer_S8.md not written yet")
-    current = (ROOT_DIR / "docs" / "manuscript" / "CURRENT").read_text(encoding="utf-8").strip()
-    main_tex = ROOT_DIR / "docs" / "manuscript" / current
-    tex = main_tex.read_text(encoding="utf-8")
+    tex = (MANUSCRIPT_DIR / ARCHIVED_V64).read_text(encoding="utf-8")
     spans = _excluded_spans(tex)
     assert len(spans) == len(EXCLUDED_LABELS), f"excluded subsections not located: {len(spans)}"
     bad = []
     for i, (target, search, _) in enumerate(_payload_blocks(TRANSFER), 1):
-        if Path(target).name != current:
+        if Path(target).name != ARCHIVED_V64:
             continue
         pos = tex.find(search)
         if pos >= 0 and any(lo <= pos < hi for lo, hi in spans):
