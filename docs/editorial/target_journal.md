@@ -87,3 +87,10 @@ puis assembler ne coûte qu'une passe.
   (`config/experiment_ssot.py`, `exp_R5_config.py`, `run_all.sh`, les 9 `run_experiment_R*.sh`).
   Elle est factuellement périmée dès la présente action ; la correction est un `sed` d'une ligne,
   laissée en attente d'instruction plutôt qu'appliquée unilatéralement.
+
+## Suivi — assemblage v65 (S11-b)
+
+Conversion faite : `\documentclass[smallextended]{svjour3}`, `\usepackage{cite}` retiré, `natbib`
+numérique avec `spmpsci`, fichiers de classe Springer vendus dans `docs/manuscript/` (provenance et
+empreintes dans `docs/ENVIRONMENT.md`). Le PDF compilé par Tectonic fait 59 pages. Restent ouverts :
+la limite de mots du résumé sous MLJ et l'étiquette `ICDM 2026` des scripts.

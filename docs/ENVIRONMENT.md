@@ -48,13 +48,27 @@ Tectonic 0.17.0, installed from `conda-forge` into a **dedicated** environment (
 is already constrained, and the scientific pins must not move to accommodate a document build.
 
 ```bash
-conda run -n tex tectonic -X compile docs/manuscript/articleA_blindspot_v64_camera_ready.tex
+conda run -n tex tectonic -X compile docs/manuscript/$(cat docs/manuscript/CURRENT)
 ```
 
-Tectonic runs XeTeX, which substitutes for the Type 1 `ptm` faces and emits four
-`LaTeX Font Warning: Font shape 'TU/ptm/...' undefined` lines. These are toolchain artefacts of the
-substitution, not document defects; the committed camera-ready PDF was produced with a pdfTeX
-toolchain and is not replaced by the Tectonic output.
+The manuscript of record uses Springer's `svjour3` class (target: *Machine Learning*), which the
+Tectonic bundle does not ship (`default_bundle_v33`: no `svjour3.cls`, `svglov3.clo`,
+`spbasic.bst` or `spmpsci.bst` in its index). Three files are vendored in `docs/manuscript/`, fetched
+from `github.com/latextemplates/svjour` at commit `689ad94ce9145affab4b259e42a6fadbd3e945d8`
+(2019-03-05). They are copyright Springer and licensed for submissions to Springer journals only.
+
+| file | version | bytes | sha256 |
+|---|---|---:|---|
+| `svjour3.cls` | v3.2, 2007/05/08 | 47 679 | `7334bcfda97ba34d06e28dc546a7bd7801711a1ba7732f03481dafbe0d04f892` |
+| `svglov3.clo` | — | 3 696 | `7524d6ec8fc3fe6216e6ce97db64caff366e76312b2caf65b3a8437ef4c0c032` |
+| `spmpsci.bst` | — | 30 130 | `ad80c3ef28c671efbab5a3c624fe77414733898cff590b1f61ac177ce3334950` |
+
+Citations are numeric (`natbib` with `numbers,sort&compress`, style `spmpsci`). Under `svjour3`
+the build emits no font-substitution warning; the v65 build of stream S11-b is 59 pages.
+
+The archived v64 (`IEEEtran`) compiles with the same command pointed at its file. XeTeX substitutes
+for its Type 1 `ptm` faces and emits four `LaTeX Font Warning: Font shape 'TU/ptm/...' undefined`
+lines, toolchain artefacts of the substitution rather than document defects.
 
 ## Measured wall-clock times
 
