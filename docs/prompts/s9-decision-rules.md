@@ -36,6 +36,8 @@ active in the published claim. The nomenclature is fixed once, here, and every l
 | `W_buf` | smoothing buffer on the error stream, upstream of KSWIN | `30` | `exp_R4_main_table.py:147` |
 | `n_stat` | KSWIN statistic size, the size of each of the two compared samples | `30` | `exp_R4_main_table.py:167` |
 
+> **Erratum, appended by stream S2-ter after measurement; the four rows above are the pre-registered text and are not edited.** The `57.4` of the `W_transient` row is `tau_swap^(1/M)`, the mean first-swap time (S9 D0, `docs/theory/S9_detector_coverage.md` §0), not `tau_erase - tau^*`, which measures a median of `1 995.5` at the same point; the census of `W` counts seven acceptions, with the naming convention that separates them, in `docs/prompts/s2ter-decision-rules.md` §A.1–A.2.
+
 The "structural lag `W/2 = 15`" of `.tex:500`, and `KSWIN_LAG = 15` at `exp_R4_main_table.py:52`,
 are `W_buf / 2`. They are **not** `W_transient / 2 = 28.7`. Any statement that reads the ProteuS
 `ADD = 14` as "half the exploitable transient" is reading the wrong `W`.

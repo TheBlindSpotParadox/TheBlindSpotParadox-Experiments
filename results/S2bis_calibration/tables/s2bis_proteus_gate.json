@@ -3,10 +3,12 @@
     "R_CUSUM_slope_per_unit_log_1_over_alpha": 1.467802109348584,
     "at": {
       "W": 57.4,
+      "W_alias_of": "tau_swap_1_over_M",
       "delta_P": 0.01,
       "eps": 0.05,
       "n_stat": 30,
-      "p_true": 0.024
+      "p_true": 0.024,
+      "tau_swap_1_over_M": 57.4
     },
     "crossings": {
       "R_ADWIN": {
@@ -84,6 +86,7 @@
     "R_KSWIN_at_deployed_alpha": 22.67926771600675,
     "at": {
       "W": 57.4,
+      "W_alias_of": "tau_swap_1_over_M",
       "band_provenance": "S6 Bernoulli arm, s2_gate_T20.json p_true_sensitivity.band_used -- rule B8",
       "delta_e": 0.326793,
       "eps": 0.05,
@@ -92,7 +95,8 @@
       "p_true_band": [
         0.015,
         0.032
-      ]
+      ],
+      "tau_swap_1_over_M": 57.4
     },
     "epsilon_margin": 9.27240617375013,
     "per_couple": [
