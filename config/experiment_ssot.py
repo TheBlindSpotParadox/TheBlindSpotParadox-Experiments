@@ -640,3 +640,50 @@ S9_T94_COUPLE = "R4 deployed lambda_ref (c=0)"  # the s2bis_proteus_gate.json ro
                                                 # lambda_eq = 15, the Table I operating point
 S9_EDDM_WARM_START = 30                         # river's EDDM warm_start: the MONITORED ERRORS it
                                                 # needs before it can signal at all. D9's column
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S10 — external validity, dual mode, label latency (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+# S10 closes the experimental front before the v65 assembly. Its decision rules are frozen
+# beforehand in docs/theory/S10_decision_rules.md -- docs/prompts/ is outside this stream's write
+# perimeter. Every name is an alias of a registry value or a value introduced with its motive.
+
+# --- T10.1: label latency ------------------------------------------------------------------------
+S10_LAGS = [0, 10, 50, 100, 500]                # PROMPT_S10 T10.1, verbatim. 0 is the S6 trunk
+S10_ROTATION_ETA = S8_MECH_ETA                  # 0.05: the rotation arm whose null binds (S9 D7)
+S10_N_SEEDS = len(S6_CAMPAIGN_SEEDS)            # 100; the VALUES come from _gate_common.seed_pool
+S10_WARMUP_WINDOW = S6_WARMUP_WINDOW            # 1000: the p0 window AND the monitor feed start,
+                                                # S9's replay convention
+S10_TRACE_POST = S6_TRACE_POST                  # 4000: the traced post-drift span, S6's frame
+S10_T_HORIZON = S6_T_HORIZON + max(S10_LAGS)    # 3000: the monitor feed, the detection-at-all reading
+                                                # and the descriptive def:times W. Erasure itself is
+                                                # read by argmax from the lag-shifted first swap
+                                                # (erratum E1), a window that moves with the lag
+S10_LAMBDAS = S9_OFFLINE_LAMBDAS                # [5, 8, 15, 25, 50], the S9 replay ladder
+S10_TEST_LAMBDA = R4_PHT_LAMBDA                 # 15.0: the one threshold whose contrasts enter T10.4
+S10_TEST_LAG = max(S10_LAGS)                    # 500: the one lag contrasted against 0 in T10.4
+S10_BOOTSTRAP_SEED = S2BIS_BOOTSTRAP_SEED       # 12345, the repository's one bootstrap seed
+S10_N_BOOTSTRAP = S2BIS_N_BOOTSTRAP             # 10 000 seed-cluster resamples
+S10_SMOKE_N_SEEDS = S6_SMOKE_N_SEEDS            # 5, paired with the committed S6 smoke corpus
+S10_SMOKE_DELTA_E = S6_SMOKE_DELTA_E            # [0.10, 0.25, 0.40], idem
+
+# --- T10.2: the dual mode on one axis ------------------------------------------------------------
+S10_DUAL_LAMBDA_GRID = sorted(set(S2BIS_INSECTS_LAMBDA_GRID) | set(S2BIS_PROTEUS_LAMBDA_GRID)
+                              | set(S9_OFFLINE_LAMBDAS) | set(S6_FIGURE_LAMBDA_LADDER))
+                                                # 19 thresholds from 1 to 200 and no new value: the
+                                                # union of every ladder the repository already reads
+S10_DUAL_DELTA_E = S9_DELTA_E_REF               # 0.326793, the canonical operating point
+S10_TAU_TOL = R3_TAU_TOL                        # 1000: the matching tolerance the .tex states for its
+                                                # synthetic crossover streams
+S10_RECALL_MIN = 1.0 - S9_EPS                   # 0.95, the miss level of def:requirement
+S10_PRECISION_MIN = 0.5                         # at most one false alarm per true detection:
+                                                # S8_PHT_TARGET_FA = 1 transposed to precision
+
+# --- T10.3: p0 of every real stream the repository instruments -----------------------------------
+S10_P0_PIPELINES = ("pht_ht", "pht_arf_c1")     # the two classifiers of Table II. adwin_arf_c1 builds
+                                                # the same ARF(c = 1) as pht_arf_c1 -- build_model
+                                                # reads the "_ht" suffix and "c32" only -- so its p0
+                                                # is identical by construction
+
+# --- T10.4: multiplicity -------------------------------------------------------------------------
+S10_HOLM_ALPHA = 0.05                           # the level protocol_v2.tex section Multiplicity states

@@ -1,0 +1,4 @@
+# Regenerable S10 error traces (s10_latency.py smoke|full), the S6 / S8 / S9 regime.
+# runs.parquet stays tracked: it is the trunk record rule L0 compares with S6 and S8.
+data/*/traces.parquet/
+smoke/
