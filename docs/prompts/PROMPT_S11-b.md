@@ -1,80 +1,48 @@
-# STREAM S11-b — ASSEMBLAGE v65
+# STREAM S11-b — ASSEMBLAGE v65 DU MANUSCRIT
 
 ## Rôle
-Instance secondaire, rédacteur et intégrateur. Tu produis le manuscrit v65.
-C'est le chantier bloquant du projet depuis cinq tours.
+Instance d'assemblage et intégration. Tu produis le manuscrit v65.
 
-## PRÉCONDITIONS — ne commence pas si l'une manque
-  1. S9, S11-a et S8 fusionnés sur main, suite à 154 tests, arbre propre.
-  2. Arbitrage MLJ / DAMI rendu.
-  3. Générateur de record tranché (canonique ou rotation).
-  4. S2-ter clos : le prédicat de point aveugle tranché, l'audit de W fait sur
-     les quatre artefacts, (C4) réécrit.
-  5. `thesis_v4.md` révisé sur \LearnShare (98.6), (C1) et (C4).
-Sans la 4 et la 5, tu assembles un document dont l'énoncé central est périmé.
+## PRÉCONDITIONS VALIDÉES :
+1. Dépôt fusionné sur main (commits S8, S9, S11-a, S2-ter, S10 intégrés), 179 tests réussis, arbre 100 % propre.
+2. Revue cible actée : MLJ (Machine Learning Journal, classe Springer `svjour3`).
+3. Générateur de record acté : Canonique en record historique, rotation (S8, eta=0.05) en référence d'invariance et de robustesse.
+4. S2-ter clos : généralisation Am formulée, table des 7 acceptions de W livrée, payloads (C4) livrés dans transfer_S2ter.md.
+5. S10 clos : retard M1/M2 mesuré, figure du double mode livrée, colonnes p0 prêtes, transferts dans S10_transfer.md.
 
-## ORDRE IMPOSÉ — la conversion de classe PRÉCÈDE l'assemblage
-`IEEEtran -> svjour3` d'abord. Ce n'est pas une préférence :
-  - elle invalide tout réglage de flottants, donc tout desserrage appliqué sous
-    IEEEtran serait à refaire ;
-  - elle rend `\usepackage{cite}` inadapté et change le style bibliographique,
-    ce qui peut déplacer des clés et rouvrir la garde A6 ;
-  - `\IEEEoverridecommandlockouts`, `\IEEEkeywords` et l'environnement
-    `IEEEkeywords` n'existent pas sous svjour3 et sont dans
-    `STANDARD_ENVIRONMENTS` de tests/test_manuscript_integrity.py ;
-  - les trois sections v2 compilent aujourd'hui contre le préambule IEEEtran ;
-    la garde `test_sections_assemble_into_the_main_document` suivra la
-    conversion, mais seulement si elle est faite d'abord.
-Assembler puis convertir, c'est payer deux fois et rouvrir trois gardes.
+## ORDRE IMPOSÉ DES PHASES :
 
-## ORDRE IMPOSÉ — les 44 sites de dette se traitent PAR ZONE, pas par section
-  1. Les 2 sites `GENERATED` (légende Table I) — édition Python PLUS
-     régénération, donc une entrée à authorized_deviations.txt et deux hachages
-     qui bougent DANS LA MÊME PASSE. `test_manuscript_assets_match_the_pipeline`
-     compare les deux copies par SHA-256.
-  2. Les 38 sites `editable`.
-  3. Les 4 sites `EXCLUDED` — par suppression, quand framework_v2.tex remplace
-     les sous-sections. Ne les patche pas : ils disparaissent.
-Patcher du texte qui sera supprimé est le gaspillage que cet ordre évite.
+### Phase 1 — Conversion de classe LaTeX (`IEEEtran -> svjour3`)
+- Créer `docs/manuscript/articleA_blindspot_v65_mlj.tex` depuis `articleA_blindspot_v64_camera_ready.tex`.
+- Remplacer `\documentclass[10pt,conference]{IEEEtran}` par `\documentclass[smallextended]{svjour3}`.
+- Adapter les blocs d'en-tête (commandes auteurs/affiliations `svjour3`, supprimer `\IEEEoverridecommandlockouts` et adapter l'environnement de mots-clés).
+- Retirer `\usepackage{cite}` si incompatible avec natbib sous `svjour3`.
+- Mettre à jour `tests/test_manuscript_integrity.py` : déclarer la v64 dans `ARCHIVED_MAIN_TEX` et pointer `docs/manuscript/CURRENT` sur la v65.
+- Valider la compilation via Tectonic (exit 0).
 
-## DEUX PAIRES CONTRADICTOIRES, une édition chacune
-`rem:bgswap` contre `rem:envelope`, et l'annonce de M_crit contre `cor:mcrit`.
-Dans les deux cas une moitié est `editable` et l'autre `EXCLUDED`. Corriger la
-moitié accessible seule laisse le document se contredire à l'intérieur de
-lui-même — ce qu'il fait déjà aujourd'hui. Traite chaque paire en une passe.
+### Phase 2 — Traitement des 44 sites du registre de dette (`docs/editorial/debt_register.md`)
+Traiter par ZONE, jamais au hasard :
+1. Les 2 sites `GENERATED` (légende Table I) : mise à jour Python dans `experiments/R4_proteus_evaluation/exp_R4_main_table.py` + régénération locale des tables + mise à jour des hachages dans `results/audit_S7/_baseline/authorized_deviations.txt` et `artifacts_sha256_pre_ssot.txt`.
+2. Remplacement des 4 sous-sections `EXCLUDED` : intégrer `docs/manuscript/sections/framework_v2.tex` (qui purge automatiquement les 4 sites exclus).
+3. Les 38 sites `editable` : application stricte des corrections répertoriées dans `debt_register.md`.
+4. Traitement synchronisé des paires contradictoires (`rem:bgswap` vs `rem:envelope`, et annonce de `M_crit` vs `cor:mcrit`).
 
-## LES CHARGES À APPLIQUER
-  - 2 différées S-SYNC : T-A(ii) à .tex L431, T-B à L314. Elles vivent dans une
-    table de rapport que rien n'oblige à relire. Ne les perds pas.
-  - transfer_S8.md : réattribution de \LearnShare, causalité du premier swap,
-    bascule haute absente, générateur rotation.
-  - transfer_S9.md : 8 charges, dont la condition de contraste, la purge de
-    l'immunité KSWIN à .tex:500, la colonne d'armement d'EDDM.
-  - transfer_S2ter.md si S2-ter en produit.
-Re-grep chaque ancre sur le fichier vivant avant application : le document aura
-bougé sous la conversion de classe.
+### Phase 3 — Application des charges de transfert cumulées
+Appliquer les charges SEARCH/REPLACE vérifiées octet par octet :
+- S-SYNC (charges différées 5 et 6 : T-A(ii) `res:tension` et T-B arme R1).
+- transfer_S8.md (réattribution de \LearnShare à 98.6 %, premier remplacement à 0.71 %, bascule haute).
+- transfer_S9.md (KSWIN, condition de contraste, EDDM armement).
+- transfer_S2ter.md (payloads S2ter-D à S2ter-I : réécriture de C4, table p0 long-format).
+- S10_transfer.md (S10-A multiplicité/Holm, S10-C retard d'étiquetage, S10-D figure dual-mode, S10-E colonnes p0).
 
-## POINTS À RATIFIER, PAS À DÉCOUVRIR
-  - `\LearnShare` comme quatrième numéral du résumé : deux lectures défendables
-    sont écrites dans thesis_v4.md §T11a.3. Ratifie-en une.
-  - Cinq littéraux du résumé sans macro : 33.5, 19.2, 36.6, 59.3, 31.2.
-    Cinq `\newcommand` suffisent, sous la règle de source unique qui gouverne
-    les 55 autres constantes.
-  - `ARCHIVED_MAIN_TEX = set()` à tests/test_manuscript_integrity.py:52 : toute
-    v65 déposée fera échouer la suite tant que v64 n'y est pas déclarée. À
-    traiter dans la passe de création, pas après.
-  - La figure d'ontologie passe de ~55 mm à ~100 mm. Rejoue l'arbitrage espace de
-    space_constraints_audit.md contre cette taille.
-  - Candidat de titre B : c'est le seul qui ferme la disjonction A8, et la
-    condition trois de terminology_map.md n'est plus satisfaite depuis A8 sans
-    que la table l'enregistre. Tranche l'incohérence de la carte terminologique.
+### Phase 4 — Titre et Résumé v65
+- Adopter le Titre B (ou A avec le sous-titre acté) fermant la disjonction de terminologie.
+- Appliquer l'abstract v4 de `thesis_v4.md` §T11a.3 intégrant la décomposition S8 (`\LearnShare` = 98.6 %).
+- Définir les 5 macros manquantes dans le préambule (33.5, 19.2, 36.6, 59.3, 31.2).
 
-## PORTE DE SORTIE
-  - v65 déposée, CURRENT repointé, ARCHIVED_MAIN_TEX renseigné.
-  - `tectonic` exit 0, zéro référence indéfinie, zéro Overfull introduit.
-  - Suite complète verte, total mesuré.
-  - `sha256sum -c` : les déviations ajoutées, si ajout il y a, égales à
-    authorized_deviations.txt (`comm -3` vide).
-  - Les 44 sites du registre traités : appliqué, supprimé ou déclaré sans objet,
-    chacun avec son statut.
-  - Zéro revendication du manuscrit contredite par un artefact du dépôt.
+### Phase 5 — Portes de sortie et validation finale
+- `tectonic docs/manuscript/$(cat docs/manuscript/CURRENT)` : exit 0, zéro undefined reference/citation.
+- `PYTHONHASHSEED=0 python -m pytest tests/ -q` : 100 % vert.
+- `sha256sum -c` : strict respect des déviations autorisées (`comm -3` vide).
+- Les 44 ancres du registre de dette vérifiées.
+- Arbre de travail Git propre.
