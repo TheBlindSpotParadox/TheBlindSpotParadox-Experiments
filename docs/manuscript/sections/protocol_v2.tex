@@ -377,6 +377,30 @@ for a given (boundary shift, seed) pair, and the label rule $y_t = \mathbf{1}[x_
 is a deterministic function of it. Arms at equal seed therefore differ only in the classifier and
 the monitor, which is exactly the contrast the paired resampling estimates.
 
+\paragraph{A second label rule on the same covariates.} The boundary-shift rule
+$y_t = \mathbf{1}[x_{0,t} + x_{1,t} > b]$ moves the class prior as it moves the
+magnitude: $P(y{=}1) = 0.5 - \Delta e$ post-drift, under $2.5\%$ over the last
+seven magnitudes of the grid. A rotation rule
+$y_t = \mathbf{1}[\cos\phi\, x_{0,t} + \sin\phi\, x_{1,t} > 0]$, with
+$\phi = \pi/4 + \pi \Delta e / (1 - 2\eta)$ and declared label noise $\eta$
+applied to both phases, holds the balance at $50/50$ at every magnitude and
+keeps $\Delta e = (1-2\eta)\,|\phi - \pi/4| / \pi$ exact --- verified at all
+twenty magnitudes and both $\eta$ arms within $3$ standard errors. The
+pre-drift phase is the canonical one written differently
+($x_0 + x_1 > 0$ \emph{is} the rotation at $\phi = \pi/4$), so at $\eta = 0$ the
+covariates, the pre-drift labels, the warm-up and the ensemble state at $\tau^*$
+are bit-identical and the two families are paired by seed rather than only in
+distribution. The noise draws come from a generator spawned separately from the
+covariate one, so the two-draws-per-step invariant above is untouched.
+
+Two published readings depend on which family is used, and both are reported
+with the family named. The high-magnitude sign change of $A/A_{\mathrm{rect}}$
+exists only on the boundary-shift family. The miss rate of an external CUSUM at
+$\lambda = 50$ is $0.99$--$1.00$ at every boundary-shift magnitude and
+$0.33$--$0.77$ under rotation at $\eta = 0.05$: the blind spot persists on a
+balanced generator with a non-zero Bayes error, and is markedly less extreme
+there than on the family the published figures use.
+
 Two deviations from that invariant exist in the repository and are declared rather than smoothed
 over. The regime-crossover experiment draws its covariates from the legacy
 \texttt{RandomState} (MT19937) generator rather than the modern one, deliberately, to reproduce the

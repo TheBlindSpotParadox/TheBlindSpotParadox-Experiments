@@ -202,7 +202,17 @@ to an external monitor, because adaptation accelerates in proportion.
   Hypothesis~(i) is the rectangular surrogate that synchronised instrumentation
   withdraws: $A/A_{\mathrm{rect}}$ spans $2.70$ to $-14.12$ over the magnitude
   grid and \emph{changes sign} at $\Delta e \ge 0.452$, where the adapted
-  ensemble ends the window below its pre-change error rate. Hypothesis~(ii) is
+  ensemble ends the window below its pre-change error rate. That sign change is
+  a property of the \emph{generator} and is reported as such: the boundary-shift
+  family carries a post-drift class prior $P(y{=}1) = 0.5 - \Delta e$, which
+  falls under $2.5\%$ over the last seven magnitudes, so the drift makes the
+  problem easier and the integrated excess turns negative. On a rotation family
+  with the same $\Delta e$ but a class balance held at $50/50$ --- the post-drift
+  half-plane turned by $\theta = \pi \Delta e / (1 - 2\eta)$, label noise $\eta$
+  giving a Bayes error that does not vanish --- the same ratio is monotone
+  increasing to $+8.0$ at the top magnitude and negative on no run, against
+  $100\%$ of runs negative on the boundary-shift family. The withdrawal of
+  hypothesis~(i) does not depend on the generator; the sign change does. Hypothesis~(ii) is
   measured at $\hat\alpha \approx 0.98$, not $1$; by~\eqref{eq:invariance} that
   predicts a spread of $(0.50/0.10)^{0.02} = 1.03$ over the envelope. The
   measured threshold-free ceiling $\max_t A_{\mathrm{unrefl}}$ spreads by a
@@ -216,6 +226,35 @@ to an external monitor, because adaptation accelerates in proportion.
   the same ceiling spreads by a factor of $124$ and is monotone increasing.
   Invariance is therefore an \emph{effect of adaptation}, demonstrated by
   removing it, and not a consequence of an exponent equal to one.
+\end{remark}
+
+\begin{remark}[The first replacement, isolated]\label{rem:first_swap}
+  The two counterfactual arms of the synchronised campaign fork \emph{at}
+  $\tau_{\mathrm{swap}}^{(1/M)}$ and therefore share the first replacement with
+  the nominal arm; no contrast among them can attribute anything to it. Two
+  further arms fork at $\tau^*$ instead --- an instant fixed by the protocol
+  rather than by the trajectory --- with both internal detector paths made
+  inert, the second additionally stopping \texttt{learn\_one}. With the
+  $\tau^*$-frozen arm as the single reference the decomposition closes
+  identically,
+  \[
+    E_{\mathrm{total}} = E_{\mathrm{learn}} + E_{\mathrm{swap}}^{(1)}
+                       + E_{\mathrm{swap}}^{(>1)} ,
+  \]
+  measured additivity residual $2.3\times10^{-13}$ over $1{,}999$ cells. Over
+  $100$ seeds and $20$ magnitudes, incremental learning with \emph{no} tree ever
+  replaced accounts for $98.64\%$ of the erasure ($95\%$ seed-paired bootstrap
+  $[98.48, 98.82]$), the first replacement alone for $0.71\%$
+  $[0.63, 0.78]$, and every later replacement together for $0.56\%$
+  $[0.47, 0.67]$. The first replacement therefore carries \emph{more} of the
+  erasure than all its successors combined.
+
+  The volumetric share understates it at the threshold. At $\Delta e = 0.3268$
+  and $\lambda = 50$ the external CUSUM fires in $0$ of $100$ nominal runs, $18$
+  of $100$ when replacement is suppressed after the first, and $49$ of $100$
+  when it is suppressed from $\tau^*$ onward. Isolating the first replacement is
+  worth $31$ points of detection rate --- more than suppressing every
+  replacement after it.
 \end{remark}
 
 \subsection{Proof Requirement}\label{sec:requirement}
@@ -241,6 +280,28 @@ to an external monitor, because adaptation accelerates in proportion.
 Definition~\ref{def:blindspot} compares two quantities in the same unit and
 contains no implementation constant. It supersedes any condition coupling an
 ADWIN clock to a CUSUM threshold.
+
+\begin{empresult}[The budget is the sufficient statistic; the erasure time is
+not]\label{res:budget_sufficient}
+  Nine pipelines --- an ARF driven by each of ADWIN, DDM, EDDM, PageHinkley and
+  KSWIN, plus SRP, leveraging bagging, ADWIN bagging and a Hoeffding adaptive
+  tree --- were run over six magnitudes with the external monitor calibrated to
+  one false alarm per warm-up \emph{per pipeline}. Grouped by $A$, the miss-rate
+  curves collapse: in the single budget band whose outcome is not saturated at
+  $0$ or $1$, the miss rate is monotone in the band's median $A$ across every
+  mechanism present. Grouped by $\tau_{\mathrm{erase}}$ they do not. At
+  $\Delta e = 0.327$ the DDM-driven forest erases over $836$ steps against the
+  ADWIN-driven forest's $808$ --- within $3.4\%$ --- and leaves $A = 75.4$
+  against $43.9$; at $\lambda = 50$ the first is never missed in $30$ runs and
+  the second is missed in $77\%$ of $30$. Erasing over the same window does not
+  mean leaving the same evidence, and only the second decides.
+\end{empresult}
+
+The blind spot is therefore a statement about the budget, not about the
+mechanism and not about the erasure time. The internal detector enters only
+through the $A$ it leaves, which is what makes
+Definition~\ref{def:blindspot} implementation-free rather than merely
+implementation-agnostic.
 
 \begin{theorem}[Universal detection floor]\label{thm:floor}
   Let $\Delta_{\max} := \max_{t \in (\tau^*, \tau^*+W]}

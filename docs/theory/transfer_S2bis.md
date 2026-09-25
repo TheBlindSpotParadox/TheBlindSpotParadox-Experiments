@@ -407,6 +407,12 @@ carried into the replacement, so applying this patch after Patch B leaves exactl
 The sentence *"The variance reduction that makes the ARF a good classifier buys it a low threshold"*
 is **withdrawn**: the measurement contradicts it on two of three streams.
 
+*Erratum, stream S11-b (v65 assembly).* As delivered, the SEARCH block of T-A(i) stops before the
+sentence its REPLACE re-emits, so a verbatim application would carry *"Flooding remains
+parametrically controllable..."* twice. The S-SYNC pass applied it with the SEARCH extended by that
+sentence and the REPLACE unchanged (`docs/editorial/sync_pass_report.md` §3b); the v65 manuscript
+carries that applied state, which `tests/test_S2bis_calibration.py` checks. Do not re-apply it.
+
 ---
 
 ## 3. T-B — the R1 reference rate

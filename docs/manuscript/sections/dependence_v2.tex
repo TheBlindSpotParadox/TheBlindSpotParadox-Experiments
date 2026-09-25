@@ -260,7 +260,22 @@ is reported as a bracket, never as a point attribution.
   \bottomrule
 \end{tabular}\end{center}
 
-Two quantities remain unmeasured and are named rather than estimated: the member marginal $F$
-itself, and the false-alarm-budget-equalised form of the Hydra factor, which would require
-recording the per-step pre-drift error stream of a single tree standalone and inside the ensemble.
-Neither is approximated here.
+Both quantities named here as unmeasured have since been measured, by recording the per-step
+pre-drift error stream of each member inside the ensemble alongside the standalone arm, over $100$
+seeds at the two canonical anchors.
+
+The member marginal and the standalone arm share a \emph{rate} and differ by averaging. One member
+of the $M=10$ forest errs on $0.0912 \pm 0.0288$ of the pre-drift window against $0.0895$ for the
+standalone $M=1$ arm --- a gap of $0.0017$ against a between-tree standard deviation of $0.0288$ ---
+while the ensemble errs on $0.0240$. The measured per-step variance ratio is $3.51$, and the
+one-false-alarm-per-warm-up threshold it buys is $\lambda_{\mathrm{eq}} = 2.45$ for the ensemble
+against $6.84$ for the single tree. Emp.~Res.~\ref{res:plugin_refuted} refutes the substitution
+through the tails; this locates the difference in the dispersion rather than in the level.
+
+The equalised form of the Hydra factor is then a decomposition, not a number. Writing
+$R = \lambda + \sqrt{(W/2)\ln(1/\varepsilon)}$ for the requirement and $A$ for the measured
+ceiling, $\log(A/R)$ is additive, so the $M=1$ against $M=10$ contrast splits exactly into an
+ensemble-size part $\log(A_1/A_{10})$ and a threshold part $-\log(R_1/R_{10})$. The split is
+magnitude-dependent and is published as such: the threshold carries $9.5\%$ of the contrast at
+$\Delta e = 0.141$ and $76.5\%$ at $\Delta e = 0.327$. No single equalised factor is quoted, because
+either value would be false at the other anchor.
