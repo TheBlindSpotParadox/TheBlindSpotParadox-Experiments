@@ -369,6 +369,12 @@ of $D$'s calibration, and a different monitor family escapes it.
   $\Delta e = 0.3268$, $\tau_{\mathrm{swap}}^{(1/M)} = 57.4$ in place of $W$, $\lambda = 50$ evaluates to
   $[13.9,\, 18.3]$ --- a $\pm 14\%$ interval. Every floor in this paper is stated
   as that interval, never as its midpoint.
+
+  The interval is evaluated at $\tau_{\mathrm{swap}}^{(1/M)}$, a lower bound on $W$, through both
+  $\alpha = W/\mathrm{ARL}_0$ and the term $-W\delta_P$. At the exploitable transient it is
+  $[7.1,\, 11.8]$ for $W = 611.9$ (argmax of $A_{\mathrm{unrefl}}$) and $[-7.3,\, -2.5]$, vacuous,
+  for $W = 1{,}995.5$ (Definition~\ref{def:times}): the floor weakens as $W$ grows, because the
+  tolerance $\delta_P$ is charged on every step of the window.
 \end{remark}
 
 \paragraph{Family instantiations.} Write $\lambda(\alpha)$ for the CUSUM
@@ -387,6 +393,30 @@ Up to universal constants,
      \label{eq:Rkswin}
 \end{align}
 
+For $R_{\mathrm{CUSUM}}$ and $R_{\mathrm{ADWIN}}$ the quantity compared against
+the requirement is the budget $A$ of Definition~\ref{def:budget}. For
+$R_{\mathrm{KSWIN}}$ it is not, and the difference is structural rather than a
+constant: a two-sample test reads a fixed window of $n_{\mathrm{stat}}$
+observations, so at most $\min(W, n_{\mathrm{stat}})$ steps of the transient
+are ever in evidence at once. Writing $k^*(\alpha, n_{\mathrm{stat}})$ for the
+smallest integer with
+$\mathbb{P}(D \ge k^*/n_{\mathrm{stat}}) \le \alpha$ under the exact
+two-sample null,
+\begin{equation}\label{eq:Rkswin_contrast}
+  \min(W,\, n_{\mathrm{stat}})\,\Delta e \;\ge\; k^*(\alpha, n_{\mathrm{stat}})
+\end{equation}
+is the condition that governs detection on a controlled rectangular transient, where it agrees
+with the measurement on $93.1\%$ of $3{,}840$ cells. It is a mean-field boundary: on the two
+classifier-driven families it agrees on $62$ of $80$ and $36$ of $40$ cells, and every disagreement
+is a detection it promises, within about two excess errors of $k^*$, that occurs in fewer than the
+$1-\varepsilon$ share of runs. Two consequences separate it from~\eqref{eq:Rkswin}. It is not monotone in the evidence budget: over the
+magnitude grid of Section~\ref{sec:experiments}, $A$ falls from $24.0$ to $1.2$
+while KSWIN's detection rate rises from $0$ to $1$. And $k^*$ lives on the
+lattice $k/n_{\mathrm{stat}}$, so the requirement is a step function of
+$\alpha$ rather than the smooth $\sqrt{n_{\mathrm{stat}}\ln(2/\alpha)}$;
+at $n_{\mathrm{stat}} = 30$ the asymptotic form understates it by $4.4\%$ at
+$\alpha = 0.005$, which is the level deployed.
+
 The family is deliberately not closed over every cumulative detector.
 EDDM~\cite{baena_eddm_2006} is \emph{not} instantiated here, and no
 $R_{\mathrm{EDDM}}$ is claimed. Its statistic is not an accumulated sum
@@ -400,7 +430,43 @@ post-change evidence required grows with the length of the stationary history
 and does not scale as $\lambda/\Delta e$. Modelling it is left open
 (Appendix~\ref{sec:prop3}); the \emph{empirical} EDDM collapse of
 Section~\ref{sec:proteus} is a measurement and stands independently of any
-requirement being assigned to it.
+requirement being assigned to it. It is also not a property of the detector
+alone. On the ProteuS stream EDDM never arms---its warm-up counts monitored
+\emph{errors}, and the stream delivers nine in eight thousand steps---so the
+$0/1080$ is a warm-up that never completed rather than an accumulation that
+failed. Armed, its standing inverts with the pre-change error rate: at
+$p_0 = 0.024$ it detects $97.4\%$ of runs at a $2\%$ pre-drift alarm rate, and
+at $p_0 = 0.069$, armed $554$ steps before the change, it detects $2.2\%$ at a
+$93\%$ pre-drift alarm rate. Any ordering that assigns EDDM a rank must carry
+its arming state and its $p_0$ alongside.
+
+\begin{remark}[The windowed requirement in amplitude]\label{rem:window_requirement}
+  On a binary error stream the two-sample statistic of KSWIN is a difference of error counts
+  between its two samples of size $n_{\mathrm{stat}}$, so a rectangular transient of height
+  $\Delta e$ and length $W$ offers it at most $\Delta e \min(W, n_{\mathrm{stat}})$ excess errors
+  at once. Against the exact lattice level $k^*(\alpha, n_{\mathrm{stat}})$ the windowed family
+  requires, in amplitude, $\Delta e \ge k^*/\min(W, n_{\mathrm{stat}})$, while~\eqref{eq:Rkswin}
+  read on $A = (\Delta e - \delta_P) W$ requires
+  $\Delta e \ge \delta_P + \bigl[\sqrt{n_{\mathrm{stat}} \ln(2/\alpha)}
+  + \sqrt{(W/2)\ln(1/\varepsilon)}\bigr]/W$. For $W \le n_{\mathrm{stat}}$ both scale as $1/W$
+  and~\eqref{eq:Rkswin} is the stricter. For $W > n_{\mathrm{stat}}$ the first saturates at the
+  lattice distance $k^*/n_{\mathrm{stat}}$ while the second keeps falling toward $\delta_P$; they
+  cross at $W_\times = \bigl[(b + \sqrt{b^2 + 4 c R_{\mathrm{fa}}})/(2c)\bigr]^2$, with
+  $b = \sqrt{\ln(1/\varepsilon)/2}$, $c = k^*/n_{\mathrm{stat}} - \delta_P$ and
+  $R_{\mathrm{fa}} = \sqrt{n_{\mathrm{stat}}\ln(2/\alpha)}$, which is $47.3$ at the deployed
+  $(\alpha, n_{\mathrm{stat}}) = (0.005, 30)$. Past $W_\times$,~\eqref{eq:Rkswin} promises the
+  detection of amplitudes below $k^*/n_{\mathrm{stat}}$, which no transient length makes
+  detectable. Over the $3{,}840$ cells of a controlled-transient grid its errors follow these
+  frontiers away from the threshold: all $91$ of its errors with $W \le n_{\mathrm{stat}}$ forbid a
+  detection that occurs, all $478$ with $W \ge W_\times$ promise one that does not, and between
+  the two $7$ of $8$ are broken promises, because near the threshold the rate observed at level
+  $1 - \varepsilon$ sits above the mean-field boundary both conditions use. On the two
+  classifier-driven families that boundary agrees with the observation on $62$ of $80$ and $36$ of
+  $40$ cells, each disagreement a detection it promises; it locates the median run, not a
+  $(1 - \varepsilon)$ requirement. Both prices of $R_{\mathrm{KSWIN}}$ are set by
+  $n_{\mathrm{stat}}$: a $(1 - \varepsilon)$ guarantee at one test adds
+  $\sqrt{n_{\mathrm{stat}} \ln(1/\varepsilon)}$ to the critical count and carries no $W$.
+\end{remark}
 
 \begin{corollary}[Family split]\label{cor:split}
   Let $\alpha \to 0$ at fixed $W$, $\varepsilon$ and $n_{\mathrm{stat}}$. Then
@@ -428,6 +494,17 @@ and placed the $\alpha$-price of $R_{\mathrm{KSWIN}}$ ``inside a square root of
 $W$'', which~\eqref{eq:Rkswin} contradicts: that term carries no $W$. The
 operative axis is $\alpha$, which the practitioner sets, rather than $W$, which
 the classifier does.
+
+Neither statement makes $R_{\mathrm{KSWIN}}$ a sufficient condition. Measured
+over a controlled-transient grid of $192{,}000$ runs, the sign of
+$A - R_{\mathrm{KSWIN}}$ predicts detection on $85.0\%$ of cells against
+$93.1\%$ for the contrast condition of~\eqref{eq:Rkswin_contrast}, and the
+deficit is concentrated where the transient outlasts the window that reads it:
+$79.8\%$ for $W \ge n_{\mathrm{stat}}$ and $73.0\%$ for
+$W > W_{\mathrm{win}} - n_{\mathrm{stat}}$. The reservoir-contamination regime
+is not a failure regime: the alarm rate rises with $W$ and then plateaus,
+because a long transient is tested early, while the reference window is still
+clean.
 
 \begin{remark}[The split, at the measured operating point]\label{rem:split_measured}
   At $\Delta e = 0.3268$, $\tau_{\mathrm{swap}}^{(1/M)} = 57.4$ in place of $W$, $\varepsilon = 0.05$,
@@ -459,4 +536,15 @@ the classifier does.
   The evidence is there; the cumulative monitor cannot spend it at that
   false-alarm level. That is the second regime of Theorem~\ref{thm:floor}, and
   it is why a detector-side resolution exists at all.
+
+  The operating point is a lower bound on $W$: $\tau_{\mathrm{swap}}^{(1/M)} \le
+  \tau_{\mathrm{erase}}$ by Proposition~\ref{prop:order}, and every $W$-slot of the table,
+  $\alpha = W/\mathrm{ARL}_0$ included, is read there. At the exploitable transient itself,
+  $W = 611.9$ by the argmax of $A_{\mathrm{unrefl}}$ and $W = 1{,}995.5$ by the last crossing of
+  Definition~\ref{def:times}, none of the three requirements is met at any $\lambda$ of the table,
+  and $R_{\mathrm{KSWIN}}$ at the deployed $\alpha = 0.005$ rises from $22.7$ to $43.7$ and $68.1$.
+  At the same point the cumulative monitor at $\lambda = 15$ detects every run within $W$: read at
+  $W$, the margin $\sqrt{(W/2)\ln(1/\varepsilon)}$ that~\eqref{eq:Rcusum} to~\eqref{eq:Rkswin}
+  share makes them too loose to decide the blind spot, and the table above holds at the first-swap
+  horizon only.
 \end{remark}

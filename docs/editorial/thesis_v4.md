@@ -361,13 +361,18 @@ v4. Each is followed by the artifact that carries it.
   stream, one history and one fork; we measure the evidence ceiling directly rather than through a
   rectangular surrogate, and we report the dilation between the first replacement and erasure as a
   measurement rather than as a definitional assumption (Section~\ref{sec:experiments}).
-  \item \textbf{An ordering of monitor families, and the level at which it reverses.} We order
-  cumulative, windowed and distributional monitors by the evidence each requires at a
-  \emph{common} false-alarm level, show that the ordering follows a scaling law rather than a
-  taxonomy---linear in $\ln(1/\alpha)$ for the cumulative monitor, square-root for the other
-  two---and locate the crossings. The threshold this paper recommends lies on the side where the
-  cumulative monitor is the cheaper of the three (Section~\ref{sec:related} and
-  Section~\ref{sec:discussion}).
+  \item \textbf{An ordering of monitor families, indexed by the stream.} We compare cumulative,
+  adaptive-window and fixed-window two-sample monitors on the error stream at their deployed
+  levels and at a common false-alarm level, on two streams whose pre-change error rate $p_0$ is
+  not zero. Equalising the level lowers the fixed-window two-sample monitor (KSWIN, $0.458 \to
+  0.337$ of runs detected) and raises the adaptive-window one (ADWIN, $0.885 \to 0.926$, median
+  delay $28 \to 15$ steps), both at zero pre-change alarms: the deployed comparison orders
+  calibrations, not families. EDDM has no rank of its own---it never arms at $p_0 = 0$, is first
+  at $p_0 = 0.024$ ($0.974$ detected, $0.020$ pre-change alarms) and last at $p_0 = 0.069$
+  ($0.022$ detected, $0.930$)---so the ordering is a table with $p_0$ as a column
+  (Table~\ref{tab:family_order}), not a ranking. A monitor on the input distribution does not
+  enter it: on a change of $P(Y \mid X)$ at fixed $P(X)$ it does not see the drift
+  (Section~\ref{sec:related} and Section~\ref{sec:discussion}).
 \end{enumerate}
 ```
 
@@ -385,11 +390,13 @@ v4. Each is followed by the artifact that carries it.
   (`100` seeds × `20` magnitudes × four arms; `κ ≥ 1` in `1835/1836` runs, median `14.6`;
   `τ_swap^(1)/τ_swap^(1/M) = 17.9`, elasticity `0.66`, `z = -14.9`); `framework_v2.tex`
   `def:kappa`, `rem:order`.
-- **(C4)** — `framework_v2.tex` `cor:split` and `rem:split_measured`;
-  `results/S2bis_calibration/tables/s2bis_proteus_gate.json :: cor_split_crossings` (KSWIN at
-  `ln(1/α) = 16.34`, `λ = 22.605`; ADWIN at `18.97`, `λ = 26.466`; CUSUM slope `1.468 = 1/θ*`);
-  `envelope_stats.json` for `λ_op = 21.93 [19.876, 22.398]`, which lies entirely below the KSWIN
-  crossing.
+- **(C4)** — `results/S9_detector_coverage/tables/s9_family_ordering.json` (`p_0 = 0.024`) and
+  `s9_family_ordering_rotation.json` (`p_0 = 0.069`), grid means over 20 magnitudes of 100 runs,
+  raw error stream, arm `full`; `s2bis_proteus_gate.json :: eddm_arming_T_D` (`p_0 = 0`, EDDM never
+  armed, `0/1080`); verdicts D5 = LOST, D7 = HOLDS, D8 = NOT PRODUCED and D9 = ARMED-COLUMN in
+  `docs/theory/S9_detector_coverage.md`. The equalised levels are those of
+  `s2bis_proteus_gate.json`, derived with `tau_swap^(1/M) = 57.4` in place of `W`. Every numeral
+  reproduced by rule E4 of `docs/prompts/s2ter-decision-rules.md`.
 
 ### What (C1) keeps, and why the two removals do not empty it
 
@@ -413,24 +420,18 @@ contradicts the proposition three pages later.
 
 ### (C4): reformulated, not conditioned — and why
 
-**Decision: reformulate.** S9 exists as a prompt and nothing else. `git log --all` shows no
-branch, `results/` no directory, `docs/theory/` no transfer. An arm that is not delivered cannot
-carry a contribution.
+**Decision: rewrite.** The version above rested on `cor:split`'s crossings, read at
+`tau_swap^(1/M) = 57.4` in place of `W`, and on `eq:Rkswin` as KSWIN's governing condition. S9
+refuted the second (D2). S2-ter traced the first to a lower bound on `W`: at the exploitable
+transient no requirement of the ladder is met at any `lambda` (rule E3). The crossings therefore
+cannot carry the contribution.
 
-The reformulation is not a retreat to a weaker claim; it moves (C4) onto a result that is derived
-and instantiated rather than promised. `cor:split` derives the ordering from a scaling law, and
-`rem:split_measured` instantiates it at the measured operating point with a crossing point. That
-is strictly more than the v2 (C4) offered, which ordered three families by exposure and stated a
-cost per family without a number.
-
-The input-space promise descends to future work and is declared there with its structural cost,
-which the paper already states: `related_work_v2.tex` L92-95 records that an input-space monitor is
-blind to a change in `P(Y|X)` at fixed `P(X)`, and the controlled generator of this paper moves the
-decision boundary at fixed `P(X)`. The arm would therefore be blind to the drift the paper studies
-by construction. Declaring that is a result about the design space, and it is the honest form of
-the sentence at `related_work_v2.tex` L97-99 — *which is why we evaluate an input-space arm
-alongside the error-stream arms* — which currently promises an experiment the repository does not
-contain. That sentence is in the register.
+What carries it is measured: S9's family matrix at the deployed and at a common false-alarm level,
+on two streams whose null is not degenerate, with `p_0` as a column, because the one family whose
+rank inverts between the two, EDDM, inverts with `p_0`. The input-space class is the third row and a
+result about the design space: S9 measured the instrument sensitive to a covariate shift and blind,
+by construction of both generators, to the drift this paper studies (D8, NOT PRODUCED). That
+replaces the promise of `related_work_v2.tex` L97-99.
 
 ---
 

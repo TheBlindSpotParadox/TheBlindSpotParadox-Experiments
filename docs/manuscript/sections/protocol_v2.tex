@@ -296,28 +296,33 @@ the library's background learning mechanism operates as designed.
 
 \subsection{Multiplicity}\label{sec:protocol_multiplicity}
 
-The family of hypothesis tests reported in this paper is stated in full: six seed-level pipeline
-contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep, and three seed-level contrasts on
-the INSECTS variants of Table~\ref{tab:real_data_summary} --- ten tests. The three BAF rows carry
-no test, their $\Delta e$ being indistinguishable from zero (Section~\ref{sec:protocol_ci}).
+The family of hypothesis tests reported in this paper is stated in full. Eighteen tests carry its
+claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep,
+three seed-level contrasts on the INSECTS variants of Table~\ref{tab:real_data_summary}, and eight
+seed-level contrasts of the label-latency analysis (Section~\ref{sec:limitations}). The three BAF
+rows carry no test, their $\Delta e$ being indistinguishable from zero
+(Section~\ref{sec:protocol_ci}). The paper reports twenty-one further $p$-values---twenty
+Kolmogorov--Smirnov tests of exponentiality and one Fisher test of homogeneity---and the
+correction is also run over all thirty-nine; no verdict differs between the two families.
 
-Eight of the ten $p$-values sit exactly at the resolution floor of the two-sided sign test at
-$n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}. No correction over a
-family of this size can lift them: Holm--Bonferroni at $\alpha = 0.05$ compares the smallest
-against $\alpha/10 = 5 \times 10^{-3}$, and $2^{-29} \approx 1.86 \times 10^{-9}$ clears that by six
-orders of magnitude, as it clears every subsequent step. Bonferroni over the whole family gives
-$10 \cdot 2^{-29} \approx 1.86 \times 10^{-8}$, still far below any conventional level. For these
-eight the correction is not applied because it is arithmetically incapable of changing a decision,
-which is a justification and not an omission.
+Holm--Bonferroni at $\alpha = 0.05$ over the eighteen retains fifteen. Eight of the ten tests
+declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test
+at $n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}; $2^{-29} \approx 1.86
+\times 10^{-9}$ clears the first Holm threshold, $\alpha/18 \approx 2.8 \times 10^{-3}$, by six
+orders of magnitude, as it clears every subsequent step. Seven of the eight latency contrasts are
+retained, at $p \le 2.4 \times 10^{-10}$ over one hundred seeds.
 
-The two remaining tests are reported with the opposite verdict, and it is the honest one. The
-KSWIN $\alpha$-sweep contrast is degenerate ($p = 1$: both arms detect 1080 of 1080 runs), and the
-INSECTS \emph{abrupt\_balanced} contrast has $p = 0.043$, which under Holm is compared against
-$\alpha/2 = 0.025$ and \textbf{does not survive}. We therefore do not claim a seed-level effect on
-\emph{abrupt\_balanced}. That is consistent with how Section~\ref{sec:proteus} already treats that
-variant --- a weak witness whose five canonical jumps are heterogeneous and partly negative, and
-whose marginal advantage is explicitly not attributed to the mechanism. The multiplicity correction
-removes a claim the paper had already declined to make.
+Three tests are not retained, and the paper claims none of them. The KSWIN $\alpha$-sweep contrast
+is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The INSECTS \emph{abrupt\_balanced}
+contrast has $p = 0.043$, which under Holm is compared against $\alpha/3 \approx 0.017$ and
+\textbf{does not survive}. We therefore do not claim a seed-level effect on
+\emph{abrupt\_balanced}, consistently with how Section~\ref{sec:proteus} already treats that
+variant---a weak witness whose five canonical jumps are heterogeneous and partly negative, and whose
+marginal advantage is explicitly not attributed to the mechanism. The rise of detection under a
+shared label latency on the rotation family ($p = 0.16$) is withdrawn; its canonical counterpart is
+retained. Over the thirty-nine, the Fisher homogeneity test ($p = 1$) joins the non-retained set; it
+licenses pooling as a non-rejection, which no correction alters. Every Kolmogorov--Smirnov test is
+retained, the largest ($p = 0.003$) against $\alpha/5$.
 
 \subsection{Complete Separations and Effect Sizes}\label{sec:protocol_separation}
 

@@ -434,12 +434,19 @@ def _target(f):
     return ROOT_DIR / f
 
 
+S2TER_I_SINGLE_COLUMN = (("  \\begin{tabular}{llrlrrr}\n", "  \\resizebox{\\textwidth}{!}{%\n  \\begin{tabular}{llrlrrr}\n"),
+                         ("  \\end{tabular}\n\\end{table*}", "  \\end{tabular}}\n\\end{table*}"))
+
+
 def test_transfer_S2ter_payloads_resolve_once_and_avoid_pending_anchors():
     payloads = _payloads(TRANSFER_S2TER)
     assert len(payloads) == 7, len(payloads)
     pending = [(f, s) for p in PENDING_TRANSFERS for f, s, _ in _payloads(p)]
     assert pending
     for f, search, replace in payloads:
+        if "\\label{tab:family_order}" in replace:
+            for old, new in S2TER_I_SINGLE_COLUMN:
+                replace = replace.replace(old, new)
         text = _target(f).read_text(encoding="utf-8")
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         assert state in [(1, 0), (0, 1)], (f, search.splitlines()[0][:80], state)

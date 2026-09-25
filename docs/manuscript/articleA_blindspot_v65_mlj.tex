@@ -46,7 +46,11 @@
 \newcommand{\SwapRatio}{17.9}                % tau\_swap^(1)/tau\_swap^(1/M), pooled median
 \newcommand{\SwapElasticity}{0.66}           % AFT beta\_1
 \newcommand{\SwapElasticityZ}{-14.9}         % z against H0 = 1
-\newcommand{\LambdaFA}{15}                   % R4\_PHT\_LAMBDA, ProteuS pre-drift calibration
+\newcommand{\LambdaFA}{15}                   % R4\_PHT\_LAMBDA. FIXED operating threshold, NOT a
+                                             % calibration: ProteuS carries an identically zero
+                                             % pre-drift error, so no false-alarm budget selects
+                                             % 15 or any other value. Cf. the footnote at
+                                             % \ref{sec:crossover} and Section~\ref{sec:limitations}.
 \newcommand{\LambdaOpNarrow}{21.93}          % envelope\_stats.json, lambda\_op\_bootstrap 0.20\_0.40
 \newcommand{\LambdaOpNarrowCI}{[19.88,\,22.40]}
 \newcommand{\WideEnvUnstable}{62.6}          % percent of replicates with lambda\_op below LambdaFA
@@ -467,7 +471,7 @@ All significance is assessed at the seed level (the unit of statistical independ
 When testing the Streaming Random Patches (SRP)~\cite{gomes_srp_2019} ensemble paired with a PHT, we observe the exact same phenomenon: F1${=}0.00$ at $c_{\mathrm{int}}=1$ ($0/1080$ runs detected vs.\ $932/1080$ for PHT$+$HT; complete separation across all 30 seeds). The measurement stands on its own: a second bagging ensemble with internal replacement starves the same cumulative monitor on the same streams. It does not confirm Corollary~\ref{cor:mcrit}, which certifies no ensemble size.
 
 \textbf{KSWIN+ARF: A detector-side architectural resolution.}
-Conversely, pairing the ARF ($c_{\mathrm{int}}=1$) with an external KSWIN monitor~\cite{raab_kswin_2020} completely resolves the phenomenon (F1${=}1.00$, ADD${=}14$ [0]; $1080/1080$ runs detected vs.\ $0/1080$ for PHT$+$ARF, complete separation across all 30 seeds). KSWIN evaluates a \emph{distributional divergence} (Kolmogorov-Smirnov distance) between sliding windows rather than accumulating continuous binary evidence, rendering it structurally immune to transient signal erasure. The measured ADD${=}14$ stems entirely from the smoothing window's structural lag ($W/2=15$), yielding a lag-corrected true delay of $[0]$. Crucially, this resolution is hyper-parameter robust: an $\alpha$-sensitivity sweep ($\alpha \in [0.001, 0.05]$) maintains F1${=}1.00$ uniformly across all GARCH regimes without false-alarm flooding.
+Conversely, pairing the ARF ($c_{\mathrm{int}}=1$) with an external KSWIN monitor~\cite{raab_kswin_2020} completely resolves the phenomenon (F1${=}1.00$, ADD${=}14$ [0]; $1080/1080$ runs detected vs.\ $0/1080$ for PHT$+$ARF, complete separation across all 30 seeds). KSWIN evaluates a \emph{distributional divergence} (Kolmogorov-Smirnov distance) between sliding windows rather than accumulating continuous binary evidence. The measured ADD${=}14$ stems from the smoothing buffer's lag ($W_{\mathrm{buf}}/2=15$, not $W/2$ of Definition~\ref{def:times}), yielding a lag-corrected delay of $[0]$. This result does not generalise beyond ProteuS, and the reason is the stream rather than the monitor: ProteuS carries an identically zero pre-drift error (Section~\ref{sec:limitations}), so $\Delta e = 1$, no false alarm is possible, and the operating point sits an order of magnitude above $R_{\mathrm{KSWIN}}$---which is why the $\alpha$ sweep is flat. On the instrumented Bernoulli family, where the null is not degenerate, the same monitor at the same settings detects $45.8\%$ of runs against $92.8\%$ for PHT at $\lambda{=}15$, its detection moves from $3\%$ to $69\%$ across the same $\alpha \in [0.001, 0.05]$, and on the $W_{\mathrm{buf}}{=}30$ smoothed error stream it actually consumes it raises a pre-drift alarm in every run at every $\alpha$.
 
 \subsection{Bridging the Gap: The Regime Crossover}\label{sec:crossover}
 
@@ -498,9 +502,14 @@ The Blind Spot Phenomenon is thus not a contradiction of the literature, but its
 To validate the regime crossover boundary beyond synthetic distributions, we evaluated the phenomenon on six real-world streams: the Bank Account Fraud (BAF) tabular benchmark~\cite{jesus_baf_2022} in its three temporal-split variants (Base, Variant I, Variant II), and three variants of the INSECTS benchmark~\cite{souza_insects_2020} (\emph{abrupt\_balanced}, \emph{gradual\_balanced}, \emph{incremental\_reoccurring\_balanced}). We compute F1 over 30 random seeds per variant, evaluating true detections via a bipartite Hopcroft-Karp matching protocol~\cite{hopcroft_karp_1973}. The effective error jump $\Delta e$ is estimated drift-by-drift via an adaptive window protocol $w_k = \min(5000, \min(\Delta t_{\mathrm{left}}, \Delta t_{\mathrm{right}})/3)$ to avoid the overlapping-window artefact that fixed-window estimators produce on closely-spaced engineered drifts.
 
 \textbf{Empirical frontier calibration.}
-The six streams populate the regime-crossover boundary of Section~\ref{sec:crossover} continuously (Table~\ref{tab:real_data_summary}); all INSECTS positions follow Souza et al.~\cite{souza_insects_2020}, Table~2. The three BAF variants sit at $\Delta e \approx 0$ (Weak Signal zone), where the blind spot is dormant and the HT/ARF F1 ratio is indistinguishable from unity. This reading is not an artefact of the estimator being measured on an adapting model: a reference tree forked at the end of the warm-up and never retrained reports the same $\Delta e \approx 0$ at the same canonical positions ($|\Delta e| < 0.001$, every interval covering zero). A frozen model cannot absorb a change, so a jump it does not see is not one adaptation has erased. Both trees in fact sit at the majority-class error rate, which on these streams is the fraud rate itself: no Hoeffding-tree pipeline acquires discriminative signal on BAF, so no error transient exists for any monitor to miss. BAF is therefore an explicit \emph{negative control} for the phenomenon, and the demonstration rests on the two high-magnitude INSECTS variants. INSECTS \emph{abrupt\_balanced} ($\Delta e \approx 0.07$) is a \emph{weak witness}: its five canonical jumps are heterogeneous and partly negative ($\Delta e \in \{0.68, -0.15, 0.24, -0.27, -0.13\}$) and both detectors fire near their false-alarm rate, so its marginal ARF advantage is not mechanistically attributable. The effect appears on the two high-magnitude variants, and through \emph{false-alarm flooding}, not starvation. On \emph{gradual\_balanced} ($\Delta e \approx 0.45$, single transition) PHT+HT detects genuinely ($7$ alarms, precision $0.14$, F1 $0.25$) whereas PHT+ARF($c{=}1$) sprays $86$ alarms (precision $0.012$, F1 $0.02$)---a $10.57\times$ F1 gap (sign test $p \le 2^{-29}$, the resolution floor of the two-sided test at $30$ seeds) driven entirely by precision; \emph{incremental\_reoccurring\_balanced} ($\Delta e \approx 0.39$) confirms the same mode more moderately ($1.61\times$, $p \le 2^{-29}$). We state this plainly: the predicted \emph{starvation} (recall $\to 0$) is observed only on the synthetic stationary streams (Bernoulli, ProteuS), while the real non-stationary streams exhibit its dual, \emph{flooding} (precision $\to 0$; Remark~\ref{rem:flooding}).\footnote{Two further INSECTS variants are excluded: \emph{incremental\_balanced} has no discrete drift positions (change throughout the stream~\cite{souza_insects_2020}), precluding tolerance matching; \emph{incremental\_abrupt\_balanced} is excluded as an easier-task transition rather than a difficulty onset. It is not part of the evaluated variant set, so no $\Delta e$ is computed for it and none is reported here.}
+The six streams populate the regime-crossover boundary of Section~\ref{sec:crossover} continuously (Table~\ref{tab:real_data_summary}); all INSECTS positions follow Souza et al.~\cite{souza_insects_2020}, Table~2. The three BAF variants sit at $\Delta e \approx 0$ (Weak Signal zone), where the blind spot is dormant and the HT/ARF F1 ratio is indistinguishable from unity. This reading is not an artefact of the estimator being measured on an adapting model: a reference tree forked at the end of the warm-up and never retrained reports the same $\Delta e \approx 0$ at the same canonical positions ($|\Delta e| < 0.001$, every interval covering zero). A frozen model cannot absorb a change, so a jump it does not see is not one adaptation has erased. Both trees in fact sit at the majority-class error rate, which on these streams is the fraud rate itself: no Hoeffding-tree pipeline acquires discriminative signal on BAF, so no error transient exists for any monitor to miss. BAF is therefore an explicit \emph{negative control} for the phenomenon, and the demonstration rests on the two high-magnitude INSECTS variants. INSECTS \emph{abrupt\_balanced} ($\Delta e \approx 0.07$) is a \emph{weak witness}: its five canonical jumps are heterogeneous and partly negative ($\Delta e \in \{0.68, -0.15, 0.24, -0.27, -0.13\}$) and both detectors fire near their false-alarm rate, so its marginal ARF advantage is not mechanistically attributable. The effect appears on the two high-magnitude variants, and through \emph{false-alarm flooding}, not starvation. On \emph{gradual\_balanced} ($\Delta e \approx 0.45$, single transition) PHT+HT detects genuinely ($7$ alarms, precision $0.14$, F1 $0.25$) whereas PHT+ARF($c{=}1$) sprays $86$ alarms (precision $0.012$, F1 $0.02$)---a $10.57\times$ F1 gap (sign test $p \le 2^{-29}$, the resolution floor of the two-sided test at $30$ seeds) driven entirely by precision; \emph{incremental\_reoccurring\_balanced} ($\Delta e \approx 0.39$) confirms the same mode more moderately ($1.61\times$, $p \le 2^{-29}$). We state this plainly: the predicted \emph{starvation} (recall $\to 0$) is observed only on the synthetic stationary streams (Bernoulli, ProteuS), while the real non-stationary streams exhibit its dual, \emph{flooding} (precision $\to 0$; Remark~\ref{rem:flooding}).\footnote{The evaluated set is the three balanced INSECTS variants with discrete change points held in the artifact repository. Table~2 of Souza et al.~\cite{souza_insects_2020} lists eleven streams, and the other eight are not evaluated: \emph{incremental\_balanced}, which has no discrete drift positions and so admits no tolerance matching, \emph{incremental\_abrupt\_balanced}, the five imbalanced variants, and \emph{out-of-control}. No $\Delta e$ is computed or reported for them.}
 
-\input{tables/table2_real_data_summary.tex}
+\begin{table*}[ht]
+  \centering
+  \caption{Real-world validation across six streams ($30$ seeds/cell). Drift positions follow Souza et al.~\cite{souza_insects_2020} Table~2 (`reoccurring\_balanced' retains $K{=}2$ in-stream transitions). F1 numerator is deterministic here; per-cell dispersion reflects classifier initialization. Significance: seed-level sign test, where $2 \cdot 10^{-9}$ is the resolution floor $2^{-29}$ of the two-sided test at $30$ seeds. $p_0$: the classifier's own mean error over the armed pre-change span, external detector disabled, median over seeds. The $c{=}1$ clock degrades monitoring via `false-alarm flooding' (precision collapse), not starvation: on `gradual\_balanced', PHT+ARF($c{=}1$) emits 86 alarms for one drift (precision $0.012$) vs 7 for PHT+HT ($0.14$). `abrupt\_balanced' is a weak witness (heterogeneous, partly negative jumps; neither beats false-alarm rate).}
+  \label{tab:real_data_summary}
+  \resizebox{\textwidth}{!}{\input{tables/s10_table2_p0.tex}}
+\end{table*}
 
 \subsection{A Constructive Solution: The Non-Adaptive Ensemble}\label{sec:solution_rf}
 
@@ -516,18 +525,77 @@ This monitoring fidelity comes at a measurable predictive cost: as visible in Fi
 
 % ══════════════════════════════════════════════════════════════════
 \section{Discussion}\label{sec:discussion}
+
+\begin{table*}[t]
+  \centering
+  \small
+  \caption{Monitor families on the error stream at their deployed and equalised false-alarm
+  levels, indexed by the pre-change error rate $p_0$ of the stream. Detection inside the
+  exploitable transient and the pre-change alarm rate are means over $20$ magnitudes of $100$
+  runs on the raw error stream; the delay is the median over magnitudes of the per-magnitude
+  median. The equalised levels place ADWIN and KSWIN at the requirement of a CUSUM at
+  $\lambda = 15$, derived with $\tau_{\mathrm{swap}}^{(1/M)} = 57.4$ in place of $W$; at the
+  exploitable transient itself no ADWIN level in $(0, 1]$ matches that requirement. At $p_0 = 0$
+  the null is degenerate and no false-alarm level is defined; only EDDM's arming state is reported
+  there. EDDM carries its arming rate and median arming instant beside its delay.}
+  \label{tab:family_order}
+  \resizebox{\textwidth}{!}{%
+  \begin{tabular}{llrlrrr}
+    \toprule
+    family & setting & $p_0$ & armed & pre-change alarms & detected in $W$ & median delay \\
+    \midrule
+    EDDM & published & $0.000$ & never, $0/1080$ & --- & $0.000$ & --- \\
+    \midrule
+    StrictCUSUM, $\lambda = 15$ & published & $0.024$ & --- & $0.000$ & $0.928$ & $35.0$ \\
+    StrictCUSUM, $\lambda = 50$ & published & $0.024$ & --- & $0.000$ & $0.001$ & $1089.0$ \\
+    PHT, $\lambda = 15$ & published & $0.024$ & --- & $0.000$ & $0.928$ & $33.5$ \\
+    PHT, $\lambda = 50$ & published & $0.024$ & --- & $0.000$ & $0.000$ & --- \\
+    ADWIN & published & $0.024$ & --- & $0.000$ & $0.885$ & $28.0$ \\
+    ADWIN & equalised & $0.024$ & --- & $0.000$ & $0.926$ & $15.0$ \\
+    KSWIN & published & $0.024$ & --- & $0.000$ & $0.458$ & $27.0$ \\
+    KSWIN & equalised & $0.024$ & --- & $0.000$ & $0.337$ & $28.0$ \\
+    EDDM & published & $0.024$ & $1.000$ at $t_{\mathrm{rel}} = +16$ & $0.020$ & $0.974$ & $17.5$ \\
+    \midrule
+    StrictCUSUM, $\lambda = 15$ & published & $0.069$ & --- & $0.000$ & $0.958$ & $31.5$ \\
+    StrictCUSUM, $\lambda = 50$ & published & $0.069$ & --- & $0.000$ & $0.448$ & $440.0$ \\
+    PHT, $\lambda = 15$ & published & $0.069$ & --- & $0.030$ & $0.942$ & $28.0$ \\
+    PHT, $\lambda = 50$ & published & $0.069$ & --- & $0.000$ & $0.090$ & $391.0$ \\
+    ADWIN & published & $0.069$ & --- & $0.000$ & $0.891$ & $32.0$ \\
+    ADWIN & equalised & $0.069$ & --- & $0.000$ & $0.933$ & $18.5$ \\
+    KSWIN & published & $0.069$ & --- & $0.000$ & $0.572$ & $27.2$ \\
+    KSWIN & equalised & $0.069$ & --- & $0.000$ & $0.478$ & $28.8$ \\
+    EDDM & published & $0.069$ & $1.000$ at $t_{\mathrm{rel}} = -554$ & $0.930$ & $0.022$ & $40.0$ \\
+    \bottomrule
+  \end{tabular}}
+\end{table*}
 % ══════════════════════════════════════════════════════════════════
 
 \subsection{Practical Implications}
 Default configurations (e.g., River's ARF at $c_{\mathrm{int}} = 1$) mask strong drifts from a cumulative monitor. Reliable monitoring is obtained with either a non-adaptive classifier, or an external clock faster than the internal one ($c_{\mathrm{ext}} < c_{\mathrm{int}}$); neither is necessary (Definition~\ref{def:decoupling}).
 
-\textbf{The Fundamental Tension.} The tension is an envelope property, not a universal one. Instrumented on the canonical grid at $\delta_P = \DeltaPtext$, the measured evidence ceiling gives $q_{0.05}(S_{\max}) = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \LambdaFA\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$, and non-empty for every envelope floored at or above $\DeFloorHi$; the boundary lies strictly inside that interval, measured at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Restricting the envelope to $[\EnvLo, \EnvHi]$, where the post-change class prior stays at $10\%$, leaves the admissible set non-empty. The infeasibility claim of the submitted version held only because the envelope reached below the detectability floor. This forces a choice among three architectural fixes:
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{figures/Fig_S10_dual_mode.png}
+  \caption{Starvation and flooding on one axis. Recall (solid) and precision (dashed) against the
+    PageHinkley threshold on six streams; shaded: thresholds with recall $\ge 0.95$ and precision
+    $\ge 0.5$, at the grid's resolution. Dotted: the threshold buying one false alarm over the armed
+    pre-change span; dash-dot: the $5\%$ quantile of the post-drift statistic peak. (a,~b)~canonical
+    and rotation families at $\Delta e = 0.327$, passive monitor; (c)~ProteuS; (d--f)~INSECTS,
+    monitor and classifier reset on each alarm. Every published failure fails by one criterion:
+    starvation by recall, flooding by precision. No threshold is admissible on INSECTS with the ARF
+    at $c = 1$.}
+  \label{fig:dual_mode}
+\end{figure*}
+
+\textbf{The Fundamental Tension.} Figure~\ref{fig:dual_mode} places starvation and flooding on one threshold axis. The tension is an envelope property, not a universal one. Instrumented on the canonical grid at $\delta_P = \DeltaPtext$, the measured evidence ceiling gives $q_{0.05}(S_{\max}) = \QlowFloorLo$ at $\Delta e = \DeFloorLo$ and $\QlowFloorHi$ at $\Delta e = \DeFloorHi$. The admissible set $\{\lambda \ge \LambdaFA\} \cap \{\lambda \le \lambda_{\mathrm{op}}\}$ is therefore empty for every envelope floored at or below $\DeFloorLo$, and non-empty for every envelope floored at or above $\DeFloorHi$; the boundary lies strictly inside that interval, measured at $\Delta e_c = \DeCrit$ ($95\%$ bootstrap CI $\DeCritCI$, $n=300$). Restricting the envelope to $[\EnvLo, \EnvHi]$, where the post-change class prior stays at $10\%$, leaves the admissible set non-empty. The infeasibility claim of the submitted version held only because the envelope reached below the detectability floor. This forces a choice among three architectural fixes:
 \textbf{(S1) Detector-side:} Window-divergence monitors (e.g., KSWIN) do not accumulate evidence and are far less sensitive to a short transient; on the settings we test they restore detection at no predictive cost.
 \textbf{(S2) Classifier-side:} A Static Random Forest ($\tau_{\mathrm{ARF}} = \infty$) removes the CUSUM tension at a $23.4$ percentage-point post-drift accuracy cost, isolating internal adaptation as the driver.
 \textbf{(S3) Macro-architecture:} A two-tier protocol in which the external monitor commands the ensemble swap keeps S1's monitoring fidelity together with S2's long-term recovery.
 
 \subsection{Limitations and Future Work}\label{sec:limitations}
-\textbf{Limitations.} First, tracking internal swaps aggregates true detections with continuous background noise, preventing isolated ARL$_0$ comparisons. Second, evaluating adaptive pipelines on the canonical (ARL$_0$, ADD) plane confounds noise filtering with detection survival; resolving against the control threshold $\lambda$ is required to isolate the collapse. Third, the starvation boundary is stated distribution-free, and its tighter conditional form needs a conditional independence the shared generator does not deliver (Appendix~\ref{sec:dep_gate}); the shortfall of the measured acceleration ($4$--$8\times$) from the $M$-fold reference ($10\times$ at $M{=}10$) is carried mostly by the non-exponential delay law, not by inter-tree correlation (Section~\ref{sec:hydra}). Finally, the phenomenon is regime-dependent: standard benchmarks (SEA, Hyperplane) operate at low magnitudes ($\Delta e \lesssim 0.15$), masking the starvation condition and shielding standard pipelines from the blind spot.
+\textbf{Limitations.} First, tracking internal swaps aggregates true detections with continuous background noise, preventing isolated ARL$_0$ comparisons. Second, evaluating adaptive pipelines on the canonical (ARL$_0$, ADD) plane confounds noise filtering with detection survival; resolving against the control threshold $\lambda$ is required to isolate the collapse. Third, the starvation boundary is stated distribution-free, and its tighter conditional form needs a conditional independence the shared generator does not deliver (Appendix~\ref{sec:dep_gate}); the shortfall of the measured acceleration ($4$--$8\times$) from the $M$-fold reference ($10\times$ at $M{=}10$) is carried mostly by the non-exponential delay law, not by inter-tree correlation (Section~\ref{sec:hydra}). Fourth, the ProteuS pre-drift error is identically zero on every run of both arms, so the false-alarm side of Table~\ref{tab:results_concept} is void: no threshold on those streams is bought at a false-alarm cost, the $\alpha$ sweep of KSWIN cannot move a false-alarm rate, and $\lambda = \LambdaFA$ is an operating threshold rather than a calibration. Finally, the phenomenon is regime-dependent: standard benchmarks (SEA, Hyperplane) operate at low magnitudes ($\Delta e \lesssim 0.15$), masking the starvation condition and shielding standard pipelines from the blind spot.
+
+\textbf{Label latency.} The external monitor reads an error stream, and every error waits for its label. We measured delays of $l \in \{10, 50, 100, 500\}$ steps on the canonical and rotation families ($100$ seeds $\times$ $20$ magnitudes). The outcome depends on who waits. If only the monitor waits, erasure stays where it was and the alarm moves by $l$: detection before erasure at $\lambda = 15$ falls from $0.92$ to $0.24$ at $l = 500$ on the canonical family, with the evidence itself unchanged. If the classifier learns from the same delayed labels, adaptation recedes with them: the erasure instant moves by $0.998\,l$ at $l = 500$, the evidence read before it grows $2.5$-fold, and the starvation threshold $\lambda = 50$ detects $90\%$ of drifts instead of $5\%$. Latency penalises a monitor through the delay it adds \emph{beyond} the classifier's; a shared latency trades detection delay for a longer, larger transient.
 
 \textbf{Future Work.} Three directions emerge. \emph{First}, extending Empirical Result~\ref{res:budget_sufficient}, which already covers Streaming Random Patches and leveraging bagging~\cite{bifet_leveraging_2010}, beyond its nine pipelines and six magnitudes. \emph{Second}, formalizing the externalized two-tier architecture (S3) or exploring windowed-detector pairings (e.g., ADWIN+ARF) that retain the ensemble's variance-reduction benefits without starvation. \emph{Third}, developing a closed-form derivation of the transition threshold ($\lambda^* \approx 15$--$25$) from the joint $\tau_{\mathrm{ARF}}$/CUSUM dynamics.
 
