@@ -210,7 +210,9 @@ PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=====
 
 
 def test_s10_writes_only_inside_its_perimeter():
-    """PROMPT_S10: no write under results/S6_*, S8_*, S9_*, R*_*, and no new authorized deviation."""
+    """PROMPT_S10: no write under results/S6_*, S8_*, S9_*, R*_*, and no new authorized deviation.
+    The ledger check reads the stream's own entry heading: a later stream may declare a change to an
+    S10 artifact (stream S13, round I, re-laid Table 7) without S10 having written a deviation."""
     tables = ssot.RESULTS_DIR / "S10_external_validity" / "tables"
     if tables.exists():
         unprefixed = [p.name for p in tables.iterdir() if p.is_file() and not p.name.startswith("s10_")]
@@ -219,7 +221,7 @@ def test_s10_writes_only_inside_its_perimeter():
                for p in ssot.RESULTS_DIR.glob(f"{pattern}/**/*s10_*")]
     assert not foreign, foreign
     ledger = ssot.RESULTS_DIR / "audit_S7" / "_baseline" / "authorized_deviations.txt"
-    assert "S10" not in ledger.read_text(encoding="utf-8")
+    assert "Stream S10" not in ledger.read_text(encoding="utf-8")
 
 
 def _payloads():
@@ -234,15 +236,31 @@ def _target(f):
     return ROOT_DIR / f
 
 
+# Applied payloads that a later insertion separated from their anchor: anchor and appended part each
+# stand once, so the (anchor, replacement) count reads (1, 0) as if pending, and a re-application
+# would print the appended part twice.
+S10_DISPLACED = {
+    "masking the starvation condition and shielding standard pipelines from the blind spot.":
+        "S10-C, separated from its anchor by the INSECTS and two-predicate paragraphs (stream S13)",
+}
+
+
 def test_transfer_S10_anchors_resolve_exactly_once():
+    """Every S10 payload is applied, (0, 1), or declared displaced by name; a pending state is a
+    defect now that the assembly has consumed them all."""
     payloads = _payloads()
     assert len(payloads) == 3, f"{len(payloads)} payloads parsed -- the fence shape changed"
     for f, search, replace in payloads:
         target = _target(f)
         assert target.exists(), f
         text = target.read_text(encoding="utf-8")
+        if search.splitlines()[0] in S10_DISPLACED:
+            tail = replace[len(search):].strip("\n")
+            assert replace.startswith(search) and (text.count(search), text.count(tail)) == (1, 1), (
+                f, S10_DISPLACED[search.splitlines()[0]])
+            continue
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
-        assert state in [(1, 0), (0, 1)], (f, state, search.splitlines()[0][:80])
+        assert state == (0, 1), (f, state, search.splitlines()[0][:80])
 
 
 def test_transfer_S10_payloads_avoid_the_excluded_subsections():

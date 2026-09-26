@@ -109,3 +109,20 @@ def test_hat_refit_is_committed_with_its_interval():
     assert hat["domain_min"] == 0.10
     assert hat["ci_lo"] <= hat["estimate"] <= hat["ci_hi"]
     assert hat["n_censored"] >= 0
+
+def test_segmented_comparison_is_derived_from_the_committed_fit():
+    """R-8: the numerals rem:exponent quotes are arithmetic on the committed fit and grid."""
+    seg = json.load(open(GATE_JSON))["tau_segmented"]
+    df = pd.read_csv(BELL_CSV, float_precision="round_trip")
+    valid = df[df["delta_e"] >= 0.10]
+    past = valid[valid["delta_e"] > seg["de_star"]]
+    n = len(valid)
+    assert seg["sse_gain"] == pytest.approx(1 - seg["sse_segmented"] / seg["sse_pooled"])
+    assert seg["post_hoc"]["f_stat"] == pytest.approx(
+        (seg["sse_pooled"] - seg["sse_segmented"]) / (seg["sse_segmented"] / (n - 3)))
+    assert seg["minus2_decline_past_break"] == pytest.approx(
+        1 - (past["delta_e"].min() / past["delta_e"].max()) ** 2)
+    assert seg["median_decline_past_break"] == pytest.approx(
+        1 - past["tau_arf_median"].iloc[-1] / past["tau_arf_median"].iloc[0])
+    lo, hi = seg["post_hoc"]["exponent_ci_break_fixed"]
+    assert lo <= seg["exponent"] <= hi

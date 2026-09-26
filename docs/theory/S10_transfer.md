@@ -110,6 +110,11 @@ Numbers: `s10_latency.json` (M1 and M2 rates at `lambda` = 15 and 50, `T` shifts
 closed in `s10_holm.json :: T10_1_verdicts`. The rotation family's M2 rise is **not** cited: it did
 not survive Holm.
 
+*Erratum, stream S13, round I.* S10-C is applied: the label-latency paragraph stands once in
+`sec:limitations`, now separated from its anchor by the INSECTS and two-predicate paragraphs, so the
+(anchor, replacement) count reads (1, 0) as if pending. A verbatim re-application would print the
+paragraph twice. `tests/test_S10_external_validity.py` declares it displaced by name.
+
 ## D. S10-D — the dual-mode figure (recorded, not applied)
 
 The asset is `results/S10_external_validity/figures/Fig_S10_dual_mode.png`, produced by

@@ -243,12 +243,20 @@ def _excluded_spans(tex):
     return spans
 
 
-def test_transfer_S8_payload_anchors_resolve_uniquely():
-    """A SEARCH/REPLACE payload is applicable only while its anchor is present and unique.
+# Applied payloads that a later insertion separated from their anchor: anchor and appended part each
+# stand once, so the (anchor, replacement) count reads (1, 0) as if pending, and a re-application
+# would define rem:first_swap twice.
+S8_DISPLACED = {
+    "  Invariance is therefore an \\emph{effect of adaptation}, demonstrated by":
+        "S8-2, separated from its anchor by res:bell and res:skillfloor (stream S13)",
+}
 
-    Valid in exactly two states, as S2-bis established: (1, 0) PENDING or (0, 1) APPLIED, the first
-    component netted against the replacement so an append-style payload that re-emits its own anchor
-    is not read as a duplication."""
+
+def test_transfer_S8_payload_anchors_resolve_uniquely():
+    """A SEARCH/REPLACE payload is valid only applied: (0, 1), the first component netted against
+    the replacement so an append-style payload that re-emits its own anchor is not read as a
+    duplication. The assembly consumed every S8 payload, so (1, 0) is no longer a valid pending
+    state but a defect -- unless the payload is declared displaced by name in S8_DISPLACED."""
     if not TRANSFER.exists():
         pytest.skip("transfer_S8.md not written yet")
     blocks = _payload_blocks(TRANSFER)
@@ -260,10 +268,15 @@ def test_transfer_S8_payload_anchors_resolve_uniquely():
             bad.append(f"block {i}: target {target} does not exist")
             continue
         tex = path.read_text(encoding="utf-8")
+        if search.splitlines()[0] in S8_DISPLACED:
+            tail = replace[len(search):].strip("\n")
+            if not (replace.startswith(search) and (tex.count(search), tex.count(tail)) == (1, 1)):
+                bad.append(f"block {i}: {S8_DISPLACED[search.splitlines()[0]]} no longer holds")
+            continue
         state = (tex.count(search) - tex.count(replace) * replace.count(search), tex.count(replace))
-        if state not in [(1, 0), (0, 1)]:
+        if state != (0, 1):
             bad.append(f"block {i} {state} in {target}: {search[:70]!r}")
-    assert not bad, ("S8 payloads that are neither pending (1, 0) nor applied (0, 1), as "
+    assert not bad, ("S8 payloads that are not applied (0, 1), as "
                      "(anchors outside the replacement, replacements):\n  " + "\n  ".join(bad))
 
 

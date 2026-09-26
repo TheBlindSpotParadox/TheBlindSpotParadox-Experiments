@@ -319,9 +319,10 @@ def _s2ter_b():
 
 def test_transfer_S9_anchors_resolve_exactly_once():
     """An anchor that matches twice patches the wrong site; one that matches zero times is lost at
-    assembly. Both are silent failures at apply time, so they fail here instead. A payload is valid
-    pending (1, 0) or applied (0, 1), the first component netted against an append-style replacement;
-    a payload naming the archived v64 resolves in the manuscript of record."""
+    assembly. Both are silent failures at apply time, so they fail here instead. The assembly
+    consumed every S9 payload, so a payload is valid only applied (0, 1), the first component netted
+    against an append-style replacement, or declared relabelled or superseded by name; a payload
+    naming the archived v64 resolves in the manuscript of record."""
     payloads = _payloads()
     assert len(payloads) >= 8, f"only {len(payloads)} payloads parsed -- the fence shape changed"
     for f, search, replace in payloads:
@@ -337,7 +338,7 @@ def test_transfer_S9_anchors_resolve_exactly_once():
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         if state == (0, 0) and search.splitlines()[0] in S9_SUPERSEDED:
             continue
-        assert state in [(1, 0), (0, 1)], (f, state, search.splitlines()[0][:80])
+        assert state == (0, 1), (f, state, search.splitlines()[0][:80])
 
 
 def test_transfer_S9_payloads_avoid_the_excluded_subsections():

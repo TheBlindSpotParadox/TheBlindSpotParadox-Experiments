@@ -25,6 +25,10 @@ the four inline subsections `CLAUDE.md` excludes.
 | **S2ter-K** | requirement margins read at `W` | S1 / S2 theory | charge, escalation |
 | **S2ter-L** | S9-A and S9-G | `transfer_S9.md` | record of supersession |
 
+*Erratum, stream S13, round I.* The seven payloads are applied in their targets (verified in round
+H, report 46 §5), and S2ter-B is applied inside S9-F. "Every payload below is unapplied" records the
+state at delivery. `tests/test_S2ter_predicate.py` now requires the applied state.
+
 ---
 
 ## A. S2ter-A — T1, the arbitration, not retained

@@ -183,6 +183,11 @@ $\alpha = 0.005$, which is the level deployed.
 >>>>>>> REPLACE
 ~~~~~~~~~
 
+*Erratum, stream S13, round I.* S9-F is applied in `framework_v2.tex`, with the replacement text of
+S2ter-B in place of its governing sentence, so the unrestricted claim that the contrast condition
+governs detection is in no version of the manuscript. `tests/test_S9_coverage.py` checks that
+applied state. The status column above still reads the state at delivery: do not re-apply.
+
 ## G. S9-G — contribution (C4), third exposure class
 
 (C4) promises an ordering of monitor families by exposure to the loop, each row carrying the cost it

@@ -37,3 +37,5 @@ La charge H3 n'inclut le bras HAT que si R-9 rend les horloges identiques. **R-9
 ## 6. Sortie
 
 Gate `s13_gate.json` : entrée `tau_segmented` (bras ARF) et `tau_segmented_hat` (bras HAT) — `de_star`, `exponent`, `floor`, intervalles bootstrap des trois, `sse_segmented`, `sse_pooled`. Les chiffres committés au gate sont la seule base admissible de la charge R7-B.
+
+*Erratum, round I (report 50).* « Un segmenté qui n'améliore pas ne se publie pas » ne fixait aucun seuil ; le tour H a lu 5,4 % de SSE comme une amélioration (ARF) et 0,2 % comme une absence d'amélioration (HAT), ligne tracée après lecture. Une comparaison pénalisée, calculée après coup et déclarée comme telle dans `s13_gate.json :: tau_segmented.post_hoc` (F(1,15) = 0,85, p = 0,37 ; AIC et BIC en faveur de la loi à un morceau), ne préfère pas le modèle segmenté. Les lignes ci-dessus ne sont pas modifiées.

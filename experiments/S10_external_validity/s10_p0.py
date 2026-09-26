@@ -176,13 +176,16 @@ def table2_with_p0(summary):
         return "---" if x is None or not np.isfinite(x) else fmt.format(x)
 
     lines = [r"\begin{tabular}{@{}lcccccccc@{}}", r"\toprule",
-             r"Variant & $\Delta e$ & F1(PHT+HT) & F1(PHT+ARF$_{c=1}$) & F1(ADW+ARF$_{c=1}$) & "
-             r"Ratio HT/ARF & Sign test $p$ & $p_0$ HT & $p_0$ ARF$_{c=1}$ \\", r"\midrule"]
+             r" & & \multicolumn{3}{c}{F1} & Ratio & Sign test & \multicolumn{2}{c}{$p_0$} \\",
+             r"\cmidrule(lr){3-5}\cmidrule(lr){8-9}",
+             r"Variant & $\Delta e$ & PHT+HT & PHT+ARF & ADWIN+ARF & HT/ARF & $p$ & HT & ARF \\",
+             r"\midrule"]
     for _, r in t2.iterrows():
         p = r["sign_test_p"]
         de = (r"$\approx 0$" if r["dataset"] == "baf" and abs(r["delta_e"]) < 0.01   # R5's rule
               else f"${r['delta_e']:.2f}$")
-        lines.append(f"{r['row']} & {de} & ${r['F1_PHT_HT']:.2f}$ & ${r['F1_PHT_ARF']:.2f}$ & "
+        lines.append(f"{r['row'].replace(chr(92) + '_balanced', '')} & {de} & "
+                     f"${r['F1_PHT_HT']:.2f}$ & ${r['F1_PHT_ARF']:.2f}$ & "
                      f"${r['F1_ADW_ARF']:.2f}$ & {cell(r['ratio'], '${:.2f}$')} & "
                      f"{'---' if pd.isna(p) else sci(p)} & "
                      f"{cell(p0.get((r['variant'], 'pht_ht')), '${:.3f}$')} & "

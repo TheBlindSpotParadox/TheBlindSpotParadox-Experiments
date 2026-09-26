@@ -80,9 +80,12 @@ inputs.
 Every SEARCH/REPLACE payload of `docs/theory/transfer_S*.md` and `S10_transfer.md` is applied or
 declared superseded. The guards of `tests/test_S2bis_calibration.py`, `test_S8_generality.py`,
 `test_S9_coverage.py`, `test_S10_external_validity.py` and `test_S2ter_predicate.py` accept a
-payload only pending `(1, 0)` or applied `(0, 1)`, resolve a target naming v64 in the manuscript
-`CURRENT` names, and declare each superseded or amended payload by name. A transfer document is an
-archive: it is not rewritten, and a defect in one is recorded by an erratum line beside it.
+payload only applied `(0, 1)`, resolve a target naming v64 in the manuscript `CURRENT` names, and
+declare each superseded, amended, relabelled or displaced payload by name. A displaced payload is an
+applied one that a later insertion separated from its anchor (S8-2, S10-C): its count reads `(1, 0)`
+as if pending, and a guard that accepted `(1, 0)` hid it — which is why none does since stream S13,
+round I. A transfer document is an archive: it is not rewritten, and a defect in one is recorded by
+an erratum line beside it.
 
 `docs/editorial/debt_register.md` carries a `v65` column (`PENDING` / `PURGED` / `RETAINED`) that
 `tests/test_debt_register.py` checks against the rendered manuscript; no row is `PENDING`.

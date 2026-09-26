@@ -307,15 +307,18 @@ def test_transfer_payload_anchors_resolve_uniquely():
     stale anchor, (1, 1) a duplication (applied while the original still stands), anything higher an
     ambiguous anchor. The first component is netted against the replacement because an append-style
     payload re-emits its own anchor as the first line of its replacement (T-A(0)): counting raw
-    occurrences would read that legitimate applied state as a duplication."""
+    occurrences would read that legitimate applied state as a duplication.
+
+    The v65 assembly consumed every payload, so (1, 0) is no longer a valid pending state: a guard
+    that accepts both states cannot tell an applied payload from one an insertion displaced."""
     doc = ROOT_DIR / "docs" / "theory" / "transfer_S2bis.md"
     _need(doc, "the S2-bis transfer document is a deliverable of this stream")
     where, tex = _manuscript_of_record()
     blocks = _search_blocks(doc)
     assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
     bad = [(i, b[:80], state) for i, (b, r) in enumerate(blocks, 1)
-           if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) not in [(1, 0), (0, 1)]]
-    assert not bad, ("SEARCH/REPLACE payloads that are neither pending (1, 0) nor applied (0, 1) "
+           if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) != (0, 1)]
+    assert not bad, ("SEARCH/REPLACE payloads that are not applied (0, 1) "
                      f"against {where}, as (anchors outside the replacement, replacements):\n  "
                      + "\n  ".join(f"block {i} {n}: {t!r}" for i, t, n in bad))
 

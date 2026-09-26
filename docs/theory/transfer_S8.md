@@ -140,6 +140,11 @@ When the v65 assembly consumes `framework_v2.tex`, `rem:cf_scope` and its closin
 claim is made about that quantity"* are superseded by `rem:first_swap` and must not survive
 alongside it.
 
+*Erratum, stream S13, round I.* This payload is applied: `rem:first_swap` stands once in
+`framework_v2.tex`, but `res:bell` and `res:skillfloor`, inserted by stream S13, now separate it from
+its anchor, so the (anchor, replacement) count reads (1, 0) as if pending. A verbatim re-application
+would define `rem:first_swap` twice. `tests/test_S8_generality.py` declares it displaced by name.
+
 ---
 
 ## C. S8-C — the standalone Figure 4

@@ -187,7 +187,7 @@ def _detector_clocks():
     }
 
 
-def _segmented_fit(des, medians, min_side=3):
+def _segmented_fit(des, medians, min_side=3, fixed_k=None):
     """R-8 — two-piece onset model with the breakpoint estimated, not chosen.
 
     log tau = a + b log(de) for de <= de_star, constant after (continuity
@@ -195,13 +195,14 @@ def _segmented_fit(des, medians, min_side=3):
     least min_side points on each side, (a, b) is solved by OLS on the
     augmented design and de_star minimises the residual sum of squares.
     Pre-registered in docs/prompts/2026 09 26 - 45 - R-8 pre-registration
-    segmented onset regression.md.
+    segmented onset regression.md. fixed_k holds the breakpoint at one grid
+    index (post-hoc diagnostic, report 50).
     """
     x = np.log(np.asarray(des, dtype=float))
     y = np.log(np.asarray(medians, dtype=float))
     n = len(x)
     best = None
-    for k in range(min_side - 1, n - min_side):
+    for k in (range(min_side - 1, n - min_side) if fixed_k is None else [fixed_k]):
         xs = np.concatenate([x[: k + 1], np.full(n - k - 1, x[k])])
         X = np.column_stack([np.ones(n), xs])
         coef, _, _, _ = np.linalg.lstsq(X, y, rcond=None)
@@ -222,8 +223,9 @@ def _pooled_sse(des, medians):
 
 
 def _bootstrap_segmented(runs, de_col, tau_col, de_min, n_boot=2000,
-                         seed=BOOT_SEED + 6, min_side=3):
-    """Seed bootstrap CIs for the segmented fit, breakpoint re-estimated per draw."""
+                         seed=BOOT_SEED + 6, min_side=3, fixed_k=None):
+    """Seed bootstrap CIs for the segmented fit, breakpoint re-estimated per draw
+    unless fixed_k holds it."""
     valid_runs = runs[runs[de_col] >= de_min].copy()
     uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
     des = np.sort(valid_runs[de_col].unique())
@@ -233,7 +235,7 @@ def _bootstrap_segmented(runs, de_col, tau_col, de_min, n_boot=2000,
     for i in range(n_boot):
         boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
         meds = [np.median(grouped[de].reindex(boot_seeds).dropna().to_numpy()) for de in des]
-        fit = _segmented_fit(des, meds, min_side)
+        fit = _segmented_fit(des, meds, min_side, fixed_k)
         draws[i] = (fit["b"], fit["floor"], fit["de_star"])
     lo = np.percentile(draws, 2.5, axis=0)
     hi = np.percentile(draws, 97.5, axis=0)
@@ -414,6 +416,23 @@ def main():
         runs, de_col, tau_col, ssot.S13_VALID_DE_MIN, seed=BOOT_SEED + 6
     )
     sse_arf_pooled = _pooled_sse(valid.delta_e.to_numpy(), valid.tau_arf_median.to_numpy())
+    # R-8 past the break: the decline a -2 exponent predicts across the points
+    # the constant piece holds, against the decline their medians show.
+    des_valid = valid.delta_e.to_numpy()
+    med_valid = valid.tau_arf_median.to_numpy()
+    k_star = int(np.flatnonzero(des_valid == seg_arf["de_star"])[0])
+    past_de, past_med = des_valid[k_star + 1:], med_valid[k_star + 1:]
+    # Post-hoc diagnostics, computed after the R-8 verdict was read (report 50):
+    # the penalised comparison the pre-registration left undefined, and the
+    # flank interval with the break held at its estimate.
+    n_valid = len(des_valid)
+    f_stat = (sse_arf_pooled - seg_arf["sse"]) / (seg_arf["sse"] / (n_valid - 3))
+    seg_fixed_ci = _bootstrap_segmented(
+        runs, de_col, tau_col, ssot.S13_VALID_DE_MIN, seed=BOOT_SEED + 8, fixed_k=k_star
+    )
+    ll = {m: n_valid * np.log(s / n_valid)
+          for m, s in (("pooled", sse_arf_pooled), ("segmented", seg_arf["sse"]))}
+    n_par = {"pooled": 2, "segmented": 3}
     seg_hat = _segmented_fit(hat_med.index.to_numpy(), hat_med.to_numpy())
     seg_hat_ci = _bootstrap_segmented(
         hat.dropna(subset=["tau_hat"]), "delta_e", "tau_hat",
@@ -462,6 +481,18 @@ def main():
             "de_star_ci": seg_arf_ci["de_star_ci"],
             "sse_segmented": seg_arf["sse"],
             "sse_pooled": sse_arf_pooled,
+            "sse_gain": 1.0 - seg_arf["sse"] / sse_arf_pooled,
+            "minus2_decline_past_break": float(1.0 - (past_de[0] / past_de[-1]) ** 2),
+            "median_decline_past_break": float(1.0 - past_med[-1] / past_med[0]),
+            "post_hoc": {
+                "note": "computed after the R-8 verdict was read; not pre-registered",
+                "f_stat": float(f_stat),
+                "f_pvalue": float(stats.f.sf(f_stat, 1, n_valid - 3)),
+                "aic": {m: float(ll[m] + 2 * n_par[m]) for m in ll},
+                "bic": {m: float(ll[m] + n_par[m] * np.log(n_valid)) for m in ll},
+                "exponent_ci_break_fixed": seg_fixed_ci["exponent_ci"],
+                "tail_ols_slope": float(stats.linregress(np.log(past_de), np.log(past_med)).slope),
+            },
         },
         tau_segmented_hat={
             "de_star": seg_hat["de_star"],

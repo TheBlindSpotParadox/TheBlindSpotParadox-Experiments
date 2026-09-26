@@ -81,7 +81,28 @@
       0.491644
     ],
     "sse_segmented": 0.0769793985973186,
-    "sse_pooled": 0.08135893939233828
+    "sse_pooled": 0.08135893939233828,
+    "sse_gain": 0.05382986587251537,
+    "minus2_decline_past_break": 0.060955307514417245,
+    "median_decline_past_break": 0.06451612903225812,
+    "post_hoc": {
+      "note": "computed after the R-8 verdict was read; not pre-registered",
+      "f_stat": 0.8533856216380393,
+      "f_pvalue": 0.3702188525566146,
+      "aic": {
+        "pooled": -93.18661378172615,
+        "segmented": -92.18260562712351
+      },
+      "bic": {
+        "pooled": -91.40587026593383,
+        "segmented": -89.51149035343502
+      },
+      "exponent_ci_break_fixed": [
+        -1.9478951338648678,
+        -1.7139836887563429
+      ],
+      "tail_ols_slope": -2.5773405351449186
+    }
   },
   "tau_segmented_hat": {
     "de_star": 0.4916443387401259,

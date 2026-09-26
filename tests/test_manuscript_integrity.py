@@ -334,6 +334,30 @@ def test_proscribed_sources_are_not_cited():
         + "\n  ".join(used))
 
 
+MACRO_RE = re.compile(r"\\newcommand\{\\(\w+)\}\{([^%\n]*?)\}\s*(?:%|\n)")
+SPRINGER_ABSTRACT_MAX = 250
+
+
+def abstract_word_count(src):
+    """Words of the abstract as a submission form counts them: macros expanded, each inline formula
+    one word, dashes and ties read as spaces, the \\keywords line excluded."""
+    body = src[src.index("\\begin{abstract}") + len("\\begin{abstract}"):src.index("\\keywords{")]
+    for name, value in sorted(MACRO_RE.findall(src), key=lambda nv: -len(nv[0])):
+        body = re.sub(r"\\" + name + r"(?![A-Za-z])", lambda _m, v=value: v, body)
+    body = re.sub(r"\$[^$]*\$", "F", body)
+    return len(re.sub(r"---|--|~", " ", body).split())
+
+
+def test_abstract_within_springer_limit():
+    """Machine Learning (Springer) accepts an abstract of 150 to 250 words. Stream S13 found it at
+    355 against the 339 recorded in docs/editorial/target_journal.md: it grows between rounds unless
+    something counts it. Counted on the source; the compiled PDF is untracked, so its own count is
+    taken at compile time and reported with the round."""
+    src = (MANUSCRIPT_DIR / CURRENT.read_text(encoding="utf-8").strip()).read_text(encoding="utf-8")
+    words = abstract_word_count(src)
+    assert 150 <= words <= SPRINGER_ABSTRACT_MAX, f"abstract has {words} words"
+
+
 SOURCE_LEDGER = ROOT_DIR / "docs" / "editorial" / "source_verification.md"
 EXPIRY_RE = re.compile(r"^\|\s*(?P<source>[^|]+?)\s*\|\s*(?P<date>\d{4}-\d{2}-\d{2})\s*\|", re.MULTILINE)
 

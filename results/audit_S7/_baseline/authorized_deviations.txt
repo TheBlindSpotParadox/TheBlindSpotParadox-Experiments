@@ -85,6 +85,21 @@ results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
     copy is re-copied from it. Neither .tex is in artifacts_sha256_pre_ssot.txt: this consumes
     no deviation, and sha256sum -c stays at 27 OK, 7 FAILED.
 
+    Stream S13, round I (Opus prompt 48), two artifacts outside the frozen list.
+    results/S13_evidence_bell/s13_gate.json gains keys only: tau_segmented.sse_gain,
+    minus2_decline_past_break, median_decline_past_break, and a post_hoc block (F-test, AIC/BIC,
+    the flank interval with the breakpoint held at its estimate on a new seed BOOT_SEED + 8, the
+    OLS slope past the break). Every pre-existing key is unchanged, evidence_bell.csv and
+    blindspot_map.csv are byte-identical, and two reruns give the same SHA-256.
+    results/S10_external_validity/tables/s10_table2_p0.tex, layout only: s10_p0.table2_with_p0
+    now sets a two-level header and drops the _balanced suffix from the INSECTS row labels, so
+    the table renders at 7.2 pt instead of 4.5 pt. It is re-rendered from the committed
+    s10_p0.json summary and table2_values.csv -- the old header re-renders byte for byte first --
+    without rerunning the S10 campaign; every numeric cell is unchanged, and the
+    docs/manuscript/tables/ copy is re-copied from it. Neither file is in
+    artifacts_sha256_pre_ssot.txt: this consumes no deviation, and sha256sum -c stays at
+    27 OK, 7 FAILED.
+
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt
     -> expected since U0 restoration: 27 OK, 7 FAILED (the seven files above).

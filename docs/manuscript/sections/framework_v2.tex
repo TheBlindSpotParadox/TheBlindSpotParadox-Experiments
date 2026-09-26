@@ -143,7 +143,7 @@ learners replaced in $(\tau^*, t]$.
   withdrawn on its own evidence: it holds in $55.3\%$ of the runs where both sides
   are defined, and $\tau_{\mathrm{swap}}^{(1)}$ is itself undefined in $11.3\%$ of
   runs, the sweep of all $M$ trees never completing within the horizon. Audit:
-  \texttt{experiments/S6\_synchronized\_traces/s6\_audit\_ass\_repair.py}.
+  \path{experiments/S6_synchronized_traces/s6_audit_ass_repair.py}.
 \end{remark}
 
 \begin{definition}[Dilation ratio]\label{def:kappa}
@@ -241,11 +241,6 @@ to an external monitor, because adaptation accelerates in proportion.
   delivers \emph{less} evidence --- the reflected counterpart of the
   unreflected ceiling of Remark~\ref{rem:invariance_measured} --- because
   adaptation consumes the transient faster than the walk accumulates it.
-  The saturation of Remark~\ref{rem:exponent} closes the loop between the
-  two results: past the rupture the onset can no longer accelerate --- the
-  ensemble already adapts as fast as its internal detector allows --- while
-  the residual error keeps falling with the magnitude, so the evidence
-  integral narrows from above rather than in duration.
 \end{empresult}
 
 \begin{empresult}[The trivial floor at the degenerate end]\label{res:skillfloor}
@@ -326,6 +321,18 @@ to an external monitor, because adaptation accelerates in proportion.
   A pipeline $(C, D)$ exhibits a \emph{blind spot} at $(\Delta e, W)$ when
   $A < R(D, \varepsilon, \alpha)$.
 \end{definition}
+
+\begin{remark}[Scope of the predicate]\label{rem:predicate_scope}
+  The budget $A$ of Definition~\ref{def:blindspot} is the evidence a monitor
+  spends when its window can span the whole transient, as for the cumulative
+  statistics and ADWIN. A fixed-window two-sample monitor reads at most
+  $\min(W, n_{\mathrm{stat}})$ steps of the transient at once, so the budget is
+  not the quantity its detection tracks: its condition is the contrast
+  of~\eqref{eq:Rkswin_contrast}, a mean-field boundary whose scope
+  Remark~\ref{rem:window_requirement} measures. We state the two conditions
+  separately; a single predicate covering both was pre-registered and not
+  retained (Section~\ref{sec:limitations}).
+\end{remark}
 
 Definition~\ref{def:blindspot} compares two quantities in the same unit and
 contains no implementation constant. It supersedes any condition coupling an
