@@ -177,7 +177,10 @@ misstate not only its value but its mechanism.
 Every later campaign --- the instrumented starvation experiments, the real-world streams, the
 $\lambda_{\mathrm{op}}$ sweep and the synchronised traces --- calibrates $p_0$ on the warm-up and
 carries one arm only. The fixed literal survives in those as an unreachable fallback for an empty
-warm-up buffer, which a 1000-step window never produces.
+warm-up buffer, which a 1000-step window never produces. One quantity is declared unmeasured
+rather than substituted: the pre-drift span of the synchronised traces carries $1{,}000$ steps
+per run, so the baseline window bias of $p_0$ --- a $1000$-step against a $3000$-step window ---
+is not computable from the committed corpus and no constant stands in for it.
 
 \paragraph{The warning detector is two parameters, not one.}
 River~0.23.0~\cite{montiel_river_2021} resolves an unset \texttt{warning\_detector} on its adaptive forest to

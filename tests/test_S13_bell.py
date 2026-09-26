@@ -38,10 +38,44 @@ def test_evidence_bell_contract():
     slope = gate["tau_exponent"]["estimate"]
     assert slope < -1.5, f"Expected adaptation exponent < -1.5, got {slope}"
 
-    # 4. Le score d'habileté franchit zéro à l'intérieur de la grille
-    zero_cross = gate["skill_zero_crossing"]
+    # 4. Episode skill crosses zero inside the grid; converged skill either
+    #    crosses or the absence is declared as null (never a placeholder).
+    zero_cross = gate["skill_zero_crossing_episode"]
     min_de = df["delta_e"].min()
     max_de = df["delta_e"].max()
     assert min_de < zero_cross < max_de, (
         f"Skill zero-crossing {zero_cross} is outside the interior grid ({min_de}, {max_de})"
     )
+    conv = gate["skill_zero_crossing_converged"]
+    assert conv is None or min_de < conv < max_de, (
+        f"Converged skill zero-crossing {conv} is neither interior nor declared null"
+    )
+
+def test_baseline_bias_is_measured_not_substituted():
+    gate = json.load(open(GATE_JSON))
+    source = gate["baseline_bias_source"]
+    if source == "measured_from_traces":
+        assert gate["baseline_bias_n"] >= 100
+        # A round placeholder is the signature of a fallback that fired.
+        assert abs(gate["baseline_bias_1000_vs_3000"] - 0.007) > 1e-9
+    else:
+        # Declared gap: an uncomputable R-5 must be recorded as such, with
+        # null values, never masked by a substituted constant.
+        assert source.startswith("uncomputable_"), (
+            f"Unknown baseline_bias_source {source}"
+        )
+        assert gate["baseline_bias_1000_vs_3000"] is None
+        assert gate["baseline_bias_area_units"] is None
+
+
+def test_mode_is_reported_as_a_plateau_not_a_point():
+    df = pd.read_csv(BELL_CSV, float_precision="round_trip")
+    gate = json.load(open(GATE_JSON))
+    top = df.nlargest(2, "smax_mean")
+    lo = top["smax_ci_lo"].max()
+    hi = top["smax_ci_hi"].min()
+    if hi > lo:                       # the two candidates overlap
+        assert max(gate["mode_posterior"].values()) < 0.90, (
+            "Overlapping CIs: the mode is not identified and must not be "
+            "reported as a point estimate"
+        )

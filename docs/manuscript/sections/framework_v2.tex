@@ -228,6 +228,39 @@ to an external monitor, because adaptation accelerates in proportion.
   removing it, and not a consequence of an exponent equal to one.
 \end{remark}
 
+\begin{empresult}[The evidence bell over the magnitude grid]\label{res:bell}
+  The peak of the reflected walk of Eq.~\eqref{eq:cusum} over the post-drift
+  horizon, $\mathbb{E}[S_{\max}(H)]$ (nominal arm, $H = 2000$,
+  $\delta_P = 0.01$, $100$ seeds per amplitude), is unimodal over the
+  magnitude grid: it rises from $5.28$ $[5.01, 5.55]$ at $\Delta e = 0.028$
+  to a plateau near $33$ over $\Delta e \in [0.19, 0.25]$, then falls
+  monotonically to $19.13$ $[18.73, 19.50]$ at $\Delta e = 0.498$. The two
+  plateau points differ by $0.58$ against bootstrap half-widths of $0.97$,
+  so the mode is not separable at $100$ seeds per amplitude and we report
+  the plateau rather than a point. Past the plateau a stronger drift
+  delivers \emph{less} evidence --- the reflected counterpart of the
+  unreflected ceiling of Remark~\ref{rem:invariance_measured} --- because
+  adaptation consumes the transient faster than the walk accumulates it.
+\end{empresult}
+
+\begin{empresult}[The trivial floor at the degenerate end]\label{res:skillfloor}
+  The highest grid points carry a minority prior below $1.8\%$, and there
+  the adaptive ensemble stops beating the constant majority-class
+  predictor. The skill score is reported against two error estimators,
+  because they answer different questions and disagree on how far the
+  deficit extends. Against the mean error over the post-drift episode ---
+  which charges the ensemble for a transient the constant predictor never
+  pays --- skill turns negative from $\Delta e = 0.482$ and reaches $-3.47$
+  at $\Delta e = 0.498$. Against the converged residual error (mean over
+  the last $200$ steps of the horizon), which no transient can explain
+  away, skill stays non-negative over the grid but collapses onto the
+  trivial floor at the last three magnitudes: $+0.06$ $[-0.13, +0.23]$,
+  $+0.01$ $[-0.22, +0.23]$ and $+0.02$ $[-0.26, +0.29]$, every interval
+  straddling zero. Under either reading the right end of the grid describes
+  a degenerate classification problem rather than a monitoring one, and
+  every residual error there is reported with its trivial floor beside it.
+\end{empresult}
+
 \begin{remark}[The first replacement, isolated]\label{rem:first_swap}
   The two counterfactual arms of the synchronised campaign fork \emph{at}
   $\tau_{\mathrm{swap}}^{(1/M)}$ and therefore share the first replacement with

@@ -83,6 +83,76 @@ def _find_partition_dir(traces_root, de):
     raise FileNotFoundError(f"Partition delta_e={de:.6f} introuvable sous {traces_root / 'traces.parquet'}")
 
 
+def _baseline_window_bias(traces_root, runs, horizon):
+    """Pre-drift baseline bias between a 1000-step and a 3000-step window.
+
+    Measured from the t_rel < 0 rows of the committed traces.
+    If the corpus lacks 3000 pre-drift steps, returns (None, 'uncomputable_insufficient_warmup', 0)
+    so the gap is formally recorded in the gate rather than masked by a placeholder.
+    """
+    diffs = []
+    for de, _ in runs.groupby("delta_e"):
+        part = pd.read_parquet(
+            _find_partition_dir(traces_root, de),
+            columns=["arm", "seed", "t_rel", "err"],
+            filters=[("arm", "==", "full"), ("t_rel", "<", 0)],
+        )
+        if part.empty:
+            return None, "uncomputable_empty_predrift", 0
+        for _, g in part.groupby("seed"):
+            e = g.sort_values("t_rel")["err"].to_numpy()
+            if len(e) < 3000:
+                return None, "uncomputable_insufficient_warmup", int(len(e))
+            diffs.append(float(e[-1000:].mean() - e[-3000:].mean()))
+    return float(np.mean(diffs)), "measured_from_traces", len(diffs)
+
+
+def _skill(err, trivial):
+    return 1.0 - err / trivial if trivial > 0 else float("nan")
+
+
+def _first_negative(bell, col):
+    """First delta_e where the column turns negative, None if it never does.
+
+    None (JSON null) rather than NaN: the gate must stay strict JSON, and an
+    absent crossing is a declared outcome, not a missing value.
+    """
+    neg = bell.loc[bell[col] < 0, "delta_e"]
+    return float(neg.min()) if len(neg) else None
+
+
+def _bootstrap_argmax(bell, n_boot=2000):
+    """Posterior mass on each amplitude being the mode of the bell."""
+    rng = np.random.default_rng(BOOT_SEED + 1)
+    means = bell["smax_mean"].to_numpy()
+    half = ((bell["smax_ci_hi"] - bell["smax_ci_lo"]) / 3.92).to_numpy()
+    counts = np.zeros(len(means))
+    for _ in range(n_boot):
+        counts[int(np.argmax(rng.normal(means, half)))] += 1
+    return {float(d): float(c / n_boot)
+            for d, c in zip(bell["delta_e"], counts)}
+
+
+def _bootstrap_tau_exponent(runs, de_col, tau_col, de_min, n_boot=2000):
+    """Seed-level bootstrap confidence interval for adaptation time slope."""
+    valid_runs = runs[runs[de_col] >= de_min].copy()
+    uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
+    des = np.sort(valid_runs[de_col].unique())
+    log_des = np.log(des)
+    rng = np.random.default_rng(BOOT_SEED + 2)
+    slopes = np.empty(n_boot)
+
+    grouped = {de: g.set_index("seed")[tau_col] for de, g in valid_runs.groupby(de_col)}
+
+    for b in range(n_boot):
+        boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
+        boot_medians = [np.median(grouped[de].loc[boot_seeds].to_numpy()) for de in des]
+        slope, _, _, _, _ = stats.linregress(log_des, np.log(boot_medians))
+        slopes[b] = slope
+
+    return float(np.percentile(slopes, 2.5)), float(np.percentile(slopes, 97.5))
+
+
 def main():
     runs = pd.read_parquet(RUNS)
 
@@ -113,6 +183,7 @@ def main():
 
         smax, seeds = [], []
         run_smax = []
+        run_err_converged = []
 
         for _, r in grp.iterrows():
             seed_val = int(r.seed)
@@ -128,15 +199,35 @@ def main():
             smax.append(sm)
             run_smax.append(sm)
             seeds.append(seed_val)
+            # Converged error: mean over the last 200 steps of the post-drift
+            # horizon, matching the students' final_post_error estimator so
+            # the two campaigns are comparable.
+            run_err_converged.append(float(err[H - 200 :].mean()))
 
         smax = np.asarray(smax)
         seeds = np.asarray(seeds)
         lo, hi = seed_bootstrap(smax, seeds)
 
         p_min = 0.5 - float(de)                  # minority prior after the shift
-        err_final = float(grp[err_col].mean())
         trivial = baseline_error(p_min)
-        skill = 1.0 - err_final / trivial if trivial > 0 else np.nan
+        err_episode = float(grp["err_post_mean"].mean()) if "err_post_mean" in grp.columns else float(grp[err_col].mean())
+        if "final_post_error" in grp.columns:
+            err_converged = float(grp["final_post_error"].mean())
+        else:
+            err_converged = float(np.mean(run_err_converged))
+        skill_episode = _skill(err_episode, trivial)
+        skill_converged = _skill(err_converged, trivial)
+        # Seed bootstrap CI for the converged skill: the "no detectable
+        # advantage" claim at the degenerate end must cite a committed
+        # interval, not a session-side computation.
+        errc = np.asarray(run_err_converged)
+        if trivial > 0 and len(errc):
+            idx = np.random.default_rng(BOOT_SEED + 3).integers(0, len(errc), size=(BOOT, len(errc)))
+            skill_c_lo, skill_c_hi = np.percentile(
+                1.0 - errc[idx].mean(axis=1) / trivial, [2.5, 97.5]
+            )
+        else:
+            skill_c_lo = skill_c_hi = float("nan")
 
         rows.append(dict(
             delta_e=float(de),
@@ -144,9 +235,15 @@ def main():
             smax_ci_lo=lo,
             smax_ci_hi=hi,
             tau_arf_median=float(grp[tau_col].median()),
-            err_final=err_final,
+            err_episode=err_episode,
+            err_converged=err_converged,
+            err_final=err_converged,
             trivial_error=trivial,
-            skill=skill,
+            skill_episode=skill_episode,
+            skill_converged=skill_converged,
+            skill_converged_ci_lo=float(skill_c_lo),
+            skill_converged_ci_hi=float(skill_c_hi),
+            skill=skill_converged,
             n_runs=int(len(smax)),
         ))
 
@@ -166,12 +263,15 @@ def main():
     # R-4 — refit avec le domaine valide (bruit exclu, delta_e >= 0.10)
     valid = bell[bell.delta_e >= ssot.S13_VALID_DE_MIN]
     fit = stats.linregress(np.log(valid.delta_e), np.log(valid.tau_arf_median))
+    tau_ci_lo, tau_ci_hi = _bootstrap_tau_exponent(
+        runs, de_col, tau_col, ssot.S13_VALID_DE_MIN
+    )
 
-    # R-5 — biais de fenêtre de base (1000 vs 3000 pas pré-dérive)
-    if "p0_1000" in runs.columns and "p0_3000" in runs.columns:
-        bias = float((runs.p0_1000 - runs.p0_3000).mean())
-    else:
-        bias = 0.007  # Biais mesuré de référence R-5 (warmup standard)
+    # R-5 — biais de fenêtre de base mesuré sur les lignes pré-dérive des traces
+    bias, bias_source, bias_n = _baseline_window_bias(TRACES, runs, H)
+    bias_area = float(bias * H) if bias is not None else None
+
+    mode_post = _bootstrap_argmax(bell)
 
     gate_payload = dict(
         smax_peak={
@@ -180,14 +280,21 @@ def main():
         },
         smax_left=float(bell.smax_mean.iloc[0]),
         smax_right=float(bell.smax_mean.iloc[-1]),
+        mode_posterior=mode_post,
         tau_exponent={
             "estimate": float(fit.slope),
             "stderr": float(fit.stderr),
+            "ci_lo": tau_ci_lo,
+            "ci_hi": tau_ci_hi,
             "domain_min": float(ssot.S13_VALID_DE_MIN)
         },
-        skill_zero_crossing=float(bell.loc[bell.skill < 0, "delta_e"].min()),
+        skill_zero_crossing=_first_negative(bell, "skill_converged"),
+        skill_zero_crossing_episode=_first_negative(bell, "skill_episode"),
+        skill_zero_crossing_converged=_first_negative(bell, "skill_converged"),
         baseline_bias_1000_vs_3000=bias,
-        baseline_bias_area_units=bias * H,
+        baseline_bias_source=bias_source,
+        baseline_bias_n=bias_n,
+        baseline_bias_area_units=bias_area,
         delta_p=DELTA_P,
         horizon=H,
         n_boot=BOOT,
