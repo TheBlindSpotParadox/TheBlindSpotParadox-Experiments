@@ -1,6 +1,6 @@
 # exp_R5_config.py
 """Central configuration for the R5 real-world evaluation (Table II: BAF + INSECTS)
-of "The Blind Spot Paradox" (ICDM 2026).
+of "The Blind Spot Paradox".
 
 All paths are resolved dynamically from this file's location, so the repository is
 fully portable (no hard-coded absolute path). River is pinned to 0.23.0 because the
@@ -41,7 +41,7 @@ BAF_WARMUP    = 100_000
 BAF_TAU_TOL   = ssot.TAU_TOL
 BAF_NONE_FILL = 0     # default label used when the classifier abstains
 
-# --- INSECTS (Souza et al., 2020, Table 2) ---
+# --- INSECTS (Souza et al., 2020) ---
 INSECTS_VARIANTS = ["abrupt_balanced", "gradual_balanced",
                     "incremental_reoccurring_balanced"]
 INSECTS_WARMUP_FRACTION = 0.10
@@ -50,9 +50,10 @@ INSECTS_TAU_FRACTION    = 0.05
 INSECTS_TAU_CAP         = ssot.TAU_TOL
 INSECTS_NONE_FILL       = -1
 
-# Canonical drift positions (Souza 2020, Table 2). The reoccurring stream stops at
-# ~79,986 instances: positions 79932 (truncated post-window) and 106497
-# (out-of-stream) are PHANTOM drifts that cap the recall of every pipeline at 2/4.
+# Canonical drift positions. Table 2 of Souza et al. (2020) lists 26568 and
+# 53364 for the reoccurring stream; positions 79932 (truncated post-window) and
+# 106497 (out-of-stream) are PHANTOM drifts that cap the recall of every
+# pipeline at 2/4.
 INSECTS_DRIFTS = {
     "abrupt_balanced":                  [14352, 19500, 33240, 38682, 39510],   # K=5
     "gradual_balanced":                 [14028],                                # K=1

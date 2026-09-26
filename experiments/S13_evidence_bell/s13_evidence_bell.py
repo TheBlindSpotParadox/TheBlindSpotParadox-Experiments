@@ -153,6 +153,97 @@ def _bootstrap_tau_exponent(runs, de_col, tau_col, de_min, n_boot=2000, seed=BOO
     return float(np.percentile(slopes, 2.5)), float(np.percentile(slopes, 97.5))
 
 
+def _detector_clocks():
+    """R-9 — effective internal-detector configuration of both onset arms.
+
+    The floor comparison across arms (HAT ~50 vs ARF ~29 steps) is
+    interpretable only if both run their internal detectors on the same
+    clock; a cadence mismatch would make the floor ratio a test-sampling
+    artifact, not an ensemble effect.
+    """
+    from river import drift as _drift
+    from river.forest import ARFClassifier as _ARF
+
+    def arm(n_models, clock):
+        det = _drift.ADWIN(clock=clock)
+        arf = _ARF(n_models=n_models, seed=0,
+                   drift_detector=_drift.ADWIN(clock=clock),
+                   warning_detector=_drift.ADWIN(clock=clock))
+        return {
+            "n_models": int(n_models),
+            "adwin_clock": int(det.clock),
+            "adwin_delta": float(det.delta),
+            "adwin_min_window_length": int(det.min_window_length),
+            "adwin_grace_period": int(det.grace_period),
+            "arf_grace_period": int(arf.grace_period),
+        }
+
+    equal = bool(ssot.S6_C_INT == ssot.R6_C_INT)
+    return {
+        "arf_arm_S6_full": arm(ssot.N_MODELS, ssot.S6_C_INT),
+        "hat_arm_R6": arm(ssot.R6_N_MODELS, ssot.R6_C_INT),
+        "clocks_equal": equal,
+        "verdict": "identical_clocks" if equal else "clock_mismatch",
+    }
+
+
+def _segmented_fit(des, medians, min_side=3):
+    """R-8 — two-piece onset model with the breakpoint estimated, not chosen.
+
+    log tau = a + b log(de) for de <= de_star, constant after (continuity
+    imposed: c = a + b log de_star). For each candidate grid point with at
+    least min_side points on each side, (a, b) is solved by OLS on the
+    augmented design and de_star minimises the residual sum of squares.
+    Pre-registered in docs/prompts/2026 09 26 - 45 - R-8 pre-registration
+    segmented onset regression.md.
+    """
+    x = np.log(np.asarray(des, dtype=float))
+    y = np.log(np.asarray(medians, dtype=float))
+    n = len(x)
+    best = None
+    for k in range(min_side - 1, n - min_side):
+        xs = np.concatenate([x[: k + 1], np.full(n - k - 1, x[k])])
+        X = np.column_stack([np.ones(n), xs])
+        coef, _, _, _ = np.linalg.lstsq(X, y, rcond=None)
+        sse = float(((y - X @ coef) ** 2).sum())
+        if best is None or sse < best["sse"]:
+            a, b = float(coef[0]), float(coef[1])
+            best = {"de_star": float(des[k]), "a": a, "b": b,
+                    "floor": a + b * float(x[k]), "sse": sse}
+    return best
+
+
+def _pooled_sse(des, medians):
+    """Residual sum of squares of the one-piece power law on the same medians."""
+    x = np.log(np.asarray(des, dtype=float))
+    y = np.log(np.asarray(medians, dtype=float))
+    r = stats.linregress(x, y)
+    return float(((y - (r.intercept + r.slope * x)) ** 2).sum())
+
+
+def _bootstrap_segmented(runs, de_col, tau_col, de_min, n_boot=2000,
+                         seed=BOOT_SEED + 6, min_side=3):
+    """Seed bootstrap CIs for the segmented fit, breakpoint re-estimated per draw."""
+    valid_runs = runs[runs[de_col] >= de_min].copy()
+    uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
+    des = np.sort(valid_runs[de_col].unique())
+    grouped = {de: g.set_index("seed")[tau_col] for de, g in valid_runs.groupby(de_col)}
+    rng = np.random.default_rng(seed)
+    draws = np.empty((n_boot, 3))
+    for i in range(n_boot):
+        boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
+        meds = [np.median(grouped[de].reindex(boot_seeds).dropna().to_numpy()) for de in des]
+        fit = _segmented_fit(des, meds, min_side)
+        draws[i] = (fit["b"], fit["floor"], fit["de_star"])
+    lo = np.percentile(draws, 2.5, axis=0)
+    hi = np.percentile(draws, 97.5, axis=0)
+    return {
+        "exponent_ci": [float(lo[0]), float(hi[0])],
+        "floor_ci": [float(lo[1]), float(hi[1])],
+        "de_star_ci": [float(lo[2]), float(hi[2])],
+    }
+
+
 def main():
     runs = pd.read_parquet(RUNS)
 
@@ -315,6 +406,21 @@ def main():
         ((hat.delta_e >= ssot.S13_VALID_DE_MIN) & hat.tau_hat.isna()).sum()
     )
 
+    # R-8 — segmented onset regression, breakpoint estimated (pre-registered
+    # in docs/prompts/2026 09 26 - 45). HAT arm included: R-9 verdict is
+    # identical_clocks (gate entry detector_clocks).
+    seg_arf = _segmented_fit(valid.delta_e.to_numpy(), valid.tau_arf_median.to_numpy())
+    seg_arf_ci = _bootstrap_segmented(
+        runs, de_col, tau_col, ssot.S13_VALID_DE_MIN, seed=BOOT_SEED + 6
+    )
+    sse_arf_pooled = _pooled_sse(valid.delta_e.to_numpy(), valid.tau_arf_median.to_numpy())
+    seg_hat = _segmented_fit(hat_med.index.to_numpy(), hat_med.to_numpy())
+    seg_hat_ci = _bootstrap_segmented(
+        hat.dropna(subset=["tau_hat"]), "delta_e", "tau_hat",
+        ssot.S13_VALID_DE_MIN, seed=BOOT_SEED + 7,
+    )
+    sse_hat_pooled = _pooled_sse(hat_med.index.to_numpy(), hat_med.to_numpy())
+
     # R-5 — biais de fenêtre de base mesuré sur les lignes pré-dérive des traces
     bias, bias_source, bias_n = _baseline_window_bias(TRACES, runs, H)
     bias_area = float(bias * H) if bias is not None else None
@@ -345,6 +451,27 @@ def main():
             "ci_hi": hat_ci_hi,
             "domain_min": float(ssot.S13_VALID_DE_MIN),
             "n_censored": hat_n_censored
+        },
+        detector_clocks=_detector_clocks(),
+        tau_segmented={
+            "de_star": seg_arf["de_star"],
+            "exponent": seg_arf["b"],
+            "floor": seg_arf["floor"],
+            "exponent_ci": seg_arf_ci["exponent_ci"],
+            "floor_ci": seg_arf_ci["floor_ci"],
+            "de_star_ci": seg_arf_ci["de_star_ci"],
+            "sse_segmented": seg_arf["sse"],
+            "sse_pooled": sse_arf_pooled,
+        },
+        tau_segmented_hat={
+            "de_star": seg_hat["de_star"],
+            "exponent": seg_hat["b"],
+            "floor": seg_hat["floor"],
+            "exponent_ci": seg_hat_ci["exponent_ci"],
+            "floor_ci": seg_hat_ci["floor_ci"],
+            "de_star_ci": seg_hat_ci["de_star_ci"],
+            "sse_segmented": seg_hat["sse"],
+            "sse_pooled": sse_hat_pooled,
         },
         skill_zero_crossing_episode=_first_negative(bell, "skill_episode"),
         skill_zero_crossing_converged=_first_negative(bell, "skill_converged"),

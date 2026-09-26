@@ -6,11 +6,11 @@
 set -e
 set -o pipefail
 
-# [IEEE/ICDM FAIR Compliance] Enforcing global determinism for child processes
+# [FAIR Compliance] Enforcing global determinism for child processes
 export PYTHONHASHSEED=0
 
 echo "======================================================================"
-echo " ICDM 2026 Artifact Evaluation: FULL REPRODUCTION PIPELINE"
+echo " Artifact Evaluation: FULL REPRODUCTION PIPELINE"
 echo "======================================================================"
 
 # S1: Execute all experiments in dependency order.

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # ==============================================================================
 # Script: run_experiment_R1.sh
-# Objective: Reproduce Figure 1 (Race Condition & Starvation) for ICDM 2026.
+# Objective: Reproduce Figure 1 (Race Condition & Starvation).
 # Outputs:   - Data: results/R1_race_condition/data/R1_race_condition.parquet
 #            - Figure: results/R1_race_condition/figures/Fig_R1_race_condition.png
 # Execution: ./run_experiment_R1.sh
@@ -11,7 +11,7 @@
 set -e # Exit immediately if a command exits with a non-zero status
 set -o pipefail
 
-# [IEEE/ICDM FAIR Compliance] Pinned dictionary hashing for bit-wise reproducibility
+# [FAIR Compliance] Pinned dictionary hashing for bit-wise reproducibility
 export PYTHONHASHSEED=0
 
 # 1. Structure Initialization
@@ -26,7 +26,7 @@ LOG_FILE="logs/${EXP_NAME}/execution_$(date +%Y%m%d_%H%M%S).log"
 # 2. Execution Wrapper with Logging
 {
     echo "======================================================================"
-    echo " ICDM 2026 Artifact Evaluation: The Blind Spot Paradox"
+    echo " Artifact Evaluation: The Blind Spot Paradox"
     echo " Experiment R1: Race Condition (tau_ARF vs tau_det)"
     echo "======================================================================"
     

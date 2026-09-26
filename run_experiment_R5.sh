@@ -24,7 +24,7 @@ LOG_FILE="logs/${EXP_NAME}/execution_$(date +%Y%m%d_%H%M%S).log"
 
 {
     echo "======================================================================"
-    echo " ICDM 2026 Artifact Evaluation: The Blind Spot Paradox"
+    echo " Artifact Evaluation: The Blind Spot Paradox"
     echo " Experiment R5: Real-World Evaluation (Table II)"
     echo "======================================================================"
 
