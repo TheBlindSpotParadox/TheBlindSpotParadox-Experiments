@@ -687,3 +687,9 @@ S10_P0_PIPELINES = ("pht_ht", "pht_arf_c1")     # the two classifiers of Table I
 
 # --- T10.4: multiplicity -------------------------------------------------------------------------
 S10_HOLM_ALPHA = 0.05                           # the level protocol_v2.tex section Multiplicity states
+
+# ══════════════════════════════════════════════════════════════════════════════
+# S13 — Evidence bell, blind-spot map, skill floor, refitted adaptation law (append-only block)
+# ══════════════════════════════════════════════════════════════════════════════
+S13_VALID_DE_MIN = 0.10          # R-4: domain threshold excluding noise-swap regime (Delta_e < 0.10) where ADWIN trips on noise
+S13_LAMBDA_GRID_STEP = 0.5       # Fine grid step for CUSUM threshold mapping (2.0 to 60.0)

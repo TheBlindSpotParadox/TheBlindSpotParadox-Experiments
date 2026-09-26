@@ -1,0 +1,20 @@
+{
+  "smax_peak": {
+    "delta_e": 0.193621,
+    "value": 33.199919999999814
+  },
+  "smax_left": 5.2834200000000475,
+  "smax_right": 19.13002999999999,
+  "tau_exponent": {
+    "estimate": -1.7739446482842203,
+    "stderr": 0.04713402620094089,
+    "domain_min": 0.1
+  },
+  "skill_zero_crossing": 0.482255,
+  "baseline_bias_1000_vs_3000": 0.007,
+  "baseline_bias_area_units": 14.0,
+  "delta_p": 0.01,
+  "horizon": 2000,
+  "n_boot": 10000,
+  "boot_seed": 20260925
+}
