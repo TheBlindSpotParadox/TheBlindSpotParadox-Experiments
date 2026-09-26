@@ -256,7 +256,19 @@ to an external monitor, because adaptation accelerates in proportion.
   away, skill stays non-negative over the grid but collapses onto the
   trivial floor at the last three magnitudes: $+0.06$ $[-0.13, +0.23]$,
   $+0.01$ $[-0.22, +0.23]$ and $+0.02$ $[-0.26, +0.29]$, every interval
-  straddling zero. Under either reading the right end of the grid describes
+  straddling zero. These intervals carry few events: at $\Delta e = 0.498$
+  the trivial floor is $0.23\%$, so the last $200$ steps of $100$ runs
+  contain $46$ errors in total ($105$, $72$ and $46$ across the three
+  magnitudes). Every interval is therefore reported with its event count,
+  and the comparison is widened to the last $1000$ steps of the horizon ---
+  the transient is over within $\sim 30$ steps at these magnitudes, so the
+  widened window charges no transient --- where the same amplitudes carry
+  $501$, $340$ and $212$ errors: $+0.10$ $[+0.02, +0.18]$, $+0.07$
+  $[-0.04, +0.17]$ and $+0.09$ $[-0.03, +0.21]$. Widened, the window
+  resolves a small positive advantage at $\Delta e = 0.494$; the two most
+  degenerate magnitudes remain statistically indistinguishable from the
+  trivial floor, and there the equality is a result, not a limit of the
+  window. Under either reading the right end of the grid describes
   a degenerate classification problem rather than a monitoring one, and
   every residual error there is reported with its trivial floor beside it.
 \end{empresult}

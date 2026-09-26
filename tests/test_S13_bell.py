@@ -79,3 +79,33 @@ def test_mode_is_reported_as_a_plateau_not_a_point():
             "Overlapping CIs: the mode is not identified and must not be "
             "reported as a point estimate"
         )
+
+
+def test_converged_windows_carry_event_counts():
+    """R-6: an equality claim at the degenerate end must carry its power."""
+    df = pd.read_csv(BELL_CSV, float_precision="round_trip")
+    for col in (
+        "err_converged_1000",
+        "skill_converged_1000",
+        "skill_converged_1000_ci_lo",
+        "skill_converged_1000_ci_hi",
+        "n_errors_converged",
+        "n_errors_converged_1000",
+    ):
+        assert col in df.columns, f"Missing column {col}"
+    last = df.nlargest(3, "delta_e")
+    assert (last["n_errors_converged"] > 0).all(), (
+        "Event counts must be actual error counts, never a placeholder zero"
+    )
+    assert (last["n_errors_converged_1000"] > last["n_errors_converged"]).all(), (
+        "The widened window must carry strictly more events than the 200-step one"
+    )
+
+
+def test_hat_refit_is_committed_with_its_interval():
+    """R-7: the single-tree onset refit must be a committed, intervalled artifact."""
+    gate = json.load(open(GATE_JSON))
+    hat = gate["tau_exponent_hat"]
+    assert hat["domain_min"] == 0.10
+    assert hat["ci_lo"] <= hat["estimate"] <= hat["ci_hi"]
+    assert hat["n_censored"] >= 0

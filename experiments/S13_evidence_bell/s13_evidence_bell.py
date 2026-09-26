@@ -133,20 +133,20 @@ def _bootstrap_argmax(bell, n_boot=2000):
             for d, c in zip(bell["delta_e"], counts)}
 
 
-def _bootstrap_tau_exponent(runs, de_col, tau_col, de_min, n_boot=2000):
+def _bootstrap_tau_exponent(runs, de_col, tau_col, de_min, n_boot=2000, seed=BOOT_SEED + 2):
     """Seed-level bootstrap confidence interval for adaptation time slope."""
     valid_runs = runs[runs[de_col] >= de_min].copy()
     uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
     des = np.sort(valid_runs[de_col].unique())
     log_des = np.log(des)
-    rng = np.random.default_rng(BOOT_SEED + 2)
+    rng = np.random.default_rng(seed)
     slopes = np.empty(n_boot)
 
     grouped = {de: g.set_index("seed")[tau_col] for de, g in valid_runs.groupby(de_col)}
 
     for b in range(n_boot):
         boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
-        boot_medians = [np.median(grouped[de].loc[boot_seeds].to_numpy()) for de in des]
+        boot_medians = [np.median(grouped[de].reindex(boot_seeds).dropna().to_numpy()) for de in des]
         slope, _, _, _, _ = stats.linregress(log_des, np.log(boot_medians))
         slopes[b] = slope
 
@@ -184,6 +184,9 @@ def main():
         smax, seeds = [], []
         run_smax = []
         run_err_converged = []
+        run_err_converged_1000 = []
+        run_n_err_200 = []
+        run_n_err_1000 = []
 
         for _, r in grp.iterrows():
             seed_val = int(r.seed)
@@ -201,8 +204,14 @@ def main():
             seeds.append(seed_val)
             # Converged error: mean over the last 200 steps of the post-drift
             # horizon, matching the students' final_post_error estimator so
-            # the two campaigns are comparable.
+            # the two campaigns are comparable. The 1000-step window (R-6)
+            # widens the comparison at the degenerate end, where the 200-step
+            # window carries too few error events to separate the ensemble
+            # from the trivial floor.
             run_err_converged.append(float(err[H - 200 :].mean()))
+            run_err_converged_1000.append(float(err[H - 1000 :].mean()))
+            run_n_err_200.append(int(err[H - 200 :].sum()))
+            run_n_err_1000.append(int(err[H - 1000 :].sum()))
 
         smax = np.asarray(smax)
         seeds = np.asarray(seeds)
@@ -229,6 +238,20 @@ def main():
         else:
             skill_c_lo = skill_c_hi = float("nan")
 
+        # R-6 — widened converged window (last 1000 steps) with its own CI:
+        # an equality claim at the degenerate end must carry the number of
+        # events it rests on, and the 200-step window carries too few.
+        errc1000 = np.asarray(run_err_converged_1000)
+        err_converged_1000 = float(errc1000.mean())
+        skill_converged_1000 = _skill(err_converged_1000, trivial)
+        if trivial > 0 and len(errc1000):
+            idx = np.random.default_rng(BOOT_SEED + 4).integers(0, len(errc1000), size=(BOOT, len(errc1000)))
+            skill_c1k_lo, skill_c1k_hi = np.percentile(
+                1.0 - errc1000[idx].mean(axis=1) / trivial, [2.5, 97.5]
+            )
+        else:
+            skill_c1k_lo = skill_c1k_hi = float("nan")
+
         rows.append(dict(
             delta_e=float(de),
             smax_mean=float(smax.mean()),
@@ -237,13 +260,17 @@ def main():
             tau_arf_median=float(grp[tau_col].median()),
             err_episode=err_episode,
             err_converged=err_converged,
-            err_final=err_converged,
+            err_converged_1000=err_converged_1000,
             trivial_error=trivial,
             skill_episode=skill_episode,
             skill_converged=skill_converged,
             skill_converged_ci_lo=float(skill_c_lo),
             skill_converged_ci_hi=float(skill_c_hi),
-            skill=skill_converged,
+            skill_converged_1000=skill_converged_1000,
+            skill_converged_1000_ci_lo=float(skill_c1k_lo),
+            skill_converged_1000_ci_hi=float(skill_c1k_hi),
+            n_errors_converged=int(np.sum(run_n_err_200)),
+            n_errors_converged_1000=int(np.sum(run_n_err_1000)),
             n_runs=int(len(smax)),
         ))
 
@@ -267,6 +294,27 @@ def main():
         runs, de_col, tau_col, ssot.S13_VALID_DE_MIN
     )
 
+    # R-7 — refit de la loi d'onset du bras HAT (arbre unique) sur le même
+    # domaine valide. Estimateur pré-enregistré dans
+    # docs/prompts/2026 09 26 - 41 - R-7 pre-registration refit HAT.md :
+    # médiane par amplitude sur les graines non censurées, linregress
+    # log-log, bootstrap sur graines à graine distincte.
+    hat = pd.read_parquet(
+        REPO_ROOT / "results" / "R6_hydra_factor" / "data" / "R6_hat_instrumented.parquet"
+    )
+    hat_valid = hat[
+        (hat.delta_e >= ssot.S13_VALID_DE_MIN) & hat.tau_hat.notna()
+    ]
+    hat_med = hat_valid.groupby("delta_e")["tau_hat"].median()
+    hat_fit = stats.linregress(np.log(hat_med.index.to_numpy()), np.log(hat_med.to_numpy()))
+    hat_ci_lo, hat_ci_hi = _bootstrap_tau_exponent(
+        hat.dropna(subset=["tau_hat"]), "delta_e", "tau_hat",
+        ssot.S13_VALID_DE_MIN, seed=BOOT_SEED + 5,
+    )
+    hat_n_censored = int(
+        ((hat.delta_e >= ssot.S13_VALID_DE_MIN) & hat.tau_hat.isna()).sum()
+    )
+
     # R-5 — biais de fenêtre de base mesuré sur les lignes pré-dérive des traces
     bias, bias_source, bias_n = _baseline_window_bias(TRACES, runs, H)
     bias_area = float(bias * H) if bias is not None else None
@@ -284,11 +332,20 @@ def main():
         tau_exponent={
             "estimate": float(fit.slope),
             "stderr": float(fit.stderr),
+            "intercept": float(fit.intercept),
             "ci_lo": tau_ci_lo,
             "ci_hi": tau_ci_hi,
             "domain_min": float(ssot.S13_VALID_DE_MIN)
         },
-        skill_zero_crossing=_first_negative(bell, "skill_converged"),
+        tau_exponent_hat={
+            "estimate": float(hat_fit.slope),
+            "stderr": float(hat_fit.stderr),
+            "intercept": float(hat_fit.intercept),
+            "ci_lo": hat_ci_lo,
+            "ci_hi": hat_ci_hi,
+            "domain_min": float(ssot.S13_VALID_DE_MIN),
+            "n_censored": hat_n_censored
+        },
         skill_zero_crossing_episode=_first_negative(bell, "skill_episode"),
         skill_zero_crossing_converged=_first_negative(bell, "skill_converged"),
         baseline_bias_1000_vs_3000=bias,

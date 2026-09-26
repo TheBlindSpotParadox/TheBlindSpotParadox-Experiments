@@ -30,11 +30,20 @@
   "tau_exponent": {
     "estimate": -1.7739446482842203,
     "stderr": 0.04713402620094089,
+    "intercept": 2.106355996932945,
     "ci_lo": -1.898230225201645,
     "ci_hi": -1.669086504265848,
     "domain_min": 0.1
   },
-  "skill_zero_crossing": null,
+  "tau_exponent_hat": {
+    "estimate": -3.0943958013874715,
+    "stderr": 0.16452090338935454,
+    "intercept": 1.7346911808314016,
+    "ci_lo": -3.2568654303137117,
+    "ci_hi": -2.831487504899497,
+    "domain_min": 0.1,
+    "n_censored": 2
+  },
   "skill_zero_crossing_episode": 0.482255,
   "skill_zero_crossing_converged": null,
   "baseline_bias_1000_vs_3000": null,
