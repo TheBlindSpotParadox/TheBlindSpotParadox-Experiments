@@ -52,6 +52,17 @@ AUTHORED = {"fig_ontology.tex"}
 # intends to keep.
 ARCHIVED_MAIN_TEX = {"articleA_blindspot_v64_camera_ready.tex"}
 
+# SHA-256 of each archived main document, sealing its lineage: v64 is the exact stream-S11-b input
+# from which v65 was assembled, so any byte change -- an editorial re-save, a merge artifact, a
+# re-archival -- breaks the chain from the camera-ready record to the live document. Adding a file
+# to ARCHIVED_MAIN_TEX without pinning its hash here leaves the archive mutable in silence; the
+# test below demands the fingerprint, and re-hashing after a deliberate re-archival is the
+# operator's declaration, made here in the open.
+ARCHIVED_MAIN_TEX_SHA256 = {
+    "articleA_blindspot_v64_camera_ready.tex":
+        "8718fb744a60bb04b864022a6a8bc61a97b90de9b44a2234e7f2ae4e03fb1d6e",
+}
+
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -137,6 +148,37 @@ def test_current_manuscript_is_unique_and_live():
         + "\n  ".join(os.path.relpath(p, ROOT_DIR) for p in undeclared))
     assert target in mains, (
         f"CURRENT names {name}, but it carries no \\documentclass and is not compilable on its own")
+
+
+def test_archived_main_tex_lineage_is_sealed():
+    """Every archived main document matches its pinned SHA-256, byte for byte.
+
+    ARCHIVED_MAIN_TEX exempts a document from the single-source check, and that exemption is only
+    honest if the exempted bytes cannot drift: an archive that can be edited in place is a second
+    manuscript by another name. Checked in both directions, because either alone leaves a hole: an
+    archive with no pinned hash passes by silence, and a pinned hash with no file on disk seals a
+    lineage that no longer exists."""
+    unpinned = sorted(ARCHIVED_MAIN_TEX - set(ARCHIVED_MAIN_TEX_SHA256))
+    assert not unpinned, (
+        "archived main documents with no fingerprint in ARCHIVED_MAIN_TEX_SHA256; the exemption "
+        "from the single-source check is only honest if the archived bytes are pinned:\n  "
+        + "\n  ".join(unpinned))
+
+    broken = []
+    for name, expected in sorted(ARCHIVED_MAIN_TEX_SHA256.items()):
+        path = MANUSCRIPT_DIR / name
+        if not path.is_file():
+            broken.append(f"{name}: archived file absent from "
+                          f"{MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/")
+            continue
+        actual = sha256(path)
+        if actual != expected:
+            broken.append(f"{name}: {actual} != pinned {expected}")
+    assert not broken, (
+        "archived main documents that no longer match their pinned fingerprint. The lineage from "
+        "the camera-ready record is broken; if the re-archival was deliberate, re-hash with "
+        "sha256sum and update ARCHIVED_MAIN_TEX_SHA256 as the declaration:\n  "
+        + "\n  ".join(broken))
 
 
 CITE_RE = re.compile(r"\\[a-zA-Z]*cite[a-zA-Z]*\s*(?:\[[^\]]*\]\s*)*\{([^}]*)\}")
