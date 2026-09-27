@@ -253,6 +253,16 @@ S8_DISPLACED = {
 # Declared amendment: the manuscript sources carry no process label, so the comment an applied
 # replacement brought into the preamble was neutralised (stream S13); the payload is matched with it.
 S8_NEUTRALISED_COMMENTS = (("% ── Stream S8, ab initio arms. Source:", "% ── Ab initio arms. Source:"),)
+# Declared amendment: the first sentence of the S8-I replacement narrated a change of state, which the
+# printed text no longer carries (stream S13); the sentence now states what is measured.
+S8I_OPENING_AMENDED = ((
+    "Both quantities named here as unmeasured have since been measured, by recording the per-step\n"
+    "pre-drift error stream of each member inside the ensemble alongside the standalone arm, over $100$\n"
+    "seeds at the two canonical anchors.",
+    "Two quantities complete this analysis: the member marginal, and the false-alarm-budget-equalised\n"
+    "form of the Hydra factor. Both are measured by recording the per-step pre-drift error stream of each\n"
+    "member inside the ensemble alongside the standalone arm, over $100$ seeds at the two canonical\n"
+    "anchors."),)
 
 
 def test_transfer_S8_payload_anchors_resolve_uniquely():
@@ -271,7 +281,7 @@ def test_transfer_S8_payload_anchors_resolve_uniquely():
             bad.append(f"block {i}: target {target} does not exist")
             continue
         tex = path.read_text(encoding="utf-8")
-        for old, new in S8_NEUTRALISED_COMMENTS:
+        for old, new in S8_NEUTRALISED_COMMENTS + S8I_OPENING_AMENDED:
             replace = replace.replace(old, new)
         if search.splitlines()[0] in S8_DISPLACED:
             tail = replace[len(search):].strip("\n")

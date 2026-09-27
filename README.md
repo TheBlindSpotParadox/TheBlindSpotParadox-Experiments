@@ -17,7 +17,7 @@ pip install -r requirements.txt
 
 ## 2. Datasets & Data Preparation
 
-To comply with anonymous repository size limits, some large datasets are provided in a compressed format. Before running the real-world evaluations, please decompress the Bank Account Fraud (BAF) dataset.
+To comply with repository size limits, some large datasets are provided in a compressed format. Before running the real-world evaluations, please decompress the Bank Account Fraud (BAF) dataset.
 
 **Execute the following command from the repository root:**
 ```bash

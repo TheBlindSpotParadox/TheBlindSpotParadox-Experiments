@@ -297,7 +297,7 @@ def test_the_S3_zone_of_the_manuscript_carries_the_repaired_statement():
     assert r"P_{\mathrm{miss}}(s) \;\le\; \min\bigl(1,\, M\,F(s)\bigr)" in src, \
         "eq:pmiss must carry the two-sided envelope, not the v63 equality"
     assert "Correlation disclaimer" not in src
-    assert "Retraction of the single-tree instantiation" in src
+    assert "Why the single-tree substitution is not used." in src
     # the four subsections the project conventions exclude from the S3 perimeter are untouched by this stream
     assert "the $M$-fold acceleration is exact for exponential $F$" in src or \
            "The $M$-fold acceleration is exact for exponential $F$" in src

@@ -7,9 +7,7 @@
 
 \section{Inter-Tree Dependence and the Starvation Boundary}\label{sec:dependence}
 
-The submitted version of Proposition~\ref{prop:starvation_boundary} asserted an \emph{equality}
-for $P_{\mathrm{miss}}$ under a conditional independence of the per-tree delays that was never
-demonstrated, against a \emph{deterministic} accumulation time $\tau_{\mathrm{det}}^*$. The main text
+The natural first form of Proposition~\ref{prop:starvation_boundary} is an \emph{equality} for $P_{\mathrm{miss}}$, under a conditional independence of the per-tree delays, against a \emph{deterministic} accumulation time $\tau_{\mathrm{det}}^*$. Neither the independence nor the determinism survives measurement. The main text
 states the repaired proposition; this appendix derives its three components: the equality replaced
 by a two-sided distribution-free envelope, the independence assumption by a named and measured
 hypothesis, and $\tau_{\mathrm{det}}^*$ by the competing-risks formulation of
@@ -138,11 +136,9 @@ $\mathbb{P}(\tau_{\mathrm{ARF}} \le s)$ directly on the same seeds and magnitude
 The refutation is of the \emph{substitution}, not of either inequality:
 Eq.~\eqref{eq:boole_bound} holds unconditionally for the true $F$. What the measurement establishes
 is that the ARF member's delay law is \emph{more dispersed} than the HAT's at both tails, which is
-what Poisson weighting and a one-feature split rule would produce. No numeral of
-Eq.~\eqref{eq:pmiss} is therefore published through $\widehat{F}$, and the numerical example of the
-v63 section is retracted rather than recomputed.
+what Poisson weighting and a one-feature split rule would produce. No numeral of Eq.~\eqref{eq:pmiss} is therefore published through $\widehat{F}$.
 
-\subsection{Critical ensemble size, withdrawn}\label{sec:dep_mcrit}
+\subsection{Critical ensemble size}\label{sec:dep_mcrit}
 
 \begin{remark}[Why $M_{\mathrm{crit}}$ does not survive]\label{rem:mcrit_withdrawn}
   Corollary~\ref{cor:mcrit} inverts Eq.~\eqref{eq:pmiss} in $M$. That inversion exists only for the
@@ -153,17 +149,11 @@ v63 section is retracted rather than recomputed.
   $\Delta e = \SixCanonDeltaE$, saturating from $M = 4$ and $M = 3$ respectively). With
   Eq.~\eqref{eq:jensen_bound} unavailable by Remark~\ref{rem:rng_gate} and $\widehat{F}$ refuted by
   Empirical Result~\ref{res:plugin_refuted}, $M_{\mathrm{crit}}$ has neither a bound to invert nor a
-  CDF to invert it on. It is withdrawn, and replaced by the measured incidence of
-  Section~\ref{sec:dep_race}.
+  CDF to invert it on. We therefore do not publish it; the measured incidence of Section~\ref{sec:dep_race} takes its place.
 \end{remark}
 
 What the proposition retains is the envelope of Eq.~\eqref{eq:boole_bound} stated on $F$, with the
-equality of Eq.~\eqref{eq:pmiss} replaced by an inequality. That is strictly weaker than the v63
-statement and is published as such. We note for completeness that the alternative --- withdrawing
-the proposition entirely --- was considered: $\mathrm{Prop.}$~\ref{prop:certificate} is
-deterministic, carries no distributional hypothesis, and already routes the published result
-through $A_{\mathrm{swap}}$ (Definition~\ref{def:decoupling}, Empirical
-Result~\ref{res:tension}). The envelope is retained because it remains informative
+equality of Eq.~\eqref{eq:pmiss} replaced by an inequality. That is strictly weaker than an exact ordering, and is stated as such. The proposition is not load-bearing: $\mathrm{Prop.}$~\ref{prop:certificate} is deterministic, carries no distributional hypothesis, and already routes the published result through $A_{\mathrm{swap}}$ (Definition~\ref{def:decoupling}, Empirical Result~\ref{res:tension}). The envelope is retained because it remains informative
 ($\le 0.5$) at $132$ of the $384$ operating points of the grid $\Delta e \ge 0.24$,
 $\lambda \in \{8, 15, 25, 50\}$, $M \ge 2$, and because it is the only statement that ties ensemble
 size to miss probability without a distributional assumption.
@@ -230,8 +220,7 @@ swap times is not distinguishable from zero.}
 \end{remark}
 
 Read as a quantitative null, the parallel-chart analogy~\cite{tartakovsky_2005_multichart} predicts
-$10\times$ at $M = 10$, and the submitted version attributed the measured shortfall to positive
-inter-tree correlation. That attribution does not survive measurement. Evaluating the order
+$10\times$ at $M = 10$, and positive inter-tree correlation is the natural candidate for the measured shortfall. That attribution does not survive measurement. Evaluating the order
 statistics of $\widehat{F}$ alone --- which would return exactly $M$ were $\widehat{F}$ exponential
 --- gives an acceleration of $9.22\times$ at $\Delta e = \SixCanonDeltaE$ and $4.83\times$ at
 $\Delta e = 0.141$, against measured factors of $7.99\times$ and $4.12\times$. The residual left for
@@ -242,26 +231,10 @@ $\Delta e = 0.141$ for nearly all of it --- consistently with the near-zero $\wi
 Empirical Result~\ref{res:meff}. The decomposition is itself conditional on the refuted plug-in and
 is reported as a bracket, never as a point attribution.
 
-\subsection{Status of the v63 statements}\label{sec:dep_status}
-
-\begin{center}\begin{tabular}{@{}lll@{}}
-  \toprule
-  object & v63 form & disposition \\
-  \midrule
-  \emph{Correlation disclaimer} & asserted sign & Cor.~\ref{cor:disclaimer}, proved; reason corrected \\
-  Eq.~\eqref{eq:pmiss} & equality & Eq.~\eqref{eq:boole_bound}, two-sided envelope \\
-  independence assumption & tacit & Prop.~\ref{prop:min_jensen}, named and \emph{measured to fail} \\
-  $\tau_{\mathrm{det}}^*$ & deterministic scalar & removed; Emp.~Res.~\ref{res:cif} \\
-  $\widehat{F}$ as member marginal & tacit & Emp.~Res.~\ref{res:plugin_refuted}, \emph{refuted} \\
-  Cor.~\ref{cor:mcrit} & live corollary & \textbf{withdrawn} (Rem.~\ref{rem:mcrit_withdrawn}) \\
-  numerical example & $M_{\mathrm{crit}} = 0$ at $r = 0.95$ & retracted with the plug-in \\
-  $M$-fold exactness & read as a result & Rem.~\ref{rem:exponential_reference}, a reference \\
-  \bottomrule
-\end{tabular}\end{center}
-
-Both quantities named here as unmeasured have since been measured, by recording the per-step
-pre-drift error stream of each member inside the ensemble alongside the standalone arm, over $100$
-seeds at the two canonical anchors.
+Two quantities complete this analysis: the member marginal, and the false-alarm-budget-equalised
+form of the Hydra factor. Both are measured by recording the per-step pre-drift error stream of each
+member inside the ensemble alongside the standalone arm, over $100$ seeds at the two canonical
+anchors.
 
 The member marginal and the standalone arm share a \emph{rate} and differ by averaging. One member
 of the $M=10$ forest errs on $0.0912 \pm 0.0288$ of the pre-drift window against $0.0895$ for the
@@ -278,3 +251,8 @@ ensemble-size part $\log(A_1/A_{10})$ and a threshold part $-\log(R_1/R_{10})$. 
 magnitude-dependent and is published as such: the threshold carries $9.5\%$ of the contrast at
 $\Delta e = 0.141$ and $76.5\%$ at $\Delta e = 0.327$. No single equalised factor is quoted, because
 either value would be false at the other anchor.
+
+Of the objects this section discusses, two are published --- the distribution-free
+bound of Eq.~\eqref{eq:boole_bound} and the measured incidence of
+Section~\ref{sec:dep_race} --- and two are not: a critical ensemble size, and any
+numeral obtained by substituting $\widehat{F}$ into Eq.~\eqref{eq:mcrit}.

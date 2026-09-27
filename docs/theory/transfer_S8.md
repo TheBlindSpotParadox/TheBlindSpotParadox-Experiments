@@ -384,3 +384,10 @@ either value would be false at the other anchor.
 The arm paired against the ensemble is ARF($M = 1$), the object the `4.12x` / `7.99x` anchors are
 measured on, **not** a HAT — charge S8-E. The wording above says "the standalone $M=1$ arm" rather
 than "the HAT" for that reason, and the assembly must make the surrounding text agree.
+
+*Erratum, stream S13 (revision-history cleanup).* This payload is applied, but the first sentence of
+its replacement narrated a change of state ("named here as unmeasured have since been measured"),
+which the printed text no longer carries. The paragraph now opens "Two quantities complete this
+analysis: the member marginal, and the false-alarm-budget-equalised form of the Hydra factor. Both
+are measured by recording ..."; every numeral is unchanged. `tests/test_S8_generality.py` declares
+the amendment (`S8I_OPENING_AMENDED`). Do not re-apply the block.

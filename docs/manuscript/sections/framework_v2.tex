@@ -104,9 +104,7 @@ learners replaced in $(\tau^*, t]$.
   $s$ --- which is exactly the hypothesis excluded. Hence
   $t_1 \le \tau_{\mathrm{erase}}$.
 
-  The universal quantifier over $s \ge t$ is what carries the argument, and it
-  is why the ordering does not need the withdrawn pointwise assumption of
-  Remark~\ref{rem:order}: a transient dip of $\bar{e}$ below $p_0 + \delta_P$
+  The universal quantifier over $s \ge t$ is what carries the argument, and it is why the ordering does not need the pointwise assumption of Remark~\ref{rem:order}: a transient dip of $\bar{e}$ below $p_0 + \delta_P$
   at some $t < t_1$ does not make $t$ admissible unless the error stays there,
   so it cannot move $\tau_{\mathrm{err}}$. The hypothesis excluded above is
   strictly weaker than that assumption --- it forbids \emph{resolution} before
@@ -117,10 +115,7 @@ learners replaced in $(\tau^*, t]$.
   estimable, and in all $2{,}000$ under the hysteresis estimator.
 \end{proof}
 
-\begin{remark}[The ordering is measured; the assumption behind it is withdrawn]\label{rem:order}
-  The submitted version derived the inequality from an assumption of \emph{no
-  recovery without replacement}: $\bar{e}_t > p_0 + \delta_P$ pointwise on
-  $[\tau^*, \tau_{\mathrm{swap}}^{(1/M)})$. Synchronised instrumentation refutes
+\begin{remark}[The ordering is measured, not assumed]\label{rem:order} The inequality follows immediately from an assumption of \emph{no recovery without replacement}: $\bar{e}_t > p_0 + \delta_P$ pointwise on $[\tau^*, \tau_{\mathrm{swap}}^{(1/M)})$. That assumption is contradicted by measurement, and we do not use it. Synchronised instrumentation refutes
   it ($100$ seeds $\times$ $20$ magnitudes of the nominal arm, $\delta_P = 0.01$).
   Under a cumulative mean from $\tau^*$ it holds in $31.0\%$ of $2{,}000$ runs;
   under a $20$-step trailing mean, in $83.1\%$; and under the $200$-step window
@@ -137,9 +132,7 @@ learners replaced in $(\tau^*, t]$.
   estimator. The assumption was strictly stronger than the conclusion it was
   introduced to support, and false exactly where it exceeded it.
 
-  The converse bound $\tau_{\mathrm{erase}} \le \tau_{\mathrm{swap}}^{(1)}$ of the
-  submitted version did not follow from that assumption in the first place, and is
-  withdrawn on its own evidence: it holds in $55.3\%$ of the runs where both sides
+  The converse bound $\tau_{\mathrm{erase}} \le \tau_{\mathrm{swap}}^{(1)}$ does not follow from that assumption either, and fails on its own evidence: it holds in $55.3\%$ of the runs where both sides
   are defined, and $\tau_{\mathrm{swap}}^{(1)}$ is itself undefined in $11.3\%$ of
   runs, the sweep of all $M$ trees never completing within the horizon. Audit:
   \path{experiments/S6_synchronized_traces/s6_audit_ass_repair.py}.
@@ -150,9 +143,7 @@ learners replaced in $(\tau^*, t]$.
              (\tau_{\mathrm{swap}}^{(1/M)} - \tau^*)$.
 \end{definition}
 
-The first swap is retained as an instrumented lower bound on $W$; $\kappa$ is
-measured, never assumed --- the submitted version asserted $\kappa \ge 1$ inside
-the definition, which is a claim about measured quantities and not a definition.
+The first swap is retained as an instrumented lower bound on $W$; $\kappa$ is measured, never assumed: asserting $\kappa \ge 1$ inside the definition would make a claim about measured quantities under the guise of a definition.
 Measured, $\kappa \ge 1$ in $1{,}835/1{,}836$ runs, median $14.6$; the single
 exception is a run whose $200$-step trailing mean reports erasure before the first
 replacement, a lag artefact of the estimator rather than a recovery.
@@ -545,9 +536,7 @@ its arming state and its $p_0$ alongside.
 
 Corollary~\ref{cor:split} derives the empirically observed separation between
 the cumulative and the windowed families from a scaling law rather than
-positing it as a taxonomy. The submitted version stated the split in $W$ alone
-and placed the $\alpha$-price of $R_{\mathrm{KSWIN}}$ ``inside a square root of
-$W$'', which~\eqref{eq:Rkswin} contradicts: that term carries no $W$. The
+positing it as a taxonomy. Stating the split in $W$ alone would place the $\alpha$-price of $R_{\mathrm{KSWIN}}$ inside a square root of $W$, which~\eqref{eq:Rkswin} contradicts: that term carries no $W$. The
 operative axis is $\alpha$, which the practitioner sets, rather than $W$, which
 the classifier does.
 

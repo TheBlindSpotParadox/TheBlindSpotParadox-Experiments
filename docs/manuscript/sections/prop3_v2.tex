@@ -58,12 +58,11 @@ Two readings deserve to be separated. Across the grid, Eq.~\eqref{eq:markov_boun
 is informative essentially only at $\lambda = 50$ under the first-swap window,
 and at $\lambda = 25$ for $\Delta e \ge 0.436$. That is a narrow domain --- and
 it contains the operating point at which the starvation certificate is stated.
-The proposition is not vacuous where it is used; it is vacuous almost everywhere
-else, and the submitted version said neither.
+The proposition is not vacuous where it is used; it is vacuous almost everywhere else.
 
 \subsection{\texorpdfstring{$W$}{W} is a random variable}\label{sec:prop3_random}
 
-A reviewer of the submitted version faulted it for treating a random window as a constant.
+Treating a random window as a constant is not admissible here.
 Proposition~\ref{prop:starvation} is stated at a single $W$, and the campaign
 measures a distribution whose spread straddles $\partial\mathcal{D}$. The
 statement that bounds the ensemble of runs is therefore
@@ -204,8 +203,7 @@ blind spot. The mechanism is Proposition~\ref{prop:certificate}.
   $\hat\alpha \approx 0.98$, and Eq.~\eqref{eq:invariance} then predicts a
   spread of $(\Delta e)^{0.02}$, a factor $1.03$ over
   $\Delta e \in [0.10, 0.50]$, against a measured factor of $1.90$ that is not
-  monotone. The proposition is thus a true statement about a model the
-  repository has withdrawn, and it explains $3\%$ of a $90\%$ effect. What
+  monotone. The proposition is thus a true statement about a model the measurements contradict, and it explains $3\%$ of a $90\%$ effect. What
   survives is Remark~\ref{rem:invariance_measured}'s counterfactual: the same
   ceiling on the branch where adaptation is suppressed spreads by a factor of
   $124$ and is monotone.
@@ -253,8 +251,7 @@ blind spot. The mechanism is Proposition~\ref{prop:certificate}.
 \subsection{EDDM}\label{sec:prop3_eddm}
 
 No $R_{\mathrm{EDDM}}$ is delivered, and the requirement is withdrawn from the
-family of \S\ref{sec:requirement}. The reasons are stated so that the
-withdrawal is not read as an oversight.
+family of \S\ref{sec:requirement}.
 
 EDDM compares $p'_i + 2s'_i$, the cumulative mean and standard deviation of
 inter-error distances since the last reset, against the running maximum of that
@@ -299,11 +296,7 @@ they differ by exactly the adaptation under study, and the \texttt{frozen} arm
 never adapts at all. A statistic that cannot tell those three apart is not
 reporting on drift.
 
-The \emph{empirical} EDDM result is untouched by this: $0$ detections in
-$1{,}080$ runs against $882$ for the same detector on a non-adaptive learner,
-sign test $p \approx 1.9\times10^{-9}$, is a measurement and stands on its own.
-What is withdrawn is the claim that a requirement $R_{\mathrm{EDDM}}$ of the
-form of Eqs.~\eqref{eq:Rcusum}--\eqref{eq:Rkswin} governs it.
+The \emph{empirical} EDDM result is independent of this: $0$ detections in $1{,}080$ runs against $882$ for the same detector on a non-adaptive learner, sign test $p \approx 1.9\times10^{-9}$, is a measurement and stands on its own. What is not established is that a requirement $R_{\mathrm{EDDM}}$ of the form of Eqs.~\eqref{eq:Rcusum}--\eqref{eq:Rkswin} governs it.
 
 \subsection{Proof status}\label{sec:prop3_status}
 

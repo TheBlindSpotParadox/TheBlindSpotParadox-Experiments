@@ -37,10 +37,7 @@ with its replicate count, its seed and its generator.
   \end{tabular}
 \end{table*}
 
-\begin{remark}[Correction to the submitted resampling unit of Table~\ref{tab:results_concept}]\label{rem:boot_unit}
-  The submitted version resampled the 360 \emph{runs} of a cell with replacement, off the global
-  NumPy state seeded once before aggregation, while the caption asserted the seed as the unit of
-  statistical independence. The two statements are incompatible: the 36 streams a seed produces
+\begin{remark}[The resampling unit of Table~\ref{tab:results_concept}]\label{rem:boot_unit} Resampling the 360 \emph{runs} of a cell with replacement, off a global state seeded once before aggregation, does not resample the unit of statistical independence: runs sharing a seed share their stream. The two statements are incompatible: the 36 streams a seed produces
   share that seed's forest initialisation and are not independent of one another, so a run-level
   resample understates the width of the interval. The bootstrap now resamples the 30 seed indices,
   paired across arms, on a locally injected generator, which is the scheme the onset-acceleration ratio already
@@ -185,9 +182,7 @@ is not computable from the committed corpus and no constant stands in for it.
 River~0.23.0~\cite{montiel_river_2021} resolves an unset \texttt{warning\_detector} on its adaptive forest to
 ADWIN($\delta = 0.01$, clock $= 32$) and an unset \texttt{drift\_detector} to
 ADWIN($\delta = 0.001$, clock $= 32$); a bare \texttt{ADWIN()} is neither, at
-$\delta = 0.002$, clock $= 32$. The submitted version pinned only the drift detector on the ProteuS
-and crossover arms, so their warning detector ran at $\delta = 0.01$ and clock $32$ while the
-instrumented arms pinned both at $\delta = 0.002$ and clock $c$. Unifying the two therefore moves
+$\delta = 0.002$, clock $= 32$. On the ProteuS and crossover arms only the drift detector is pinned, so their warning detector runs at the library default, $\delta = 0.01$ and clock $32$, while the instrumented arms pin both at $\delta = 0.002$ and clock $c$. Unifying the two therefore moves
 \emph{two} parameters, $0.01 \to 0.002$ and $32 \to c$, not the clock alone.
 
 Both consequences of that unification are stated, because they coexist and neither cancels the
@@ -410,8 +405,7 @@ there than on the family the published figures use.
 
 Two deviations from that invariant exist in the repository and are declared rather than smoothed
 over. The regime-crossover experiment draws its covariates from the legacy
-\texttt{RandomState} (MT19937) generator rather than the modern one, deliberately, to reproduce the
-streams of the submitted version bit-for-bit; pairing is unaffected, since both arms read the same
+\texttt{RandomState} (MT19937) generator rather than the modern one, deliberately, so that its streams remain bit-for-bit reproducible against the archived artifacts; pairing is unaffected, since both arms read the same
 legacy stream, but its draws are not comparable with those of the other experiments. And the
 $\lambda_{\mathrm{op}}$ sweep seeds only its local generator, without the global lock described
 next; it reports no paired interval, so nothing in the paper depends on that omission.
