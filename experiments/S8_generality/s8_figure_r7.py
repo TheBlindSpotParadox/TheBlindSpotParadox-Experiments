@@ -2,7 +2,7 @@
 
 `space_constraints_audit.md` section 2.1 reserves this. The manuscript anchor is textual, not
 numerical: `% Figure 4 merged with Figure 2 above to respect ICDM page limits.` (.tex:327,
-`sec:hardware`, outside the zone CLAUDE.md excludes).
+`sec:hardware`, outside the excluded zone).
 
 R7 is NOT re-executed. `results/R7_clock_mismatch/tables/exp_R7_regime1_miss_curve.csv` already
 carries `config, delta_e, miss_rate` for the three clock configurations over the twenty canonical

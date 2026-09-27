@@ -3,8 +3,13 @@
 import re
 from pathlib import Path
 
+import pytest
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 DEBT_REGISTER = REPO_ROOT / "docs" / "editorial" / "debt_register.md"
+if not DEBT_REGISTER.exists():
+    pytest.skip("the editorial debt register is an internal document, not shipped with the "
+                "submission artifact", allow_module_level=True)
 MANUSCRIPT_DIR = REPO_ROOT / "docs" / "manuscript"
 CURRENT_FILE = MANUSCRIPT_DIR / "CURRENT"
 ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"

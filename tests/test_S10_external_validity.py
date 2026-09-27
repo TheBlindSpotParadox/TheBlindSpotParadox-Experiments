@@ -212,7 +212,7 @@ PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=====
 def test_s10_writes_only_inside_its_perimeter():
     """PROMPT_S10: no write under results/S6_*, S8_*, S9_*, R*_*, and no new authorized deviation.
     The ledger check reads the stream's own entry heading: a later stream may declare a change to an
-    S10 artifact (stream S13, round I, re-laid Table 7) without S10 having written a deviation."""
+    S10 artifact (stream S13 re-laid Table 7) without S10 having written a deviation."""
     tables = ssot.RESULTS_DIR / "S10_external_validity" / "tables"
     if tables.exists():
         unprefixed = [p.name for p in tables.iterdir() if p.is_file() and not p.name.startswith("s10_")]

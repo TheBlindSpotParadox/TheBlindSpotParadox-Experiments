@@ -45,6 +45,10 @@ refer to v64 and do not transfer to v65; re-grep before anchoring an edit.
 - Compile: `conda run -n tex tectonic -X compile docs/manuscript/$(cat docs/manuscript/CURRENT)`.
   The Springer class and style files are vendored in `docs/manuscript/`; never add Springer's
   template `.tex` there, since it carries a `\documentclass` of its own.
+- Submission export: `./make_submission_export.sh <dir>` writes HEAD without
+  `docs/{prompts,reports,theory,editorial,plans}` and `CLAUDE.md`, and fails on any identity
+  reference left in it. Validate it by running `pytest tests/` from inside `<dir>`, outside any git
+  working tree: tests of internal documents skip there, everything else must pass.
 
 ## Write perimeter
 

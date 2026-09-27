@@ -1,6 +1,7 @@
 """Tests for S13 evidence bell, refitted exponent, and skill floor."""
 import json
 from pathlib import Path
+import numpy as np
 import pandas as pd
 import pytest
 
@@ -126,3 +127,21 @@ def test_segmented_comparison_is_derived_from_the_committed_fit():
         1 - past["tau_arf_median"].iloc[-1] / past["tau_arf_median"].iloc[0])
     lo, hi = seg["post_hoc"]["exponent_ci_break_fixed"]
     assert lo <= seg["exponent"] <= hi
+
+
+def test_local_slopes_are_arithmetic_on_the_committed_medians():
+    """rem:exponent cites the half-steps of the right end and the quadratic term; both are read
+    from the gate, which must agree with the committed medians."""
+    gate = json.load(open(GATE_JSON))
+    df = pd.read_csv(BELL_CSV, float_precision="round_trip")
+    valid = df[df["delta_e"] >= 0.10]
+    x, m = np.log(valid["delta_e"].to_numpy()), valid["tau_arf_median"].to_numpy()
+    slopes = gate["local_slopes"]
+    assert len(slopes) == len(valid) - 1 == 17
+    for i, s in enumerate(slopes):
+        assert s["slope"] == pytest.approx(np.log(m[i + 1] / m[i]) / (x[i + 1] - x[i]))
+        assert s["half_steps"] == round(2 * abs(m[i + 1] - m[i]))
+    assert sum(s["half_steps"] for s in slopes[-5:]) == 4
+    curv = gate["curvature"]
+    assert curv["quadratic_coef"] == pytest.approx(np.polyfit(x, np.log(m), 2)[0])
+    assert curv["quadratic_ci"][0] <= curv["quadratic_coef"] <= curv["quadratic_ci"][1]

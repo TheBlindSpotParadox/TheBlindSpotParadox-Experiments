@@ -342,7 +342,7 @@ def test_transfer_S9_anchors_resolve_exactly_once():
 
 
 def test_transfer_S9_payloads_avoid_the_excluded_subsections():
-    """`CLAUDE.md` forbids patching the four superseded subsections of the live manuscript. Checked
+    """The project conventions forbid patching the four superseded subsections of the live manuscript. Checked
     by character offset against the real subsection boundaries, not by line number or by eye."""
     live = ROOT_DIR / "docs" / "manuscript" / "articleA_blindspot_v64_camera_ready.tex"
     text = live.read_text(encoding="utf-8")

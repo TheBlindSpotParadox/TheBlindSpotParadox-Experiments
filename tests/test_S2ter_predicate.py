@@ -398,8 +398,17 @@ def test_gate_json_labels_the_first_swap_time_beside_its_W_alias():
         assert at["tau_swap_1_over_M"] == at["W"] == round(tau_swap, 1), at
 
 
+def _doc(path):
+    """Text of an internal design document, skipped where it is not shipped: the submission
+    artifact carries no docs/theory/."""
+    if not path.exists():
+        pytest.skip(f"{path.relative_to(ROOT_DIR)} is an internal document, not shipped with the "
+                    "submission artifact")
+    return path.read_text(encoding="utf-8")
+
+
 def test_the_named_documents_carry_no_bare_W_for_the_first_swap_time():
-    texts = {p: (ROOT_DIR / p).read_text(encoding="utf-8")
+    texts = {p: _doc(ROOT_DIR / p)
              for p in ("docs/manuscript/sections/framework_v2.tex", "docs/theory/transfer_S2.md",
                        "docs/theory/S2_arl0_recomputation.md")}
     for p, t in texts.items():
@@ -424,7 +433,7 @@ def test_part_C_closed_forms():
 
 
 def _payloads(path):
-    return PAYLOAD_RE.findall(path.read_text(encoding="utf-8"))
+    return PAYLOAD_RE.findall(_doc(path))
 
 
 def _target(f):
@@ -435,6 +444,14 @@ def _target(f):
 
 S2TER_I_SINGLE_COLUMN = (("  \\begin{tabular}{llrlrrr}\n", "  \\resizebox{\\textwidth}{!}{%\n  \\begin{tabular}{llrlrrr}\n"),
                          ("  \\end{tabular}\n\\end{table*}", "  \\end{tabular}}\n\\end{table*}"))
+# Second declared adaptation: typographic re-composition to a legible size, cells unchanged; the
+# row-by-row reconciliation with family_table_latex() still holds through the verbatim rows.
+S2TER_I_RECOMPOSED = (
+    ("  \\begin{tabular}{llrlrrr}\n",
+     "  \\setlength{\\tabcolsep}{4pt}%\n  \\begin{tabular}{@{}llrlrrr@{}}\n"),
+    ("    family & setting & $p_0$ & armed & pre-change alarms & detected in $W$ & median delay \\\\\n",
+     "     & & & & pre-change & detected & median \\\\\n"
+     "    family & setting & $p_0$ & armed & alarms & in $W$ & delay \\\\\n"))
 
 
 def test_transfer_S2ter_payloads_are_applied():
@@ -445,7 +462,7 @@ def test_transfer_S2ter_payloads_are_applied():
     assert len(payloads) == 7, len(payloads)
     for f, search, replace in payloads:
         if "\\label{tab:family_order}" in replace:
-            for old, new in S2TER_I_SINGLE_COLUMN:
+            for old, new in S2TER_I_SINGLE_COLUMN + S2TER_I_RECOMPOSED:
                 replace = replace.replace(old, new)
         text = _target(f).read_text(encoding="utf-8")
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
@@ -468,7 +485,7 @@ def test_transfer_S2ter_payloads_avoid_the_excluded_subsections():
 
 
 def test_the_ordering_table_payload_is_the_recomputation():
-    transfer = TRANSFER_S2TER.read_text(encoding="utf-8")
+    transfer = _doc(TRANSFER_S2TER)
     assert family_table_latex() in transfer
     assert "family & setting & $p_0$ & armed &" in transfer
 

@@ -85,7 +85,7 @@ results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
     copy is re-copied from it. Neither .tex is in artifacts_sha256_pre_ssot.txt: this consumes
     no deviation, and sha256sum -c stays at 27 OK, 7 FAILED.
 
-    Stream S13, round I (Opus prompt 48), two artifacts outside the frozen list.
+    Stream S13, two artifacts outside the frozen list.
     results/S13_evidence_bell/s13_gate.json gains keys only: tau_segmented.sse_gain,
     minus2_decline_past_break, median_decline_past_break, and a post_hoc block (F-test, AIC/BIC,
     the flank interval with the breakpoint held at its estimate on a new seed BOOT_SEED + 8, the
@@ -99,6 +99,11 @@ results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
     docs/manuscript/tables/ copy is re-copied from it. Neither file is in
     artifacts_sha256_pre_ssot.txt: this consumes no deviation, and sha256sum -c stays at
     27 OK, 7 FAILED.
+    A later pass adds two more keys to the same gate, under the same conditions: local_slopes
+    (the log-log slope between consecutive grid points, the half-steps its medians span, and a
+    seed-bootstrap interval on BOOT_SEED + 9) and curvature (the quadratic term of ln(median) in
+    ln(delta_e) with its interval). Pre-existing keys and both CSV files are unchanged; two
+    reruns give the same SHA-256.
 
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt

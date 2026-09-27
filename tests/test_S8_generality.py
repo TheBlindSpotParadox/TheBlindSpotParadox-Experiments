@@ -23,7 +23,7 @@ Stream S8 generality suite -- one invariant per piece of non-trivial logic the s
 
 6. Manuscript payloads. Every SEARCH anchor of `docs/theory/transfer_S8.md` resolves in its target
    file and is in exactly one of the two valid states, and none of them falls inside a subsection
-   `CLAUDE.md` excludes. Same invariant `tests/test_S2bis_calibration.py` enforces on its own
+   the project conventions exclude. Same invariant `tests/test_S2bis_calibration.py` enforces on its own
    transfer document, transposed to a payload set that targets three files rather than one.
 
 Assertions 4 to 6 read committed artifacts and skip with an explicit motive when absent, so the
@@ -231,7 +231,7 @@ def _payload_blocks(path):
 
 
 def _excluded_spans(tex):
-    """[(lo, hi)] character spans of the four inline subsections CLAUDE.md excludes."""
+    """[(lo, hi)] character spans of the four inline subsections the project conventions exclude."""
     import re
     starts = sorted((m.start(), m.group(1)) for label in EXCLUDED_LABELS
                     for m in re.finditer(r"\\subsection\{[^}]*\}\\label\{(" + label + r")\}", tex))
@@ -281,7 +281,7 @@ def test_transfer_S8_payload_anchors_resolve_uniquely():
 
 
 def test_transfer_S8_payloads_avoid_the_excluded_subsections():
-    """`CLAUDE.md` excludes sec:race, sec:hydra, sec:starvation and sec:decoupling until the v65
+    """The project conventions exclude sec:race, sec:hydra, sec:starvation and sec:decoupling until the v65
     assembly. A payload anchored inside one is lost at assembly or duplicated and divergent --
     exactly the failure that had v63 edited while v64 was live, transposed one level down."""
     if not TRANSFER.exists():
@@ -296,5 +296,5 @@ def test_transfer_S8_payloads_avoid_the_excluded_subsections():
         pos = tex.find(search)
         if pos >= 0 and any(lo <= pos < hi for lo, hi in spans):
             bad.append(f"block {i}: {search[:70]!r}")
-    assert not bad, ("S8 payloads anchored inside a subsection CLAUDE.md excludes; they belong in "
+    assert not bad, ("S8 payloads anchored inside an excluded subsection; they belong in "
                      "docs/manuscript/sections/framework_v2.tex:\n  " + "\n  ".join(bad))

@@ -115,7 +115,7 @@ def main():
         )
 
     print(f"[INFO] Real instrumentation data: {file_path.name}")
-    # CLAUDE.md FAIR rule: the default C parser loses 1 ULP on 4 of the 20 boundary_shift values,
+    # FAIR rule: the default C parser loses 1 ULP on 4 of the 20 boundary_shift values,
     # which is the join-key defect found in S7. Read the key at full precision.
     df = pd.read_csv(file_path, float_precision="round_trip")
     for col in ("boundary_shift", "tau_hat"):

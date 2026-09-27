@@ -47,7 +47,7 @@ AUTHORED = {"fig_ontology.tex"}
 
 # Main documents (a .tex carrying \documentclass) retained for lineage and deliberately NOT the
 # manuscript of record. v64 is archived by stream S11-b, which assembled v65 from it; v63 is
-# referenced by CLAUDE.md but is not in the repository. Adding a file here is the declaration the
+# referenced by the project conventions but is not in the repository. Adding a file here is the declaration the
 # check demands -- it is never a way to silence a surprise, only to record an archive the operator
 # intends to keep.
 ARCHIVED_MAIN_TEX = {"articleA_blindspot_v64_camera_ready.tex"}

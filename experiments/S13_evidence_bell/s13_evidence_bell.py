@@ -246,6 +246,23 @@ def _bootstrap_segmented(runs, de_col, tau_col, de_min, n_boot=2000,
     }
 
 
+def _bootstrap_curvature(runs, de_col, tau_col, de_min, n_boot=2000, seed=BOOT_SEED + 9):
+    """Seed bootstrap of the log-log slope between consecutive grid points and of c2 in
+    ln(median) = c0 + c1 ln(de) + c2 ln(de)^2; returns ((lo, hi) per slope, (lo, hi) of c2)."""
+    valid_runs = runs[runs[de_col] >= de_min].copy()
+    uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
+    des = np.sort(valid_runs[de_col].unique())
+    x = np.log(des)
+    grouped = {de: g.set_index("seed")[tau_col] for de, g in valid_runs.groupby(de_col)}
+    rng = np.random.default_rng(seed)
+    slopes, quad = np.empty((n_boot, len(des) - 1)), np.empty(n_boot)
+    for i in range(n_boot):
+        boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
+        y = np.log([np.median(grouped[de].reindex(boot_seeds).dropna().to_numpy()) for de in des])
+        slopes[i], quad[i] = np.diff(y) / np.diff(x), np.polyfit(x, y, 2)[0]
+    return np.percentile(slopes, [2.5, 97.5], axis=0), np.percentile(quad, [2.5, 97.5])
+
+
 def main():
     runs = pd.read_parquet(RUNS)
 
@@ -433,6 +450,17 @@ def main():
     ll = {m: n_valid * np.log(s / n_valid)
           for m, s in (("pooled", sse_arf_pooled), ("segmented", seg_arf["sse"]))}
     n_par = {"pooled": 2, "segmented": 3}
+    # Shape of the onset curve, also computed after the R-8 verdict was read: the slope between
+    # consecutive grid points with the half-steps its medians span, and the quadratic term in
+    # x = ln(de) of y = ln(median).
+    x_v, y_v = np.log(des_valid), np.log(med_valid)
+    (ls_lo, ls_hi), quad_ci = _bootstrap_curvature(runs, de_col, tau_col, ssot.S13_VALID_DE_MIN)
+    local_slopes = [dict(de_lo=float(des_valid[i]), de_hi=float(des_valid[i + 1]),
+                         median_lo=float(med_valid[i]), median_hi=float(med_valid[i + 1]),
+                         half_steps=int(round(2 * abs(med_valid[i + 1] - med_valid[i]))),
+                         slope=float((y_v[i + 1] - y_v[i]) / (x_v[i + 1] - x_v[i])),
+                         ci=[float(ls_lo[i]), float(ls_hi[i])])
+                    for i in range(n_valid - 1)]
     seg_hat = _segmented_fit(hat_med.index.to_numpy(), hat_med.to_numpy())
     seg_hat_ci = _bootstrap_segmented(
         hat.dropna(subset=["tau_hat"]), "delta_e", "tau_hat",
@@ -503,6 +531,14 @@ def main():
             "de_star_ci": seg_hat_ci["de_star_ci"],
             "sse_segmented": seg_hat["sse"],
             "sse_pooled": sse_hat_pooled,
+        },
+        local_slopes=local_slopes,
+        curvature={
+            "model": f"ln(tau_arf_median) = c0 + c1 ln(delta_e) + c2 ln(delta_e)^2, "
+                     f"{n_valid} grid points, delta_e >= {ssot.S13_VALID_DE_MIN}",
+            "quadratic_coef": float(np.polyfit(x_v, y_v, 2)[0]),
+            "quadratic_ci": [float(quad_ci[0]), float(quad_ci[1])],
+            "note": "computed after the R-8 verdict was read; not pre-registered",
         },
         skill_zero_crossing_episode=_first_negative(bell, "skill_episode"),
         skill_zero_crossing_converged=_first_negative(bell, "skill_converged"),

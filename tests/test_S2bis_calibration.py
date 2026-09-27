@@ -324,7 +324,7 @@ def test_transfer_payload_anchors_resolve_uniquely():
 
 
 def test_transfer_payloads_do_not_touch_the_excluded_subsections():
-    """`CLAUDE.md` excludes four inline subsections until the v65 assembly: sec:race, sec:hydra,
+    """The project conventions exclude four inline subsections until the v65 assembly: sec:race, sec:hydra,
     sec:starvation, sec:decoupling. A payload whose anchor falls inside one of them would be lost
     at assembly or duplicated and divergent. Checked by character offset against the manuscript,
     not by eye."""
