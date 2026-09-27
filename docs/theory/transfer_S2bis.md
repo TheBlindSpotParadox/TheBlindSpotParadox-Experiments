@@ -413,6 +413,11 @@ parametrically controllable..."* twice. The S-SYNC pass applied it with the SEAR
 sentence and the REPLACE unchanged (`docs/editorial/sync_pass_report.md` §3b); the v65 manuscript
 carries that applied state, which `tests/test_S2bis_calibration.py` checks. Do not re-apply it.
 
+*Erratum, stream S13 (manuscript-source cleanup).* The macro block of T-A is applied, but its
+heading comment `% ── Stream S2-bis, equal-false-alarm-budget calibration.` now reads
+`% ── Equal-false-alarm-budget calibration.` in the manuscript: the shipped sources carry no process
+label. `tests/test_S2bis_calibration.py` declares the amendment. Do not re-apply the block.
+
 ---
 
 ## 3. T-B — the R1 reference rate

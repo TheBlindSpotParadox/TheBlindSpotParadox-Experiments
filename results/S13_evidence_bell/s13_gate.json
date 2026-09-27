@@ -336,7 +336,64 @@
       0.29619270014729726,
       0.7592460753436157
     ],
-    "note": "computed after the R-8 verdict was read; not pre-registered"
+    "note": "computed after the R-8 verdict was read; not pre-registered",
+    "robustness": {
+      "note": "same seed-bootstrap draws as quadratic_ci; not cited by the paper",
+      "subsets": [
+        {
+          "points": "all",
+          "n": 18,
+          "c2": 0.4998701946916084,
+          "stderr_ols": 0.046672332087751976,
+          "ci": [
+            0.29619270014729726,
+            0.7592460753436157
+          ]
+        },
+        {
+          "points": "without the leftmost point",
+          "n": 17,
+          "c2": 0.4738324390722849,
+          "stderr_ols": 0.08717191738750063,
+          "ci": [
+            0.1811798808294522,
+            0.7380619381685917
+          ]
+        },
+        {
+          "points": "without the six largest magnitudes",
+          "n": 12,
+          "c2": 0.5919411249701825,
+          "stderr_ols": 0.03800389813349825,
+          "ci": [
+            0.34849536470146436,
+            0.8868771552303786
+          ]
+        },
+        {
+          "points": "without both",
+          "n": 11,
+          "c2": 0.6692336711895166,
+          "stderr_ols": 0.06879153970454764,
+          "ci": [
+            0.27896219925555227,
+            0.966878605449932
+          ]
+        }
+      ],
+      "disjoint_blocks": {
+        "points": "the first six and the next six points of the valid grid",
+        "slopes": [
+          -2.0480466979223753,
+          -1.3223144152086268
+        ],
+        "difference": -0.7257322827137485,
+        "difference_ci": [
+          -1.1950796113613527,
+          -0.22539816403307497
+        ]
+      }
+    }
   },
   "skill_zero_crossing_episode": 0.482255,
   "skill_zero_crossing_converged": null,

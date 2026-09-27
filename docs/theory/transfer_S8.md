@@ -80,6 +80,11 @@ and not patched: the sentence appears in the conclusion (outside the exclusion) 
 `sec:starvation` (inside it) in near-identical form, and splitting them at this stage is exactly how
 the two copies diverge.
 
+*Erratum, stream S13 (manuscript-source cleanup).* The macro block of S8-A is applied, but its
+heading comment `% ── Stream S8, ab initio arms.` now reads `% ── Ab initio arms.` in the manuscript:
+the shipped sources carry no process label. `tests/test_S8_generality.py` declares the amendment
+(`S8_NEUTRALISED_COMMENTS`). Do not re-apply the block.
+
 ---
 
 ## B. S8-B — `rem:cf_scope` is answered, and the answer is routed

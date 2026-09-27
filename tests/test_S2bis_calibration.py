@@ -314,7 +314,11 @@ def test_transfer_payload_anchors_resolve_uniquely():
     doc = ROOT_DIR / "docs" / "theory" / "transfer_S2bis.md"
     _need(doc, "the S2-bis transfer document is a deliverable of this stream")
     where, tex = _manuscript_of_record()
-    blocks = _search_blocks(doc)
+    # Declared amendment: the manuscript sources carry no process label, so the comment an applied
+    # replacement brought into the preamble was neutralised (stream S13); the payload is matched with it.
+    blocks = [(b, r.replace("% ── Stream S2-bis, equal-false-alarm-budget calibration. Source:",
+                            "% ── Equal-false-alarm-budget calibration. Source:"))
+              for b, r in _search_blocks(doc)]
     assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
     bad = [(i, b[:80], state) for i, (b, r) in enumerate(blocks, 1)
            if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) != (0, 1)]

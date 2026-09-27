@@ -22,12 +22,12 @@
 \spnewtheorem{assumption}{Assumption}{\bfseries}{\rmfamily}
 \spnewtheorem{empresult}{Empirical Result}{\bfseries}{\rmfamily}
 
-% ── Stream S6 measured constants. Source: results/S6_synchronized_traces/.
+% ── Measured constants. Source: results/S6_synchronized_traces/.
 % Every value is read from a committed artifact; none is typed by hand.
 \newcommand{\SixSeeds}{100}                  % config/experiment_ssot.py S6_CAMPAIGN_SEEDS
 \newcommand{\SixHorizon}{2500}               % S6_T_HORIZON
 \newcommand{\DeltaPtext}{0.01}               % R2_CUSUM_DELTA = S6_AUDIT_DELTA_P
-\newcommand{\SixCanonDeltaE}{0.3268}         % canonical grid point (transfer\_S1 label 0.33)
+\newcommand{\SixCanonDeltaE}{0.3268}         % canonical grid point
 \newcommand{\SixTauFirst}{57.4}              % mean tau\_swap^(1/M), s6\_causal.json
 \newcommand{\SixTauErase}{612}               % mean argmax A\_unrefl, s6\_causal.json
 \newcommand{\SixMuWfirst}{18.2}              % (Delta e - delta\_P) * SixTauFirst
@@ -58,10 +58,10 @@
 \newcommand{\EnvLo}{0.20}\newcommand{\EnvHi}{0.40}
 \newcommand{\DeFloorLo}{0.085}\newcommand{\DeFloorHi}{0.141}
 \newcommand{\QlowFloorLo}{9.38}\newcommand{\QlowFloorHi}{18.32}
-\newcommand{\DeCrit}{0.120}                  % measured Action 4: 0.1197, n=300
+\newcommand{\DeCrit}{0.120}                  % measured: 0.1197, n=300
 \newcommand{\DeCritCI}{[0.114, 0.127]}       % 95% bootstrap CI (10,000 draws)
 
-% ── Stream S8, ab initio arms. Source: results/S8\_ab\_initio/data/s8\_causal.json,
+% ── Ab initio arms. Source: results/S8\_ab\_initio/data/s8\_causal.json,
 % decomposition\_ab\_initio.a\_pos\_common. Reference arm forked at tau*, not at the first swap.
 % Every value is read from a committed artifact; none is typed by hand.
 \newcommand{\LearnSharePure}{98.6}           % E\_learn\_pure / E\_total, learning with no tree
@@ -75,7 +75,7 @@
                                              % replacement suppressed from tau* onward (18 when
                                              % suppressed only after the first, 0 nominal)
 
-% ── v4 abstract, stream S11-b. Source: results/S2\_theory/tables/s2\_gate\_T20.json and
+% ── Abstract numerals. Source: results/S2\_theory/tables/s2\_gate\_T20.json and
 % results/S2bis\_calibration/tables/s2bis\_proteus\_gate.json. Every value is read from a committed
 % artifact; none is typed by hand.
 \newcommand{\CeilingCanon}{33.5}             % budget\_restitution.measured.per\_magnitude at Delta e = 0.326793: 33.5115
@@ -84,7 +84,7 @@
 \newcommand{\RcusumFifty}{59.3}              % floor\_and\_family.family\_requirements.common\_alpha\_ladder[3].R\_CUSUM = 59.2724
 \newcommand{\RcusumOp}{31.2}                 % family\_requirements\_at\_lambda\_eq, couple S6 measured lambda\_op (c=0): 31.2007
 
-% ── Stream S2 recomputation at the MEASURED base rate. Source: results/S2_theory/tables/.
+% ── Recomputation at the MEASURED base rate. Source: results/S2_theory/tables/.
 % Every value is read from a committed artifact; none is typed by hand.
 \newcommand{\PzeroMeas}{0.024}               % ssot.P0\_MEASURED; median e\_pre, arm full, n = 2000
 \newcommand{\PzeroBand}{[0.015,\,0.032]}     % central 95 \% of per-run e\_pre, s2\_gate\_T20.json
@@ -99,7 +99,7 @@
 \newcommand{\FloodPredHt}{28}                % idem
 \newcommand{\FloodArlGap}{3\times10^{4}}     % shortfall factor of the ARL\_0 model
 
-% ── Stream S2-bis, equal-false-alarm-budget calibration. Source: results/S2bis\_calibration/.
+% ── Equal-false-alarm-budget calibration. Source: results/S2bis\_calibration/.
 % Every value is read from a committed artifact; none is typed by hand.
 \newcommand{\SpanOverWarm}{4.8}              % armed pre-change span / warm-up, gradual\_balanced
 \newcommand{\LamEqArf}{93}                   % lambda\_eq at the span budget, PHT+ARF(c=1)
@@ -111,7 +111,7 @@
 \newcommand{\RhoEqSpanCI}{[1.16,\,1.43]}     % seed-paired bootstrap, 10\,000 resamples
 \newcommand{\ThresholdShare}{90}             % \% of the log-ratio attributable to the threshold
 
-% Artifact repository, anonymised. Declared once here so the venue never leaks into the body.
+% Artifact repository, declared once here.
 % \url{\RepoURL} expands only because this URL carries no catcode-active character. If it ever
 % gains a # % ~ _ or &, switch the call site to \expandafter\url\expandafter{\RepoURL}.
 \newcommand{\RepoURL}{https://anonymous.4open.science/r/TheBlindSpot-Experiments}
@@ -647,6 +647,12 @@ Default configurations (e.g., River's ARF at $c_{\mathrm{int}} = 1$) mask strong
 We formalized the \textbf{blind spot} as a deficit of the evidence an adaptation leaves against the evidence a monitor's calibration requires, both in one unit (Definition~\ref{def:blindspot}). On the instrumented forests the roles separate: the internal ADWIN fixes the onset of adaptation; incremental learning with no tree replaced performs $\LearnSharePure\%$ of the erasure; and the first replacement carries more of the remainder than all later ones together ($\SwapFirstShare\%$ against $\SwapRestShare\%$) and sets the thresholded decision, with $\AbInitDetect$ detections in $100$ when replacement is suppressed from $\tau^*$ against $\NoSwapLeak$ when it is suppressed only after the first. Ensemble onset acceleration moves the onset earlier; it does not drive the erasure. No critical ensemble size is certifiable from the distribution-free envelope (Corollary~\ref{cor:mcrit}), and the race is measured instead. Windowed and distributional monitors are not exempt: read at the false-alarm level of a $\lambda = 50$ CUSUM, their requirements exceed the measured evidence ceiling as well (Remark~\ref{rem:split_measured}).
 
 The reactivity condition of Definition~\ref{def:decoupling} is sufficient, not necessary. Below the detectability floor, bounding false alarms on heteroscedastic streams requires a threshold above the evidence ceiling and the admissible calibration set is empty; above it a calibration exists. The operational rule is to set the threshold from the false-alarm budget of the span the monitor will run armed over, on the error stream of the classifier it will be paired with, and to check that the resulting requirement lies below the measured ceiling. A distribution-based monitor such as KSWIN detects on ProteuS, whose pre-drift error is identically zero, at no predictive cost; on the instrumented Bernoulli family it is the weakest of the five monitors measured at equal false-alarm cost.
+
+\section*{Declarations}
+
+\paragraph{Use of generative AI.} Anthropic's Claude (Claude Opus models) was used to assist with mathematical formalisation, critical review, and the refactoring of the experimental code and of the \LaTeX{} manuscript, under the supervision and sole responsibility of the human authors. Every number the paper reports comes from a committed result file, and the repository's test suite checks those files. No language model is an author of this work.
+
+\paragraph{Code and data availability.} The experiment code, the committed result files and the test suite are available at \url{\RepoURL}; the public datasets are cited where they are used.
 
 \appendix
 \input{sections/prop3_v2}

@@ -57,10 +57,12 @@ ARCHIVED_MAIN_TEX = {"articleA_blindspot_v64_camera_ready.tex"}
 # re-archival -- breaks the chain from the camera-ready record to the live document. Adding a file
 # to ARCHIVED_MAIN_TEX without pinning its hash here leaves the archive mutable in silence; the
 # test below demands the fingerprint, and re-hashing after a deliberate re-archival is the
-# operator's declaration, made here in the open.
+# operator's declaration, made here in the open. Re-archival declared: v64 gained a three-line
+# comment header labelling it as a superseded, unsubmitted version; below the header its bytes are
+# the stream-S11-b input, whose hash was 8718fb744a60bb04b864022a6a8bc61a97b90de9b44a2234e7f2ae4e03fb1d6e.
 ARCHIVED_MAIN_TEX_SHA256 = {
     "articleA_blindspot_v64_camera_ready.tex":
-        "8718fb744a60bb04b864022a6a8bc61a97b90de9b44a2234e7f2ae4e03fb1d6e",
+        "315c59fa9323f23ebef990998462fbf44061e163b1c6ea673d0f50cd700a73d3",
 }
 
 

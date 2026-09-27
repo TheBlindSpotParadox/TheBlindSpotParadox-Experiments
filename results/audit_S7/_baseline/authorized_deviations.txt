@@ -103,7 +103,10 @@ results/R4_proteus_evaluation/data/exp_R4_seed_level_tests.csv
     (the log-log slope between consecutive grid points, the half-steps its medians span, and a
     seed-bootstrap interval on BOOT_SEED + 9) and curvature (the quadratic term of ln(median) in
     ln(delta_e) with its interval). Pre-existing keys and both CSV files are unchanged; two
-    reruns give the same SHA-256.
+    reruns give the same SHA-256. A third pass adds curvature.robustness: the quadratic term on
+    four subsets of the grid with its OLS standard error and seed-bootstrap interval, and the
+    difference of the slopes over two disjoint blocks, all on the same draws as quadratic_ci,
+    whose value is unchanged; same conditions.
 
 Verification:
     sha256sum -c results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt

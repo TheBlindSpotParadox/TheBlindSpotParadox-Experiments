@@ -30,6 +30,11 @@ H = 2000                              # post-drift horizon, def:times
 LAMBDA_GRID = np.arange(2.0, 60.5, ssot.S13_LAMBDA_GRID_STEP)
 BOOT = 10_000
 BOOT_SEED = 20260925
+# Robustness of the quadratic onset term to the points a reader would question first: the
+# leftmost magnitude (highest leverage) and the six largest (medians quantised to half-steps).
+CURVATURE_SUBSETS = {"all": slice(0, None), "without the leftmost point": slice(1, None),
+                     "without the six largest magnitudes": slice(0, -6), "without both": slice(1, -6)}
+CURVATURE_BLOCKS = (slice(0, 6), slice(6, 12))
 
 
 def reflected_max(err, p0, delta):
@@ -247,20 +252,34 @@ def _bootstrap_segmented(runs, de_col, tau_col, de_min, n_boot=2000,
 
 
 def _bootstrap_curvature(runs, de_col, tau_col, de_min, n_boot=2000, seed=BOOT_SEED + 9):
-    """Seed bootstrap of the log-log slope between consecutive grid points and of c2 in
-    ln(median) = c0 + c1 ln(de) + c2 ln(de)^2; returns ((lo, hi) per slope, (lo, hi) of c2)."""
+    """Seed bootstrap of the log-log slope between consecutive grid points, of c2 in
+    ln(median) = c0 + c1 ln(de) + c2 ln(de)^2 on each of CURVATURE_SUBSETS, and of the difference
+    of the OLS slopes over the two CURVATURE_BLOCKS; returns the (lo, hi) percentiles of each."""
     valid_runs = runs[runs[de_col] >= de_min].copy()
     uniq_seeds = np.unique(valid_runs["seed"].to_numpy())
     des = np.sort(valid_runs[de_col].unique())
     x = np.log(des)
     grouped = {de: g.set_index("seed")[tau_col] for de, g in valid_runs.groupby(de_col)}
     rng = np.random.default_rng(seed)
-    slopes, quad = np.empty((n_boot, len(des) - 1)), np.empty(n_boot)
+    slopes = np.empty((n_boot, len(des) - 1))
+    quad = np.empty((n_boot, len(CURVATURE_SUBSETS)))
+    block_diff = np.empty(n_boot)
     for i in range(n_boot):
         boot_seeds = rng.choice(uniq_seeds, size=len(uniq_seeds), replace=True)
         y = np.log([np.median(grouped[de].reindex(boot_seeds).dropna().to_numpy()) for de in des])
-        slopes[i], quad[i] = np.diff(y) / np.diff(x), np.polyfit(x, y, 2)[0]
-    return np.percentile(slopes, [2.5, 97.5], axis=0), np.percentile(quad, [2.5, 97.5])
+        slopes[i] = np.diff(y) / np.diff(x)
+        quad[i] = [np.polyfit(x[s], y[s], 2)[0] for s in CURVATURE_SUBSETS.values()]
+        first, second = (np.polyfit(x[s], y[s], 1)[0] for s in CURVATURE_BLOCKS)
+        block_diff[i] = first - second
+    return tuple(np.percentile(a, [2.5, 97.5], axis=0) for a in (slopes, quad, block_diff))
+
+
+def _quad_ols(x, y):
+    """c2 of y = c0 + c1 x + c2 x^2 and its OLS standard error, s^2 (X'X)^-1."""
+    X = np.column_stack([np.ones_like(x), x, x ** 2])
+    beta = np.linalg.lstsq(X, y, rcond=None)[0]
+    s2 = float(((y - X @ beta) ** 2).sum()) / (len(x) - 3)
+    return float(beta[2]), float(np.sqrt(s2 * np.linalg.inv(X.T @ X)[2, 2]))
 
 
 def main():
@@ -454,7 +473,9 @@ def main():
     # consecutive grid points with the half-steps its medians span, and the quadratic term in
     # x = ln(de) of y = ln(median).
     x_v, y_v = np.log(des_valid), np.log(med_valid)
-    (ls_lo, ls_hi), quad_ci = _bootstrap_curvature(runs, de_col, tau_col, ssot.S13_VALID_DE_MIN)
+    (ls_lo, ls_hi), (q_lo, q_hi), block_ci = _bootstrap_curvature(
+        runs, de_col, tau_col, ssot.S13_VALID_DE_MIN)
+    block_slopes = [float(np.polyfit(x_v[s], y_v[s], 1)[0]) for s in CURVATURE_BLOCKS]
     local_slopes = [dict(de_lo=float(des_valid[i]), de_hi=float(des_valid[i + 1]),
                          median_lo=float(med_valid[i]), median_hi=float(med_valid[i + 1]),
                          half_steps=int(round(2 * abs(med_valid[i + 1] - med_valid[i]))),
@@ -537,8 +558,21 @@ def main():
             "model": f"ln(tau_arf_median) = c0 + c1 ln(delta_e) + c2 ln(delta_e)^2, "
                      f"{n_valid} grid points, delta_e >= {ssot.S13_VALID_DE_MIN}",
             "quadratic_coef": float(np.polyfit(x_v, y_v, 2)[0]),
-            "quadratic_ci": [float(quad_ci[0]), float(quad_ci[1])],
+            "quadratic_ci": [float(q_lo[0]), float(q_hi[0])],
             "note": "computed after the R-8 verdict was read; not pre-registered",
+            "robustness": {
+                "note": "same seed-bootstrap draws as quadratic_ci; not cited by the paper",
+                "subsets": [dict(points=name, n=len(x_v[s]),
+                                 **dict(zip(("c2", "stderr_ols"), _quad_ols(x_v[s], y_v[s]))),
+                                 ci=[float(q_lo[j]), float(q_hi[j])])
+                            for j, (name, s) in enumerate(CURVATURE_SUBSETS.items())],
+                "disjoint_blocks": {
+                    "points": "the first six and the next six points of the valid grid",
+                    "slopes": block_slopes,
+                    "difference": block_slopes[0] - block_slopes[1],
+                    "difference_ci": [float(block_ci[0]), float(block_ci[1])],
+                },
+            },
         },
         skill_zero_crossing_episode=_first_negative(bell, "skill_episode"),
         skill_zero_crossing_converged=_first_negative(bell, "skill_converged"),

@@ -145,3 +145,25 @@ def test_local_slopes_are_arithmetic_on_the_committed_medians():
     curv = gate["curvature"]
     assert curv["quadratic_coef"] == pytest.approx(np.polyfit(x, np.log(m), 2)[0])
     assert curv["quadratic_ci"][0] <= curv["quadratic_coef"] <= curv["quadratic_ci"][1]
+
+
+def test_curvature_robustness_is_recomputable():
+    """The quadratic onset term survives removing the leftmost magnitude and the six quantised
+    largest ones; every entry is recomputable from the committed medians."""
+    rob = json.load(open(GATE_JSON))["curvature"]["robustness"]
+    df = pd.read_csv(BELL_CSV, float_precision="round_trip")
+    valid = df[df["delta_e"] >= 0.10]
+    x, y = np.log(valid["delta_e"].to_numpy()), np.log(valid["tau_arf_median"].to_numpy())
+    subsets = {"all": slice(0, None), "without the leftmost point": slice(1, None),
+               "without the six largest magnitudes": slice(0, -6), "without both": slice(1, -6)}
+    assert [s["points"] for s in rob["subsets"]] == list(subsets)
+    for s in rob["subsets"]:
+        xs, ys = x[subsets[s["points"]]], y[subsets[s["points"]]]
+        X = np.column_stack([np.ones_like(xs), xs, xs ** 2])
+        beta, res, *_ = np.linalg.lstsq(X, ys, rcond=None)
+        se = np.sqrt(res[0] / (len(xs) - 3) * np.linalg.inv(X.T @ X)[2, 2])
+        assert (s["n"], s["c2"], s["stderr_ols"]) == (len(xs), pytest.approx(beta[2]), pytest.approx(se))
+        assert s["ci"][0] > 0, s
+    blocks = rob["disjoint_blocks"]
+    assert blocks["slopes"] == pytest.approx([np.polyfit(x[:6], y[:6], 1)[0], np.polyfit(x[6:12], y[6:12], 1)[0]])
+    assert blocks["difference_ci"][1] < 0

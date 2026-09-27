@@ -33,7 +33,8 @@ test's `ARCHIVED_MAIN_TEX`. Renaming the manuscript means editing `CURRENT`, not
 
 `docs/manuscript/articleA_blindspot_v64_camera_ready.tex` is **archived** since stream S11-b:
 retained for lineage, because the debt register and every transfer document are written against
-it. It is declared in `ARCHIVED_MAIN_TEX`, and it is not edited and not compiled. v63 is referenced
+it. It is declared in `ARCHIVED_MAIN_TEX`, and it is not compiled and not edited beyond the three-line
+header that labels it as superseded and unsubmitted (re-pinned in the test). v63 is referenced
 by older reports but is not in the repository. Line numbers quoted in reports predating S11-b
 refer to v64 and do not transfer to v65; re-grep before anchoring an edit.
 

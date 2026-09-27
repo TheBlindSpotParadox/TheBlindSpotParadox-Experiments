@@ -250,6 +250,9 @@ S8_DISPLACED = {
     "  Invariance is therefore an \\emph{effect of adaptation}, demonstrated by":
         "S8-2, separated from its anchor by res:bell and res:skillfloor (stream S13)",
 }
+# Declared amendment: the manuscript sources carry no process label, so the comment an applied
+# replacement brought into the preamble was neutralised (stream S13); the payload is matched with it.
+S8_NEUTRALISED_COMMENTS = (("% ── Stream S8, ab initio arms. Source:", "% ── Ab initio arms. Source:"),)
 
 
 def test_transfer_S8_payload_anchors_resolve_uniquely():
@@ -268,6 +271,8 @@ def test_transfer_S8_payload_anchors_resolve_uniquely():
             bad.append(f"block {i}: target {target} does not exist")
             continue
         tex = path.read_text(encoding="utf-8")
+        for old, new in S8_NEUTRALISED_COMMENTS:
+            replace = replace.replace(old, new)
         if search.splitlines()[0] in S8_DISPLACED:
             tail = replace[len(search):].strip("\n")
             if not (replace.startswith(search) and (tex.count(search), tex.count(tail)) == (1, 1)):

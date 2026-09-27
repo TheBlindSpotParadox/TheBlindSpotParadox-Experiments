@@ -347,3 +347,13 @@ Two corrections to the previous wording, both measured on the pinned build rathe
 2. **The enumeration was incomplete.** R6, R7, R8 and R9 also pinned both detectors and were outside the list, as did `make_srp` inside R4 itself: R4 was drift-only for its ARF and both-pinned for its SRP, in the same file.
 
 The heterogeneity this section used to document therefore no longer exists: what was implicit is now pinned, in both arms. What it cost is recorded, not hidden: `results/audit_S7/_baseline/authorized_deviations.txt` carries the R4 artifact deviations with their measured effect. R3 consumes none — its published U0 arm reproduces the frozen baseline byte for byte — and it is the **unified** arm that is archived beside it, in `results/audit_S7/s7ter_arms/r3_u1/`.
+
+## 6. Submission Artifact
+
+The submission artifact is this repository without the authors' internal notes (`docs/prompts`, `docs/reports`, `docs/theory`, `docs/editorial`, `docs/plans`); `docs/METHODS.md` explains the references to them that remain in the code. From inside the artifact, `pytest tests/` passes with 15 tests skipped, each for a stated reason:
+
+- 13 check internal documents the artifact does not ship (transfer documents and the editorial debt register);
+- 1 checks that git tracks no compiled bytecode, and needs a git working tree;
+- 1 checks the review dates of the source-verification ledger, which is not shipped.
+
+`docs/manuscript/articleA_blindspot_v64_camera_ready.tex` is an earlier version, kept only to seal the lineage of the numerals. It is not submitted, and its thesis is superseded by `docs/manuscript/articleA_blindspot_v65_mlj.tex`.
