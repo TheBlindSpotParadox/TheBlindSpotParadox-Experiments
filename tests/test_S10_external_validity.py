@@ -244,6 +244,28 @@ S10_DISPLACED = {
         "S10-C, separated from its anchor by the INSECTS and two-predicate paragraphs (stream S13)",
 }
 
+# S10-A's replacement body is amended by stream H10 (objection CONS-004): the Fisher homogeneity
+# test of the envelope pooling is withdrawn -- the pooled envelope rate is the estimand by design,
+# and at one event in 1,600 its non-rejection was guaranteed -- so the reported family loses its
+# twenty-first p-value and the census reads twenty / thirty-eight. The amendment is applied to the
+# payload's replacement text before counting, exactly as S9's S2ter-B amendment is.
+S10A_AMENDED_BY_H10 = (
+    "The paper reports twenty-one further $p$-values---twenty\n"
+    "Kolmogorov--Smirnov tests of exponentiality and one Fisher test of homogeneity---and the\n"
+    "correction is also run over all thirty-nine; no verdict differs between the two families.",
+    "The paper reports twenty further $p$-values---twenty\n"
+    "Kolmogorov--Smirnov tests of exponentiality---and the\n"
+    "correction is also run over all thirty-eight; no verdict differs between the two families.",
+    "retained. Over the thirty-nine, the Fisher homogeneity test ($p = 1$) joins the non-retained set; it\n"
+    "licenses pooling as a non-rejection, which no correction alters. Every Kolmogorov--Smirnov test is\n"
+    "retained, the largest ($p = 0.003$) against $\\alpha/5$.",
+    "retained. The Fisher homogeneity test of the envelope pooling is no longer reported: the pooled\n"
+    "envelope rate is the estimand by design (Remark~\\ref{rem:aggregation}), not a hypothesis tested\n"
+    "toward pooling, and at one event in $1{,}600$ its non-rejection was guaranteed whatever the true\n"
+    "per-magnitude rates are. Every Kolmogorov--Smirnov test is\n"
+    "retained, the largest ($p = 0.003$) against $\\alpha/5$.",
+)
+
 
 def test_transfer_S10_anchors_resolve_exactly_once():
     """Every S10 payload is applied, (0, 1), or declared displaced by name; a pending state is a
@@ -259,6 +281,9 @@ def test_transfer_S10_anchors_resolve_exactly_once():
             assert replace.startswith(search) and (text.count(search), text.count(tail)) == (1, 1), (
                 f, S10_DISPLACED[search.splitlines()[0]])
             continue
+        old_census, new_census, old_fisher, new_fisher = S10A_AMENDED_BY_H10
+        replace = (replace.replace(old_census, new_census)
+                        .replace(old_fisher, new_fisher))
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         assert state == (0, 1), (f, state, search.splitlines()[0][:80])
 

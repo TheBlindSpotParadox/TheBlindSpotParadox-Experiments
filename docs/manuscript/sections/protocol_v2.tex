@@ -298,9 +298,9 @@ claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN 
 three seed-level contrasts on the INSECTS variants of Table~\ref{tab:real_data_summary}, and eight
 seed-level contrasts of the label-latency analysis (Section~\ref{sec:limitations}). The three BAF
 rows carry no test, their $\Delta e$ being indistinguishable from zero
-(Section~\ref{sec:protocol_ci}). The paper reports twenty-one further $p$-values---twenty
-Kolmogorov--Smirnov tests of exponentiality and one Fisher test of homogeneity---and the
-correction is also run over all thirty-nine; no verdict differs between the two families.
+(Section~\ref{sec:protocol_ci}). The paper reports twenty further $p$-values---twenty
+Kolmogorov--Smirnov tests of exponentiality---and the
+correction is also run over all thirty-eight; no verdict differs between the two families.
 
 Holm--Bonferroni at $\alpha = 0.05$ over the eighteen retains fifteen. Eight of the ten tests
 declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test
@@ -317,8 +317,10 @@ contrast has $p = 0.043$, which under Holm is compared against $\alpha/3 \approx
 variant---a weak witness whose five canonical jumps are heterogeneous and partly negative, and whose
 marginal advantage is explicitly not attributed to the mechanism. The rise of detection under a
 shared label latency on the rotation family ($p = 0.16$) is withdrawn; its canonical counterpart is
-retained. Over the thirty-nine, the Fisher homogeneity test ($p = 1$) joins the non-retained set; it
-licenses pooling as a non-rejection, which no correction alters. Every Kolmogorov--Smirnov test is
+retained. The Fisher homogeneity test of the envelope pooling is no longer reported: the pooled
+envelope rate is the estimand by design (Remark~\ref{rem:aggregation}), not a hypothesis tested
+toward pooling, and at one event in $1{,}600$ its non-rejection was guaranteed whatever the true
+per-magnitude rates are. Every Kolmogorov--Smirnov test is
 retained, the largest ($p = 0.003$) against $\alpha/5$.
 
 \subsection{Complete Separations and Effect Sizes}\label{sec:protocol_separation}

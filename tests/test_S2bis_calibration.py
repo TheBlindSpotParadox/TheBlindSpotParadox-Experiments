@@ -319,6 +319,29 @@ def test_transfer_payload_anchors_resolve_uniquely():
     blocks = [(b, r.replace("% ── Stream S2-bis, equal-false-alarm-budget calibration. Source:",
                             "% ── Equal-false-alarm-budget calibration. Source:"))
               for b, r in _search_blocks(doc)]
+    # Declared amendment (stream H10, objections CONS-003 and CONS-019): the flooding paragraph
+    # gains the seed-level sign test of the span-equalised ratio, and its closing thesis is
+    # restated -- starvation is a threshold fact on every measured grid, the erasure mechanism
+    # being the structural part -- replacing "no CUSUM threshold escapes it". The payload is
+    # matched with both amendments applied.
+    s2bis_h10 = (
+        ("(seed-paired bootstrap): $\\ThresholdShare\\%$",
+         "(seed-paired bootstrap; seed-level sign test $18$ against $0$ at $30$ seeds, "
+         "$p = 7.6\\times10^{-6}$): $\\ThresholdShare\\%$"),
+        ("Flooding remains parametrically controllable---alarms scale as $1/\\lambda$ in the "
+         "re-arm model---whereas starvation is structural: no CUSUM threshold escapes it "
+         "(Section~\\ref{sec:starvation_boundary}).",
+         "Flooding remains parametrically controllable---alarms scale as $1/\\lambda$ in the "
+         "re-arm model---and so does starvation on every grid this paper measures: the same "
+         "monitor that misses every drift at $\\lambda = 50$ detects at $\\lambda = 8$ on the "
+         "Bernoulli family and at $\\lambda = 5$ on ProteuS, at a false-alarm cost "
+         "$\\mathrm{ARL}_0(\\lambda = 15) = \\ArlFifteen$ steps makes negligible on the "
+         "Bernoulli family. Both published collapses are threshold facts; what is structural "
+         "is the erasure mechanism behind them (Remark~\\ref{rem:first_swap}), not the "
+         "collapse at any one threshold."),
+    )
+    for old, new in s2bis_h10:
+        blocks = [(b, r.replace(old, new)) for b, r in blocks]
     assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
     bad = [(i, b[:80], state) for i, (b, r) in enumerate(blocks, 1)
            if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) != (0, 1)]

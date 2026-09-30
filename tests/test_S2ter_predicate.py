@@ -29,6 +29,19 @@ N_STAT = ssot.S9_KSWIN_STAT
 TRANSFER_S2TER = ROOT_DIR / "docs" / "theory" / "transfer_S2ter.md"
 MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
 ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
+
+# Payloads superseded by the H10 correction of the manuscript (stream H10): S2ter-D's closing of
+# rem:split_measured and S2ter-E's closing of rem:floor_band are rewritten wholesale -- the table
+# is re-derived at the exact windowed level with the budget, floor and measured crossing rate per
+# row at a declared W (objections CONS-016/018/002), and the floor is evaluated at the exact
+# restarted level and banded over the measured reference (CONS-013/016). Their content survives
+# in the rewritten remarks; the verbatim payloads do not.
+S2TER_SUPERSEDED_BY_H10 = {
+    "  it is why a detector-side resolution exists at all.":
+        "S2ter-D, by the H10 rewrite of rem:split_measured",
+    "  as that interval, never as its midpoint.":
+        "S2ter-E, by the H10 rewrite of rem:floor_band",
+}
 PAYLOAD_RE = re.compile(r"~{9}\n(?P<f>[^\n]+)\n<<<<<<< SEARCH\n(?P<s>.*?)\n=======\n"
                         r"(?P<r>.*?)\n>>>>>>> REPLACE\n~{9}", re.S)
 EXCLUDED_SUBSECTIONS = {"sec:race", "sec:hydra", "sec:starvation", "sec:decoupling"}
@@ -455,17 +468,38 @@ S2TER_I_RECOMPOSED = (
 
 
 def test_transfer_S2ter_payloads_are_applied():
-    """All seven payloads are applied, (0, 1). The S8 and S9 transfers they had to avoid while
-    pending are applied too, so the overlap check that guarded pending anchors had nothing left to
-    compare and is removed rather than kept as a check that cannot fail."""
+    """All seven payloads are applied, (0, 1), or declared superseded by name. The S8 and S9
+    transfers they had to avoid while pending are applied too, so the overlap check that guarded
+    pending anchors had nothing left to compare and is removed rather than kept as a check that
+    cannot fail."""
     payloads = _payloads(TRANSFER_S2TER)
     assert len(payloads) == 7, len(payloads)
     for f, search, replace in payloads:
         if "\\label{tab:family_order}" in replace:
             for old, new in S2TER_I_SINGLE_COLUMN + S2TER_I_RECOMPOSED:
                 replace = replace.replace(old, new)
+        # S2ter-C's remark is amended by stream H10 (objection CONS-001): W_x is quoted at the
+        # declared tolerance delta_P = 0.01 (47.9), the 47.3 of the superseded delta_P = 0.005
+        # kept beside it. The amendment is applied to the payload's replacement text before
+        # counting, as the tab:family_order amendments above are.
+        replace = replace.replace(
+            "  $R_{\\mathrm{fa}} = \\sqrt{n_{\\mathrm{stat}}\\ln(2/\\alpha)}$, which is $47.3$ at the deployed\n"
+            "  $(\\alpha, n_{\\mathrm{stat}}) = (0.005, 30)$.",
+            "  $R_{\\mathrm{fa}} = \\sqrt{n_{\\mathrm{stat}}\\ln(2/\\alpha)}$, which is $47.9$ at the deployed\n"
+            "  $(\\alpha, n_{\\mathrm{stat}}) = (0.005, 30)$ and the declared tolerance\n"
+            "  $\\delta_P = 0.01$ ($47.3$ only under the superseded $\\delta_P = 0.005$).")
+        # S2ter-I's caption is amended by stream H10 (objection CONS-016): the equalised levels
+        # are stated to be alpha-free, so the exact windowed level of Definition 2 moves them.
+        replace = replace.replace(
+            "matches that requirement. At $p_0 = 0$",
+            "matches that requirement. The\n"
+            "  equalised levels are unchanged by the exact windowed level of\n"
+            "  Definition~\\ref{def:monitor}: they equalise to $R_{\\mathrm{CUSUM}}(15) = 24.27$, which carries\n"
+            "  no $\\alpha$. At $p_0 = 0$")
         text = _target(f).read_text(encoding="utf-8")
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
+        if state == (0, 0) and search.splitlines()[0] in S2TER_SUPERSEDED_BY_H10:
+            continue
         assert state == (0, 1), (f, search.splitlines()[0][:80], state)
 
 

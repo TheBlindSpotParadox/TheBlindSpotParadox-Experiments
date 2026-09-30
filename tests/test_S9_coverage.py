@@ -296,6 +296,14 @@ S9_SUPERSEDED = {
 }
 S9F_SENTENCE_AMENDED_BY_S2TER_B = ("is the condition that governs detection. Two consequences separate it\n"
                 "from~\\eqref{eq:Rkswin}.")
+# S9-A is displaced by stream H10 (objection CONS-002): the "order statements" caveat on the
+# requirement formulas is inserted between the align block and the "For R_CUSUM and R_ADWIN"
+# paragraph, so anchor and appended part each stand once and a re-application would print the
+# appended part twice.
+S9_DISPLACED_BY_H10 = {
+    "  R_{\\mathrm{KSWIN}} &= \\sqrt{n_{\\mathrm{stat}} \\ln \\tfrac{2}{\\alpha}}":
+        "S9-A, separated from its appended paragraph by the H10 order-statements caveat",
+}
 MANUSCRIPT_DIR = ROOT_DIR / "docs" / "manuscript"
 ARCHIVED_V64 = "articleA_blindspot_v64_camera_ready.tex"
 
@@ -335,6 +343,11 @@ def test_transfer_S9_anchors_resolve_exactly_once():
             continue
         if S9F_SENTENCE_AMENDED_BY_S2TER_B in replace:
             replace = replace.replace(S9F_SENTENCE_AMENDED_BY_S2TER_B, _s2ter_b())
+        if search.splitlines()[0] in S9_DISPLACED_BY_H10:
+            tail = replace[len(search):].strip("\n")
+            assert replace.startswith(search) and (text.count(search), text.count(tail)) == (1, 1), (
+                f, S9_DISPLACED_BY_H10[search.splitlines()[0]])
+            continue
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         if state == (0, 0) and search.splitlines()[0] in S9_SUPERSEDED:
             continue
