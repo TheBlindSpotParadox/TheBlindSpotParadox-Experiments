@@ -342,6 +342,23 @@ def test_transfer_payload_anchors_resolve_uniquely():
     )
     for old, new in s2bis_h10:
         blocks = [(b, r.replace(old, new)) for b, r in blocks]
+    # Declared amendment (OBJ-P3-01 withdrawal, work order 2026-09-30): every INSECTS p-value and
+    # interval is withdrawn -- on INSECTS the stream is fixed and the Hoeffding tree unseeded, so
+    # the HT arm admits no seed-level replication -- and the span-equalised ratio survives as a
+    # descriptive point observation only, with no interval, no test and no confidence-interval
+    # claim. Applied on top of the H10 amendment, exactly as that one is.
+    s2bis_p3_withdrawal = (
+        ("$\\RhoEqSpan$ $\\RhoEqSpanCI$ (seed-paired bootstrap; seed-level sign test $18$ against "
+         "$0$ at $30$ seeds, $p = 7.6\\times10^{-6}$): $\\ThresholdShare\\%$ of the published "
+         "log-ratio is threshold-attributable and the residual coupling effect is a factor "
+         "$\\RhoEqSpan$, small but with a confidence interval excluding $1$.",
+         "$\\RhoEqSpan$ --- a descriptive point observation on a single stream, with no interval "
+         "and no test (Section~\\ref{sec:protocol_aggregation}): $\\ThresholdShare\\%$ of the "
+         "published log-ratio is threshold-attributable and the residual coupling effect is a "
+         "factor $\\RhoEqSpan$."),
+    )
+    for old, new in s2bis_p3_withdrawal:
+        blocks = [(b, r.replace(old, new)) for b, r in blocks]
     assert blocks, "no SEARCH/REPLACE block found in transfer_S2bis.md"
     bad = [(i, b[:80], state) for i, (b, r) in enumerate(blocks, 1)
            if (state := (tex.count(b) - tex.count(r) * r.count(b), tex.count(r))) != (0, 1)]

@@ -185,15 +185,17 @@ def test_holm_step_down_matches_a_hand_computed_case():
     assert np.allclose(adjusted, [0.03, 0.06, 0.06, 0.02])
 
 
-def test_the_declared_ten_reproduce_the_protocol_verdict():
-    """protocol_v2.tex section Multiplicity: eight at the 2^-29 floor retained, abrupt_balanced
-    compared against alpha / 2 and not retained, the degenerate alpha-sweep contrast not retained."""
-    fam = holm_mod.apply(holm_mod.declared_members())
+def test_the_declared_family_reproduces_the_protocol_verdict():
+    """protocol_v2.tex section Multiplicity, as withdrawn by OBJ-P3-01 (work order 2026-09-30): the
+    three INSECTS contrasts leave the family -- on INSECTS the stream is fixed and the Hoeffding tree
+    unseeded, so the HT arm admits no seed-level replication -- leaving seven tests declared before
+    the latency analysis, six at the 2^-29 floor and retained, the degenerate alpha-sweep contrast
+    not retained."""
+    fam = holm_mod.apply([m for m in holm_mod.declared_members()
+                          if not m["member"].startswith("R5-")])
     kept = {r["member"]: r["retained"] for r in fam["members"]}
-    assert fam["m"] == 10 and sum(kept.values()) == 8
-    assert not kept["R5-abrupt_balanced"] and not kept["R4-alpha"]
-    abrupt = next(r for r in fam["members"] if r["member"] == "R5-abrupt_balanced")
-    assert abrupt["threshold"] == pytest.approx(0.05 / 2)
+    assert fam["m"] == 7 and sum(kept.values()) == 6
+    assert not kept["R4-alpha"]
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -266,6 +268,54 @@ S10A_AMENDED_BY_H10 = (
     "retained, the largest ($p = 0.003$) against $\\alpha/5$.",
 )
 
+# S10-A's replacement body is further amended by the OBJ-P3-01 withdrawal (work order 2026-09-30):
+# the three INSECTS contrasts leave the Holm family -- on INSECTS the stream is fixed and the
+# Hoeffding tree unseeded, so the HT arm admits no seed-level replication -- so the family reads
+# fifteen / thirty-five, the declared-before-latency set reads seven of which six sit at the 2^-29
+# floor, the abrupt_balanced sentences go with them, and the largest Kolmogorov--Smirnov p-value
+# is compared against alpha/4. Applied after the H10 amendment, exactly as that one is.
+S10A_AMENDED_BY_P3_WITHDRAWAL = (
+    ("Eighteen tests carry its\n"
+    "claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN $\\alpha$-sweep,\n"
+    "three seed-level contrasts on the INSECTS variants of Table~\\ref{tab:real_data_summary}, and eight\n"
+    "seed-level contrasts of the label-latency analysis (Section~\\ref{sec:limitations}). The three BAF\n"
+    "rows carry no test, their $\\Delta e$ being indistinguishable from zero\n"
+    "(Section~\\ref{sec:protocol_ci}). The paper reports twenty further $p$-values---twenty\n"
+    "Kolmogorov--Smirnov tests of exponentiality---and the\n"
+    "correction is also run over all thirty-eight; no verdict differs between the two families.",
+     "Fifteen tests carry its\n"
+    "claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN $\\alpha$-sweep,\n"
+    "and eight seed-level contrasts of the label-latency analysis (Section~\\ref{sec:limitations}). The\n"
+    "three INSECTS variants carry no test: the stream is fixed and the Hoeffding tree deterministic,\n"
+    "so the HT arm admits no seed-level replication and the comparison is reported descriptively\n"
+    "(Section~\\ref{sec:protocol_aggregation}). The three BAF\n"
+    "rows carry no test, their $\\Delta e$ being indistinguishable from zero\n"
+    "(Section~\\ref{sec:protocol_ci}). The paper reports twenty further $p$-values---twenty\n"
+    "Kolmogorov--Smirnov tests of exponentiality---and the\n"
+    "correction is also run over all thirty-five; no verdict differs between the two families."),
+    ("Holm--Bonferroni at $\\alpha = 0.05$ over the eighteen retains fifteen. Eight of the ten tests\n"
+    "declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test\n"
+    "at $n_{\\mathrm{eff}} = 30$, derived in Section~\\ref{sec:protocol_separation}; $2^{-29} \\approx 1.86\n"
+    "\\times 10^{-9}$ clears the first Holm threshold, $\\alpha/18 \\approx 2.8 \\times 10^{-3}$, by six\n"
+    "orders of magnitude, as it clears every subsequent step.",
+    "Holm--Bonferroni at $\\alpha = 0.05$ over the fifteen retains thirteen. Six of the seven tests\n"
+    "declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test\n"
+    "at $n_{\\mathrm{eff}} = 30$, derived in Section~\\ref{sec:protocol_separation}; $2^{-29} \\approx 1.86\n"
+    "\\times 10^{-9}$ clears the first Holm threshold, $\\alpha/15 \\approx 3.3 \\times 10^{-3}$, by six\n"
+    "orders of magnitude, as it clears every subsequent step."),
+    ("Three tests are not retained, and the paper claims none of them. The KSWIN $\\alpha$-sweep contrast\n"
+    "is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The INSECTS \\emph{abrupt\\_balanced}\n"
+    "contrast has $p = 0.043$, which under Holm is compared against $\\alpha/3 \\approx 0.017$ and\n"
+    "\\textbf{does not survive}. We therefore do not claim a seed-level effect on\n"
+    "\\emph{abrupt\\_balanced}, consistently with how Section~\\ref{sec:proteus} already treats that\n"
+    "variant---a weak witness whose five canonical jumps are heterogeneous and partly negative, and whose\n"
+    "marginal advantage is explicitly not attributed to the mechanism. The rise of detection under a",
+     "Two tests are not retained, and the paper claims none of them. The KSWIN $\\alpha$-sweep contrast\n"
+    "is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The rise of detection under a"),
+    ("retained, the largest ($p = 0.003$) against $\\alpha/5$.",
+     "retained, the largest ($p = 0.003$) against $\\alpha/4$."),
+)
+
 
 def test_transfer_S10_anchors_resolve_exactly_once():
     """Every S10 payload is applied, (0, 1), or declared displaced by name; a pending state is a
@@ -284,6 +334,8 @@ def test_transfer_S10_anchors_resolve_exactly_once():
         old_census, new_census, old_fisher, new_fisher = S10A_AMENDED_BY_H10
         replace = (replace.replace(old_census, new_census)
                         .replace(old_fisher, new_fisher))
+        for old, new in S10A_AMENDED_BY_P3_WITHDRAWAL:
+            replace = replace.replace(old, new)
         state = (text.count(search) - text.count(replace) * replace.count(search), text.count(replace))
         assert state == (0, 1), (f, state, search.splitlines()[0][:80])
 

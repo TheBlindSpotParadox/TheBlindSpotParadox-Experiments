@@ -84,6 +84,16 @@ Cell means in Table~\ref{tab:results_concept} are plain means over the 360 runs 
 the seed level. $\mathrm{ADD}$ is averaged over detected runs alone and is undefined --- printed
 $\infty$ --- when a cell detects nothing, which is the reading of the three blind-spot rows.
 
+\paragraph{The replication limit of the real-world streams.}
+The seed-paired tests above are legitimate only where both arms vary at the seed. On the INSECTS
+variants they do not: the stream is fixed and the Hoeffding tree is deterministic and unseeded, so
+the HT arm admits no seed-level replication --- its runs repeat one deterministic trajectory, and a
+seed-paired test there would compare thirty ARF runs against thirty copies of a single HT run. The
+INSECTS comparison is therefore reported descriptively and carries no paired-test claim: no
+p-value and no interval is attached to it. The correct instrument is a block-bootstrap replication
+unit that varies both arms --- resampled stream segments or permuted instance order, with the
+Hoeffding tree re-run on each replicate --- and it is left to future work.
+
 \subsection{The Twelve ProteuS Transitions}\label{sec:protocol_transitions}
 
 The 12 transitions are the ordered pairs of the four reference ETFs, and the drift width is a
@@ -293,35 +303,32 @@ the library's background learning mechanism operates as designed.
 
 \subsection{Multiplicity}\label{sec:protocol_multiplicity}
 
-The family of hypothesis tests reported in this paper is stated in full. Eighteen tests carry its
+The family of hypothesis tests reported in this paper is stated in full. Fifteen tests carry its
 claims: six seed-level pipeline contrasts on ProteuS, one contrast in the KSWIN $\alpha$-sweep,
-three seed-level contrasts on the INSECTS variants of Table~\ref{tab:real_data_summary}, and eight
-seed-level contrasts of the label-latency analysis (Section~\ref{sec:limitations}). The three BAF
+and eight seed-level contrasts of the label-latency analysis (Section~\ref{sec:limitations}). The
+three INSECTS variants carry no test: the stream is fixed and the Hoeffding tree deterministic,
+so the HT arm admits no seed-level replication and the comparison is reported descriptively
+(Section~\ref{sec:protocol_aggregation}). The three BAF
 rows carry no test, their $\Delta e$ being indistinguishable from zero
 (Section~\ref{sec:protocol_ci}). The paper reports twenty further $p$-values---twenty
 Kolmogorov--Smirnov tests of exponentiality---and the
-correction is also run over all thirty-eight; no verdict differs between the two families.
+correction is also run over all thirty-five; no verdict differs between the two families.
 
-Holm--Bonferroni at $\alpha = 0.05$ over the eighteen retains fifteen. Eight of the ten tests
+Holm--Bonferroni at $\alpha = 0.05$ over the fifteen retains thirteen. Six of the seven tests
 declared before the latency analysis sit exactly at the resolution floor of the two-sided sign test
 at $n_{\mathrm{eff}} = 30$, derived in Section~\ref{sec:protocol_separation}; $2^{-29} \approx 1.86
-\times 10^{-9}$ clears the first Holm threshold, $\alpha/18 \approx 2.8 \times 10^{-3}$, by six
+\times 10^{-9}$ clears the first Holm threshold, $\alpha/15 \approx 3.3 \times 10^{-3}$, by six
 orders of magnitude, as it clears every subsequent step. Seven of the eight latency contrasts are
 retained, at $p \le 2.4 \times 10^{-10}$ over one hundred seeds.
 
-Three tests are not retained, and the paper claims none of them. The KSWIN $\alpha$-sweep contrast
-is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The INSECTS \emph{abrupt\_balanced}
-contrast has $p = 0.043$, which under Holm is compared against $\alpha/3 \approx 0.017$ and
-\textbf{does not survive}. We therefore do not claim a seed-level effect on
-\emph{abrupt\_balanced}, consistently with how Section~\ref{sec:proteus} already treats that
-variant---a weak witness whose five canonical jumps are heterogeneous and partly negative, and whose
-marginal advantage is explicitly not attributed to the mechanism. The rise of detection under a
+Two tests are not retained, and the paper claims none of them. The KSWIN $\alpha$-sweep contrast
+is degenerate ($p = 1$: both arms detect 1080 of 1080 runs). The rise of detection under a
 shared label latency on the rotation family ($p = 0.16$) is withdrawn; its canonical counterpart is
 retained. The Fisher homogeneity test of the envelope pooling is no longer reported: the pooled
 envelope rate is the estimand by design (Remark~\ref{rem:aggregation}), not a hypothesis tested
 toward pooling, and at one event in $1{,}600$ its non-rejection was guaranteed whatever the true
 per-magnitude rates are. Every Kolmogorov--Smirnov test is
-retained, the largest ($p = 0.003$) against $\alpha/5$.
+retained, the largest ($p = 0.003$) against $\alpha/4$.
 
 \subsection{Complete Separations and Effect Sizes}\label{sec:protocol_separation}
 
