@@ -34,7 +34,7 @@ LOG_FILE="logs/${EXP_NAME}/execution_$(date +%Y%m%d_%H%M%S).log"
     echo -e "\n[STEP 2/6] Smoke test (20k-row prefixes)..."
     python ${EXP_DIR}/exp_R5_smoke_test.py
 
-    echo -e "\n[STEP 3/6] BAF evaluation (checkpointed; long-running, ~4.5h)..."
+    echo -e "\n[STEP 3/6] BAF evaluation (checkpointed; long-running, ~2h extrapolated -- docs/ENVIRONMENT.md)..."
     python ${EXP_DIR}/exp_R5_compute_baf.py
 
     echo -e "\n[STEP 4/6] INSECTS evaluation (aggregate + per-episode)..."
