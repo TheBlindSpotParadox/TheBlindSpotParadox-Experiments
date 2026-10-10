@@ -5,6 +5,7 @@ lambda showing the joint stopping times (tau_ARF, tau_det) on a broken linear
 x-axis, with a deterministic 2D jitter (one seeded generator per lambda panel)
 applied to the censored/starved runs to keep the scatter cloud readable.
 """
+import argparse
 import pandas as pd
 import matplotlib
 matplotlib.use('Agg')
@@ -18,7 +19,7 @@ RESULTS_DIR = ROOT_DIR / "results" / "R1_race_condition" / "data"
 FIG_DIR = ROOT_DIR / "results" / "R1_race_condition" / "figures"
 FIG_DIR.mkdir(parents=True, exist_ok=True)
 
-def plot_tau_scatter(df_diag):
+def plot_tau_scatter(df_diag, fig_dir=FIG_DIR):
     import matplotlib.gridspec as gridspec
     import matplotlib.lines as mlines
     
@@ -108,19 +109,24 @@ def plot_tau_scatter(df_diag):
 
     plt.subplots_adjust(bottom=0.15, top=0.85, left=0.08, right=0.98)
     # Bbox_inches='tight' secures the inclusion of the extracted legend
-    plt.savefig(FIG_DIR / "Fig_R1_race_condition.png", bbox_inches='tight')
+    plt.savefig(fig_dir / "Fig_R1_race_condition.png", bbox_inches='tight')
     plt.close()
 
-def main():
-    data_path = RESULTS_DIR / "R1_race_condition.parquet"
+def main(arm="current"):
+    data_dir = RESULTS_DIR if arm == "current" else RESULTS_DIR.parent / arm / "data"
+    fig_dir = FIG_DIR if arm == "current" else FIG_DIR.parent / arm / "figures"
+    fig_dir.mkdir(parents=True, exist_ok=True)
+    data_path = data_dir / "R1_race_condition.parquet"
     try:
         df_diag = pd.read_parquet(data_path)
         print(f"[INFO] Successfully loaded data from {data_path}. Generating plot...")
-        plot_tau_scatter(df_diag)
-        print(f"[SUCCESS] Figure R1 saved to {FIG_DIR / 'Fig_R1_race_condition.png'}")
+        plot_tau_scatter(df_diag, fig_dir)
+        print(f"[SUCCESS] Figure R1 saved to {fig_dir / 'Fig_R1_race_condition.png'}")
     except FileNotFoundError:
         print(f"[ERROR] Data file not found at {data_path}. Please run the diagnostic script first.")
         raise
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--arm", choices=("current", "owad2026"), default="current")
+    main(parser.parse_args().arm)

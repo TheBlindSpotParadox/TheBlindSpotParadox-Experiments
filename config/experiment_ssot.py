@@ -77,6 +77,7 @@ R1_LAMBDAS = [2.5, 5.0, 10.0, 15.0, 20.0, 25.0, 50.0, 100.0]  # S7/G2: 15 and 20
                                                # lambda* instead of interpolating it across [10, 25]
 R1_N_MODELS = N_MODELS
 R1_DELTA_P = CUSUM_DELTA_P                     # A1: R1 runs StrictCUSUM, not River's PHT
+R1_OWAD_DELTA_P = 0.005  # OWAD 2026 Fig. 1, tolerance before action A1
 R1_WARMUP_WINDOW = 1000                        # pre-drift error buffer for the empirical CUSUM p_pre
 R1_C_INT = C_INT
 

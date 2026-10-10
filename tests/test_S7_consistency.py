@@ -96,6 +96,13 @@ CUSUM_DELTA_EXEMPT = {
         "re-accumulates them at CUSUM_DELTA_P post hoc, and every published S6 numeral comes from "
         "that audit path",
 }
+CUSUM_DELTA_ARMS = {
+    ("experiments/R1_race_condition/exp_R1_generate_data.py", "owad2026"): (
+        0.005,
+        "regenerates Fig. 1 of the OWAD 2026 paper at the tolerance it was published with, before "
+        "DELTA_P and CUSUM_DELTA_P were split; the nominal arm of the same file stays on "
+        "CUSUM_DELTA_P"),
+}
 
 SAFE_BUILTINS = {n: getattr(builtins, n)
                  for n in ("list", "range", "dict", "tuple", "set", "int", "float", "str",
@@ -180,7 +187,8 @@ def module_namespace(path):
 
 
 def cusum_delta_sites(path):
-    """[(site, resolved delta or UNRESOLVED)] for every StrictCUSUM construction in `path`."""
+    """[(site, resolved delta or UNRESOLVED, arm or None)] for every StrictCUSUM construction in
+    `path`; a delta indexed into a module-level dict yields one site per key of that dict."""
     tree = ast.parse(path.read_text(encoding="utf-8"))
     idx = default = None
     for node in ast.walk(tree):
@@ -207,15 +215,21 @@ def cusum_delta_sites(path):
             arg = default
         if arg is None:
             out.append((f"{CUSUM_CLASS}(...)  [no delta argument and no resolvable signature]",
-                        UNRESOLVED))
+                        UNRESOLVED, None))
             continue
         src = ast.unparse(arg)
         ns = module_namespace(path) if ns is None else ns
+        table = (ns.get(ast.unparse(arg.value))
+                 if isinstance(arg, ast.Subscript) and not isinstance(arg.slice, ast.Constant) else None)
+        if isinstance(table, dict):
+            out += [(f"{CUSUM_CLASS}(... delta={src}) [{arm!r}]", value, arm)
+                    for arm, value in table.items()]
+            continue
         try:
             out.append((f"{CUSUM_CLASS}(... delta={src})",
-                        eval(src, {"__builtins__": SAFE_BUILTINS}, ns)))
+                        eval(src, {"__builtins__": SAFE_BUILTINS}, ns), None))
         except Exception:
-            out.append((f"{CUSUM_CLASS}(... delta={src})", UNRESOLVED))
+            out.append((f"{CUSUM_CLASS}(... delta={src})", UNRESOLVED, None))
     return out
 
 
@@ -252,15 +266,20 @@ def test_ssot_registry_and_no_value_drift():
 
 
 def test_strict_cusum_runs_at_the_cusum_tolerance():
-    bad, checked = [], 0
+    bad, checked, seen_arms = [], 0, set()
     for p in sorted((ROOT_DIR / "experiments").rglob("*.py")):
         rel = str(p.relative_to(ROOT_DIR))
         if rel in CUSUM_DELTA_EXEMPT:
             continue
-        for site, delta in cusum_delta_sites(p):
+        for site, delta, arm in cusum_delta_sites(p):
             checked += 1
+            declared = CUSUM_DELTA_ARMS.get((rel, arm))
+            if declared is not None:
+                seen_arms.add((rel, arm))
             if delta is UNRESOLVED:
                 bad.append(f"{rel}: {site} -- extend the guard, do not silence it")
+            elif declared is not None and delta == declared[0]:
+                continue
             elif delta != ssot.CUSUM_DELTA_P:
                 bad.append(f"{rel}: {site} -> {delta}, expected CUSUM_DELTA_P = {ssot.CUSUM_DELTA_P}")
 
@@ -270,6 +289,22 @@ def test_strict_cusum_runs_at_the_cusum_tolerance():
         f"guard that verifies nothing.")
     assert not bad, ("StrictCUSUM constructed at a tolerance other than the registry's "
                      "CUSUM_DELTA_P:\n  " + "\n  ".join(bad))
+    unseen = sorted(set(CUSUM_DELTA_ARMS) - seen_arms)
+    assert not unseen, ("declared StrictCUSUM arms that no construction indexes; the declaration is "
+                        "stale:\n  " + "\n  ".join(f"{rel} [{arm!r}]" for rel, arm in unseen))
+
+
+def test_a_constant_arm_index_is_resolved_not_expanded(tmp_path):
+    probe = tmp_path / "probe.py"
+    probe.write_text("class StrictCUSUM:\n"
+                     "    def __init__(self, p_pre, delta, threshold):\n"
+                     "        pass\n"
+                     "TABLE = dict(current=0.01, owad2026=0.005)\n"
+                     "def run(arm='current'):\n"
+                     "    StrictCUSUM(0.05, TABLE['owad2026'], 25)\n"
+                     "    StrictCUSUM(0.05, TABLE[arm], 25)\n", encoding="utf-8")
+    assert [(delta, arm) for _, delta, arm in cusum_delta_sites(probe)] == [
+        (0.005, None), (0.01, "current"), (0.005, "owad2026")]
 
 
 def test_no_foreign_experiment_directory_under_results():
@@ -389,6 +424,7 @@ READ_CSV_EXEMPTIONS = {
     "experiments/R5_real_world_evaluation/exp_R5_compute_insects.py:simulate": _RAW_SOURCE,
     "experiments/R5_real_world_evaluation/exp_R5_smoke_test.py:smoke_baf": _RAW_SOURCE,
     "experiments/R5_real_world_evaluation/exp_R5_smoke_test.py:smoke_insects": _RAW_SOURCE,
+    "experiments/R5_real_world_evaluation/exp_R5_baf_timing.py:main": _RAW_SOURCE,
     "tests/test_R8_lambda_op.py:test_withdrawn_surrogate_is_absent_from_the_artifacts":
         "nrows=0: reads the header row only, parses no float at all",
     "tests/test_S7_consistency.py:_read": _FORWARDER,

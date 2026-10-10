@@ -3,6 +3,7 @@ exp_R1_generate_data.py
 Extended Diagnostic 3: Isolate the evolution of P(tau_arf < tau_det) over a lambda grid,
 with truncation bias correction for the Share Blind Spot computation.
 """
+import argparse
 import random
 import sys
 import numpy as np
@@ -28,6 +29,7 @@ N_SEEDS = ssot.R1_N_SEEDS
 DELTA_E = ssot.R1_DELTA_E
 LAMBDAS_TO_TEST = ssot.R1_LAMBDAS
 DELTA_P = ssot.R1_DELTA_P
+DELTA_P_BY_ARM = dict(current=DELTA_P, owad2026=ssot.R1_OWAD_DELTA_P)
 
 class StrictCUSUM:
     def __init__(self, p_pre, delta, threshold):
@@ -37,7 +39,7 @@ class StrictCUSUM:
         self.S = max(0.0, self.S + (x - self.p_pre) - self.delta)
         if self.S >= self.threshold: self.drift_detected = True
 
-def run_diff_test(seed, lambda_val):
+def run_diff_test(seed, lambda_val, arm="current"):
     # [IEEE/ICDM FAIR Compliance] Worker-Level Global Locking (Controlled Rollback)
     # We use the exact original uint32 seed to guarantee bit-wise match with the submitted paper.
     # Python 3.12 and Numpy 1.26 natively handle uint32, avoiding C-level overflow.
@@ -53,7 +55,7 @@ def run_diff_test(seed, lambda_val):
     
     arf = ssot.require_drift_tracker(
         forest.ARFClassifier(n_models=ssot.R1_N_MODELS, seed=seed, drift_detector=drift.ADWIN(clock=ssot.R1_C_INT), warning_detector=drift.ADWIN(clock=ssot.R1_C_INT)))
-    cusum_external_fixed = StrictCUSUM(0.05, DELTA_P, lambda_val)
+    cusum_external_fixed = StrictCUSUM(0.05, DELTA_P_BY_ARM[arm], lambda_val)
     
     errors_warmup = []
     cusum_external_emp = None
@@ -78,7 +80,7 @@ def run_diff_test(seed, lambda_val):
                 swaps_at_drift = sum(arf._drift_tracker.values())
                 p_pre_emp = np.mean(errors_warmup)
                 if p_pre_emp == 0: p_pre_emp = 0.01
-                cusum_external_emp = StrictCUSUM(p_pre_emp, DELTA_P, lambda_val)
+                cusum_external_emp = StrictCUSUM(p_pre_emp, DELTA_P_BY_ARM[arm], lambda_val)
             
         before = sum(arf._drift_tracker.values())
         arf.learn_one(x_dict, y)
@@ -122,14 +124,19 @@ def run_diff_test(seed, lambda_val):
     }
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--arm", choices=sorted(DELTA_P_BY_ARM), default="current")
+    arm = parser.parse_args().arm
+    out_dir = RESULTS_DIR if arm == "current" else RESULTS_DIR.parent / arm / "data"
+    out_dir.mkdir(parents=True, exist_ok=True)
     print("[INFO] Launching Extended Diagnostic 3 (Share Blind Spot Cartography)...")
     seq = np.random.SeedSequence(ssot.SEED_SCHEME_SEEDSEQ_ENTROPY)
     seeds = [int(s.generate_state(1)[0]) for s in seq.spawn(N_SEEDS)]
-    
+
     grid = [(s, l) for s in seeds for l in LAMBDAS_TO_TEST]
-    results = Parallel(n_jobs=-1)(delayed(run_diff_test)(s, l) for s, l in tqdm(grid, desc="Experiment R1"))
+    results = Parallel(n_jobs=-1)(delayed(run_diff_test)(s, l, arm) for s, l in tqdm(grid, desc="Experiment R1"))
     df = pd.DataFrame(results)
-    output_parquet = RESULTS_DIR / "R1_race_condition.parquet"
+    output_parquet = out_dir / "R1_race_condition.parquet"
     df.to_parquet(output_parquet, index=False)
     print(f"[INFO] Parquet artifact saved to: {output_parquet}")
     
@@ -138,7 +145,7 @@ if __name__ == "__main__":
         Detection_Rate=('tau_det_emp_finite', 'mean')
     ).round(3)
     
-    output_md = RESULTS_DIR / "R1_race_condition_diagnostic.md"
+    output_md = out_dir / "R1_race_condition_diagnostic.md"
     with open(output_md, "w") as f:
         f.write("# Experiment R1: Share Blind Spot Evolution\n\n")
         f.write(agg.to_markdown())

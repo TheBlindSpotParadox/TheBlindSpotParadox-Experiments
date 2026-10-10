@@ -65,6 +65,13 @@ ARCHIVED_MAIN_TEX_SHA256 = {
         "315c59fa9323f23ebef990998462fbf44061e163b1c6ea673d0f50cd700a73d3",
 }
 
+PUBLISHED_DIR = MANUSCRIPT_DIR / "owad2026"
+PUBLISHED_MAIN_TEX = {
+    "The_Blind_Spot_Paradox_ICDM_OWAD_2026.tex":
+        "4ed09a783b809847067478518be2bd0de60243ceb27c8999158f4f97bd740020",
+}
+PUBLISHED_PATHS = {PUBLISHED_DIR / name for name in PUBLISHED_MAIN_TEX}
+
 
 def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
@@ -143,10 +150,12 @@ def test_current_manuscript_is_unique_and_live():
         "how a superseded manuscript gets read in place of the live one:\n  " + "\n  ".join(stray))
 
     mains = main_tex_documents()
-    undeclared = [p for p in mains if p != target and p.name not in ARCHIVED_MAIN_TEX]
+    undeclared = [p for p in mains
+                  if p != target and p.name not in ARCHIVED_MAIN_TEX and p not in PUBLISHED_PATHS]
     assert not undeclared, (
         f"more than one compilable manuscript under {MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/ and "
-        f"CURRENT names {name}. Declare the others in ARCHIVED_MAIN_TEX or remove them:\n  "
+        f"CURRENT names {name}. Declare the others in ARCHIVED_MAIN_TEX or PUBLISHED_MAIN_TEX, or "
+        f"remove them:\n  "
         + "\n  ".join(os.path.relpath(p, ROOT_DIR) for p in undeclared))
     assert target in mains, (
         f"CURRENT names {name}, but it carries no \\documentclass and is not compilable on its own")
@@ -183,16 +192,41 @@ def test_archived_main_tex_lineage_is_sealed():
         + "\n  ".join(broken))
 
 
+def test_published_snapshot_stays_out_of_the_current_checks():
+    current = MANUSCRIPT_DIR / CURRENT.read_text(encoding="utf-8").strip()
+    leaked = {p for p in _tex_sources()[1] if PUBLISHED_DIR in p.parents}
+    leaked |= {p for main, sources in citation_documents() if main == current
+               for p in sources if PUBLISHED_DIR in p.parents}
+    assert not leaked, (
+        "files of the published snapshot checked as fragments of the manuscript of record; their "
+        "labels and citations belong to the published document:\n  "
+        + "\n  ".join(sorted(os.path.relpath(p, ROOT_DIR) for p in leaked)))
+
+
+def test_published_main_tex_is_sealed():
+    broken = []
+    for path in sorted(PUBLISHED_PATHS):
+        rel = os.path.relpath(path, ROOT_DIR)
+        if not path.is_file():
+            broken.append(f"{rel}: published file absent")
+        elif sha256(path) != PUBLISHED_MAIN_TEX[path.name]:
+            broken.append(f"{rel}: {sha256(path)} != pinned {PUBLISHED_MAIN_TEX[path.name]}")
+    assert not broken, (
+        "published main documents that no longer match their pinned fingerprint. The published "
+        "bytes are a record, not a draft:\n  " + "\n  ".join(broken))
+
+
 CITE_RE = re.compile(r"\\[a-zA-Z]*cite[a-zA-Z]*\s*(?:\[[^\]]*\]\s*)*\{([^}]*)\}")
 # A .bib entry key: @type{key, ... }. @string macro definitions carry no comma and are excluded --
 # they define journal abbreviations (IEEEabrv.bib), which \cite never resolves against.
 ENTRY_RE = re.compile(r"^@(?!string\b)[a-zA-Z]+\s*\{\s*([^,\s]+)\s*,", re.MULTILINE | re.IGNORECASE)
+BIBLIOGRAPHY_RE = re.compile(r"\\bibliography\{([^}]*)\}")
 
 
-def cited_keys():
+def cited_keys(texs=None):
     """{key: [files citing it]} over every .tex under docs/manuscript/, sections included."""
     out = {}
-    for tex in sorted(MANUSCRIPT_DIR.rglob("*.tex")):
+    for tex in (sorted(MANUSCRIPT_DIR.rglob("*.tex")) if texs is None else texs):
         for group in CITE_RE.findall(tex.read_text(encoding="utf-8", errors="ignore")):
             for key in (k.strip() for k in group.split(",")):
                 if key:
@@ -200,13 +234,29 @@ def cited_keys():
     return out
 
 
-def bib_entries():
+def bib_entries(bibs=None):
     """{key: [bib files defining it]} over every .bib under docs/manuscript/."""
     out = {}
-    for bib in sorted(MANUSCRIPT_DIR.glob("*.bib")):
+    for bib in (sorted(MANUSCRIPT_DIR.rglob("*.bib")) if bibs is None else bibs):
         for key in ENTRY_RE.findall(bib.read_text(encoding="utf-8", errors="ignore")):
-            out.setdefault(key, []).append(bib.name)
+            out.setdefault(key, []).append(os.path.relpath(bib, MANUSCRIPT_DIR))
     return out
+
+
+def bibliography_files(main):
+    names = [n.strip() for group in BIBLIOGRAPHY_RE.findall(main.read_text(encoding="utf-8"))
+             for n in group.split(",") if n.strip()]
+    return [main.parent / f"{n}.bib" for n in names]
+
+
+def citation_documents():
+    current = MANUSCRIPT_DIR / CURRENT.read_text(encoding="utf-8").strip()
+    mains = main_tex_documents()
+    fragments = [p for p in sorted(MANUSCRIPT_DIR.rglob("*.tex")) if p not in mains]
+    own = {m: [p for p in fragments if m.parent in p.parents] if m in PUBLISHED_PATHS else []
+           for m in mains}
+    return ([(m, [m] + own[m]) for m in mains]
+            + [(current, [p for p in fragments if PUBLISHED_DIR not in p.parents])])
 
 
 def test_every_cited_key_resolves_in_the_bibliography():
@@ -216,19 +266,26 @@ def test_every_cited_key_resolves_in_the_bibliography():
 
     It also fails on a duplicate entry key, which BibTeX reports as a warning and is easy to miss --
     the failure mode a second .bib file would have reintroduced."""
-    entries, cited = bib_entries(), cited_keys()
-    assert entries, f"no .bib entry found under {MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/"
-    assert cited, "no citation found; the check verifies nothing as written"
+    assert bib_entries(), f"no .bib entry found under {MANUSCRIPT_DIR.relative_to(ROOT_DIR)}/"
+    assert cited_keys(), "no citation found; the check verifies nothing as written"
 
-    duplicates = [f"{k} defined in {', '.join(f)}" for k, f in sorted(entries.items()) if len(f) > 1]
+    missing, duplicates, dangling = set(), set(), set()
+    for main, sources in citation_documents():
+        bibs = bibliography_files(main)
+        missing |= {f"{os.path.relpath(b, ROOT_DIR)} named by {main.name}"
+                    for b in bibs if not b.is_file()}
+        entries = bib_entries([b for b in bibs if b.is_file()])
+        duplicates |= {f"{k} defined in {', '.join(f)}" for k, f in entries.items() if len(f) > 1}
+        dangling |= {f"{k}  cited by {', '.join(sorted(set(f)))}"
+                     for k, f in cited_keys(sources).items() if k not in entries}
+
+    assert not missing, (
+        "bibliography files named by \\bibliography but absent:\n  " + "\n  ".join(sorted(missing)))
     assert not duplicates, (
         "duplicate bibliography keys; BibTeX resolves one and warns about the rest:\n  "
-        + "\n  ".join(duplicates))
-
-    dangling = [f"{k}  cited by {', '.join(sorted(set(f)))}"
-                for k, f in sorted(cited.items()) if k not in entries]
+        + "\n  ".join(sorted(duplicates)))
     assert not dangling, (
-        "citations with no bibliography entry:\n  " + "\n  ".join(dangling))
+        "citations with no bibliography entry:\n  " + "\n  ".join(sorted(dangling)))
 
 
 # Environments the document class or a package in the preamble supplies (svjour3, amsmath, graphicx,
@@ -256,13 +313,14 @@ REF_RE = re.compile(r"\\(?:eq)?ref\{([^}]*)\}|\\hyperref\[([^}]*)\]")
 def _tex_sources():
     """(manuscript of record named by CURRENT, [every fragment .tex under docs/manuscript/]).
 
-    Archived main documents are neither the main document nor fragments: their preamble must not
-    vouch for an environment, and their labels must not resolve a fragment's \\ref."""
+    Archived and published main documents are neither the main document nor fragments: their
+    preamble must not vouch for an environment, and their labels must not resolve a fragment's
+    \\ref."""
     main = MANUSCRIPT_DIR / CURRENT.read_text(encoding="utf-8").strip()
     if not main.is_file():
         return None, []
     return main, [p for p in sorted(MANUSCRIPT_DIR.rglob("*.tex"))
-                  if p != main and p.name not in ARCHIVED_MAIN_TEX]
+                  if p != main and p.name not in ARCHIVED_MAIN_TEX and PUBLISHED_DIR not in p.parents]
 
 
 def test_sections_assemble_into_the_main_document():

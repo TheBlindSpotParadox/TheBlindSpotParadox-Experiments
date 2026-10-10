@@ -1,5 +1,6 @@
 # Streaming ML framework (Pinned to exact version from Section 3 of the paper)
 river==0.23.0
+typing_extensions==4.12.2
 
 # Core Data Science stack (Pinned to exact environment for bit-wise reproducibility)
 numpy==1.26.4

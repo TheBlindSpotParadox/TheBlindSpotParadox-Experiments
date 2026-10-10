@@ -1,0 +1,19 @@
+\begin{table*}[ht]
+  \centering
+  \caption{Empirical evaluation across six real-world benchmark streams (30 seeds per configuration). Drift positions follow the canonical protocol of Souza et al.~\cite{souza_insects_2020} (\textit{incremental\_reoccurring\_balanced} retains $K=2$ in-stream transitions). The $c_{\mathrm{int}}=1$ evaluation mode induces precision collapse via false-alarm flooding rather than starvation (e.g., 86 alarms emitted on \textit{gradual\_balanced} for a single true drift). $^{\ast}$\textit{abrupt\_balanced} exhibits heterogeneous, partly negative local error shifts where neither detector exceeds baseline false-alarm rates.}
+  \label{tab:real_data_summary}
+  \small
+  \setlength{\tabcolsep}{8pt}
+  \begin{tabular}{@{}lccccc@{}}
+    \toprule
+    Benchmark Variant                         & $\Delta e$ (adaptive) & $\text{F1}_{\mathrm{PHT+HT}}$ & $\text{F1}_{\mathrm{PHT+ARF}_{c=1}}$ & $\text{F1}_{\mathrm{ADW+ARF}_{c=1}}$ & Ratio HT / ARF \\
+    \midrule
+    BAF Base                                  & $\approx 0$           & 0.10                          & 0.10                                 & 0.00                                 & 1.00           \\
+    BAF Variant I                             & $\approx 0$           & 0.09                          & 0.11                                 & 0.00                                 & 0.83           \\
+    BAF Variant II                            & $\approx 0$           & 0.00                          & 0.00                                 & 0.00                                 & --             \\
+    INSECTS \textit{abrupt\_balanced}         & $0.07^{\ast}$         & 0.13                          & 0.18                                 & \textbf{0.48}                        & 0.71           \\
+    INSECTS \textit{gradual\_balanced}        & \textbf{0.45}         & 0.25                          & 0.02                                 & 0.06                                 & \textbf{10.57} \\
+    INSECTS \textit{incremental\_reoccurring} & 0.39                  & 0.31                          & 0.19                                 & 0.16                                 & \textbf{1.61}  \\
+    \bottomrule
+  \end{tabular}
+\end{table*}
