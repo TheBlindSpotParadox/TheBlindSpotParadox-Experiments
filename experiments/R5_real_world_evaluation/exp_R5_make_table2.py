@@ -6,7 +6,10 @@
     caption auto-generated from the flooding artifact; a standalone reference
     render parallel to the hand-maintained Table II in the manuscript -- keep the
     two in sync, do NOT \\input alongside the manuscript copy or it doubles).
-Significance is the seed-level paired sign test (unit of independence = seed)."""
+The seed-level paired sign test stays in table2_values.csv and is not printed: on INSECTS the
+stream is fixed and the Hoeffding tree unseeded, so the seeds do not replicate the HT arm and the
+test is pseudo-replicated (results/S2bis_calibration/tables/s2bis_flooding_gate.json ->
+pseudo_replication_B10). Both manuscripts withdraw it."""
 import sys
 import numpy as np
 import pandas as pd
@@ -40,17 +43,6 @@ def flooding_table(ep):
     g["recall_chance"] = p_chance(g["n_fp"], g["tau_tol"], g["n_total"])
     g["detection_genuine"] = g["recall"] > g["recall_chance"] + cfg.FLOODING_GENUINE_MARGIN
     return g.round(4)
-
-
-def sci(p):
-    """Format a p-value as $m \\cdot 10^{e}$ with a one-significant-figure mantissa."""
-    if p is None or not np.isfinite(p):
-        return "---"
-    e = int(np.floor(np.log10(p)))
-    m = int(round(p / 10.0 ** e))
-    if m >= 10:
-        m, e = 1, e + 1
-    return rf"${m} \cdot 10^{{{e}}}$"
 
 
 def bold(s):
@@ -98,7 +90,7 @@ def main():
         else:
             p, wins, loss = None, None, None
 
-        # --- Presentation layer (data-driven; reproduces the submitted Table II) ---
+        # --- Presentation layer (data-driven) ---
         if dataset == "baf" and abs(de_mean) < 0.01:
             de_txt = r"$\approx 0$"
         else:
@@ -112,10 +104,9 @@ def main():
             ratio_cell = "---"
         else:
             ratio_cell = bold(f"{ratio:.2f}") if ratio > 1.5 else f"${ratio:.2f}$"
-        p_txt = sci(p)
 
         tex_lines.append(f"      {label:<29} & {de_txt} & {ht_txt} & {arf_txt} "
-                         f"& {adw_txt} & {ratio_cell} & {p_txt} \\\\")
+                         f"& {adw_txt} & {ratio_cell} \\\\")
         rows_csv.append({
             "row": label, "dataset": dataset, "variant": v,
             "delta_e": round(de_mean, 4), "F1_PHT_HT": round(f1_ht, 4),
@@ -138,7 +129,7 @@ def main():
     caption = (
         r"Real-world validation across six streams ($30$ seeds/cell). Drift positions follow Souza et al.~\cite{souza_insects_2020} Table~2 "
         r"(`reoccurring\_balanced' retains $K{=}2$ in-stream transitions). F1 numerator is deterministic here; per-cell dispersion "
-        r"reflects classifier initialization. Significance: seed-level sign test. The $c{=}1$ clock degrades monitoring via "
+        r"reflects classifier initialization. The $c{=}1$ clock degrades monitoring via "
         r"`false-alarm flooding' (precision collapse), not starvation: on `gradual\_balanced', PHT+ARF($c{=}1$) emits "
         f"{arf_alarms} alarms for one drift (precision ${arf_prec}$) vs {ht_alarms} for PHT+HT (${ht_prec}$). "
         r"$^{\ast}$`abrupt\_balanced' is a weak witness (heterogeneous, partly negative jumps; neither beats false-alarm rate)."
@@ -152,9 +143,9 @@ def main():
         r"  \small",
         r"  \setlength{\tabcolsep}{4pt}",
         r"  \makebox[\textwidth][c]{%",
-        r"    \begin{tabular}{@{}lcccccc@{}}",
+        r"    \begin{tabular}{@{}lccccc@{}}",
         r"      \toprule",
-        r"      Variant                       & $\Delta e$ (adaptive) & F1(PHT+HT) & F1(PHT+ARF$_{c=1}$) & F1(ADW+ARF$_{c=1}$) & Ratio HT/ARF     & Sign test $p$ (seed) \\",
+        r"      Variant                       & $\Delta e$ (adaptive) & F1(PHT+HT) & F1(PHT+ARF$_{c=1}$) & F1(ADW+ARF$_{c=1}$) & Ratio HT/ARF \\",
         r"      \midrule"
     ]
     latex_table.extend(tex_lines)

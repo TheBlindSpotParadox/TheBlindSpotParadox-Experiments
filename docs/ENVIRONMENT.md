@@ -35,11 +35,16 @@ states it as "24 cores, 48 threads / 192 GB". Same host, two conventions.
 | pyarrow      | 21.0.0  |
 | river        | 0.23.0  |
 | tqdm         | 4.67.1  |
+| typing_extensions | 4.12.2 |
 
 `river == 0.23.0` is load-bearing, not cosmetic: the instrumented experiments read the private
 attributes `_drift_tracker` and `_warning_tracker` to time the internal tree swap.
 `config.experiment_ssot.require_drift_tracker` raises on any River build that renames or drops them,
 so a version drift fails loudly instead of yielding a stream of NaN adaptation times.
+
+`typing_extensions == 4.12.2` is pinned in `requirements.txt` because River 0.23.0 imports it at
+module level in `river/base/base.py`, which every River estimator loads, without declaring it: the
+River package metadata requires numpy, pandas and scipy only.
 
 ## LaTeX toolchain
 
@@ -89,6 +94,8 @@ waits for the preceding stage to release the 48 threads before starting.
 | R9                        | `./run_experiment_R9.sh`                                            |                                                                                                                                           53 s | **deviates since A1** (`exp_R9_mcrit_comparison.csv`; its input `results_instrumented_A_ADWIN_HAT.csv` stays identical)                                                                                                                                                                               |
 | **subtotal R1–R4, R6–R9** |                                                                     |                                                                                                                  **7 095 s = 1 h 58 min 15 s** | **27 of 34 baseline hashes identical since U0 restoration** (26 under S7-ter U1, 29 before it); the seven deviations (`hydra_survival.csv`, the two A1 artifacts, the two A2 artifacts, and the two S7-ter/LOT B R4 artifacts) are declared in `results/audit_S7/_baseline/authorized_deviations.txt` |
 | R-1 (S7-bis)              | `python experiments/R9_mcrit/exp_R9_generate_data.py 1`             |                                                                                                                                           46 s | new artifact (matched-clock M=1 run)                                                                                                                                                                                                                                                                  |
+| R1 `--arm owad2026` (2026-10-09) | `python experiments/R1_race_condition/exp_R1_generate_data.py --arm owad2026`, then `exp_R1_plot_figure.py --arm owad2026` | 1 065 s (17 min 45 s) | the parquet equals the pre-A1 manifest entry of `R1_race_condition.parquet` byte for byte |
+| R4 `--arm owad2026` (2026-10-09) | `python experiments/R4_proteus_evaluation/exp_R4_main_table.py --arm owad2026` | 2 143 s (35 min 43 s) | fusion and sign-test CSVs byte-identical to `results/audit_S7/s7ter_arms/u0_frozen/`; the fusion CSV also equals the pre-S7-ter manifest entry of `exp_R4_results_aligned_fusion.csv` |
 | R5                        | `./run_experiment_R5.sh`                                            |                                                                  **not re-measured in full**; step 5 alone (Δe) re-executed by S7-ter in 393 s; BAF stage extrapolated at **≈2 h** from measured per-run throughput (§ "R5 BAF throughput" below) | step 5 **reproduces `delta_e.parquet` byte for byte**; `delta_e_oracle.parquet` is a new artifact, not in the manifest. Steps 1–4 and 6 untouched                                                                                                                                                     |
 | S2-bis P3                 | `python experiments/S2bis_calibration/s2bis_r1_ppre.py`             |                                                                                                                                          1.6 s | new artifacts; **bit-reproducible**, two runs byte-identical                                                                                                                                                                                                                                          |
 | S2-bis P1                 | `python experiments/S2bis_calibration/s2bis_lambda_eq.py`           |                                                                                              **3 768 s (1 h 02 min 48 s)**, second run 3 760 s | new artifacts; **bit-reproducible on the complete grid**, the two runs byte-identical. 180 detector-free calibration runs + 1 980 full prequential runs on the three INSECTS streams                                                                                                                  |
@@ -141,6 +148,11 @@ as 1 h 58 min (R1–R4, R6–R9) + 0 h 35 (S6 campaigns) + 0 h 11 (S8 mechanisms
 The journal manuscript of record keeps its stricter formulation (the measured 1 h 58 min for
 R1–R4 and R6–R9), its experiment set additionally carrying S2-bis, S8 in full and S9.
 
+**Superseded (2026-10-10).** That composition omits stages whose artifacts the OWAD paper cites —
+the S8 ab initio arms, S9, S13, S2-bis, S3 and the R9 data — and counts S8 mechanisms, which the
+paper does not cite. The end-to-end measurement of `./run_owad2026.sh` replaces it
+(§ "OWAD 2026 reproduction" below).
+
 ## R5 BAF throughput — measured per-run (2026-10-01)
 
 No committed record ever timed the full 270-run BAF stage: both surviving R5 logs resume from
@@ -188,7 +200,7 @@ Two real gaps remain, and they are named here rather than left to be discovered:
 
 | gap    | state                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
 | ------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **R5** | 15 of the 34 frozen hashes are R5's. Before stream S7-ter **none had ever been empirically re-verified** — they were asserted from the committed files, never from a reproduction. S7-ter/LOT C closes **one** of the fifteen: re-running step 5 of the pipeline regenerates `delta_e.parquet` byte for byte on this host, which is the first execution-backed proof for any R5 artifact. The remaining fourteen — the BAF and INSECTS evaluations, the per-episode decomposition, the checkpoints and `table2_values.csv` — still rest on the committed files alone, and closing them means paying the ≈2 h BAF stage (measured-throughput extrapolation, § "R5 BAF throughput" below). |
+| **R5** | 15 of the 34 frozen hashes are R5's. Before stream S7-ter **none had ever been empirically re-verified** — they were asserted from the committed files, never from a reproduction. S7-ter/LOT C closes **one** of the fifteen: re-running step 5 of the pipeline regenerates `delta_e.parquet` byte for byte on this host, which is the first execution-backed proof for any R5 artifact. The remaining fourteen — the BAF and INSECTS evaluations, the per-episode decomposition, the checkpoints and `table2_values.csv` — still rest on the committed files alone, and closing them means paying the ≈2 h BAF stage (measured-throughput extrapolation, § "R5 BAF throughput" below). **Closed on 2026-10-10:** `./run_owad2026.sh` regenerated R5 in a clean copy, checkpoints deleted first, and all 15 R5 entries verify byte for byte; the BAF stage took about 5 h (§ "OWAD 2026 reproduction"). |
 | **S8** | **Zero entries**, same regime as S6. The S8 corpus is outside the manifest; its integrity guards are `tests/test_S8_generality.py` (generator identity, PRNG neutrality, pre-drift bit-identity, ab initio arm invariants, write perimeter, payload anchors), the D3-bis trunk gate against the committed S6 rows, and the byte-identical replay of the causal reading. |
 | **S6** | **Zero entries.** The S6 Parquet corpus is outside the manifest entirely; its only integrity guard is `tests/test_S6_traces.py::test_parquet_replay_is_byte_identical`, which replays and compares rather than checking a frozen digest. The deterministic Parquet contract (`S6_PARQUET_*` in `config/experiment_ssot.py`) is what makes that replay meaningful.                                                                                                                                                                                                                                                         |
 | **S9** | **Zero entries**, and one debt the other rows do not carry. The stream's offline replay reads the S6 trace corpus through `results/S6_synchronized_traces/data/traces.parquet`, which in the `stream-s9` worktree is a **symlink to an artifact outside the repository** (`/home/m53/TheBlindSpotParadox-Experiments/...`, 20 partitions, 402 MB) and is not versioned anywhere. Until that corpus is regenerated by `s6_runner.py`, **no output of `experiments/S9_detector_coverage/s9_offline_detectors.py` is reproducible from a fresh clone**: the input does not exist there. The outputs are reproducible bit for bit GIVEN the corpus -- that is what `tests/test_S9_coverage.py::test_replay_of_one_cell_is_bit_identical` and the two-pass SHA-256 comparison establish -- and the S9 trace corpus is itself gitignored under the same regime as S6's and S8's. Declared, not masked. |
@@ -206,6 +218,53 @@ R5 re-run — converged the pipeline copy onto the manuscript copy, which is the
 `tests/test_manuscript_integrity.py::test_manuscript_assets_match_the_pipeline` now prevents.
 **Whether to delete the file or retain it as lineage is a repository-policy call and is escalated,
 not decided here.**
+
+## OWAD 2026 reproduction
+
+`./run_owad2026.sh --copy <dir>` regenerates, in a copy of the repository, every artifact
+`docs/OWAD_CLAIMS.md` cites, times each stage and compares each output with the repository's file.
+Measured on 2026-10-10, from 13:39 to 23:59 UTC, on the host above (48 threads, load average 0.43
+at start), one stage at a time. Four other interactive sessions shared the host at about 1 % CPU
+each, and two test runs under `nice 19`, under 5 min in total, overlapped the R1 stages.
+
+| stage | wall clock | outputs identical / compared |
+|---|---:|---:|
+| R1 | 1 137 s (18 min 56 s) | 3 / 3 |
+| R1 `--arm owad2026` | 1 068 s (17 min 47 s) | 3 / 3 |
+| R2 | 1 182 s (19 min 41 s) | 6 / 6 |
+| R3 `--arm U1`, against `results/audit_S7/s7ter_arms/r3_u1/` | 612 s (10 min 11 s) | 2 / 2 |
+| R3 | 537 s (8 min 56 s) | 2 / 2 |
+| R4, main table (the KSWIN sweep is cited by no claim) | 2 352 s (39 min 12 s) | 3 / 3 |
+| R4 `--arm owad2026`, also against `results/audit_S7/s7ter_arms/u0_frozen/` | 2 090 s (34 min 50 s) | 5 / 6 (a) |
+| R4 `--arm owad2026 --bootstrap seed --summarise-only` | 1 s | 2 / 2 |
+| R5, BAF included, checkpoints deleted first | 19 383 s (5 h 23 min 03 s) | 17 / 17 |
+| R6, three steps | 36 s | 4 / 4 |
+| R7 | 730 s (12 min 10 s) | 3 / 3 |
+| R9 data, `c_ext` = 32 and 1 | 85 s | 2 / 2 |
+| S6 campaign | 1 214 s (20 min 13 s) | 21 / 21 |
+| S6 refinement and `delta_e_c_data_refine.json` | 580 s (9 min 40 s) | 10 / 10 |
+| S6 envelope statistics | 3 s | 1 / 1 |
+| S6 predictive power | 1 s | 1 / 1 |
+| S3 generator factorisation gate | 2 s | 1 / 1 |
+| S8 ab initio arms and causal reading | 1 398 s (23 min 17 s) | 5 / 5 (b) |
+| S9 offline replay and family ordering | 899 s (14 min 58 s) | 2 / 3 (b, c) |
+| S13 | 49 s | 3 / 3 |
+| S2-bis lambda_eq | 3 776 s (1 h 02 min 55 s) | 3 / 3 |
+| **Total, stages summed** | **37 135 s = 10.32 h (10 h 18 min 54 s)** | **99 / 101** |
+
+(a) The Table I render differs from `u0_frozen/table1_proteus_summary.tex` in its caption and its
+`\resizebox` lines only: its 14 body rows are identical, and it equals the repository's `owad2026`
+table byte for byte. (b) The 20 trace partitions of S8 and the 20 of S9 are gitignored and absent
+from the repository, so they are compared with nothing. (c) `s9_family_ordering.json` gains two
+keys, `levels.anchor.W_alias_of` and `levels.anchor.tau_swap_1_over_M`, which it copies from the
+`at` block of `results/S2bis_calibration/tables/s2bis_proteus_gate.json`; that block was relabelled
+after the committed S9 file was written. Its 4 002 other values are identical.
+
+R5 dominates. Its BAF stage runs nine chunks of 30 runs in sequence, 32.5 to 34.5 min each, and
+under `batch_size=2` each chunk waits for its slowest pair of ARF runs: about 5 h, against the ≈2 h
+extrapolated in § "R5 BAF throughput", which assumed the 270 runs spread over 48 workers at once.
+Inside the copy, after the stages, the three OWAD test files pass (93 tests) and so does the full
+suite (277 passed, 1 skipped: the bytecode check needs a git working tree).
 
 ## Reproducing
 

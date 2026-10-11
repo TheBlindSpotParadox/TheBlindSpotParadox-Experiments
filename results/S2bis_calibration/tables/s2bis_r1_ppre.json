@@ -2,18 +2,18 @@
   "T_B_a_source_facts": {
     "R1_StrictCUSUM_sites": [
       {
-        "line": 56,
+        "line": 58,
         "p_pre_expr": "0.05",
         "p_pre_is_bare_literal": true,
         "p_pre_value": 0.05,
-        "source": "StrictCUSUM(0.05, DELTA_P, lambda_val)"
+        "source": "StrictCUSUM(0.05, DELTA_P_BY_ARM[arm], lambda_val)"
       },
       {
-        "line": 81,
+        "line": 83,
         "p_pre_expr": "p_pre_emp",
         "p_pre_is_bare_literal": false,
         "p_pre_value": null,
-        "source": "StrictCUSUM(p_pre_emp, DELTA_P, lambda_val)"
+        "source": "StrictCUSUM(p_pre_emp, DELTA_P_BY_ARM[arm], lambda_val)"
       }
     ],
     "R2_fallback": {
@@ -297,7 +297,7 @@
     "recommendation": "route the CUSUM reference rate through config/experiment_ssot.py and extend cusum_delta_sites to resolve the p_pre slot the same way it resolves delta. Both files are outside the S2-bis perimeter; no change is applied here.",
     "strict_cusum_guard_scope": "the `delta` argument only (CUSUM_CLASS / cusum_delta_sites), resolved through StrictCUSUM's own __init__ signature; the first positional slot is p_pre and is not inspected",
     "unguarded_sites": [
-      "experiments/R1_race_condition/exp_R1_generate_data.py:56",
+      "experiments/R1_race_condition/exp_R1_generate_data.py::run_diff_test (cusum_external_fixed)",
       "experiments/R2_instrumented_blind_spot/exp_R2_instrumented_blind_spot.py:90"
     ]
   },
@@ -306,7 +306,7 @@
       "Detection_Rate": false,
       "Share_Blind_Spot": false
     },
-    "reading": "Share_Blind_Spot and Detection_Rate are aggregated at exp_R1_generate_data.py:136-139 from blind_spot_observed and tau_det_emp_finite, both functions of the EMPIRICAL arm built at :81 from the warm-up mean. tau_det_fixed is recorded at :117 and read by no aggregation, so the effect of the 0.05 literal on the two published numerals is exactly zero. The choice is deliberate -- R1 is a two-arm design -- and undocumented: the manuscript names neither arm, and the control arm has never been published.",
+    "reading": "Share_Blind_Spot and Detection_Rate are aggregated in the __main__ block of exp_R1_generate_data.py from blind_spot_observed and tau_det_emp_finite, both functions of the EMPIRICAL arm cusum_external_emp, built in run_diff_test from the warm-up mean. tau_det_fixed is recorded in the record run_diff_test returns and read by no aggregation, so the effect of the 0.05 literal on the two published numerals is exactly zero. The choice is deliberate -- R1 is a two-arm design -- and undocumented: the manuscript names neither arm, and the control arm has never been published.",
     "rerun_required": false,
     "rule": "B5",
     "sentence_owed_to_the_manuscript": true,

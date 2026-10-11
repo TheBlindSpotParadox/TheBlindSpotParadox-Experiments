@@ -38,6 +38,25 @@ header that labels it as superseded and unsubmitted (re-pinned in the test). v63
 by older reports but is not in the repository. Line numbers quoted in reports predating S11-b
 refer to v64 and do not transfer to v65; re-grep before anchoring an edit.
 
+## Published archive
+
+`docs/manuscript/owad2026/` is the sealed camera-ready of the ICDM 2026 OWAD workshop paper,
+*The Blind Spot Paradox: When Adaptive Classifiers Defeat Drift Detectors* (arXiv:2610.05853). It
+is a record of what was published, never edited and never the state of the project: its ten files
+are pinned by SHA-256 in `tests/test_owad_snapshot.py`, and `PUBLISHED_MAIN_TEX` in
+`tests/test_manuscript_integrity.py` keeps its `.tex` out of the checks on the manuscript of
+record. `docs/OWAD_CLAIMS.md` is its erratum record: every numeral of the published text against
+the artifact that carries it, re-read by `tests/test_owad_claims.py`. A corrected published version
+goes to arXiv, never into this directory. `docs/manuscript/CURRENT` still names v65.
+
+`git ls-files '*.pdf'` lists one file, `docs/manuscript/owad2026/The_Blind_Spot_Paradox_ICDM_OWAD_2026.pdf`.
+It is the published document itself, and `SNAPSHOT_SHA256` in `tests/test_owad_snapshot.py` pins
+it byte for byte, so the test fails if it is missing or altered; the snapshot figures were checked
+against its embedded images when the snapshot was sealed. Every other PDF stays untracked:
+`/docs/manuscript/*.pdf` in `.gitignore` is anchored at the top of `docs/manuscript/` and does not
+reach `owad2026/`. `./run_owad2026.sh --copy <dir>` regenerates every artifact the erratum record
+cites, in a copy outside the repository.
+
 ## Execution
 
 - Interpreter: `/home/m53/miniforge3/envs/Trading/bin/python` (Python 3.12.9).

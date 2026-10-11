@@ -14,17 +14,19 @@ specification quotes the pre-A1 pair; this test pins the artifact, which is the 
 WHICH ARM THESE ASSERTIONS COVER. R1 runs TWO external CUSUM monitors on the same error stream, at
 the same tolerance and the same threshold, differing only in p_0:
 
-  nominal   `StrictCUSUM(0.05, DELTA_P, lambda)` built at `exp_R1_generate_data.py:56`, p_0 pinned
-            to the historical literal 0.05 before the stream starts   -> column `tau_det_fixed`
-  empirical `StrictCUSUM(p_pre_emp, DELTA_P, lambda)` built at `:81` at t == T_DRIFT, p_0 being the
-            mean error over the 1000-step pre-drift warm-up           -> column `tau_det_emp`
+  nominal   `cusum_external_fixed = StrictCUSUM(0.05, DELTA_P_BY_ARM[arm], lambda)` in
+            `exp_R1_generate_data.run_diff_test`, p_0 pinned to the historical literal 0.05 before
+            the stream starts                                         -> column `tau_det_fixed`
+  empirical `cusum_external_emp = StrictCUSUM(p_pre_emp, DELTA_P_BY_ARM[arm], lambda)`, built in the
+            same function at t == T_DRIFT, p_0 being the mean error over the 1000-step pre-drift
+            warm-up                                                   -> column `tau_det_emp`
 
 Every published R1 aggregate is the EMPIRICAL arm, and the assertions below are therefore on that
-arm: `Detection_Rate` is `tau_det_emp_finite` (`:120`), and `blind_spot_observed` (`:106-111`) is
-defined on `tau_det_ext_emp` alone. Verified against the frozen artifact by recomputing the
+arm: `Detection_Rate` is `tau_det_emp_finite`, and the `blind_spot_observed` rule of `run_diff_test`
+is defined on `tau_det_ext_emp` alone. Verified against the frozen artifact by recomputing the
 generator's own blind-spot rule on each column: the stored flag reproduces the empirical arm exactly
-and the nominal arm not at all. Figure 1 plots `tau_det_emp` for the same reason
-(`exp_R1_plot_figure.py:37-40`).
+and the nominal arm not at all. Figure 1 plots `tau_det_emp` for the same reason (the masks of
+`exp_R1_plot_figure.plot_tau_scatter`).
 
 The nominal arm is recorded in the artifact and read by nothing. At lambda = 25 it gives a
 detection rate of 0.390 against the empirical arm's 0.920, and a blind-spot share of 0.965 against
@@ -34,8 +36,9 @@ factual error; the two arms are not interchangeable and this docstring exists so
 cannot conflate them.
 
 R2 has one arm only: `p_pre_empirical = np.mean(errors_pre)`
-(`exp_R2_instrumented_blind_spot.py:90`), the same warm-up calibration, with the literal 0.05 reached
-only if the warm-up buffer were empty -- which a 1000-step window makes unreachable.
+(`exp_R2_instrumented_blind_spot.run_instrumented_arf_pht`), the same warm-up calibration, with the
+literal 0.05 reached only if the warm-up buffer were empty -- which a 1000-step window makes
+unreachable.
 
 Usage:  PYTHONHASHSEED=0 python -m pytest tests/test_R1_race_condition.py -v
 """

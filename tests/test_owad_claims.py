@@ -1,3 +1,4 @@
+import collections
 import functools
 import hashlib
 import inspect
@@ -21,7 +22,9 @@ sys.path.insert(0, str(ROOT_DIR))
 from config import experiment_ssot as ssot  # noqa: E402
 
 LEDGER = ROOT_DIR / "docs" / "OWAD_CLAIMS.md"
-ROW_RE = re.compile(r"^\| ([A-Z]\d{2}) \|.*\| ([A-Z]+) \|$", re.MULTILINE)
+ROW_RE = re.compile(r"^\| [A-Z]\d{2} \|")
+# A sign only where it cannot be the dash of a range such as 0.56-0.68.
+NUMBER_RE = re.compile(r"(?<![\w.])-?\d+(?:\.\d+)?")
 PREFIX_STATUS = {"M": "MATCH", "A": "ANALYTIC", "P": "PROVENANCE", "X": "MISMATCH", "B": "AMBIGUOUS",
                  "U": "UNTRACED", "L": "LAYOUT", "Q": "QUALIFICATION"}
 
@@ -44,6 +47,7 @@ R4_U0_SIGN = "results/audit_S7/s7ter_arms/u0_frozen/exp_R4_seed_level_tests.csv"
 R4_TABLES = ("results/audit_S7/s7ter_arms/u0_frozen/table1_proteus_summary.tex",
              "results/R4_proteus_evaluation/owad2026/tables/table1_proteus_summary.tex")
 R4_SCRIPT = "experiments/R4_proteus_evaluation/exp_R4_main_table.py"
+R4_SEEDBOOT = "results/R4_proteus_evaluation/owad2026_seedboot/tables/table1_proteus_summary.tex"
 R5 = "results/R5_real_world_evaluation"
 S2BIS_GATE = "results/S2bis_calibration/tables/s2bis_flooding_gate.json"
 S9 = "results/S9_detector_coverage/tables/s9_offline_summary.json"
@@ -394,9 +398,9 @@ def x09():
 
 def x10():
     env = " ".join(text("docs/ENVIRONMENT.md").split())
-    parts = ("1 h 58 min (R1–R4, R6–R9) + 0 h 35 (S6 campaigns) + 0 h 11 (S8 mechanisms) + ≈2 h (BAF) + ≈0 h 18",
-             "1 395.0 s (23 min 15 s)", "**~1 h 40 min**")
-    return [(part, "True", part in env) for part in parts] + [("S13 timed", "False", "S13" in env)]
+    hours = float(re.search(r"\*\*Total, stages summed\*\* \| \*\*([\d ]+) s =", env)[1].replace(" ", "")) / 3600
+    return [("composition of 2026-10-01 marked superseded", "True", "**Superseded (2026-10-10).**" in env),
+            ("measured total, hours", "10.32", hours), ("within [4.5 h, 5.5 h)", "False", 4.5 <= hours < 5.5)]
 
 
 def x12():
@@ -415,10 +419,12 @@ def q04():
         row = next(ln for ln in tex.splitlines() if ln.strip().startswith(r"\textbf{PHT + ARF} ($c_{\mathrm{int}} = 32$)"))
         return [float(x) for x in re.findall(r"\$\\pm\$(\d\.\d+)", row)]
 
-    run_level, seed_level = widths(text(R4_TABLES[0])), widths(r4.summarise(csv(R4_U0), "current")[1])
+    run_level, seed_level = widths(text(R4_TABLES[0])), widths(text(R4_SEEDBOOT))
     current = widths(text("results/R4_proteus_evaluation/tables/table1_proteus_summary.tex"))
     return [("published run-level min", "0.05", min(run_level)), ("max", "0.05", max(run_level)),
             ("seed-level on the published data min", "0.13", min(seed_level)), ("max", "0.15", max(seed_level)),
+            ("seed-level body rows equal the in-memory computation", "True",
+             table1_rows(ROOT_DIR / R4_SEEDBOOT) == table1_rows(r4.summarise(csv(R4_U0), "seed")[1])),
             ("seed-level on the current data min", "0.12", min(current)), ("max", "0.15", max(current))]
 
 
@@ -556,7 +562,21 @@ CHECKS = {
 
 
 def ledger():
-    return dict(ROW_RE.findall(LEDGER.read_text(encoding="utf-8")))
+    rows = {}
+    for line in LEDGER.read_text(encoding="utf-8").splitlines():
+        if ROW_RE.match(line):
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            assert len(cells) == 6, f"{cells[0]}: {len(cells)} cells, expected 6"
+            assert cells[0] not in rows, f"duplicate ledger ID {cells[0]}"
+            rows[cells[0]] = cells
+    return rows
+
+
+def in_row(expected, row):
+    try:
+        return float(expected) in {float(n) for n in NUMBER_RE.findall(row.replace(",", ""))}
+    except ValueError:
+        return expected.lower() in row.lower()
 
 
 def holds(expected, value):
@@ -569,7 +589,7 @@ def holds(expected, value):
 
 
 def test_every_ledger_row_has_exactly_one_check():
-    rows = ledger()
+    rows = {r: cells[5] for r, cells in ledger().items()}
     assert rows, f"no row parsed from {LEDGER.relative_to(ROOT_DIR)}"
     wrong_status = sorted(r for r, s in rows.items() if PREFIX_STATUS.get(r[0]) != s)
     assert not wrong_status, f"rows whose status does not match their ID prefix: {wrong_status}"
@@ -582,8 +602,23 @@ def test_every_ledger_row_has_exactly_one_check():
                                             f"module constant {sorted(declared)}")
 
 
+def test_readme_status_counts_match_the_ledger():
+    readme = (ROOT_DIR / "README.md").read_text(encoding="utf-8")
+    printed = {s: int(n) for s, n in re.findall(r"^\| ([A-Z]+) \| (\d+) \|$", readme, re.MULTILINE)}
+    counts = collections.Counter(cells[5] for cells in ledger().values())
+    assert printed == dict(counts), f"README.md prints {printed}, the ledger counts {dict(counts)}"
+
+
 @pytest.mark.parametrize("row", sorted(CHECKS))
 def test_ledger_row_matches_its_artifact(row):
+    checks = CHECKS[row]()
     bad = [f"{label}: ledger {expected}, artifact {value!r}"
-           for label, expected, value in CHECKS[row]() if not holds(expected, value)]
+           for label, expected, value in checks if not holds(expected, value)]
     assert not bad, f"{row} no longer matches its artifact:\n  " + "\n  ".join(bad)
+    # A literal counts where the row prints values, in the claim and value cells; the artifact cell
+    # names fields and selectors. True and False are outcomes of a predicate the check evaluates.
+    cells = ledger()[row]
+    line = f"{cells[2]} | {cells[4]}"
+    absent = [f"{label}: {expected}" for label, expected, _ in checks
+              if expected not in ("True", "False") and not in_row(expected, line)]
+    assert not absent, f"{row} checks literals its ledger row does not carry:\n  " + "\n  ".join(absent)

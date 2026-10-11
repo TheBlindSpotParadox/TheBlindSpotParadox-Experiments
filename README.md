@@ -1,50 +1,147 @@
-# The Calibration Blind Spot — Experiments
+# TheBlindSpotParadox-Experiments
 
-## 1. Environment and Dependencies (Prerequisites)
+Code, data and artifacts of *The Blind Spot Paradox: When Adaptive Classifiers Defeat Drift
+Detectors*, by Raphaël Minato, Fabrice Popineau, Arpad Rimmel and Bich-Liên Doan, a paper of the
+OWAD workshop at IEEE ICDM 2026 ([arXiv:2610.05853](https://arxiv.org/abs/2610.05853)). The
+camera-ready, as published, is sealed in `docs/manuscript/owad2026/`.
 
-The experiments were executed on an AMD EPYC 8224P with 192 GB RAM under **Python 3.12**. To ensure bit-wise reproducibility, especially concerning the internal ADWIN clock artifact documented in the paper, we strictly pin the `river` library to version `0.23.0`. The interpreter version is part of the determinism contract: the RNG-overflow guards in the scripts assume Python 3.12 / NumPy 1.26 native `uint32` handling.
+The repository also holds the journal-track manuscript under development, *The Calibration Blind
+Spot: Sizing Cumulative Drift Monitors Against Adaptive Classifiers*, which
+`docs/manuscript/CURRENT` names. Section 4 lists the material that belongs to it alone.
+
+## 1. Reproducing the OWAD 2026 paper
+
+One command regenerates every artifact that `docs/OWAD_CLAIMS.md` cites, in a copy of the
+repository, and compares each output with the repository's file:
 
 ```bash
-# It is highly recommended to use a virtual environment
-python -m venv blindspot_env
-source blindspot_env/bin/activate  # On Windows use `blindspot_env\Scripts\activate`
-
-# Install dependencies
-pip install -r requirements.txt
+./run_owad2026.sh --dry-run        # the stage table and the artifact -> stage map; runs nothing
+./run_owad2026.sh --copy <dir>     # copies the repository to <dir>, outside it, and runs there
 ```
 
-> **⚠️ OS Compatibility Note:** The execution pipeline relies on shell scripts (`.sh`) and POSIX utilities (`gunzip`). Windows users **must** execute this pipeline from a Bash-compatible environment (e.g., Windows Subsystem for Linux - WSL, or Git Bash).
+Before each stage it deletes every output the stage writes, so nothing resumes from a checkpoint.
+It writes `<dir>/owad_regen_report.md`: the wall clock of each stage, a byte comparison of every
+output against the repository, and the test suite run inside the copy. It refuses a directory inside
+the repository. The measured run is recorded in `docs/ENVIRONMENT.md`.
 
-## 2. Datasets & Data Preparation
+| Element | Command | Artifact | Test |
+|---|---|---|---|
+| Fig. 1 | `python experiments/R1_race_condition/exp_R1_generate_data.py --arm owad2026`, then `python experiments/R1_race_condition/exp_R1_plot_figure.py --arm owad2026` | `results/R1_race_condition/owad2026/figures/Fig_R1_race_condition.png`, drawn from `results/R1_race_condition/owad2026/data/R1_race_condition.parquet` | `tests/test_owad_snapshot.py`; rows M28 and M29 of `tests/test_owad_claims.py` |
+| Fig. 2A–2C | `./run_experiment_R2.sh` | `results/R2_instrumented_blind_spot/figures/` | `tests/test_owad_snapshot.py` |
+| Fig. 3 | `./run_experiment_R3.sh` | `results/R3_regime_crossover/figures/Fig_R3_Regime_Crossover.png` | `tests/test_owad_snapshot.py` |
+| Table I | `python experiments/R4_proteus_evaluation/exp_R4_main_table.py --arm owad2026` | `results/R4_proteus_evaluation/owad2026/tables/table1_proteus_summary.tex` | `tests/test_owad_snapshot.py`; row M30 |
+| Table II | `./run_experiment_R5.sh` | `results/R5_real_world_evaluation/tables/table2_values.csv` | `tests/test_owad_snapshot.py`; row M23 |
+| Numerals in the text | the stages of `./run_owad2026.sh` | the artifact each row of `docs/OWAD_CLAIMS.md` names | `tests/test_owad_claims.py` |
 
-To comply with repository size limits, some large datasets are provided in a compressed format. Before running the real-world evaluations, please decompress the Bank Account Fraud (BAF) dataset.
+The figures and tables of the paper are the files of `docs/manuscript/owad2026/`. Where one differs
+from the pipeline render, the difference is declared (section 3).
 
-**Execute the following command from the repository root:**
-```bash
-gunzip -k data/baf/*.gz
-```
+## 2. Errata and claim ledger
 
-### Data Sources
-*   **Bank Account Fraud (BAF):** The `Base.csv`, `VariantI.csv`, and `VariantII.csv` files originate from the [NeurIPS 2022 Bank Account Fraud Dataset](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022?resource=download).
-*   **INSECTS Dataset:** The `abrupt_balanced.csv`, `gradual_balanced.csv`, and `incremental_reoccurring_balanced.csv` streams are sourced from the official [INSECTS repository](https://drive.google.com/drive/folders/1v-iRL6X4yWhKIn82-eS-w93wb-gxjSiz).
+The printed paper is frozen at the publisher. `docs/OWAD_CLAIMS.md` is its erratum record: it
+traces every numeral written in digits in the sealed `.tex` to the committed artifact that carries
+it, and `tests/test_owad_claims.py` re-reads each artifact and fails when a row no longer holds.
 
-## 3. Repository Structure
+| Status | Rows |
+|---|---|
+| MATCH | 41 |
+| ANALYTIC | 6 |
+| PROVENANCE | 3 |
+| MISMATCH | 12 |
+| AMBIGUOUS | 4 |
+| UNTRACED | 3 |
+| LAYOUT | 3 |
+| QUALIFICATION | 4 |
+
+These counts are generated from the registry, and `tests/test_owad_claims.py` fails when they drift
+from it: they hold for every commit on which the suite passes.
+
+- **MISMATCH**, rows X01–X12: the artifact contradicts the printed numeral.
+- **UNTRACED**, rows U01–U03: no committed artifact carries the printed value.
+- **QUALIFICATION**, rows Q01–Q04: a committed measurement qualifies a printed claim without
+  contradicting it.
+
+A corrected version of the paper will be posted on arXiv.
+
+## 3. Configurations the paper does not state
+
+- **R3 warning detector.** The published arm, U0, leaves the `warning_detector` of the ARF unset,
+  which River 0.23.0 resolves to `ADWIN(delta=0.01, clock=32)`; `config/experiment_ssot.py` writes
+  it out as `R3_WARN_DELTA_U0` and `R3_C_WARN_U0`. `--arm U1` runs the ablation that clones the drift
+  detector instead (`results/audit_S7/s7ter_arms/README.md`).
+- **R1, two arms.** Fig. 1 as published runs the external CUSUM at delta_P = 0.005
+  (`R1_OWAD_DELTA_P`, `--arm owad2026`). The current arm, the default of both R1 scripts, runs it at
+  delta_P = 0.01 (`R1_DELTA_P`).
+- **R4, two arms.** Table I as published is arm U0 with intervals that resample the 360 runs of a
+  cell (`--arm owad2026`). The current arm is U1 with intervals that resample the 30 seeds.
+  `--arm owad2026 --bootstrap seed` gives seed-level intervals on the published data, in
+  `results/R4_proteus_evaluation/owad2026_seedboot/` (row Q04).
+- **Layout.** The captions of Table I and Table II, the row labels of Table II and the Fig. 1 image
+  differ from the pipeline renders. Rows L01, L02 and L03 declare each difference, and
+  `tests/test_owad_snapshot.py` checks them.
+
+## 4. Journal-track material
+
+`docs/manuscript/CURRENT` names the journal manuscript, `docs/manuscript/articleA_blindspot_v65_mlj.tex`,
+which inputs the fragments of `docs/manuscript/sections/`. Its experiment set is larger than the
+paper's; the artifact paths of `docs/OWAD_CLAIMS.md` split `results/` in two.
+
+- **Cited by the OWAD registry:** `results/R1_race_condition/`, `results/R2_instrumented_blind_spot/`,
+  `results/R3_regime_crossover/`, `results/R4_proteus_evaluation/`,
+  `results/R5_real_world_evaluation/`, `results/R6_hydra_factor/`, `results/R7_clock_mismatch/`,
+  `results/R9_mcrit/`, `results/S2bis_calibration/`, `results/S3/`,
+  `results/S6_synchronized_traces/`, `results/S8_ab_initio/`, `results/S9_detector_coverage/`,
+  `results/S13_evidence_bell/` and `results/audit_S7/`.
+- **Journal track only:** `results/R8_lambda_op_sweep/`, `results/S2_theory/`,
+  `results/S8_marginal/`, `results/S8_mechanisms/`, `results/S8_minimal_arf/`,
+  `results/S8_r7_figure/`, `results/S8_rotation_generator/` and `results/S10_external_validity/`.
+
+R9 sits on both sides. Only its data generation, `experiments/R9_mcrit/exp_R9_generate_data.py`,
+feeds the OWAD rows X07 and X09; its M_crit comparison, `experiments/R9_mcrit/exp_R9_compute_mcrit.py`,
+serves the journal manuscript.
+
+## 5. History
+
+- This repository extends and corrects the one submitted to the ICDM 2026 main track,
+  [github.com/TheBlindSpot-ICDM2026/The-Blind-Spot-Paradox-Experiments](https://github.com/TheBlindSpot-ICDM2026/The-Blind-Spot-Paradox-Experiments).
+- **The 93 → 86 flooding note.** The main-track submission quoted 93 alarms (precision 0.011) for
+  PHT+ARF (c = 1) on `gradual_balanced`. The artifact gives 86 alarms (precision 0.012), the value
+  both manuscripts print (row M23); PHT+HT emits 7 on the same stream, and the conclusion is
+  unchanged.
+- **The v64 lineage.** `docs/manuscript/articleA_blindspot_v64_camera_ready.tex` is an earlier,
+  unsubmitted version of the journal manuscript, superseded by v65 and kept to seal the lineage of
+  its numerals. `results/audit_S7/_baseline/artifacts_sha256_pre_ssot.txt` is the frozen hash list
+  of the committed artifacts, and `results/audit_S7/_baseline/authorized_deviations.txt` declares
+  every deviation from it, and every later change to an artifact, with its motive and measured
+  effect.
+
+## 6. Environment and tests
+
+- **Environment.** The interpreter, Python 3.12.9, and the pins of `requirements.txt` are part of
+  the determinism contract; `docs/ENVIRONMENT.md` records the host, the pins and the measured wall
+  clocks. The pipeline runs Bash scripts; on Windows, use WSL or Git Bash.
+
+  ```bash
+  python -m venv blindspot_env && source blindspot_env/bin/activate
+  pip install -r requirements.txt
+  ```
+
+- **Data.** `data/baf/` holds the three variants of the
+  [NeurIPS 2022 Bank Account Fraud dataset](https://www.kaggle.com/datasets/sgpjesus/bank-account-fraud-dataset-neurips-2022),
+  compressed: run `gunzip -k data/baf/*.gz` before R5. `data/insects/` holds the three streams of the
+  [INSECTS repository](https://drive.google.com/drive/folders/1v-iRL6X4yWhKIn82-eS-w93wb-gxjSiz).
+- **Current arms.** `./run_all.sh` runs R1 to R9 in dependency order, R6 after R2, then the tests.
+- **OWAD paper.** `./run_owad2026.sh`, section 1.
+- **Tests.** `python -m pytest tests/` runs the 23 test files of `tests/`.
+
+## 7. Repository tree
+
+Generated from the filesystem; the project's internal working documents are not listed.
 
 ```text
 .
-├── requirements.txt
-├── README.md
-├── run_all.sh
-├── run_tests.sh
-├── run_experiment_R1.sh                     
-├── run_experiment_R2.sh                     
-├── run_experiment_R3.sh
-├── run_experiment_R4.sh
-├── run_experiment_R5.sh
-├── run_experiment_R6.sh
-├── run_experiment_R7.sh
-├── run_experiment_R8.sh
-├── run_experiment_R9.sh
+├── config/
+│   └── experiment_ssot.py
 ├── data/
 │   ├── baf/
 │   │   ├── Base.csv.gz
@@ -54,6 +151,40 @@ gunzip -k data/baf/*.gz
 │       ├── abrupt_balanced.csv
 │       ├── gradual_balanced.csv
 │       └── incremental_reoccurring_balanced.csv
+├── docs/
+│   ├── manuscript/
+│   │   ├── figures/
+│   │   │   └── …
+│   │   ├── owad2026/
+│   │   │   ├── figures/
+│   │   │   │   ├── Fig_R1_race_condition.png
+│   │   │   │   ├── Fig_R2_A_PHT_ARF.png
+│   │   │   │   ├── Fig_R2_B_PHT_ARF.png
+│   │   │   │   ├── Fig_R2_C_PHT_ARF.png
+│   │   │   │   └── Fig_R3_Regime_Crossover.png
+│   │   │   ├── tables/
+│   │   │   │   ├── table1_proteus_summary.tex
+│   │   │   │   └── table2_real_data_summary.tex
+│   │   │   ├── The_Blind_Spot_Paradox_ICDM_OWAD_2026.bib
+│   │   │   ├── The_Blind_Spot_Paradox_ICDM_OWAD_2026.pdf
+│   │   │   └── The_Blind_Spot_Paradox_ICDM_OWAD_2026.tex
+│   │   ├── sections/
+│   │   │   └── …
+│   │   ├── tables/
+│   │   │   └── …
+│   │   ├── articleA_biblio_v64.bib
+│   │   ├── articleA_blindspot_v64_camera_ready.tex
+│   │   ├── articleA_blindspot_v65_mlj.tex
+│   │   ├── CURRENT
+│   │   ├── IEEEabrv.bib
+│   │   ├── spmpsci.bst
+│   │   ├── svglov3.clo
+│   │   └── svjour3.cls
+│   ├── slides/
+│   │   └── …
+│   ├── ENVIRONMENT.md
+│   ├── METHODS.md
+│   └── OWAD_CLAIMS.md
 ├── experiments/
 │   ├── R1_race_condition/
 │   │   ├── exp_R1_generate_data.py
@@ -63,297 +194,171 @@ gunzip -k data/baf/*.gz
 │   ├── R3_regime_crossover/
 │   │   └── exp_R3_regime_crossover.py
 │   ├── R4_proteus_evaluation/
-│   │   ├── exp_R4_main_table.py
-│   │   └── exp_R4_kswin_sweep.py
+│   │   ├── exp_R4_kswin_sweep.py
+│   │   ├── exp_R4_label_check.py
+│   │   └── exp_R4_main_table.py
 │   ├── R5_real_world_evaluation/
-│       ├── exp_R5_config.py
-│       ├── exp_R5_common.py
-│       ├── exp_R5_compute_baf.py
-│       ├── exp_R5_compute_delta_e.py
-│       ├── exp_R5_compute_insects.py
-│       ├── exp_R5_make_table2.py
-│       ├── exp_R5_preflight.py
-│       └── exp_R5_smoke_test.py
+│   │   ├── exp_R5_alarm_protocol.py
+│   │   ├── exp_R5_baf_timing.py
+│   │   ├── exp_R5_common.py
+│   │   ├── exp_R5_compute_baf.py
+│   │   ├── exp_R5_compute_delta_e.py
+│   │   ├── exp_R5_compute_insects.py
+│   │   ├── exp_R5_config.py
+│   │   ├── exp_R5_make_table2.py
+│   │   ├── exp_R5_preflight.py
+│   │   └── exp_R5_smoke_test.py
 │   ├── R6_hydra_factor/
-│       ├── exp_R6_generate_data.py
-│       └── exp_R6_compute_hydra.py
+│   │   ├── exp_R6_compute_hydra.py
+│   │   ├── exp_R6_generate_data.py
+│   │   └── exp_R6_hydra_survival.py
 │   ├── R7_clock_mismatch/
-│   │   ├── exp_R7_generate_data.py
-│   │   └── exp_R7_compute_regime1.py
+│   │   ├── exp_R7_compute_regime1.py
+│   │   └── exp_R7_generate_data.py
 │   ├── R8_lambda_op_sweep/
 │   │   └── exp_R8_lambda_op_sweep.py
 │   ├── R9_mcrit/
-│   │   ├── exp_R9_generate_data.py
-│   │   └── exp_R9_compute_mcrit.py
-│   ├── S2_theory/                           # stopping-time theory at the measured base rate
+│   │   ├── exp_R9_compute_mcrit.py
+│   │   └── exp_R9_generate_data.py
+│   ├── S10_external_validity/
+│   │   ├── s10_dual_mode.py
+│   │   ├── s10_holm.py
+│   │   ├── s10_latency.py
+│   │   └── s10_p0.py
+│   ├── S13_evidence_bell/
+│   │   ├── s13_evidence_bell.py
+│   │   └── s13_figure_bell.py
+│   ├── S2_theory/
 │   │   ├── s2_arl0.py
 │   │   ├── s2_eddm.py
+│   │   ├── s2_exact_alpha.py
 │   │   └── s2_w_random.py
-│   ├── S2bis_calibration/                   # equal-false-alarm-budget calibration
+│   ├── S2bis_calibration/
 │   │   ├── s2bis_lambda_eq.py
 │   │   ├── s2bis_proteus_calibration.py
 │   │   └── s2bis_r1_ppre.py
-│   ├── S6_synchronized_traces/              # causal arms, envelope statistics, gates
+│   ├── S3_dependence/
+│   │   ├── s3_bounds.py
+│   │   ├── s3_competing_risks.py
+│   │   └── s3_gate_rng_factorization.py
+│   ├── S6_synchronized_traces/
 │   │   ├── gates/
+│   │   │   ├── _gate_common.py
+│   │   │   ├── g0_predict_one_neutrality.py
+│   │   │   ├── g0_report.json
+│   │   │   ├── g1_deepcopy_fidelity.py
+│   │   │   ├── g1_report.json
+│   │   │   ├── g2_api_map.json
+│   │   │   ├── g2_river_introspection.py
+│   │   │   ├── g3_report.json
+│   │   │   └── g3_throughput.py
+│   │   ├── s6_audit_ass_repair.py
+│   │   ├── s6_causal.py
+│   │   ├── s6_defs.py
+│   │   ├── s6_detectors.py
+│   │   ├── s6_envelope_stats.py
+│   │   ├── s6_figure.py
+│   │   ├── s6_predictive_power.py
+│   │   ├── s6_recompute_cusum_delta001.py
 │   │   ├── s6_runner.py
-│   │   └── ...
-│   └── S8_generality/                       # mechanistic generality, rotation generator, ab initio arms
-│       ├── s8_arms.py                       # T8.1, pilot over s6_runner.campaign
-│       ├── s8_rotation.py                   # T8.2 / T8.5, rotation family and the old/new confrontation
-│       ├── s8_mechanisms.py                 # T8.3, mechanisms x ensembles at equal evidence budget
-│       ├── s8_marginal.py                   # T8.3-bis, the marginal of a tree INSIDE the ARF
-│       ├── s8_minimal_arf.py                # T8.4, replication in NumPy with no River import
-│       └── s8_figure_r7.py                  # T8.6, standalone Figure 4 from the committed R7 curve
-├── tests/
-│   ├── test_R6_hydra.py
-│   ├── test_R7_regime1.py
-│   ├── test_R8_lambda_op.py
-│   ├── test_R9_mcrit.py
-│   ├── test_S2_theory.py
-│   ├── test_S2bis_calibration.py
-│   ├── test_S3_dependence.py
-│   ├── test_S6_traces.py
-│   ├── test_S7_consistency.py
-│   ├── test_S8_generality.py
-│   └── test_manuscript_integrity.py
+│   │   ├── s6_window_budgets.py
+│   │   └── s6_writer.py
+│   ├── S8_generality/
+│   │   ├── s8_arms.py
+│   │   ├── s8_figure_r7.py
+│   │   ├── s8_marginal.py
+│   │   ├── s8_mechanisms.py
+│   │   ├── s8_minimal_arf.py
+│   │   └── s8_rotation.py
+│   └── S9_detector_coverage/
+│       ├── s9_family_ordering.py
+│       ├── s9_input_space.py
+│       ├── s9_kswin_dilution.py
+│       ├── s9_offline_detectors.py
+│       └── s9_rotation_traces.py
 ├── results/
+│   ├── audit_S7/
+│   │   └── _baseline/, config_matrix.md, hydra_survival.csv, hydra_survival.tex, regeneration_spec.md, s7ter_arms/
 │   ├── R1_race_condition/
-│   │   ├── data/                            
-│   │   └── figures/
+│   │   └── data/, figures/, owad2026/
 │   ├── R2_instrumented_blind_spot/
-│   │   ├── data/                            
-│   │   └── figures/
+│   │   └── data/, figures/
 │   ├── R3_regime_crossover/
-│   │   ├── data/                            
-│   │   └── figures/
+│   │   └── data/, figures/
 │   ├── R4_proteus_evaluation/
-│   │   ├── data/                            
-│   │   └── tables/
+│   │   └── data/, owad2026/, owad2026_seedboot/, tables/
 │   ├── R5_real_world_evaluation/
-│   │   ├── data/                            
-│   │   └── tables/                        
+│   │   └── data/, tables/
 │   ├── R6_hydra_factor/
-│   │   ├── data/                            
-│   │   └── tables/                        
+│   │   └── data/, tables/
 │   ├── R7_clock_mismatch/
-│   │   ├── data/                            
-│   │   └── tables/                        
+│   │   └── data/, tables/
 │   ├── R8_lambda_op_sweep/
-│   │   └── data/                            
+│   │   └── data/
 │   ├── R9_mcrit/
-│   │   ├── data/                            
-│   │   └── figures/                        
+│   │   └── data/, figures/
+│   ├── S10_external_validity/
+│   │   └── .gitignore, data/, figures/, tables/
+│   ├── S13_evidence_bell/
+│   │   └── blindspot_map.csv, evidence_bell.csv, figures/, s13_gate.json
 │   ├── S2_theory/
 │   │   └── tables/
 │   ├── S2bis_calibration/
 │   │   └── tables/
+│   ├── S3/
+│   │   └── bounds_grid.csv, cif_bands.csv, figures/, hydra_equal_budget.json, ks_exponentiality.csv, pmiss_vs_M.csv, rho_meff.csv, rng_factorization.json, s3_competing_risks.json, s3_verdicts.json
 │   ├── S6_synchronized_traces/
-│   │   ├── data/
-│   │   └── tables/
-│   ├── S8_ab_initio/                        # T8.1; data/traces.parquet/ is gitignored
-│   │   ├── data/
-│   │   └── tables/
-│   ├── S8_rotation_generator/               # T8.2 / T8.5, one subtree per eta arm
-│   │   ├── data/eta0.00/ , data/eta0.05/
-│   │   └── tables/
-│   ├── S8_mechanisms/                       # T8.3
-│   ├── S8_marginal/                         # T8.3-bis
-│   ├── S8_minimal_arf/                      # T8.4
-│   ├── S8_r7_figure/                        # T8.6
+│   │   └── data/, data_refine/, figures/, smoke/, tables/
+│   ├── S8_ab_initio/
+│   │   └── data/, smoke/, tables/
+│   ├── S8_marginal/
+│   │   └── data/, tables/
+│   ├── S8_mechanisms/
+│   │   └── data/, tables/
+│   ├── S8_minimal_arf/
+│   │   └── data/, tables/
+│   ├── S8_r7_figure/
 │   │   └── figures/
-│   └── audit_S7/
-│       └── _baseline/
-└── logs/
-    ├── pytest/
-    ├── R1_race_condition/
-    ├── R2_instrumented_blind_spot/
-    ├── R3_regime_crossover/
-    ├── R4_proteus_evaluation/
-    ├── R5_real_world_evaluation/
-    ├── R6_hydra_factor/
-    ├── R7_clock_mismatch/
-    ├── R8_lambda_op_sweep/
-    └── R9_mcrit/
+│   ├── S8_rotation_generator/
+│   │   └── data/, tables/
+│   └── S9_detector_coverage/
+│       └── rotation_eta0.05/, tables/
+├── tests/
+│   ├── test_debt_register.py
+│   ├── test_manuscript_integrity.py
+│   ├── test_owad_claims.py
+│   ├── test_owad_snapshot.py
+│   ├── test_R1_race_condition.py
+│   ├── test_R2_starvation.py
+│   ├── test_R3_crossover.py
+│   ├── test_R4_table1.py
+│   ├── test_R5_table2.py
+│   ├── test_R6_hydra.py
+│   ├── test_R7_regime1.py
+│   ├── test_R8_lambda_op.py
+│   ├── test_R9_mcrit.py
+│   ├── test_S10_external_validity.py
+│   ├── test_S13_bell.py
+│   ├── test_S2_theory.py
+│   ├── test_S2bis_calibration.py
+│   ├── test_S2ter_predicate.py
+│   ├── test_S3_dependence.py
+│   ├── test_S6_traces.py
+│   ├── test_S7_consistency.py
+│   ├── test_S8_generality.py
+│   └── test_S9_coverage.py
+├── README.md
+├── requirements.txt
+├── run_all.sh
+├── run_experiment_R1.sh
+├── run_experiment_R2.sh
+├── run_experiment_R3.sh
+├── run_experiment_R4.sh
+├── run_experiment_R5.sh
+├── run_experiment_R6.sh
+├── run_experiment_R7.sh
+├── run_experiment_R8.sh
+├── run_experiment_R9.sh
+├── run_owad2026.sh
+└── run_tests.sh
 ```
-
-## 4. Reproducing the Experiments
-
-### One-Click Reproduction (Recommended for Artifact Evaluation)
-To execute the entire pipeline (Experiments R1 through R9) and run the mathematical validation suite against the manuscript claims, simply execute the master orchestrator from the repository root:
-
-```bash
-chmod +x *.sh
-./run_all.sh
-```
-This will sequentially generate all data artifacts, figures, and tables, followed by a `pytest` execution verifying the exactness of the reproduced claims. Test outputs are automatically saved to `logs/pytest/`.
-
----
-
-### Experiment R1: The Race Condition (Figure 1)
-This experiment demonstrates the "Blind Spot" paradox by simulating the race condition between the internal Adaptive Random Forest (ARF) stopping time ($\tau_{ARF}$) and the external drift detector stopping time ($\tau_{det}$).
-
-To reproduce the data generation and the final plot, simply run the orchestrator script from the root of the repository:
-
-```bash
-chmod +x run_experiment_R1.sh
-./run_experiment_R1.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R1_race_condition/data/R1_race_condition.parquet`
-- **Diagnostic:** `results/R1_race_condition/data/R1_race_condition_diagnostic.md` (Tabular summary of the Blind Spot evolution).
-- **Figure:** `results/R1_race_condition/figures/Fig_R1_race_condition.png` (Directly corresponds to **Figure 1** in the manuscript).
-
-> 💡 **Reviewer Transparency Note regarding Figure 1 (Jitter Effect):**
-> The generated figure perfectly reproduces the exact $\tau_{ARF}$ and $\tau_{det}$ stopping times reported in the submitted paper (green and red markers match bit-wise). However, you may notice a slight visual difference in the exact placement of the gray crosses ("Starved" / Censored runs at the far right) compared to the submitted PDF. 
-> This is expected and strictly visual. In the original research script, these censored crosses were scattered using an unseeded random jitter to prevent overplotting. To comply with rigorous Artifact Evaluation standards, this repository explicitly seeds the jitter generator (one independent generator per $\lambda$ panel: `rng_jitter = np.random.default_rng(int(l) * 42)`) to guarantee a deterministic, bit-wise identical output PNG across all future runs. The underlying mathematical count of starved runs remains perfectly identical.
-
-### Experiment R2: Instrumented Asymptotic Complexity & The Blind Spot (Figures 2A, 2B, 2C)
-This experiment directly instruments the ARF's internal drift tracking versus the external CUSUM (PHT) across a continuous sweep of drift magnitudes ($\Delta e$). It isolates the Starvation Effect under high CUSUM thresholds ($\lambda=50$, Figure 2A), exposes the paradoxical failure increase at intermediate thresholds ($\lambda=25$, Figure 2B), and recovers the safe zone under a hyper-reactive threshold ($\lambda=8$, Figure 2C).
-
-To reproduce the instrumented tracking and re-render the 3-panel figures:
-
-```bash
-chmod +x run_experiment_R2.sh
-./run_experiment_R2.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R2_instrumented_blind_spot/data/R2_instrumented_*.parquet`
-- **Figures:** `results/R2_instrumented_blind_spot/figures/Fig_R2_A_PHT_ARF.png`, `Fig_R2_B_PHT_ARF.png`, and `Fig_R2_C_PHT_ARF.png` (Directly correspond to **Figures 2A, 2B, 2C** in the manuscript).
-
-### Experiment R3: The Regime Crossover & Non-Adaptive RF (Figure 3)
-This experiment deconstructs the paradox continuously across drift magnitudes ($\Delta e \in [0.02, 0.50]$) over Bernoulli streams. It reconciles the Blind Spot hypothesis with classical literature by mapping three regimes (Weak Signal, Safe Zone, Blind Spot). Crucially, it validates the architectural resolution proposed in the paper: deploying a Non-Adaptive Random Forest (static bagging of Hoeffding Trees) entirely eradicates the Starvation Effect on CUSUM monitors, though at an expected post-drift predictive cost.
-
-To reproduce the crossover data and re-render the 3-panel figure:
-
-```bash
-chmod +x run_experiment_R3.sh
-./run_experiment_R3.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R3_regime_crossover/data/R3_regime_crossover_metrics.parquet`
-- **Figure:** `results/R3_regime_crossover/figures/Fig_R3_Regime_Crossover.png` (Directly corresponds to **Figure 3** in the manuscript).
-
-### Experiment R4: Heteroscedastic ARMA-GARCH Streams Evaluation (Table I & KSWIN Sweep)
-This experiment validates the agnostic nature of the Starvation Effect across cumulative-evidence detectors (PHT, EDDM) against heteroscedastic ProteuS streams, and demonstrates the structural resolution provided by the distributional KSWIN monitor across an $\alpha$-sensitivity sweep.
-
-To reproduce the full pipeline (data generation, metrics, significance tests, and LaTeX table compilation), execute the orchestrator:
-
-```bash
-chmod +x run_experiment_R4.sh
-./run_experiment_R4.sh
-```
-
-**Expected Artifacts:**
-- **Main Table:** `results/R4_proteus_evaluation/tables/table1_proteus_summary.tex` (Directly corresponds to **Table I**).
-- **KSWIN Sweep Table:** `results/R4_proteus_evaluation/tables/exp_R4_table_KSWIN_alpha_sweep.tex`
-- **Significance Tests:** `exp_R4_seed_level_tests.csv` and `exp_R4_seed_level_tests_KSWIN_alpha_sweep.csv` in `results/R4_proteus_evaluation/data/`.
-
-### Experiment R5: Real-World Evaluation on BAF & INSECTS (Table II)
-This experiment validates the starvation/flooding dichotomy on six real-world streams. It contrasts a non-adaptive Hoeffding Tree (HT) against the Adaptive Random Forest (ARF), under both a CUSUM-family monitor (PageHinkley) and a windowed monitor (ADWIN), over 30 seeds per cell. The reoccurring stream is scored on its $K{=}2$ in-stream transitions: the two canonical positions lying beyond the stream length are phantom drifts, removed by the valid-window filter (consistent with the Table II caption).
-
-To reproduce the full pipeline (integrity checks, BAF/INSECTS evaluation, adaptive $\Delta e$ estimation, flooding decomposition, and the final LaTeX table body), execute the orchestrator from the repository root:
-
-```bash
-chmod +x run_experiment_R5.sh
-./run_experiment_R5.sh
-```
-
-The orchestrator pins `PYTHONHASHSEED=0`, and every cell pins its `random`/`numpy`/`river` seed through `numpy.random.SeedSequence(42)`, guaranteeing bit-wise reproducibility. The BAF stage is checkpointed and long-running (~4.5 h on the reference server); the INSECTS stage completes in minutes.
-
-**Expected Artifacts:**
-- **Table:** `results/R5_real_world_evaluation/tables/table2_real_data_summary.tex` (a complete, standalone `table*` environment for **Table II** with an auto-generated caption; this is a reference render parallel to the hand-maintained Table II in the manuscript — keep the two in sync rather than `\input`-ing this file alongside the manuscript copy).
-- **Table Values:** `results/R5_real_world_evaluation/tables/table2_values.csv` (raw values, paired difference, and seed-level sign test).
-- **Per-run metrics:** `baf_results.parquet`, `insects_results.parquet`, `insects_per_episode.parquet`, `delta_e.parquet`, `flooding_decomposition.parquet` in `results/R5_real_world_evaluation/data/`.
-- **Manuscript mapping:** Table II (`tab:real_data_summary`) and the flooding analysis of Section IV-C (genuine detection vs false-alarm flooding) are derived directly from these artifacts.
-
-> 💡 **Reviewer Transparency Note regarding Table II (Flooding Alarm Count):**
-> The Section IV-C flooding discussion in the **submitted** manuscript quoted **93 alarms** (precision $0.011$) for the `PHT+ARF(c=1)` pipeline on the `gradual_balanced` stream, whereas this artifact and the finalized Table II report the reproducible value of **86 alarms** (precision $0.012$). **This divergence is closed: the manuscript of record named by `docs/manuscript/CURRENT` carries 86 alarms / precision $0.012$ in `rem:flooding`, in `sec:crossover` and in the Table II caption; no stale 93 remains in the manuscript.** The note is retained as a historical record of the submitted version. The repository value (**86 alarms**, reproduced bit-for-bit on every run) is authoritative. The scientific conclusion — massive false-alarm flooding by `PHT+ARF(c=1)` against only **7 alarms** for the `PHT+HT` baseline — is entirely unchanged.
-
-### Experiment R6: The Hydra Effect (Ensemble Acceleration)
-This experiment isolates the adaptation delay of a single Hoeffding Adaptive Tree ($M=1$) against the full Adaptive Random Forest ($M=10$). It computes the empirical Hydra acceleration factor ($4.1\times$--$8.0\times$) and verifies the structural power-law constants ($K_{\mathrm{HAT}} \approx 102$) discussed in **Section III-C (The Hydra Effect: Ensemble Acceleration)**.
-
-> ⚠️ **CRITICAL DEPENDENCY:** 
-> Experiment R6 compares its single-tree instrumentation against the ensemble adaptation times generated in Experiment R2. You **MUST** execute `run_experiment_R2.sh` before running R6. Failure to do so will result in a `FileNotFoundError` when parsing the ARF baseline.
-
-To reproduce the instrumentation and extract the empirical power-law parameters:
-
-```bash
-chmod +x run_experiment_R6.sh
-./run_experiment_R6.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R6_hydra_factor/data/R6_hat_instrumented.parquet`
-- **Snippet:** `results/R6_hydra_factor/tables/exp_R6_hydra_empirical_validation.tex` (the empirical Hydra factors and power-law fits reported in the paper).
-
-### Experiment R7: The Clock-Mismatch Artefact (Regime 1)
-Instruments the real ARF ($M=10$) internal drift ADWIN against an external ADWIN on the ensemble error stream, across three clock configurations (mismatched, matched, decoupled), and reports the blind-spot miss rate as a function of drift magnitude. It is the data behind the "Regime 1: The Clock-Mismatch Artefact" subsection.
-
-```bash
-chmod +x run_experiment_R7.sh
-./run_experiment_R7.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R7_clock_mismatch/data/R7_clock_mismatch.parquet`
-- **Summary:** `results/R7_clock_mismatch/tables/exp_R7_regime1_miss_summary.tex` and `exp_R7_regime1_miss_curve.csv` (miss rate per clock configuration and drift-magnitude band).
-
-> **Reproducibility:** `tests/test_R7_regime1.py` re-derives the artifact and asserts the three qualitative claims of the Regime-1 subsection (mismatched miss $>50\%$ at high magnitude; matched and decoupled miss $<5\%$ above the weak-signal band).
-
-### Experiment R8: $\tau_{\mathrm{ARF}}$ distribution and its warm-up sensitivity
-Measures the internal adaptation time $\tau_{\mathrm{ARF}}$ of the ARF ($c_{\mathrm{int}}=1, M=10$) over a fine magnitude grid, at two warm-up lengths. No external detector is simulated and nothing accumulates evidence here, so the experiment consumes no drift tolerance.
-
-It supplies the two statements of Definition 11's closing paragraph: at $T_{\mathrm{drift}}=2000$ the quantile $q_{0.05}(\tau_{\mathrm{ARF}})$ is magnitude-independent, constant at $12.95$ for $\Delta e \le 0.16$; the identical sweep at $T_{\mathrm{drift}}=4000$ dissolves that plateau ($25.70 \to 30.95 \to 54.70 \to 54.70$). The pair is what identifies the low-magnitude floor as a property of an **immature ensemble** rather than a signature of noise-driven swaps, correcting the submitted version.
-
-```bash
-chmod +x run_experiment_R8.sh
-./run_experiment_R8.sh                                              # T_drift = 2000
-python experiments/R8_lambda_op_sweep/exp_R8_lambda_op_sweep.py 4000  # warm-up parity arm
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R8_lambda_op_sweep/data/exp_R8_lambda_op_sweep.csv` and `..._tdrift4000.csv`, plus the per-seed raw grids `exp_R8_fine_grid_raw{,_tdrift4000}.csv`
-
-> **Reproducibility:** `tests/test_R8_lambda_op.py` re-derives both artifacts and asserts the plateau, its dissolution, and the absence of the withdrawn `lambda_limit` column.
->
-> **Action A2.** $\lambda_{\mathrm{op}}$ is no longer computed here. The rectangular surrogate $q_{\alpha}(\tau_{\mathrm{ARF}})\cdot(\Delta e - \delta_P)$ is withdrawn in the manuscript of record (Definition 11, step 4): synchronised S6 instrumentation invalidated its constant-accumulation-rate assumption. $\lambda_{\mathrm{op}}$ is now defined on the measured evidence ceiling $A_{\mathrm{swap}}$ and reported by `results/S6_synchronized_traces/tables/envelope_stats.json`. The `lambda_limit` column and the constant `R8_DELTA_P` are purged, not merely unread.
-
-### Experiment R9: The Critical Ensemble Size ($M_{\mathrm{crit}}$)
-Records, per drift magnitude and seed, the internal adaptation delay $\tau_{\mathrm{HAT}}$ of a single Hoeffding Adaptive Tree. The empirical CDF of $\tau_{\mathrm{HAT}}$ is consumed to derive the distribution-free critical ensemble size $M_{\mathrm{crit}}$. The comparison table reports $M_{\mathrm{crit}}$ at the reliability targets $r \in \{0.99, 0.95, 0.50\}$, where $r = 1 - P_{\mathrm{miss}}$ is the target detection guarantee of Corollary 2 ($M_{\mathrm{crit}} = \lfloor \ln r / \ln(1 - F) \rfloor$). Under this formula a **larger** $M_{\mathrm{crit}}$ is **permissive** (it certifies a larger ensemble), so the low-$r$ column is the permissive end, not a conservative one. The manuscript's worked example is stated at $r = 0.95$. The operational quantity $P_{\mathrm{miss}}(M{=}10)$ is $r$-independent.
-
-```bash
-chmod +x run_experiment_R9.sh
-./run_experiment_R9.sh
-```
-
-**Expected Artifacts:**
-- **Data:** `results/R9_mcrit/data/exp_R9_mcrit_comparison.csv`
-- **Figure:** `results/R9_mcrit/figures/Fig_R9_Mcrit_empirical_vs_exp.png`
-
-> **Reproducibility:** `tests/test_R9_mcrit.py` asserts that the regenerated artifact reproduces the numerical example of the manuscript Corollary at the reliability target $r = 0.95$.
-
-## 5. Artifact Scope & Configuration Notes
-
-**Pipelines covered by this repository:** Figure 1 (R1), Figures 2A–2C (R2), Figure 3 (R3), Table I and the KSWIN $\alpha$-sweep (R4), Table II and the flooding decomposition (R5), the Hydra Effect acceleration bounds (R6), the clock-mismatch / Regime-1 matrix (R7), the $\tau_{\mathrm{ARF}}$ warm-up sensitivity behind Definition 11's closing paragraph (R8), and the Critical Ensemble Size example (R9).
-
-**ARF detector configuration (unified since stream S7-ter, arm-routed for R3):** every ARF in this repository pins both its internal `drift_detector` and its `warning_detector` explicitly, none is left for River to resolve. R4 and R6–R9 pin both to `ADWIN(delta=0.002, clock=c_int)` — the unified setting. **R3 publishes arm U0**, which pins the warning detector to River's own ARF defaults, `ADWIN(delta=0.01, clock=32)`, written out in the registry as `R3_WARN_DELTA_U0` / `R3_C_WARN_U0` rather than inherited; the unified arm is retained as the U1 ablation and is reached with `python experiments/R3_regime_crossover/exp_R3_regime_crossover.py --arm U1` (the wrapper `run_experiment_R3.sh` forwards no flag and therefore runs U0). Throughout the paper, $c_{\mathrm{int}}$ refers to the clock of the **drift** detector.
-
-Two corrections to the previous wording, both measured on the pinned build rather than inferred:
-
-1. **River's warning default is two parameters, not one.** River 0.23.0 resolves an unset `warning_detector` on `ARFClassifier` to `ADWIN(delta=0.01, clock=32)`, an unset `drift_detector` to `ADWIN(delta=0.001, clock=32)`, and a bare `drift.ADWIN()` to neither, at `delta=0.002, clock=32`. The previous text named the warning default as `ADWIN(clock=32)` and omitted its delta, which made the heterogeneity look like a clock mismatch when it was also a sensitivity mismatch.
-2. **The enumeration was incomplete.** R6, R7, R8 and R9 also pinned both detectors and were outside the list, as did `make_srp` inside R4 itself: R4 was drift-only for its ARF and both-pinned for its SRP, in the same file.
-
-The heterogeneity this section used to document therefore no longer exists: what was implicit is now pinned, in both arms. What it cost is recorded, not hidden: `results/audit_S7/_baseline/authorized_deviations.txt` carries the R4 artifact deviations with their measured effect. R3 consumes none — its published U0 arm reproduces the frozen baseline byte for byte — and it is the **unified** arm that is archived beside it, in `results/audit_S7/s7ter_arms/r3_u1/`.
-
-## 6. Submission Artifact
-
-The submission artifact is this repository without the authors' internal notes (`docs/prompts`, `docs/reports`, `docs/theory`, `docs/editorial`, `docs/plans`); `docs/METHODS.md` explains the references to them that remain in the code. From inside the artifact, `pytest tests/` passes with 15 tests skipped, each for a stated reason:
-
-- 13 check internal documents the artifact does not ship (transfer documents and the editorial debt register);
-- 1 checks that git tracks no compiled bytecode, and needs a git working tree;
-- 1 checks the review dates of the source-verification ledger, which is not shipped.
-
-`docs/manuscript/articleA_blindspot_v64_camera_ready.tex` is an earlier version, kept only to seal the lineage of the numerals. It is not submitted, and its thesis is superseded by `docs/manuscript/articleA_blindspot_v65_mlj.tex`.

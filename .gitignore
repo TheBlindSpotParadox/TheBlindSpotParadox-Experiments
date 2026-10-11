@@ -21,6 +21,9 @@ repomix.config.json
 
 # Compiled manuscript
 /docs/manuscript/*.pdf
+# Tracked on purpose: docs/manuscript/owad2026/*.pdf, the sealed published paper that
+# tests/test_owad_snapshot.py pins. The pattern above stops at the top of docs/manuscript/,
+# so no negation rule is needed (git check-ignore -v exits 1 on it).
 
 # Graphe et visualisations locales
 graphify-out/

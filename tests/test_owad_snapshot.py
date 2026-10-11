@@ -66,7 +66,16 @@ OWAD_DECLARED_EDITS = {
     TABLE1: {"caption": "edited by hand; no committed source"},
     TABLE2: {"caption": "edited by hand; no committed source",
              "row labels": "INSECTS variants typeset in italics, reoccurring_balanced renamed",
-             "sign-test column": "removed; the pipeline table still prints it"},
+             "sign-test column": "removed; withdrawn as pseudo-replicated, the pipeline table omits "
+                                 "it too and table2_values.csv keeps sign_test_p"},
+}
+
+# The "row labels" edit, label by label: published Table II label -> table2_values.csv row. A
+# published label absent from this map must equal its row verbatim.
+TABLE2_LABEL_EDITS = {
+    r"INSECTS \textit{abrupt\_balanced}": r"INSECTS abrupt\_balanced",
+    r"INSECTS \textit{gradual\_balanced}": r"INSECTS gradual\_balanced",
+    r"INSECTS \textit{incremental\_reoccurring}": r"INSECTS reoccurring\_balanced",
 }
 
 
@@ -74,8 +83,8 @@ def sha256(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def tabular_body(path):
-    lines = path.read_text(encoding="utf-8").splitlines()
+def tabular_body(source):
+    lines = (source.read_text(encoding="utf-8") if isinstance(source, Path) else source).splitlines()
     start = next(i for i, ln in enumerate(lines) if ln.strip() == r"\midrule")
     end = next(i for i, ln in enumerate(lines) if ln.strip() == r"\bottomrule")
     return lines[start + 1:end]
@@ -168,13 +177,17 @@ def test_table1_caption_is_a_declared_edit():
 
 
 def test_table2_numeric_cells_match_table2_values():
-    rows = table2_rows(OWAD_DIR / TABLE2)
-    values = pd.read_csv(ROOT_DIR / TABLE2_VALUES, float_precision="round_trip")
-    assert len(rows) == len(values) == 6, f"{len(rows)} Table II rows against {len(values)} values"
+    rows = {cells[0]: cells for cells in table2_rows(OWAD_DIR / TABLE2)}
+    values = pd.read_csv(ROOT_DIR / TABLE2_VALUES, float_precision="round_trip").set_index("row")
+    mapped = {label: TABLE2_LABEL_EDITS.get(label, label) for label in rows}
+    assert len(rows) == 6 and sorted(mapped.values()) == sorted(values.index), (
+        f"published Table II labels map to {sorted(mapped.values())}, table2_values holds "
+        f"{sorted(values.index)}: a label edit missing from TABLE2_LABEL_EDITS maps to no row")
     bad = []
-    for cells, (_, record) in zip(rows, values.iterrows()):
-        assert len(cells) == 1 + len(TABLE2_COLUMNS), f"{cells[0]}: {len(cells)} cells"
-        bad += [f"{record['row']} / {column}: printed {cell!r}, table2_values {record[column]!r}"
+    for label, cells in rows.items():
+        record = values.loc[mapped[label]]
+        assert len(cells) == 1 + len(TABLE2_COLUMNS), f"{label}: {len(cells)} cells"
+        bad += [f"{label} / {column}: printed {cell!r}, table2_values {record[column]!r}"
                 for cell, column in zip(cells[1:], TABLE2_COLUMNS)
                 if plain(cell) != printed(record[column], column)]
     assert not bad, "Table II cells that are not the committed values:\n  " + "\n  ".join(bad)
@@ -184,6 +197,9 @@ def test_table2_edits_are_declared_and_present():
     assert set(OWAD_DECLARED_EDITS[TABLE2]) == {"caption", "row labels", "sign-test column"}
     snapshot, pipeline = OWAD_DIR / TABLE2, ROOT_DIR / TABLE2_PIPELINE
     assert caption(snapshot) != caption(pipeline)
-    labels = pd.read_csv(ROOT_DIR / TABLE2_VALUES, float_precision="round_trip")["row"].tolist()
-    assert [cells[0] for cells in table2_rows(snapshot)] != labels
-    assert "sign test" in header(pipeline).lower() and "sign" not in header(snapshot).lower()
+    published = {cells[0] for cells in table2_rows(snapshot)}
+    stale = {k: v for k, v in TABLE2_LABEL_EDITS.items() if k not in published or k == v}
+    assert not stale, f"declared label edits that are no longer differences in the published table: {stale}"
+    values = pd.read_csv(ROOT_DIR / TABLE2_VALUES, float_precision="round_trip")
+    assert "sign" not in header(snapshot).lower() and "sign" not in header(pipeline).lower()
+    assert "sign_test_p" in values.columns

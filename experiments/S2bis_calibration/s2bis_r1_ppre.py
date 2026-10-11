@@ -1,23 +1,27 @@
 """Stream S2-bis, Phase 3 (T-B and T-E): the R1 reference rate, analytic, no re-execution.
 
-`exp_R1_generate_data.py:56` builds `StrictCUSUM(0.05, DELTA_P, lambda_val)` -- a reference rate of
-0.05 against a measured pre-drift error rate of `ssot.P0_MEASURED = 0.024`. The recursion therefore
-runs at an effective tolerance of `p_pre + delta_P - p_true = 0.036`, not `delta_P = 0.01`.
+`exp_R1_generate_data.run_diff_test` builds `cusum_external_fixed = StrictCUSUM(0.05,
+DELTA_P_BY_ARM[arm], lambda_val)` -- a reference rate of 0.05 against a measured pre-drift error
+rate of `ssot.P0_MEASURED = 0.024`. On the current arm the recursion therefore runs at an effective
+tolerance of `p_pre + delta_P - p_true = 0.036`, not `delta_P = 0.01`.
 
 THE FINDING IS REAL AND THE PUBLISHED NUMERALS DO NOT CARRY IT. R1 is a deliberate TWO-ARM design:
-`:56` builds the fixed arm and `:81` builds the empirical arm from the mean of the 1 000-step
-warm-up. `blind_spot_observed` (`:105-111`) and `tau_det_emp_finite` (`:120`) are both functions of
-the EMPIRICAL arm, and `:136-139` aggregates exactly those two into `Share_Blind_Spot` and
-`Detection_Rate`. `tau_det_fixed` is recorded at `:117` and read by no aggregation. The effect of
+`run_diff_test` builds the fixed arm `cusum_external_fixed` before the stream starts and the
+empirical arm `cusum_external_emp` at `t == T_DRIFT`, from the mean of the 1 000-step warm-up. The
+`blind_spot_observed` rule and `tau_det_emp_finite`, both in the record `run_diff_test` returns, are
+functions of the EMPIRICAL arm, and the `agg` of the `__main__` block aggregates exactly those two
+into `Share_Blind_Spot` and `Detection_Rate`. `tau_det_fixed` is recorded in the same record and
+read by no aggregation. The effect of
 the mis-set reference rate on the two published numerals is therefore exactly zero, and what this
 module delivers instead is the within-run counterfactual the frozen parquet already contains: both
 arms see the same post-drift error stream under the same seed and the same lambda, so the fixed arm
 is a paired control, not a separate experiment.
 
 R2 IS THE OPPOSITE OF THE BRIEF'S EXPECTATION, AND IS SHOWN STRUCTURALLY.
-`exp_R2_instrumented_blind_spot.py:90` reads `np.mean(errors_pre) if errors_pre else 0.05`. The
-buffer is appended at `:87-88` for every `t` in `[T_DRIFT - 1000, T_DRIFT)` and read at `:89` when
-`t == T_DRIFT`, so it holds `min(1000, T_DRIFT)` entries and the `0.05` fallback is UNREACHABLE for
+`exp_R2_instrumented_blind_spot.run_instrumented_arf_pht` sets `p_pre_empirical =
+np.mean(errors_pre) if errors_pre else 0.05`. The buffer is appended (`errors_pre.append`) for every
+`t` in `[T_DRIFT - 1000, T_DRIFT)` and read in the `t == T_DRIFT` branch, so it holds
+`min(1000, T_DRIFT)` entries and the `0.05` fallback is UNREACHABLE for
 any `T_DRIFT > 0`. R2's reference rate is the warm-up mean, like R1's empirical arm. The literal is
 dead code, not a second instance of the R1 defect.
 
@@ -55,7 +59,7 @@ R2_SRC = ROOT_DIR / "experiments" / "R2_instrumented_blind_spot" / "exp_R2_instr
 R1_PARQUET = ssot.RESULTS_DIR / "R1_race_condition" / "data" / "R1_race_condition.parquet"
 ARL0_COLUMNS = ssot.RESULTS_DIR / "S2_theory" / "tables" / "s2_arl0_columns.csv"
 
-P_PRE_R1 = 0.05                    # the literal under audit at exp_R1_generate_data.py:56.
+P_PRE_R1 = 0.05                    # the literal under audit: cusum_external_fixed, run_diff_test.
                                    # Deliberately NOT registered in the SSOT: a withdrawn value
                                    # given a registry name invites a call site to route through it,
                                    # the same reason s2_arl0.P_S1_ASSUMED is left unregistered.
@@ -169,9 +173,10 @@ def counterfactual(n_boot=ssot.S2BIS_N_BOOTSTRAP):
     """The within-run control the frozen parquet already contains.
 
     Both arms run on the SAME post-drift error stream under the same seed and the same lambda
-    (`exp_R1_generate_data.py:88-98` updates them in the same loop body), so the difference between
-    them is attributable to the reference rate alone. `blind_spot_observed` is recomputed from the
-    fixed arm under R1's own definition at `:105-111`, character for character."""
+    (the post-drift loop of `exp_R1_generate_data.run_diff_test` updates them in the same body), so
+    the difference between them is attributable to the reference rate alone. `blind_spot_observed`
+    is recomputed from the fixed arm under R1's own `blind_spot_observed` rule in `run_diff_test`,
+    character for character."""
     df = pd.read_parquet(R1_PARQUET)
     rng = np.random.default_rng(ssot.S2BIS_BOOTSTRAP_SEED)
     rows = []
@@ -180,7 +185,7 @@ def counterfactual(n_boot=ssot.S2BIS_N_BOOTSTRAP):
         emp_finite = g.tau_det_emp.notna().to_numpy()
         fix_finite = g.tau_det_fixed.notna().to_numpy()
         arf = g.tau_arf.to_numpy(dtype=float)
-        # R1's definition at :105-111, with the fixed arm substituted for the empirical one.
+        # R1's blind_spot_observed rule (run_diff_test), the fixed arm substituted for the empirical.
         bs_emp = np.where(~emp_finite, True,
                           arf < np.where(emp_finite, g.tau_det_emp.to_numpy(), np.inf))
         bs_fix = np.where(~fix_finite, True,
@@ -332,7 +337,8 @@ def ssot_route_audit():
                                         "cusum_delta_sites), resolved through StrictCUSUM's own "
                                         "__init__ signature; the first positional slot is p_pre "
                                         "and is not inspected",
-            "unguarded_sites": ["experiments/R1_race_condition/exp_R1_generate_data.py:56",
+            "unguarded_sites": ["experiments/R1_race_condition/exp_R1_generate_data.py::"
+                                "run_diff_test (cusum_external_fixed)",
                                 "experiments/R2_instrumented_blind_spot/"
                                 "exp_R2_instrumented_blind_spot.py:90"],
             "recommendation": "route the CUSUM reference rate through config/experiment_ssot.py "
@@ -348,11 +354,12 @@ def b5_verdict(route):
             "rerun_required": bool(routed),
             "evidence": route["routes_through_tau_det_fixed"],
             "sentence_owed_to_the_manuscript": True,
-            "reading": ("Share_Blind_Spot and Detection_Rate are aggregated at "
-                        "exp_R1_generate_data.py:136-139 from blind_spot_observed and "
-                        "tau_det_emp_finite, both functions of the EMPIRICAL arm built at :81 from "
-                        "the warm-up mean. tau_det_fixed is recorded at :117 and read by no "
-                        "aggregation, so the effect of the 0.05 literal on the two published "
+            "reading": ("Share_Blind_Spot and Detection_Rate are aggregated in the __main__ block "
+                        "of exp_R1_generate_data.py from blind_spot_observed and "
+                        "tau_det_emp_finite, both functions of the EMPIRICAL arm "
+                        "cusum_external_emp, built in run_diff_test from the warm-up mean. "
+                        "tau_det_fixed is recorded in the record run_diff_test returns and read by "
+                        "no aggregation, so the effect of the 0.05 literal on the two published "
                         "numerals is exactly zero. The choice is deliberate -- R1 is a two-arm "
                         "design -- and undocumented: the manuscript names neither arm, and the "
                         "control arm has never been published."
